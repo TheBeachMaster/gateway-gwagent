@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+   Copyright (c) 2014, AllSeen Alliance. All rights reserved.
+ 
+      Permission to use, copy, modify, and/or distribute this software for any
+      purpose with or without fee is hereby granted, provided that the above
+      copyright notice and this permission notice appear in all copies.
+ 
+      THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+      WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+      MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+      ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+      WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+      ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+      OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.^M
+ -->
+ 
+  <project name="GatewayController" basedir="." default="APK">
+ 
+ 
+  <!--  ========================================================   -->
+ 
+         <!-- The local.properties file is created and updated by the 'android' tool.
+          It contains the path to the SDK. It should *NOT* be checked into
+          Version Control Systems. -->
+         <property file="local.properties" />
+ 
+         <!-- The ant.properties file can be created by you. It is only edited by the
+              'android' tool to add properties to it.
+              This is the place to change some Ant specific build properties.
+              Here are some properties you may want to change/update:
+     
+              source.dir
+                  The name of the source directory. Default is 'src'.
+              out.dir
+                  The name of the output directory. Default is 'bin'.
+     
+              For other overridable properties, look at the beginning of the rules
+              files in the SDK, at tools/ant/build.xml
+     
+              Properties related to the SDK location or the project target should
+              be updated using the 'android' tool with the 'update' action.
+     
+              This file is an integral part of the build system for your
+              application and should be checked into Version Control Systems.
+     
+              -->
+         <property file="ant.properties" />
+ 
+         <!-- if sdk.dir was not set from one of the property file, then
+              get it from the ANDROID_HOME env var.
+              This must be done before we load project.properties since
+              the proguard config can use sdk.dir -->
+         <property environment="env" />
+         <condition property="sdk.dir" value="${env.ANDROID_HOME}">
+             <isset property="env.ANDROID_HOME" />
+         </condition>
+ 
+         <!-- The project.properties file is created and updated by the 'android'
+              tool, as well as ADT.
+     
+              This contains project specific properties such as project target, and library
+              dependencies. Lower level build properties are stored in ant.properties
+              (or in .classpath for Eclipse projects).
+     
+              This file is an integral part of the build system for your
+              application and should be checked into Version Control Systems. -->
+         <loadproperties srcFile="project.properties" />
+         
+         <!-- quick check on sdk.dir -->
+         <fail
+                 message="sdk.dir is missing. Make sure to generate local.properties using 'android update project'  or to inject it through the ANDROID_HOME environment variable."
+                 unless="sdk.dir"
+         />
+ 
+        <!--
+        Import per project custom build rules if present at the root of the project.
+        This is the place to put custom intermediary targets such as:
+            -pre-build
+            -pre-compile
+            -post-compile (This is typically used for code obfuscation.
+                           Compiled code location: ${out.classes.absolute.dir}
+                           If this is not done in place, override ${out.dex.input.absolute.dir})
+            -post-package
+            -post-build
+            -pre-clean
+         -->
+         <import file="custom_rules.xml" optional="true" />
+         
+             <!-- Import the actual build file.
+
+         To customize existing targets, there are two options:
+         - Customize only one target:
+             - copy/paste the target into this file, *before* the
+               <import> task.
+             - customize it to your needs.
+         - Customize the whole content of build.xml
+             - copy/paste the content of the rules files (minus the top node)
+               into this file, replacing the <import> task.
+             - customize to your needs.
+
+         ***********************
+         ****** IMPORTANT ******
+         ***********************
+         In all cases you must update the value of version-tag below to read 'custom' instead of an integer,
+         in order to avoid having your file be overridden by tools such as "android update project"
+          -->
+         
+             
+        <!-- version-tag: 1 -->
+        <import file="${sdk.dir}/tools/ant/build.xml" />
+         
+         <!-- 
+           By overriding this task we set our own target APK name
+        -->    
+        <target name="-set-debug-files" depends="-set-mode-check">
+           <property name="out.packaged.file" location="${out.absolute.dir}/${ant.project.name}-debug-unaligned.apk" />
+           <property name="out.final.file" location="${out.absolute.dir}/${ant.project.name}.apk" />
+           <property name="build.is.mode.set" value="true" />
+        </target>
+	     <!--  ========================================================   -->
+        
+         <property name="src.dir"     value="src" />
+         <property name="libs.dir"    value="libs"/>
+         <property name="build.dir"   value="build"/>
+         <property name="classes.dir" value="${build.dir}/classes" />
+         <property name="deploy.dir"  value="${build.dir}/deploy" />
+         <property name="andr.compile.dir" value="${sdk.dir}/platforms/${target}"/> 
+         <property name="docs.lib" value="docs"/>
+         
+         <target name="clean">
+            <echo message="Cleaning ${ant.project.name} ${build.dir} directory..."/>
+            <delete dir="${build.dir}" includeemptydirs="true" quiet="true"/>
+         </target>
+         
+         <target name="init" depends="clean">
+             <echo message="${ant.project.name} Starting init..."/>
+             <echo message="${ant.project.name} Create build directory"/>
+             <mkdir dir="${build.dir}"/>
+             <echo message="${ant.project.name} Create ${classes.dir} directory"/>
+             <mkdir dir="${classes.dir}"/>
+             <echo message="${ant.project.name} Create ${deploy.dir} directory"/>
+             <mkdir dir="${deploy.dir}"/> 
+         </target>
+         
+         <target name="compile" depends="init" description="Compiles the code">
+             
+             <echo message="${ant.project.name} starting compilation..."/>
+             
+             <path id="classpath">
+                 <fileset dir="${libs.dir}" includes="**/*.jar"/>
+                 <fileset dir="${andr.compile.dir}" includes="**/*.jar"/>
+             </path>
+             
+             <echo message="${ant.project.name} Compile project"/>
+            
+             <!--
+                We don't want to compile android classes with its dependencies.
+               Compile just org.alljoyn.ioe.... package. 
+             -->
+             <javac source="1.6" target="1.6"
+                    srcdir="${src.dir}/org/alljoyn/gatewaycontroller/sdk" 
+                    destdir="${classes.dir}" 
+                    classpathref="classpath" 
+                    debug="true" 
+                    excludes="**package-info.java**"
+                    includeantruntime="false"/>
+         </target>
+         
+         <target name="jar" depends="compile">
+           <echo message="${ant.project.name} Creates compiled JAR file"/>
+           <jar destfile="${deploy.dir}/${ant.project.name}.jar" basedir="${classes.dir}" />
+         </target>
+        
+         
+        <target name="APK" depends="jar">
+           <echo message="${ant.project.name} Creates APK file"/>
+           <antcall target="debug" />
+        </target>
+         
+        <target name="jdoc" description="${ant.project.name} Creates JAVADOC">
+           <echo message="${ant.project.name} Creates JavaDoc for the project"/>
+ 
+           <delete dir="${docs.lib}" includeemptydirs="true" quiet="true"/>
+ 
+           <javadoc
+                destdir="${docs.lib}"
+                author="false"
+                version="false"
+                use="true"
+                windowtitle="Gateway Controller SDK">
+ 
+                <classpath id="classpath">
+                     <fileset dir="${libs.dir}" includes="*/**"/>
+                     <fileset dir="${andr.compile.dir}" includes="**/*.jar"/>
+                     <!-- fileset dir="${src.dir}/org/alljoyn/gatewaycontroller/sdk/communication/alljoyn" includes="**/*"/ -->
+                     <fileset dir="${src.dir}/org/alljoyn/gatewaycontroller/sdk" includes="**/*" />
+                </classpath> 
+ 
+                <fileset dir="${src.dir}" defaultexcludes="yes">
+                     <include name="org/alljoyn/gatewaycontroller/sdk/**"/>
+                     <exclude name="org/alljoyn/gatewaycontroller/sdk/announcement/**"/>
+                     <exclude name="org/alljoyn/gatewaycontroller/sdk/managerinterfaces/**"/>
+                </fileset>
+  
+                <doctitle><![CDATA[<h1> Gateway Controller SDK</h1>]]></doctitle>
+                <bottom><![CDATA[<small>AllJoyn Gateway Controller Java API Reference Manual Version 1.0.0 (Thu Mar 06  08:00:00 2014)<br/>Copyright &copy; 2014 AllSeen Alliance.<br/><b>THIS DOCUMENT AND ALL INFORMATION CONTAIN HER EIN ARE PROVIDED ON AN "AS-IS" BASIS WITHOUT WARRANTY OF ANY KIND</b>.<br/><b>MAY CONTAIN U.S. AND INTERNATIONAL EXPORT CONTROLLED INFORMATION</b><br/></small>]]></bottom>
+           </javadoc>
+           
+        </target>
+        
+         <!--  ========================================================   -->
+
+     
+
+</project>

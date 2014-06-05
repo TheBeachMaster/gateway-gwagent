@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+ /******************************************************************************
+  * Copyright (c) 2014, AllSeen Alliance. All rights reserved.
+  *
+  *    Permission to use, copy, modify, and/or distribute this software for any
+  *    purpose with or without fee is hereby granted, provided that the above
+  *    copyright notice and this permission notice appear in all copies.
+  *
+  *    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  *    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  *    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  *    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  *    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  *    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  ******************************************************************************/
+
+
+-->
+
+<resources>
+
+    <string name="app_name">Gateway Controller Sample</string>
+    <string name="action_settings">Settings</string>
+    
+    <string name="gw_name_lbl">Gateway: </string>
+    <string name="discovered_gateways_activity">Discovered Gateways</string>
+    <string name="discovered_gateways_nogateway_txt">NO GATEWAYS FOUND ON THE NETWORK</string>
+    
+    <string name="title_activity_third_party_apps">Third Party Applications</string>
+    <string name="tp_apps_not_found">NO THIRD PARTY APPLICATIONS FOUND</string>
+    <string name="tp_apps_discover_apps_btn">Discover Apps</string>
+    <string name="tp_apps_refresh_btn">Refresh</string>
+
+    <string name="title_activity_third_party_application">Third Party Application</string>
+    <string name="tp_appname_lbl">App. Name:</string>
+    <string name="tp_appver_lbl">Version:</string>
+    <string name="tp_appstatus_connection_lbl">Connectivity:</string>
+    <string name="tp_appstatus_operation_lbl">Operation:</string>
+    <string name="tp_appstatus_install_lbl">Installation:</string>
+    <string name="tp_app_restart_btn">Restart</string>
+    
+    <string name="tp_acls_not_found">NO ACLs FOUND</string>
+    <string name="tp_acls_active_lbl">Active:</string>
+    <string name="tp_acls_active_lbl_y">Yes</string>
+    <string name="tp_acls_active_lbl_n">No</string>
+    <string name="tp_acls_create_acl_menu_lbl">Create ACL</string>
+    <string name="tp_acls_show_manifest_menu_lbl">Show Manifest</string>
+    
+    <string name="title_activity_tp_manifest">Manifest</string>
+    <string name="tp_app_manifest_rules">Manifest Rules</string>
+    <string name="tp_app_manifest_rules_exp_services_not_found">NO EXPOSED SERVICES FOUND</string>
+    <string name="tp_app_manifest_rules_remoted_services">Remoted Services</string> <!-- Exposed Services are taken from acl_mgmt_exp_services_lbl -->
+    <string name="tp_app_manifest_rules_remoted_services_not_found">NO REMOTED SERVICES FOUND</string>
+    <string name="tp_app_manifest_file">Manifest File</string>
+    
+    <string name="title_activity_acl_management">Access Control List</string>
+    <string name="acl_mgmt_acl_name_lbl">ACL Name:</string>
+    <string name="acl_mgmt_exp_services_lbl">Exposed Services</string>
+    <string name="acl_mgmt_allow_exp_services_lbl">Expose all services</string>
+    <string name="acl_mgmt_allow_remoted_app_lbl">Allow all for this app</string>
+    <string name="acl_mgmt_allow_object_lbl">Allow object</string>
+    <string name="acl_mgmt_allow_sub_objects_lbl">Allow sub objects</string>
+    <string name="acl_mgmt_drawer_open">Open navigation drawer</string>
+    <string name="acl_mgmt_drawer_close">Close navigation drawer</string>
+    <string name="acl_mgmt_menu_delete">Delete</string>
+    <string name="acl_mgmt_menu_show_aclid">Show ACL Id</string>
+    <string name="acl_mgmt_create_btn_lbl">CREATE</string>    
+    <string name="acl_mgmt_update_btn_lbl">UPDATE</string>
+    
+    <string name="alert_pwd_title_label">Password Required</string>
+    <string name="alert_pwd_msg_label">Provide password of the selected Gateway Agent</string>
+    <string name="alert_pwd_pos_btn_label">SAVE</string>
+
+</resources>

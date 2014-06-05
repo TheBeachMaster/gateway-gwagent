@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+
+  /******************************************************************************
+  * Copyright (c) 2014, AllSeen Alliance. All rights reserved.
+  *
+  *    Permission to use, copy, modify, and/or distribute this software for any
+  *    purpose with or without fee is hereby granted, provided that the above
+  *    copyright notice and this permission notice appear in all copies.
+  *
+  *    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  *    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  *    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  *    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  *    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  *    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  ******************************************************************************/
+  
+-->
+
+    
+ <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/aclDescData"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="top"
+      android:layout_marginLeft="15dp"
+      android:layout_marginRight="5dp"
+      android:layout_marginTop="20dp">
+ 
+      <TableRow
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+          
+          <TextView
+              android:id="@+id/aclMgmtTpAppNameLbl"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="5dp"
+              android:text="@string/tp_appname_lbl"
+              android:textAppearance="?android:attr/textAppearanceMedium" />
+     
+          <TextView
+              android:id="@+id/aclMgmtTpAppNameTv"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="2dp"
+              android:layout_weight="1"
+              android:textAppearance="?android:attr/textAppearanceMedium" />
+          
+      </TableRow>
+      
+     <TableRow
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content">
+          
+          <TextView
+              android:id="@+id/aclMgmtAclNameLbl"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="5dp"
+              android:text="@string/acl_mgmt_acl_name_lbl"
+              android:textAppearance="?android:attr/textAppearanceMedium" />
+
+          <EditText
+              android:id="@+id/aclMgmtAclNameEt"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:inputType="text"
+              android:layout_marginLeft="2dp"
+              android:ems="10" >
+          </EditText>
+        
+      </TableRow>
+     
+ </TableLayout>

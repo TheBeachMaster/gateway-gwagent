@@ -1,0 +1,177 @@
+<!--
+
+  /******************************************************************************
+  * Copyright (c) 2014, AllSeen Alliance. All rights reserved.
+  *
+  *    Permission to use, copy, modify, and/or distribute this software for any
+  *    purpose with or without fee is hereby granted, provided that the above
+  *    copyright notice and this permission notice appear in all copies.
+  *
+  *    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+  *    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+  *    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+  *    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+  *    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+  *    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+  ******************************************************************************/
+
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ThirdPartyApplicationActivity" >
+    
+     <TableLayout
+        android:id="@+id/tpAppDescData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp">
+        
+       <TableRow
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content">
+            
+		    <TextView
+		        android:id="@+id/gwNameLbl"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginRight="5dp"
+		        android:text="@string/gw_name_lbl"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    
+		    <TextView
+		        android:id="@+id/gwNameTv"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_weight="1"
+		        android:layout_marginLeft="2dp"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    
+		</TableRow>
+
+        <TableRow
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content">
+       
+		    <TextView
+		        android:id="@+id/aclMgmtTpAppNameLbl"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/tp_appname_lbl"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		    
+		    <TextView
+		        android:id="@+id/aclMgmtTpAppNameTv"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="2dp"
+		        android:layout_weight="1"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+        </TableRow>
+		 
+        <TableRow
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content">
+		    
+		     <TextView
+		        android:id="@+id/tpAppVerLbl"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/tp_appver_lbl"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		
+		      <TextView
+		        android:id="@+id/tpAppVerTv"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="2dp"
+		        android:layout_weight="1"
+		        android:textAppearance="?android:attr/textAppearanceMedium" />
+		  </TableRow>
+      
+    </TableLayout>
+
+    <!-- STATUS  -->
+ 
+    <TextView
+      android:id="@+id/tpAppConnStatusLbl"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/tp_appstatus_connection_lbl" 
+      android:layout_below="@+id/tpAppDescData"
+      android:layout_alignLeft="@+id/tpAppDescData"
+      android:layout_marginTop="16dp"/>
+    
+    <TextView
+      android:id="@+id/tpAppConnStatus"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="2dp"
+      android:layout_toRightOf="@+id/tpAppConnStatusLbl"
+      android:layout_alignBaseline="@+id/tpAppConnStatusLbl"/>
+    
+    <TextView
+      android:id="@+id/tpAppOperStatusLbl"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="6dp"
+      android:layout_toRightOf="@+id/tpAppConnStatus"
+      android:layout_alignBaseline="@+id/tpAppConnStatusLbl"
+      android:text="@string/tp_appstatus_operation_lbl" />
+    
+    <TextView
+      android:id="@+id/tpAppOperStatus"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginLeft="2dp"
+      android:layout_toRightOf="@+id/tpAppOperStatusLbl"
+      android:layout_alignBaseline="@+id/tpAppConnStatusLbl" />
+    
+    <TextView
+      android:id="@+id/tpAppInstallStatusLbl"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/tpAppConnStatusLbl"
+      android:layout_alignLeft="@+id/tpAppDescData"
+      android:layout_marginTop="3dp"
+      android:text="@string/tp_appstatus_install_lbl" />
+    
+    <TextView
+      android:id="@+id/tpAppInstallStatus"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toRightOf="@+id/tpAppInstallStatusLbl"
+      android:layout_alignBaseline="@+id/tpAppInstallStatusLbl"
+      android:layout_marginLeft="2dp" />
+ 
+    <!-- END STATUS -->
+     
+    <ListView
+        android:id="@+id/tpAppAclsLv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tpAppInstallStatusLbl"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="2dp"> 
+    </ListView>
+
+    <TextView
+        android:id="@+id/tpAppAclsLvNoAcls"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:gravity="center"
+        android:text="@string/tp_acls_not_found"
+        android:textSize="17sp"
+        android:visibility="gone">
+    </TextView>
+
+</RelativeLayout>
