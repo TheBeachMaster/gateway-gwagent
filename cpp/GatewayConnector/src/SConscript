@@ -1,3 +1,4 @@
+#******************************************************************************
 # Copyright (c) 2013, AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
@@ -11,18 +12,22 @@
 #    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#*****************************************************************************
 
 Import('gateway_env')
- 
-if not gateway_env.has_key('_ALLJOYNCORE_'):
-    gateway_env.Append(LIBS = ['alljoyn'])
-    if gateway_env['OS'] == 'openwrt':
-        gateway_env.AppendUnique(LIBS = [ 'stdc++', 'pthread' ])
+gwcnc_env = gateway_env.Clone()
 
-gateway_dirs = [
-    'GatewayManagementApp',
-    'GatewayConnector'
-]
-# add     'GatewayController'
+srcs = gwcnc_env.Glob('*.cc')
 
-result = [ gateway_env.SConscript('%s/SConscript' % gatewaydir, exports = ['gateway_env']) for gatewaydir in gateway_dirs ]
+libs = []
+
+# Static library
+objs = gwcnc_env.Object(srcs)
+libs.append(gwcnc_env.StaticLibrary('alljoyn_gwConnector', objs))
+
+# Shared library
+if gwcnc_env.get('LIBTYPE', 'static') != 'static':
+    shobjs = gwcnc_env.SharedObject(srcs)
+    libs.append(gwcnc_env.SharedLibrary('alljoyn_gwConnector', shobjs))
+
+Return('libs')

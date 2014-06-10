@@ -1,0 +1,29 @@
+ 
+Import('gateway_env')
+
+gwcnc_env = gateway_env.Clone()
+gwcnc_env.Append(CPPPATH = gwcnc_env.Dir('$APP_COMMON_DIR/cpp/samples_common').srcnode())
+gwcnc_env.Prepend(LIBS = ['alljoyn_about', 'alljoyn_services_common', 'alljoyn_notification', 'alljoyn_config', 'alljoyn_gwConnector'])
+
+srcs = gwcnc_env.Glob('*.cc')
+objs = gwcnc_env.Object(srcs)
+ 
+gwcnc_env.VariantDir('AppCommon', '$APP_COMMON_DIR/cpp/samples_common/', duplicate = 0)
+cobjs = gwcnc_env.SConscript('AppCommon/SConscript', {'env': gwcnc_env})
+objs.extend(cobjs)
+
+prog = gwcnc_env.Program('GatewayConnectorSample', objs)
+ 
+# Prepare for building Tar
+gwcnc_env.Install('$GWCNC_DISTDIR/tar', gwcnc_env.Glob('Manifest.xml'))
+gwcnc_env.Install('$GWCNC_DISTDIR/tar/bin', prog)
+gwcnc_env.Install('$GWCNC_DISTDIR/tar/bin', gwcnc_env.Glob('postTweet.sh'))
+gwcnc_env.Install('$GWCNC_DISTDIR/tar/bin', gwcnc_env.Glob('directMessage.sh'))
+gwcnc_env.Install('$GWCNC_DISTDIR/tar/lib', gwcnc_env.Glob('$GWCNC_DISTDIR/lib/*'))
+gwcnc_env.Install('$GWCNC_DISTDIR/tar/lib', gwcnc_env.Glob('$DISTDIR/cpp/lib/*'))
+gwcnc_env.Install('$GWCNC_DISTDIR/tar/lib', gwcnc_env.Glob('$DISTDIR/about/lib/*'))
+gwcnc_env.Install('$GWCNC_DISTDIR/tar/lib', gwcnc_env.Glob('$DISTDIR/services_common/lib/*'))
+gwcnc_env.Install('$GWCNC_DISTDIR/tar/lib', gwcnc_env.Glob('$DISTDIR/notification/lib/*'))
+gwcnc_env.Install('$GWCNC_DISTDIR/tar/lib', gwcnc_env.Glob('$DISTDIR/config/lib/*'))
+ 
+Return('prog')
