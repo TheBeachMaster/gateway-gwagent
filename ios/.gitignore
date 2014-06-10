@@ -1,0 +1,5 @@
+*.developerprofile
+*.xcuserdata
+.DS_Store
+xcshareddata
+.xcworkspacedata

@@ -13,16 +13,15 @@
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 Import('gateway_env')
- 
-if not gateway_env.has_key('_ALLJOYNCORE_'):
-    gateway_env.Append(LIBS = ['alljoyn'])
-    if gateway_env['OS'] == 'openwrt':
-        gateway_env.AppendUnique(LIBS = [ 'stdc++', 'pthread' ])
 
-gateway_dirs = [
-    'GatewayManagementApp',
-    'GatewayConnector',
-    'GatewayController'
-]
+gateway_env['GWC_DISTDIR'] = gateway_env['DISTDIR'] + '/gatewayController'
 
-result = [ gateway_env.SConscript('%s/SConscript' % gatewaydir, exports = ['gateway_env']) for gatewaydir in gateway_dirs ]
+#gateway_env.Append(LIBPATH = '$GWC_DISTDIR/lib');
+gateway_env.Append(CPPPATH = '$GWC_DISTDIR/inc');
+
+gateway_env.Install('$GWC_DISTDIR/inc/alljoyn/gateway', gateway_env.Glob('inc/alljoyn/gateway/*.h'))
+gateway_env.Install('$GWC_DISTDIR/lib', gateway_env.SConscript('src/SConscript', exports = ['gateway_env']))
+
+# Build docs
+#installDocs = gateway_env.SConscript('docs/SConscript', exports = ['gateway_env'])
+#gateway_env.Depends(installDocs, gateway_env.Glob('$GWC_DISTDIR/inc/alljoyn/gateway/*.h'));
