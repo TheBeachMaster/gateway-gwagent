@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+
+    Copyright (c) 2014, AllSeen Alliance. All rights reserved.
+ 
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted, provided that the above
+    copyright notice and this permission notice appear in all copies.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gen="http://www.alljoyn.org/gateway/manifest" targetNamespace="http://www.alljoyn.org/gateway/manifest" elementFormDefault="qualified">
+  <!--
+================================================================================
+        NAME-STRING
+================================================================================
+-->
+<xs:simpleType name='NameString'>
+  <xs:restriction base='xs:string'>
+    <xs:minLength value='1'/>
+    <xs:maxLength value='50'/>
+    <xs:pattern value="[^ ]{0,50}"/>
+  </xs:restriction>
+</xs:simpleType>
+
+  <!--
+================================================================================
+        APPID-STRING
+================================================================================
+-->
+<xs:simpleType name='AppIdString'>
+  <xs:restriction base='xs:string'>
+    <xs:minLength value='1'/>
+    <xs:maxLength value='50'/>
+    <xs:pattern value="[a-z][a-z0-9]*"/>
+  </xs:restriction>
+</xs:simpleType>
+
+   <!--
+================================================================================
+        EXECUTION_INFO-TYPE
+================================================================================
+-->
+  <xs:complexType name="ExecutionInfoType">
+    <xs:sequence>
+    	<xs:element name="executable" type="gen:NameString" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="env_variables" minOccurs="1" maxOccurs="1">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="variable" minOccurs="0" maxOccurs="unbounded">
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="gen:NameString">
+									<xs:attribute name="name" type="gen:NameString"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+				</xs:sequence>
+			</xs:complexType>					
+		</xs:element>
+        <xs:element name="arguments" minOccurs="1" maxOccurs="1">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="arg" type="gen:NameString" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>					
+		</xs:element>		
+    </xs:sequence>
+  </xs:complexType>
+  
+   <!--
+================================================================================
+        PERMISSION-TYPE
+================================================================================
+-->
+  <xs:complexType name="PermissionType">
+    <xs:sequence>
+        <xs:element name="object" minOccurs="0" maxOccurs="unbounded">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="path" type="gen:NameString" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="isPrefix" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="interfaces" minOccurs="1" maxOccurs="1">
+					    <xs:complexType>
+						 	<xs:sequence>
+								<xs:element name="interface" minOccurs="0" maxOccurs="unbounded">
+									<xs:complexType>
+										<xs:simpleContent>
+											<xs:extension base="gen:NameString">
+												<xs:attribute name="name" type="xs:string" use="required"/>
+												<xs:attribute name="secured" type="xs:boolean" default="false"/>
+											</xs:extension>
+										</xs:simpleContent>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>					
+					</xs:element>
+				</xs:sequence>
+			    <xs:attribute name="name" type="xs:string" use="required"/>				
+			</xs:complexType>
+		</xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+   <!--
+================================================================================
+        MANIFEST-TYPE
+================================================================================
+-->
+  <xs:complexType name="ManifestType">
+    <xs:sequence>
+        <xs:element name="appId" type="gen:AppIdString" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="friendlyName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="packageName" type="gen:NameString" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="version" type="gen:NameString" minOccurs="1" maxOccurs="1"/>      	  
+        <xs:element name="minAjSdkVersion" type="gen:NameString" minOccurs="1" maxOccurs="1"/>      
+        <xs:element name="exposedServices" type="gen:PermissionType" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="remotedServices" type="gen:PermissionType" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="executionInfo" type="gen:ExecutionInfoType" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="custom" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+				<xs:sequence>
+				    <xs:any minOccurs="0"/>
+				</xs:sequence>
+			</xs:complexType>					
+		</xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="manifest" type="gen:ManifestType"/>
+</xs:schema>
