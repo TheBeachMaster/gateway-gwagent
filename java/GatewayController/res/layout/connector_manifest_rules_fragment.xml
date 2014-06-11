@@ -25,7 +25,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tpAppManifestRulesExpServicesLabel"
+        android:id="@+id/connectorAppManifestRulesExpServicesLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -35,7 +35,7 @@
         android:textStyle="bold" />
 
     <ListView
-        android:id="@+id/tpAppManifestRulesExpServicesRules"
+        android:id="@+id/connectorAppManifestRulesExpServicesRules"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginTop="5dp"
@@ -43,28 +43,28 @@
     </ListView>
     
     <TextView
-        android:id="@+id/tpAppManifestRulesExpServicesRulesNotFound"
+        android:id="@+id/connectorAppManifestRulesExpServicesRulesNotFound"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:gravity="center"
-        android:text="@string/tp_app_manifest_rules_exp_services_not_found"
+        android:text="@string/connector_app_manifest_rules_exp_services_not_found"
         android:textSize="17sp"
         android:visibility="gone"
         android:layout_weight="1">
     </TextView>
     
     <TextView
-        android:id="@+id/tpAppManifestRulesRemServicesLabel"
+        android:id="@+id/connectorAppManifestRulesRemServicesLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginLeft="5dp"                
-        android:text="@string/tp_app_manifest_rules_remoted_services"
+        android:text="@string/connector_app_manifest_rules_remoted_services"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold" />
 
     <ListView
-        android:id="@+id/tpAppManifestRulesRemServicesRules"
+        android:id="@+id/connectorAppManifestRulesRemServicesRules"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginTop="5dp"
@@ -73,11 +73,11 @@
     </ListView>
     
     <TextView
-        android:id="@+id/tpAppManifestRulesRemServicesRulesNotFound"
+        android:id="@+id/connectorAppManifestRulesRemServicesRulesNotFound"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:gravity="center"
-        android:text="@string/tp_app_manifest_rules_remoted_services_not_found"
+        android:text="@string/connector_app_manifest_rules_remoted_services_not_found"
         android:textSize="17sp"
         android:visibility="gone"
         android:layout_weight="1">

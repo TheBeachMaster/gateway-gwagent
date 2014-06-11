@@ -27,8 +27,8 @@ import java.util.Set;
 
 import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
 import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
 import org.alljoyn.gatewaycontroller.sdk.RemotedApp;
 
 import android.app.Activity;
@@ -158,7 +158,7 @@ public class VisualAclConfigurableItem implements VisualItem {
 		
 		for ( ManifestObjectDescription rule : rules ) {
 			
-			for ( TPInterface iface : rule.getInterfaces() ) {
+			for ( ConnAppInterface iface : rule.getInterfaces() ) {
 				
 				VisualInterface vIface             = new VisualInterface(iface);
 				Set<VisualObjectPath> visObjPaths  = resRules.get(vIface);
@@ -207,7 +207,7 @@ public class VisualAclConfigurableItem implements VisualItem {
 	 */
 	private List<ManifestObjectDescription> convertToManifObjDesc(Map<VisualInterface, List<VisualObjectPath>> visualRules) {
 		
-		Map<TPObjectPath, Set<TPInterface>> resRules = new HashMap<TPObjectPath, Set<TPInterface>>();
+		Map<ConnAppObjectPath, Set<ConnAppInterface>> resRules = new HashMap<ConnAppObjectPath, Set<ConnAppInterface>>();
 		
 		for (VisualInterface vIface : visualRules.keySet()) {
 			
@@ -215,17 +215,17 @@ public class VisualAclConfigurableItem implements VisualItem {
 
 			for (VisualObjectPath vop : vObjPaths) {
 				
-				TPObjectPath objPath = vop.getObjPath();
+				ConnAppObjectPath objPath = vop.getObjPath();
 				
 				//If allowAllChecked is TRUE, then all the rules are considered as configured.
 				//If vIface is configured all its object paths considered as configured.
 				//If the vIface is not configured VisualObjectPath is checked.
 				if ( allowAllSelected || vIface.isConfigured() || vop.isConfigured() ) {
 					
-					Set<TPInterface> ifaces = resRules.get(objPath);
+					Set<ConnAppInterface> ifaces = resRules.get(objPath);
 					if ( ifaces == null ) {
 						
-						ifaces = new HashSet<TPInterface>();
+						ifaces = new HashSet<ConnAppInterface>();
 						resRules.put(objPath, ifaces);
 					}
 					
@@ -235,7 +235,7 @@ public class VisualAclConfigurableItem implements VisualItem {
 		}//for :: VisualReverseObjDesc
 		
 		List<ManifestObjectDescription> resModList = new ArrayList<ManifestObjectDescription>(resRules.size());
-		for (TPObjectPath objPath : resRules.keySet() ) {
+		for (ConnAppObjectPath objPath : resRules.keySet() ) {
 			
 			resModList.add( new ManifestObjectDescription(objPath, resRules.get(objPath), true) );
 		}

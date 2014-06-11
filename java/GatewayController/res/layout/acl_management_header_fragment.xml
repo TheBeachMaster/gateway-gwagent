@@ -35,15 +35,15 @@
         android:layout_height="wrap_content">
           
           <TextView
-              android:id="@+id/aclMgmtTpAppNameLbl"
+              android:id="@+id/aclMgmtConnAppNameLbl"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginRight="5dp"
-              android:text="@string/tp_appname_lbl"
+              android:text="@string/connector_appname_lbl"
               android:textAppearance="?android:attr/textAppearanceMedium" />
      
           <TextView
-              android:id="@+id/aclMgmtTpAppNameTv"
+              android:id="@+id/aclMgmtConnAppNameTv"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginLeft="2dp"

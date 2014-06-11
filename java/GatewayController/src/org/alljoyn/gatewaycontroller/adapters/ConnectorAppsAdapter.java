@@ -20,12 +20,12 @@ import java.util.List;
 
 import org.alljoyn.gatewaycontroller.GWControllerSampleApplication;
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.activity.ThirdPartyApplicationActivity;
-import org.alljoyn.gatewaycontroller.sdk.TPApplication;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus.ConnectionStatus;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus.InstallStatus;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus.OperationalStatus;
+import org.alljoyn.gatewaycontroller.activity.ConnectorApplicationActivity;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.ConnectionStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.InstallStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.OperationalStatus;
 
 import android.content.Context;
 import android.content.Intent;
@@ -38,12 +38,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 /**
- * Manages the list of {@link VisualTPApplication}s
+ * Manages the list of {@link VisualConnectorApplication}s
  */
-public class ThirdPartyAppsAdapter extends VisualArrayAdapter {
-	private static final String TAG = "gwcapp" + ThirdPartyAppsAdapter.class.getSimpleName();
+public class ConnectorAppsAdapter extends VisualArrayAdapter {
+	private static final String TAG = "gwcapp" + ConnectorAppsAdapter.class.getSimpleName();
 	
-	static class TPAppView {
+	static class ConnectorAppView {
 		
 		Button appName;
 		TextView connStatus;
@@ -57,7 +57,7 @@ public class ThirdPartyAppsAdapter extends VisualArrayAdapter {
 	 * Constructor
 	 * @param context
 	 */
-	ThirdPartyAppsAdapter(Context context) {
+	ConnectorAppsAdapter(Context context) {
 		this(context, -1, null);
 	}
 	
@@ -67,7 +67,7 @@ public class ThirdPartyAppsAdapter extends VisualArrayAdapter {
 	 * @param viewItemResId
 	 * @param itemsList
 	 */
-	public ThirdPartyAppsAdapter(Context context, int viewItemResId, List<VisualItem> itemsList) {
+	public ConnectorAppsAdapter(Context context, int viewItemResId, List<VisualItem> itemsList) {
 		
 		super(context, viewItemResId, itemsList);
 	}
@@ -79,61 +79,61 @@ public class ThirdPartyAppsAdapter extends VisualArrayAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		View row  = convertView;
-		TPAppView tpAppView;
+		ConnectorAppView connAppView;
 		
 		if ( row == null ) {
 			
 			row = inflater.inflate(viewItemResId, parent, false);
 			
-			tpAppView               = new TPAppView();
-			tpAppView.appName       = (Button) row.findViewById(R.id.tpAppName);
-			tpAppView.connStatus    = (TextView) row.findViewById(R.id.tpAppConnStatus);
-			tpAppView.installStatus = (TextView) row.findViewById(R.id.tpAppInstallStatus);
-			tpAppView.operStatus    = (TextView) row.findViewById(R.id.tpAppOperStatus);
+			connAppView               = new ConnectorAppView();
+			connAppView.appName       = (Button) row.findViewById(R.id.connectorAppName);
+			connAppView.connStatus    = (TextView) row.findViewById(R.id.connectorAppConnStatus);
+			connAppView.installStatus = (TextView) row.findViewById(R.id.connectorAppInstallStatus);
+			connAppView.operStatus    = (TextView) row.findViewById(R.id.connectorAppOperStatus);
 			
-			row.setTag(tpAppView);
+			row.setTag(connAppView);
 		}
 		else {
-			tpAppView = (TPAppView) row.getTag();
+			connAppView = (ConnectorAppView) row.getTag();
 		}
 		
-		final VisualTPApplication visApp = (VisualTPApplication) getItem(position);
+		final VisualConnectorApplication visApp = (VisualConnectorApplication) getItem(position);
 		
-		tpAppView.appName.setText(visApp.getApp().getFriendlyName());
-		tpAppView.appName.setOnClickListener( new OnClickListener() {
+		connAppView.appName.setText(visApp.getApp().getFriendlyName());
+		connAppView.appName.setOnClickListener( new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				
-				TPApplication selectedApp = visApp.getApp();
-				Log.d(TAG, "Selected TPApplication, id: '" + selectedApp.getAppId() + "'");
+				ConnectorApplication selectedApp = visApp.getApp();
+				Log.d(TAG, "Selected Connector Application, id: '" + selectedApp.getAppId() + "'");
 				((GWControllerSampleApplication) context.getApplicationContext()).setSelectedApp(selectedApp);
 				
-				Intent intent = new Intent(context, ThirdPartyApplicationActivity.class);
+				Intent intent = new Intent(context, ConnectorApplicationActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(intent);
 			}
 		});
 		
-		TPApplicationStatus tpAppStatus = visApp.getAppStatus();
-		updateStatus(tpAppView.connStatus, tpAppView.operStatus, tpAppView.installStatus, tpAppStatus);
+		ConnectorApplicationStatus connAppStatus = visApp.getAppStatus();
+		updateStatus(connAppView.connStatus, connAppView.operStatus, connAppView.installStatus, connAppStatus);
 		
 		return row;
 	}
 	
 	/**
 	 * Updates received {@link TextView} of the statuses with the data received in the 
-	 * {@link TPApplicationStatus}
+	 * {@link ConnectorApplicationStatus}
 	 * @param connStatusTv
 	 * @param operStatusTv
 	 * @param installStatusTv
 	 * @param status
 	 */
 	public static void updateStatus(TextView connStatusTv, TextView operStatusTv, TextView installStatusTv,
-			                        TPApplicationStatus tpAppStatus){
+			                        ConnectorApplicationStatus connAppStatus){
 		
 		final String UNKNOWN_STATUS = "unknown";
 		
-		if ( tpAppStatus == null ) {
+		if ( connAppStatus == null ) {
 			
 			connStatusTv.setText(UNKNOWN_STATUS);
 			installStatusTv.setText(UNKNOWN_STATUS);
@@ -142,19 +142,19 @@ public class ThirdPartyAppsAdapter extends VisualArrayAdapter {
 			return;
 		}
 		
-		ConnectionStatus connStatus = tpAppStatus.getConnectionStatus();
-		int color = Color.parseColor( VisualTPApplication.getConnStatusColor(connStatus) );
+		ConnectionStatus connStatus = connAppStatus.getConnectionStatus();
+		int color = Color.parseColor( VisualConnectorApplication.getConnStatusColor(connStatus) );
 		connStatusTv.setText(connStatus.DESC);
 		connStatusTv.setTextColor(color);
 		
-		InstallStatus instStatus = tpAppStatus.getInstallStatus();
-		color = Color.parseColor( VisualTPApplication.getInstallStatusColor(instStatus) );
+		InstallStatus instStatus = connAppStatus.getInstallStatus();
+		color = Color.parseColor( VisualConnectorApplication.getInstallStatusColor(instStatus) );
 		installStatusTv.setText( instStatus.DESC );
 		installStatusTv.setTextColor(color);
 		
 		
-		OperationalStatus operStatus = tpAppStatus.getOperationalStatus();
-		color = Color.parseColor( VisualTPApplication.getOperationalStatusColor(operStatus) );
+		OperationalStatus operStatus = connAppStatus.getOperationalStatus();
+		color = Color.parseColor( VisualConnectorApplication.getOperationalStatusColor(operStatus) );
 		operStatusTv.setText(operStatus.DESC);
 		operStatusTv.setTextColor(color);
 	}

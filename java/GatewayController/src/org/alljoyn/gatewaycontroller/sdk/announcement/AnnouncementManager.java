@@ -77,7 +77,8 @@ public class AnnouncementManager implements AnnouncementHandler {
 		gatewayApps         = new HashMap<String, Gateway>();
 		announceTaskHandler = Executors.newSingleThreadExecutor(); 
 		
-		AboutServiceImpl.getInstance().addAnnouncementHandler(this);
+		//Gateway Controller needs to receive Announcement signals with all type of the interfaces
+		AboutServiceImpl.getInstance().addAnnouncementHandler(this, null);
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class AnnouncementManager implements AnnouncementHandler {
 	public void clear() {
 		
 		Log.d(TAG, "Clearing the object resources");
-		AboutServiceImpl.getInstance().removeAnnouncementHandler(this);
+		AboutServiceImpl.getInstance().removeAnnouncementHandler(this, null);
 		
 		if ( appAnnouncements != null ) {
 			appAnnouncements.clear();

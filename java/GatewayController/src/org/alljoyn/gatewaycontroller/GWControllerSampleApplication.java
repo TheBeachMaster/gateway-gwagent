@@ -18,7 +18,6 @@ package org.alljoyn.gatewaycontroller;
 
 import org.alljoyn.about.AboutServiceImpl;
 import org.alljoyn.bus.BusAttachment;
-import org.alljoyn.bus.PasswordManager;
 import org.alljoyn.bus.SessionOpts;
 import org.alljoyn.bus.Status;
 import org.alljoyn.bus.alljoyn.DaemonInit;
@@ -29,9 +28,9 @@ import org.alljoyn.gatewaycontroller.sdk.GatewayController;
 import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
 import org.alljoyn.gatewaycontroller.sdk.GatewayListChangedHandler;
 import org.alljoyn.gatewaycontroller.sdk.RemotedApp;
-import org.alljoyn.gatewaycontroller.sdk.TPApplication;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil.SessionResult;
-import org.alljoyn.gatewaycontroller.sdk.ajcommunication.ControllerSessionListener;
+import org.alljoyn.gatewaycontroller.sdk.ajcommunication.GatewayControllerSessionListener;
 
 import android.app.Application;
 import android.content.Intent;
@@ -51,10 +50,10 @@ public class GWControllerSampleApplication extends Application implements Gatewa
 	/**
 	 * Session events listener
 	 */
-	private class SessionListener extends ControllerSessionListener {
+	private class SessionListener extends GatewayControllerSessionListener {
 		
 		/**
-		 * @see org.alljoyn.gatewaycontroller.sdk.ajcommunication.ControllerSessionListener#sessionLost(int, int)
+		 * @see org.alljoyn.gatewaycontroller.sdk.ajcommunication.GatewayControllerSessionListener#sessionLost(int, int)
 		 */
 		@Override
 		public void sessionLost(int sessionId, int reason) {
@@ -64,7 +63,7 @@ public class GWControllerSampleApplication extends Application implements Gatewa
 		}
 
 		/**
-		 * @see org.alljoyn.gatewaycontroller.sdk.ajcommunication.ControllerSessionListener#sessionJoined(org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil.SessionResult)
+		 * @see org.alljoyn.gatewaycontroller.sdk.ajcommunication.GatewayControllerSessionListener#sessionJoined(org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil.SessionResult)
 		 */
 		@Override
 		public void sessionJoined(SessionResult result) {
@@ -101,13 +100,6 @@ public class GWControllerSampleApplication extends Application implements Gatewa
      * This is to reply directly to a TC looking for a daemon 
      */  
     private static final String DAEMON_QUIET_PREFIX         = "quiet@";
- 
-    /** 
-     * The daemon authentication method
-     */  
-    private static final String DAEMON_AUTH                 = "ALLJOYN_PIN_KEYX";
- 
-    private static final String DAEMON_PWD                  = "000000";
 
     /** 
      * The {@link BusAttachment} to be used by the {@link NotificationService}
@@ -137,7 +129,7 @@ public class GWControllerSampleApplication extends Application implements Gatewa
     /**
      * Currently selected application
      */
-    private volatile TPApplication selectedApp;
+    private volatile ConnectorApplication selectedApp;
     
     /**
      * Currently selected ACL
@@ -171,7 +163,6 @@ public class GWControllerSampleApplication extends Application implements Gatewa
 			//Register to receive events about changes in the gateway list
 			gwController.setGatewayListChangedHandler(this);
 			
-			bus.addMatch("sessionless='t',type='error'");
 		} catch (GatewayControllerException gce) {
 			Log.e(TAG, "Failed to connect a BusAttachment to the daemon, Error: '" + gce.getMessage() + "'");
 			showToast("Failed to connect to AllJoyn daemon");
@@ -248,17 +239,17 @@ public class GWControllerSampleApplication extends Application implements Gatewa
 	}
 	
 	/**
-	 * @return Currently selected {@link TPApplication}
+	 * @return Currently selected {@link ConnectorApplication}
 	 */
-	public TPApplication getSelectedApp() {
+	public ConnectorApplication getSelectedApp() {
 		return selectedApp;
 	}
 
 	/**
-	 * Set selected {@link TPApplication}
+	 * Set selected {@link ConnectorApplication}
 	 * @param selectedApp
 	 */
-	public void setSelectedApp(TPApplication selectedApp) {
+	public void setSelectedApp(ConnectorApplication selectedApp) {
 		this.selectedApp = selectedApp;
 	}
 
@@ -329,14 +320,6 @@ public class GWControllerSampleApplication extends Application implements Gatewa
         //bus.setLogLevels("ALLJOYN=7");
         //bus.setLogLevels("ALL=7");
         //bus.useOSLogging(true);
-
-        //setting the password for the daemon to allow thin clients to connect
-        Log.d(TAG, "Setting daemon password");
-        Status pasStatus = PasswordManager.setCredentials(DAEMON_AUTH, DAEMON_PWD);
-
-        if ( pasStatus != Status.OK ) {
-            Log.e(TAG, "Failed to set password for daemon, Error: " + pasStatus);
-        }
 
         Status conStatus = bus.connect();
         if ( conStatus != Status.OK ) {

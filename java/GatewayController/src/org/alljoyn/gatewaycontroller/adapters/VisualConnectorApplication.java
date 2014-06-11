@@ -19,16 +19,16 @@ package org.alljoyn.gatewaycontroller.adapters;
 import java.util.EnumMap;
 import java.util.Map;
 
-import org.alljoyn.gatewaycontroller.sdk.TPApplication;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus.ConnectionStatus;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus.InstallStatus;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus.OperationalStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.ConnectionStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.InstallStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.OperationalStatus;
 
 /**
- * {@link TPApplication} to be visualized by the {@link ThirdPartyAppsAdapter}
+ * {@link ConnectorApplication} to be visualized by the {@link ConnectorAppsAdapter}
  */
-public class VisualTPApplication implements VisualItem {
+public class VisualConnectorApplication implements VisualItem {
 
 	/**
 	 * {@link ConnectionStatus} color
@@ -69,21 +69,21 @@ public class VisualTPApplication implements VisualItem {
 	//=========================================//
 	
 	/**
-	 * {@link TPApplication}
+	 * {@link ConnectorApplication}
 	 */
-	private TPApplication app;
+	private ConnectorApplication app;
 
 	/**
-	 * {@link TPApplicationStatus}
+	 * {@link ConnectorApplicationStatus}
 	 */
-	private TPApplicationStatus appStatus;
+	private ConnectorApplicationStatus appStatus;
 	
 	/**
 	 * Constructor
 	 * @param app
 	 * @param appStatus
 	 */
-	public VisualTPApplication(TPApplication app, TPApplicationStatus appStatus) {
+	public VisualConnectorApplication(ConnectorApplication app, ConnectorApplicationStatus appStatus) {
 		
 		this.app        = app;
 		this.appStatus  = appStatus;
@@ -99,16 +99,16 @@ public class VisualTPApplication implements VisualItem {
 	}
 
 	/**
-	 * @return {@link TPApplicationStatus}
+	 * @return {@link ConnectorApplicationStatus}
 	 */
-	public TPApplicationStatus getAppStatus() {
+	public ConnectorApplicationStatus getAppStatus() {
 		return appStatus;
 	}
 
 	/**
-	 * @param appStatus {@link TPApplicationStatus}
+	 * @param appStatus {@link ConnectorApplicationStatus}
 	 */
-	public void setAppStatus(TPApplicationStatus appStatus) {
+	public void setAppStatus(ConnectorApplicationStatus appStatus) {
 		this.appStatus = appStatus;
 	}
 
@@ -131,14 +131,14 @@ public class VisualTPApplication implements VisualItem {
 	}
 	
 	/**
-	 * @return {@link TPApplication}
+	 * @return {@link ConnectorApplication}
 	 */
-	public TPApplication getApp() {
+	public ConnectorApplication getApp() {
 		return app;
 	}
 	
 	/**
-	 * Call clean on {@link TPApplication}
+	 * Call clean on {@link ConnectorApplication}
 	 */
 	public void clear() {
 		app.clear();

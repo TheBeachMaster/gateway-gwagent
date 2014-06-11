@@ -33,7 +33,7 @@ import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
 import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription;
 import org.alljoyn.gatewaycontroller.sdk.ManifestRules;
 import org.alljoyn.gatewaycontroller.sdk.RemotedApp;
-import org.alljoyn.gatewaycontroller.sdk.TPApplication;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -512,7 +512,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 	}//retrieveData
 	
 	/**
-	 * Retrieve ACL rules. If create ACL call {@link TPApplication#retrieveConfigurableRules(int)}
+	 * Retrieve ACL rules. If create ACL call {@link ConnectorApplication#retrieveConfigurableRules(int)}
 	 * if update ACL call 
 	 * {@link AccessControlList#retrieveAcl(int, org.alljoyn.gatewaycontroller.sdk.ManifestRules)}
 	 * @param sid
@@ -563,7 +563,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 	}
 
 	/**
-	 * Call {@link TPApplication#createAcl(int, String, AccessRules)}
+	 * Call {@link ConnectorApplication#createAcl(int, String, AccessRules)}
 	 */
 	private void createAcl(final String aclName, final AccessRules accessRules) {
 		
@@ -588,13 +588,13 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 			 @Override
 		     protected Void doInBackground(Void... params) {
 				 
-				 TPApplication selApp = app.getSelectedApp();
+				 ConnectorApplication selApp = app.getSelectedApp();
 				 try {
 					 
 					aclWriteResponse = selApp.createAcl(sid, aclName, accessRules);
 				} catch (GatewayControllerException gce) {
 					
-					Log.d(TAG, "Failed to create ACL TPApplication: '" + selApp.getObjectPath() + "'", gce);
+					Log.d(TAG, "Failed to create ACL ConnectorApplication: '" + selApp.getObjectPath() + "'", gce);
 					errMsg = "ACL creation failed";
 				}
 				 
@@ -700,8 +700,8 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 			 app.showToast(taskName + " succeeded");
 		 }
 
-		 //Go to the ThirdPartyApplicationActivity
-	     Intent intent = new Intent(this, ThirdPartyApplicationActivity.class);
+		 //Go to the ConnectorApplicationActivity
+	     Intent intent = new Intent(this, ConnectorApplicationActivity.class);
          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
          startActivity(intent);
 	}
@@ -822,7 +822,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 	}
 	
 	/**
-	 * Call {@link TPApplication#deleteAcl(int, String)}
+	 * Call {@link ConnectorApplication#deleteAcl(int, String)}
 	 */
 	private void deleteAcl() {
 		
@@ -872,7 +872,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
                 }
                 
                 app.showToast("The ACL has been deleted successfully");
-                Intent intent = new Intent(AclManagementActivity.this, ThirdPartyApplicationActivity.class);
+                Intent intent = new Intent(AclManagementActivity.this, ConnectorApplicationActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }

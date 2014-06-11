@@ -68,10 +68,10 @@ public class Gateway extends DiscoveredApp {
 	/**
 	 * Retrieve the list of applications installed on the gateway identified by the given gwBusName 
 	 * @param sessionId The id of the session established with the gateway
-	 * @return The {@link TPApplication}
+	 * @return The {@link ConnectorApplication}
 	 * @throws GatewayControllerException
 	 */
-	public List<TPApplication> retrieveInstalledApps(int sessionId) throws GatewayControllerException {
+	public List<ConnectorApplication> retrieveInstalledApps(int sessionId) throws GatewayControllerException {
 		
 		final String  gwBusName = getBusName();
 		BusAttachment bus       = GatewayController.getInstance().getBusAttachment();
@@ -97,10 +97,10 @@ public class Gateway extends DiscoveredApp {
 				      be.getMessage() + "'", be);
 		}
 		
-		List<TPApplication> installedApps = new ArrayList<TPApplication>(appInfoArr.length); 
+		List<ConnectorApplication> installedApps = new ArrayList<ConnectorApplication>(appInfoArr.length); 
 		for (InstalledAppInfoAJ appInfo : appInfoArr ) {
 			
-			installedApps.add( new TPApplication(gwBusName, appInfo) );
+			installedApps.add( new ConnectorApplication(gwBusName, appInfo) );
 		}
 		
 		return installedApps;

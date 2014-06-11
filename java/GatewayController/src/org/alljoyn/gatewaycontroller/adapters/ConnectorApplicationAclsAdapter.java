@@ -19,7 +19,7 @@ package org.alljoyn.gatewaycontroller.adapters;
 import java.util.List;
 
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.activity.ThirdPartyApplicationActivity;
+import org.alljoyn.gatewaycontroller.activity.ConnectorApplicationActivity;
 import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
 
 import android.content.Context;
@@ -34,8 +34,8 @@ import android.widget.TextView;
 /**
  * Manages the list of {@link VisualAcl}s
  */
-public class ThirdPartyApplicationAclsAdapter extends VisualArrayAdapter {
-	private static String TAG = "gwcapp" + ThirdPartyApplicationAclsAdapter.class.getSimpleName();
+public class ConnectorApplicationAclsAdapter extends VisualArrayAdapter {
+	private static String TAG = "gwcapp" + ConnectorApplicationAclsAdapter.class.getSimpleName();
 	
 	static class AclView {
 		
@@ -48,7 +48,7 @@ public class ThirdPartyApplicationAclsAdapter extends VisualArrayAdapter {
 	/**
 	 * Constructor
 	 */
-	ThirdPartyApplicationAclsAdapter(Context context) {
+	ConnectorApplicationAclsAdapter(Context context) {
 		
 		this(context, -1, null);
 	}
@@ -59,7 +59,7 @@ public class ThirdPartyApplicationAclsAdapter extends VisualArrayAdapter {
 	 * @param viewItemResId
 	 * @param itemsList
 	 */
-	public ThirdPartyApplicationAclsAdapter(Context context, int viewItemResId, List<VisualItem> itemsList) {
+	public ConnectorApplicationAclsAdapter(Context context, int viewItemResId, List<VisualItem> itemsList) {
 		
 		super(context, viewItemResId, itemsList);
 	}
@@ -78,8 +78,8 @@ public class ThirdPartyApplicationAclsAdapter extends VisualArrayAdapter {
         	row = inflater.inflate(viewItemResId, parent, false);
         	
         	aclView           = new AclView();
-        	aclView.aclName   = (TextView) row.findViewById(R.id.tpAclName);
-        	aclView.isActive  = (Switch) row.findViewById(R.id.tpAclActiveSwitch);
+        	aclView.aclName   = (TextView) row.findViewById(R.id.connectorAclName);
+        	aclView.isActive  = (Switch) row.findViewById(R.id.connectorAclActiveSwitch);
         	
         	row.setTag(aclView);
         }
@@ -104,7 +104,7 @@ public class ThirdPartyApplicationAclsAdapter extends VisualArrayAdapter {
 				}
 				
 				Log.d(TAG, "The state of the ACL name: '" + acl.getName() + "' changed to isActive: '" + isChecked + "'");
-				((ThirdPartyApplicationActivity)context).changeAclActiveStatus(visualAcl, buttonView, isChecked);
+				((ConnectorApplicationActivity)context).changeAclActiveStatus(visualAcl, buttonView, isChecked);
 			}
 		});
         

@@ -22,16 +22,16 @@ import java.util.List;
 
 import org.alljoyn.gatewaycontroller.CallbackMethod;
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.adapters.ThirdPartyApplicationAclsAdapter;
-import org.alljoyn.gatewaycontroller.adapters.ThirdPartyAppsAdapter;
+import org.alljoyn.gatewaycontroller.adapters.ConnectorApplicationAclsAdapter;
+import org.alljoyn.gatewaycontroller.adapters.ConnectorAppsAdapter;
 import org.alljoyn.gatewaycontroller.adapters.VisualAcl;
 import org.alljoyn.gatewaycontroller.adapters.VisualItem;
 import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
 import org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.RestartStatus;
 import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
-import org.alljoyn.gatewaycontroller.sdk.TPApplication;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus.RestartStatus;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,12 +48,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 /**
- * The activity presents {@link TPApplication}s and its {@link AccessControlList} objects 
+ * The activity presents {@link ConnectorApplication}s and its {@link AccessControlList} objects 
  */
-public class ThirdPartyApplicationActivity extends BaseActivity implements ApplicationStatusSignalHandler,
+public class ConnectorApplicationActivity extends BaseActivity implements ApplicationStatusSignalHandler,
                                                                            OnItemClickListener{
 	
-	private static final String TAG = "gwcapp" + ThirdPartyApplicationActivity.class.getSimpleName();
+	private static final String TAG = "gwcapp" + ConnectorApplicationActivity.class.getSimpleName();
 	
 	/**
 	 * Gateway name
@@ -93,7 +93,7 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 	/**
 	 * Adapter for the list of the ACLs
 	 */
-	private ThirdPartyApplicationAclsAdapter adapter;
+	private ConnectorApplicationAclsAdapter adapter;
 	
     /**
      * Asynchronous task to be executed
@@ -124,7 +124,7 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
     	
     	try {
     		
-    		Class<ThirdPartyApplicationActivity> activClass = ThirdPartyApplicationActivity.class;
+    		Class<ConnectorApplicationActivity> activClass = ConnectorApplicationActivity.class;
     		retrieveDataMethod          = activClass.getDeclaredMethod("retrieveData");
 			restartAppMethod            = activClass.getDeclaredMethod("restartApp");
 			changeAclActiveStatusMethod = activClass.getDeclaredMethod("changeAclActiveStatus",
@@ -144,7 +144,7 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_third_party_application);
+		setContentView(R.layout.activity_connector_application);
 		
 		if ( retrieveDataMethod == null || restartAppMethod == null || changeAclActiveStatusMethod == null ) {
 			
@@ -165,7 +165,7 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		
-		getMenuInflater().inflate(R.menu.third_party_application, menu);
+		getMenuInflater().inflate(R.menu.connector_application, menu);
 		return true;
 	}
 
@@ -196,22 +196,22 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 		gwNameTv      = (TextView) findViewById(R.id.gwNameTv);
 		gwNameTv.setText( app.getSelectedGateway().getAppName() );
         
-		appName       = (TextView) findViewById(R.id.aclMgmtTpAppNameTv);
+		appName       = (TextView) findViewById(R.id.aclMgmtConnAppNameTv);
 		appName.setText( app.getSelectedApp().getFriendlyName() );
 		
-		appVer        = (TextView) findViewById(R.id.tpAppVerTv);
+		appVer        = (TextView) findViewById(R.id.connectorAppVerTv);
 		appVer.setText( app.getSelectedApp().getAppVersion() );
 		
-		connStatus    = (TextView) findViewById(R.id.tpAppConnStatus);
-		operStatus    = (TextView) findViewById(R.id.tpAppOperStatus);
-		installStatus = (TextView) findViewById(R.id.tpAppInstallStatus);
+		connStatus    = (TextView) findViewById(R.id.connectorAppConnStatus);
+		operStatus    = (TextView) findViewById(R.id.connectorAppOperStatus);
+		installStatus = (TextView) findViewById(R.id.connectorAppInstallStatus);
 		
-		adapter       = new ThirdPartyApplicationAclsAdapter(this, R.layout.third_party_app_acl_item, 
-				                                             new ArrayList<VisualItem>());
+		adapter       = new ConnectorApplicationAclsAdapter(this, R.layout.connector_app_acl_item, 
+				                                            new ArrayList<VisualItem>());
 		
-		aclsListView  = (ListView) findViewById(R.id.tpAppAclsLv);
+		aclsListView  = (ListView) findViewById(R.id.connectorAppAclsLv);
 		aclsListView.setAdapter(adapter);
-		aclsListView.setEmptyView( findViewById(R.id.tpAppAclsLvNoAcls) );
+		aclsListView.setEmptyView( findViewById(R.id.connectorAppAclsLvNoAcls) );
 		aclsListView.setOnItemClickListener(this);
 		
 		retrieveData();
@@ -293,17 +293,17 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 	}
 
 	/**
-	 * Since the application is selected the {@link TPApplication} object listens to the 
+	 * Since the application is selected the {@link ConnectorApplication} object listens to the 
 	 * incoming status change events
-	 * @see org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler#onStatusChanged(java.lang.String, org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus)
+	 * @see org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler#onStatusChanged(java.lang.String, org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus)
 	 */
 	@Override
-	public void onStatusChanged(String appId, final TPApplicationStatus status) {
+	public void onStatusChanged(String appId, final ConnectorApplicationStatus status) {
 		
 		Log.d(TAG, "Received status changed signal for the app id: '" + appId + "', Status: '" + status + "'");
 		if ( !appId.equals(app.getSelectedApp().getAppId()) ) {
 			
-			Log.wtf(TAG, "Weird received status changed for a not selected TPApplication!");
+			Log.wtf(TAG, "Weird received status changed for a not selected Connector Application!");
 			return;
 		}
 		
@@ -311,7 +311,7 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 			@Override
 			public void run() {
 				
-				ThirdPartyAppsAdapter.updateStatus(connStatus, operStatus, installStatus, status);
+				ConnectorAppsAdapter.updateStatus(connStatus, operStatus, installStatus, status);
 			}
 		});
 	}
@@ -343,12 +343,12 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 				openAcl(AclManagementActivity.ACTIVE_TYPE_ACL_CREATE);
 				return true;
 			}
-			case R.id.menuTpAppRestartBtn: {
+			case R.id.menuConnectorAppRestartBtn: {
 				
 				restartApp();
 				return true;
 			}
-			case R.id.menuTpAppRefreshBtn: {
+			case R.id.menuConnectorAppRefreshBtn: {
 				
 				retrieveData();
 				return true;
@@ -432,14 +432,14 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 	}//changeAclActiveStatus
 	
 	/**
-	 * Retrieves {@link TPApplication} status and its {@link AccessControlList} objects
+	 * Retrieves {@link ConnectorApplication} status and its {@link AccessControlList} objects
 	 */
 	private void retrieveData() {
 		
 	    final Integer sid = getSession();
         if ( sid == null ) { 
                  
-             Log.d(TAG, "Can't retrieve TP application ACLs, no session with the GW is established, waiting for"
+             Log.d(TAG, "Can't retrieve Connector application ACLs, no session with the GW is established, waiting for"
                         + " the onSessionJoined event");
              
              invokeOnSessionReady = new CallbackMethod(retrieveDataMethod, new Object[]{});
@@ -454,7 +454,7 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
         
         asyncTask = new AsyncTask<Void, Void, Void> () {
 
-        	private TPApplicationStatus appStatus;
+        	private ConnectorApplicationStatus appStatus;
         	private String errMsg;
         	
 			@Override
@@ -474,7 +474,7 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 					showOkDialog("Error", errMsg, "Ok", null);
 				}
 				
-				ThirdPartyAppsAdapter.updateStatus(connStatus, operStatus, installStatus, appStatus);
+				ConnectorAppsAdapter.updateStatus(connStatus, operStatus, installStatus, appStatus);
 				
 				adapter.notifyDataSetChanged();
 
@@ -485,16 +485,16 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 	
 	/**
 	 *  The method is executed on the {@link AsyncTask} thread and retrieves
-	 *  the {@link TPApplicationStatus} of the selected {@link TPApplication}
-	 * @return {@link TPApplicationStatus}
+	 *  the {@link ConnectorApplicationStatus} of the selected {@link ConnectorApplication}
+	 * @return {@link ConnectorApplicationStatus}
 	 */
-	private TPApplicationStatus retrieveAppStatusAsyncTask(final int sid) {
+	private ConnectorApplicationStatus retrieveAppStatusAsyncTask(final int sid) {
 	
 		try {
 			
-			TPApplication tpApp        = app.getSelectedApp();
-			TPApplicationStatus status = tpApp.retrieveStatus(sid);
-			Log.d(TAG, "Retrieved application status for the selectedApp, objPath: '" + tpApp.getObjectPath() + "'" +
+			ConnectorApplication connApp        = app.getSelectedApp();
+			ConnectorApplicationStatus status = connApp.retrieveStatus(sid);
+			Log.d(TAG, "Retrieved application status for the selectedApp, objPath: '" + connApp.getObjectPath() + "'" +
 			           " status: '" + status + "'");
 			
 			return status;  
@@ -508,13 +508,13 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 	
 	/**
 	 *  The method is executed on the {@link AsyncTask} thread and retrieves
-	 *  the {@link AccessControlList} objects of the selected {@link TPApplication}
+	 *  the {@link AccessControlList} objects of the selected {@link ConnectorApplication}
 	 * @return Error message if failed
 	 */
 	private String retrieveAclsAsyncTask(int sid) {
 		
 		List<AccessControlList> aclList;
-		TPApplication selApp = app.getSelectedApp();
+		ConnectorApplication selApp = app.getSelectedApp();
 		
 		try {
 			
@@ -536,14 +536,14 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 	}
 	
 	/**
-	 * Restart the selected {@link TPApplication}
+	 * Restart the selected {@link ConnectorApplication}
 	 */
 	private void restartApp() {
 		
 	    final Integer sid = getSession();
         if ( sid == null ) { 
                  
-             Log.d(TAG, "Can't restart TP application, no session with the GW is established, waiting for"
+             Log.d(TAG, "Can't restart the Connector Application, no session with the GW is established, waiting for"
                         + " the onSessionJoined event");
              
              invokeOnSessionReady = new CallbackMethod(restartAppMethod, new Object[]{});
@@ -563,9 +563,11 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 				
 		        try {
 		        	
-		        	TPApplication tpApp = app.getSelectedApp();
-					restartStatus       = tpApp.restart(sid);
-					Log.d(TAG,  "The app: '" + tpApp.getObjectPath() + "' has been restarted, status: '" + restartStatus + "'");
+		        	ConnectorApplication connApp = app.getSelectedApp();
+					restartStatus                = connApp.restart(sid);
+					Log.d(TAG,  "The app: '" + connApp.getObjectPath() + "' has been restarted, status: '" + 
+					             restartStatus + "'");
+					
 				} catch (GatewayControllerException gce) {
 					this.gce = gce;
 				}
@@ -603,11 +605,11 @@ public class ThirdPartyApplicationActivity extends BaseActivity implements Appli
 	}
 	
 	/**
-	 * Show {@link TPApplication} manifest
+	 * Show {@link ConnectorApplication} manifest
 	 */
 	private void showManifest() {
 		
-		Intent intent = new Intent(this, ThirdPartyApplicationManifestActivity.class);
+		Intent intent = new Intent(this, ConnectorApplicationManifestActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 	}

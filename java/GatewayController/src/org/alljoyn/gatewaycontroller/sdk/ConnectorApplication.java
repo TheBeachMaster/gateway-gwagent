@@ -33,9 +33,9 @@ import org.alljoyn.bus.BusObject;
 import org.alljoyn.bus.ProxyBusObject;
 import org.alljoyn.bus.Status;
 import org.alljoyn.gatewaycontroller.sdk.AccessControlList.AclResponseCode;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPObjectPath;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus.RestartStatus;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.RestartStatus;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
 import org.alljoyn.gatewaycontroller.sdk.announcement.AnnouncementData;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.AclInfoAJ;
@@ -52,10 +52,10 @@ import org.alljoyn.services.common.BusObjectDescription;
 import android.util.Log;
 
 /**
- * The Third Party Application installed on the {@link Gateway}
+ * The Gateway Connector Application installed on the {@link Gateway}
  */
-public class TPApplication {
-	private static final String TAG = "gwc" + TPApplication.class.getSimpleName();
+public class ConnectorApplication {
+	private static final String TAG = "gwc" + ConnectorApplication.class.getSimpleName();
 	
 	/**
 	 * This class receives application related signals
@@ -78,10 +78,10 @@ public class TPApplication {
 			BusAttachment bus = GatewayController.getInstance().getBusAttachment();
 			bus.enableConcurrentCallbacks();
 			
-			TPApplicationStatus appStatus;
+			ConnectorApplicationStatus appStatus;
 			
 			try {
-				appStatus = new TPApplicationStatus(installStatus, installDescription, connectionStatus, operationalStatus);
+				appStatus = new ConnectorApplicationStatus(installStatus, installDescription, connectionStatus, operationalStatus);
 			} catch (GatewayControllerException gce) {
 				
 				Log.e(TAG, "Failed to read data of the application status changed signal, objPath: '" + objectPath + "'", gce);
@@ -89,7 +89,7 @@ public class TPApplication {
 			}
 			
 			//Lock to prevent race with the unsetStatusChangedHandler method
-			synchronized (TPApplication.this) {
+			synchronized (ConnectorApplication.this) {
 				
 				if ( appSignalHandler == null ) {
 					Log.w(TAG, "appSignalHandler is NULL can't deliver StatusChanged signal, objPath: '" +
@@ -203,10 +203,10 @@ public class TPApplication {
 	/**
 	 * Constructor
 	 * @param gwBusName The name of the gateway {@link BusAttachment} the application is installed on
-	 * @param appObjPath The object path to reach the third party application on the gateway
+	 * @param appObjPath The object path to reach the Gateway Connector Application on the gateway
 	 * @throws IllegalArgumentException is thrown if bad arguments have been received
 	 */
-	public TPApplication(String gwBusName, String appObjPath) {
+	public ConnectorApplication(String gwBusName, String appObjPath) {
 		
 		if ( gwBusName == null || gwBusName.length() == 0 ) {
 			throw new IllegalArgumentException("gwBusName is undefined");
@@ -227,7 +227,7 @@ public class TPApplication {
 	 * Constructor
 	 * @param appInfo
 	 */
-	TPApplication(String gwBusName, InstalledAppInfoAJ appInfo) {
+	ConnectorApplication(String gwBusName, InstalledAppInfoAJ appInfo) {
 		
 		this.gwBusName     = gwBusName;
 		objectPath         = appInfo.objectPath;
@@ -237,21 +237,21 @@ public class TPApplication {
 	}
 
 	/**
-	 * @return gwBusName the {@link TPApplication} is installed on
+	 * @return gwBusName the {@link ConnectorApplication} is installed on
 	 */
 	public String getGwBusName() {
 		return gwBusName;
 	}
 
 	/**
-	 * @return The id of the {@link TPApplication}
+	 * @return The id of the {@link ConnectorApplication}
 	 */
 	public String getAppId() {
 		return appId;
 	}
 
 	/**
-	 * @return The name of the {@link TPApplication}. 
+	 * @return The name of the {@link ConnectorApplication}. 
 	 */
 	public String getFriendlyName() {
 		return friendlyName;
@@ -279,7 +279,7 @@ public class TPApplication {
 		
 		if ( toStrVal == null ) {
 			
-			StringBuilder sb = new StringBuilder("TPApplication [");
+			StringBuilder sb = new StringBuilder("ConnectorApplication [");
 			sb.append("gwName='").append(gwBusName).append("', ")
 			  .append("appId='").append(appId).append("', ")
 			  .append("friendlyName='").append(friendlyName).append("', ")
@@ -371,10 +371,10 @@ public class TPApplication {
 	/**
 	 * Returns the state of the application 
 	 * @param sessionId The id of the session established with the gateway
-	 * @return {@link TPApplicationStatus}
+	 * @return {@link ConnectorApplicationStatus}
 	 * @throws GatewayControllerException If failed to retrieve the application status
 	 */
-	public TPApplicationStatus retrieveStatus(int sessionId) throws GatewayControllerException {
+	public ConnectorApplicationStatus retrieveStatus(int sessionId) throws GatewayControllerException {
 		
 		Application app = getApplicationProxy(sessionId);
 		
@@ -383,7 +383,7 @@ public class TPApplication {
 		try {
 			
 			ApplicationStatusAJ appStatusAJ = app.getApplicationStatus();
-			return new TPApplicationStatus(appStatusAJ);
+			return new ConnectorApplicationStatus(appStatusAJ);
 		}
 		catch (BusException be) {
 			
@@ -427,7 +427,7 @@ public class TPApplication {
 	 * Set an {@link ApplicationStatusSignalHandler} to receive application
 	 * related events. In order to receive the events, in addition to calling this method, 
 	 * a session should be successfully established with the gateway hosting the application.
-	 * Use {@link TPApplication#unsetStatusChangedHandler()} to stop receiving the events.
+	 * Use {@link ConnectorApplication#unsetStatusChangedHandler()} to stop receiving the events.
 	 * @param handler Signal handler
 	 * @throws GatewayControllerException If failed to register the signal handler
 	 * @throws IllegalArgumentException If the received handler is NULL
@@ -704,7 +704,7 @@ public class TPApplication {
 	 */
 	static RemotedApp extractRemotedApp(List<ManifestObjectDescription> remotedServices, AnnouncementData ann) {
 		
-		Map<TPObjectPath, Set<TPInterface>> remotedRules = new HashMap<TPObjectPath, Set<TPInterface>>();
+		Map<ConnAppObjectPath, Set<ConnAppInterface>> remotedRules = new HashMap<ConnAppObjectPath, Set<ConnAppInterface>>();
 		
 		for ( BusObjectDescription bod : ann.getObjDescArr() ) {
 			
@@ -712,8 +712,8 @@ public class TPApplication {
 			
 			for (ManifestObjectDescription moj : remotedServices ) {
 			
-				TPObjectPath manop      = moj.getObjectPath();
-				Set<TPInterface> manifs = moj.getInterfaces();
+				ConnAppObjectPath manop      = moj.getObjectPath();
+				Set<ConnAppInterface> manifs = moj.getInterfaces();
 				int manifsSize          = manifs.size();
 				
 				//Check object path suitability: if manifest objPath is a prefix of BusObjDesc objPath
@@ -721,7 +721,7 @@ public class TPApplication {
 				if ( ( manop.isPrefix() && bod.getPath().startsWith(manop.getPath()) ) ||
 					         manop.getPath().equals(bod.getPath()) ) {
 					
-					Set<TPInterface> resIfaces         = new HashSet<TPInterface>();
+					Set<ConnAppInterface> resIfaces         = new HashSet<ConnAppInterface>();
 					Iterator<String> ifacesToMatchIter = ifacesToMatch.iterator();
 					
 					//Search for the interfaces that comply with the manifest interfaces 
@@ -732,12 +732,12 @@ public class TPApplication {
 						//If there are not interfaces in the manifest, it means that all the interfaces are supported
 						//add them without display names
 						if ( manifsSize == 0 ) {
-							resIfaces.add( new TPInterface(iface, "") );
+							resIfaces.add( new ConnAppInterface(iface, "") );
 							ifacesToMatchIter.remove();
 							continue;
 						}
 						
-						for ( TPInterface manIface : manifs ) {
+						for ( ConnAppInterface manIface : manifs ) {
 						
 							if ( manIface.getName().equals(iface) ) {
 								
@@ -755,10 +755,10 @@ public class TPApplication {
 					
 					//We add the manifest rule, if the manifest OP is the prefix of the BOD.objPath
 					//or both object paths are equal
-					TPObjectPath storeOp           = new TPObjectPath(manop.getPath(), manop.getFriendlyName(), false,
+					ConnAppObjectPath storeOp           = new ConnAppObjectPath(manop.getPath(), manop.getFriendlyName(), false,
 							                                          manop.isPrefixAllowed());
 					
-					Set<TPInterface> remotedIfaces = remotedRules.get(storeOp);
+					Set<ConnAppInterface> remotedIfaces = remotedRules.get(storeOp);
 					if ( remotedIfaces == null ) {
 						remotedRules.put(storeOp,  resIfaces);
 					}
@@ -771,10 +771,10 @@ public class TPApplication {
 					if ( !manop.getPath().equals(bod.getPath()) ) {
 						
 						//bodOp starts with the manOp but itself it's not a prefix
-						TPObjectPath bodOp = new TPObjectPath(bod.getPath(), "", false, manop.isPrefixAllowed());
+						ConnAppObjectPath bodOp = new ConnAppObjectPath(bod.getPath(), "", false, manop.isPrefixAllowed());
 						remotedIfaces      = remotedRules.get(bodOp);
 						if ( remotedIfaces == null ) {
-							remotedRules.put(bodOp,  new HashSet<TPInterface> (resIfaces));
+							remotedRules.put(bodOp,  new HashSet<ConnAppInterface> (resIfaces));
 						}
 						else {
 							remotedIfaces.addAll(resIfaces);
@@ -802,7 +802,7 @@ public class TPApplication {
 		
 		//Create Remoted rules list
 		List<ManifestObjectDescription> rules = new ArrayList<ManifestObjectDescription>(rulesSize); 
-		for ( TPObjectPath op : remotedRules.keySet() ) {
+		for ( ConnAppObjectPath op : remotedRules.keySet() ) {
 			rules.add( new ManifestObjectDescription(op,  remotedRules.get(op)) );
 		}
 		

@@ -20,12 +20,12 @@ import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ApplicationStatusAJ;
 
 /**
- * The information about the state of the Third Party Application
+ * The information about the state of the Gateway Connector Application
  */
-public class TPApplicationStatus {
+public class ConnectorApplicationStatus {
 	
 	/**
-	 * Connection status of the Third Party Application to the cloud service
+	 * Connection status of the Gateway Connector Application to the cloud service
 	 */
 	public static enum ConnectionStatus {
 		
@@ -61,7 +61,7 @@ public class TPApplicationStatus {
 	//=============================================//
 	
 	/**
-	 * The installation status of the Third Party Application 
+	 * The installation status of the Gateway Connector Application 
 	 */
 	public static enum InstallStatus {
 		
@@ -98,7 +98,7 @@ public class TPApplicationStatus {
 	//=============================================//
 	
 	/**
-	 * The operational status of the Third Party Application
+	 * The operational status of the Gateway Connector Application
 	 */
 	public static enum OperationalStatus {
 		
@@ -132,7 +132,7 @@ public class TPApplicationStatus {
 	//=============================================//
 	
 	/**
-	 * The restart status of the Third Party Application
+	 * The restart status of the Gateway Connector Application
 	 */
 	public static enum RestartStatus {
 		
@@ -176,12 +176,12 @@ public class TPApplicationStatus {
 	private final String installDescription;
 	
 	/**
-	 * Connection status of the Third Party Application to its cloud service
+	 * Connection status of the Gateway Connector Application to its cloud service
 	 */
 	private final ConnectionStatus connectionStatus;
 	
 	/**
-	 * The state whether the Third Party Application is working
+	 * The state whether the Gateway Connector Application is working
 	 */
 	private final OperationalStatus operationalStatus;
 
@@ -189,7 +189,7 @@ public class TPApplicationStatus {
 	 * Constructor
 	 * @throws GatewayControllerException If failed to unmarshal the status
 	 */
-	TPApplicationStatus(ApplicationStatusAJ appStatusAJ) throws GatewayControllerException {
+	ConnectorApplicationStatus(ApplicationStatusAJ appStatusAJ) throws GatewayControllerException {
 		
 		this(appStatusAJ.installStatus, appStatusAJ.installDesc, appStatusAJ.connectionStatus, appStatusAJ.operationalStatus);
 	}
@@ -202,7 +202,7 @@ public class TPApplicationStatus {
 	 * @param operationalStatus
 	 * @throws GatewayControllerException
 	 */
-	TPApplicationStatus(short installStatus, String installDescription, short connectionStatus, short operationalStatus)
+	ConnectorApplicationStatus(short installStatus, String installDescription, short connectionStatus, short operationalStatus)
 	                   throws GatewayControllerException {
 		
 		this.installDescription  = installDescription; 
@@ -229,28 +229,28 @@ public class TPApplicationStatus {
 
 
 	/**
-	 * @return The installation status of the Third Party Application
+	 * @return The installation status of the Gateway Connector Application
 	 */
 	public InstallStatus getInstallStatus() {
 		return installStatus;
 	}
 
 	/**
-	 * @return The installation description of the Third Party Application
+	 * @return The installation description of the Gateway Connector Application
 	 */
 	public String getInstallDescriptions() {
 		return installDescription;
 	}
 
 	/**
-	 * @return Connection status of the Third Party Application to its cloud service
+	 * @return Connection status of the Gateway Connector Application to its cloud service
 	 */
 	public ConnectionStatus getConnectionStatus() {
 		return connectionStatus;
 	}
 
 	/**
-	 * @return The state whether the Third Party Application is running
+	 * @return The state whether the Gateway Connector Application is running
 	 */
 	public OperationalStatus getOperationalStatus() {
 		return operationalStatus;
@@ -263,7 +263,7 @@ public class TPApplicationStatus {
 	@Override
 	public String toString() {
 		
-		return "TPApplicationStatus [installStatus='" + installStatus + "', "
+		return "ConnectorApplicationStatus [installStatus='" + installStatus + "', "
 			    + "installDescription='" + installDescription + "', "
 				+ "connectionStatus='" + connectionStatus + "', "
 				+ "operationalStatus='" + operationalStatus + "']";

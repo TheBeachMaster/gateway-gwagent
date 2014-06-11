@@ -26,7 +26,7 @@ import org.alljoyn.gatewaycontroller.sdk.GatewayController;
 
 
 /**
- * AllJoyn interface for operating the Third Party Application 
+ * AllJoyn interface for operating the Gateway Connector Application 
  */
 @BusInterface(name=Application.IFNAME)
 @Secure
@@ -38,7 +38,7 @@ public interface Application {
 	public static final String IFNAME = GatewayController.IFACE_PREFIX + ".App";
 	
 	/**
-	 * The signal about the status change of the Third Party Application
+	 * The signal about the status change of the Gateway Connector Application
 	 */
 	public static final String APPLICATION_STATUS_CHANGED  = "AppStatusChanged";
 	

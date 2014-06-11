@@ -19,7 +19,7 @@ package org.alljoyn.gatewaycontroller.activity;
 import org.alljoyn.gatewaycontroller.GWControllerSampleApplication;
 import org.alljoyn.gatewaycontroller.R;
 import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
-import org.alljoyn.gatewaycontroller.sdk.TPApplication;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
 
 import android.app.Activity;
 import android.app.Application;
@@ -34,7 +34,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 /**
- * This fragment includes the {@link TPApplication} name and the 
+ * This fragment includes the {@link ConnectorApplication} name and the 
  * the name of the selected {@link AccessControlList}
  */
 public class AclManagementHeaderFragment extends Fragment implements TextWatcher {
@@ -64,7 +64,7 @@ public class AclManagementHeaderFragment extends Fragment implements TextWatcher
 	private AclNameListener listener;
 	
 	/**
-	 * The name of the selected {@link TPApplication}
+	 * The name of the selected {@link ConnectorApplication}
 	 */
 	private TextView appName;
 	
@@ -91,7 +91,7 @@ public class AclManagementHeaderFragment extends Fragment implements TextWatcher
 		
 		View frgView = inflater.inflate(R.layout.acl_management_header_fragment, container, false);
 		
-		appName      = (TextView) frgView.findViewById(R.id.aclMgmtTpAppNameTv);
+		appName      = (TextView) frgView.findViewById(R.id.aclMgmtConnAppNameTv);
 		aclName      = (EditText) frgView.findViewById(R.id.aclMgmtAclNameEt);
 		
 		appName.setText( app.getSelectedApp().getFriendlyName() );

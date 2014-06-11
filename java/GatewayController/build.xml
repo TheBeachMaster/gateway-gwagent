@@ -205,13 +205,10 @@
                 </fileset>
   
                 <doctitle><![CDATA[<h1> Gateway Controller SDK</h1>]]></doctitle>
-                <bottom><![CDATA[<small>AllJoyn Gateway Controller Java API Reference Manual Version 1.0.0 (Thu Mar 06  08:00:00 2014)<br/>Copyright &copy; 2014 AllSeen Alliance.<br/><b>THIS DOCUMENT AND ALL INFORMATION CONTAIN HER EIN ARE PROVIDED ON AN "AS-IS" BASIS WITHOUT WARRANTY OF ANY KIND</b>.<br/><b>MAY CONTAIN U.S. AND INTERNATIONAL EXPORT CONTROLLED INFORMATION</b><br/></small>]]></bottom>
+                <bottom><![CDATA[<small>Gateway Controller SDK Java API Reference Manual Version 1.0.0 (Thu Mar 06  08:00:00 2014)<br/>Copyright &copy; 2014 AllSeen Alliance.<br/><b>THIS DOCUMENT AND ALL INFORMATION CONTAIN HER EIN ARE PROVIDED ON AN "AS-IS" BASIS WITHOUT WARRANTY OF ANY KIND</b>.<br/><b>MAY CONTAIN U.S. AND INTERNATIONAL EXPORT CONTROLLED INFORMATION</b><br/></small>]]></bottom>
            </javadoc>
            
         </target>
         
          <!--  ========================================================   -->
-
-     
-
 </project>

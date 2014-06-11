@@ -25,7 +25,7 @@ import org.alljoyn.gatewaycontroller.adapters.VisualItem;
 import org.alljoyn.gatewaycontroller.adapters.VisualManifestItem;
 import org.alljoyn.gatewaycontroller.adapters.VisualManifestItem.ItemType;
 import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPInterface;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
 import org.alljoyn.gatewaycontroller.sdk.ManifestRules;
 
 import android.app.Fragment;
@@ -37,9 +37,9 @@ import android.widget.ListView;
 
 /**
  * The class presents the manifest interfaces {@link Fragment} 
- * of the {@link ThirdPartyApplicationManifestActivity} 
+ * of the {@link ConnectorApplicationManifestActivity} 
  */
-public class ThirdPartyApplicationManifestRulesFragment extends Fragment {
+public class ConnectorApplicationManifestRulesFragment extends Fragment {
 
 	/**
 	 * Exposed services to be presented
@@ -69,17 +69,17 @@ public class ThirdPartyApplicationManifestRulesFragment extends Fragment {
 	/**
 	 * Constructor
 	 */
-	public ThirdPartyApplicationManifestRulesFragment() {
+	public ConnectorApplicationManifestRulesFragment() {
 	}
 	
     /**
      * !!! IMPORTANT !!! Use this method to create the {@link Fragment} object of this class.
      * @param rules {@link ManifestRules} 
-     * @return {@link ThirdPartyApplicationManifestRulesFragment}
+     * @return {@link ConnectorApplicationManifestRulesFragment}
      */
-	public static ThirdPartyApplicationManifestRulesFragment createInstance(ManifestRules rules) {
+	public static ConnectorApplicationManifestRulesFragment createInstance(ManifestRules rules) {
 		
-		ThirdPartyApplicationManifestRulesFragment frg = new ThirdPartyApplicationManifestRulesFragment();
+		ConnectorApplicationManifestRulesFragment frg = new ConnectorApplicationManifestRulesFragment();
 		frg.rules = rules;
 		
 		return frg;
@@ -102,23 +102,23 @@ public class ThirdPartyApplicationManifestRulesFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		
-		View frgView = inflater.inflate(R.layout.third_party_manifest_rules_fragment, container, false);
+		View frgView = inflater.inflate(R.layout.connector_manifest_rules_fragment, container, false);
 		
-		exposedServicesListView = (ListView) frgView.findViewById(R.id.tpAppManifestRulesExpServicesRules);	
-		remotedServicesListView = (ListView) frgView.findViewById(R.id.tpAppManifestRulesRemServicesRules);
+		exposedServicesListView = (ListView) frgView.findViewById(R.id.connectorAppManifestRulesExpServicesRules);	
+		remotedServicesListView = (ListView) frgView.findViewById(R.id.connectorAppManifestRulesRemServicesRules);
 		
 		exposedServicesListView.setEmptyView(
-				                    frgView.findViewById(R.id.tpAppManifestRulesExpServicesRulesNotFound));
+				                    frgView.findViewById(R.id.connectorAppManifestRulesExpServicesRulesNotFound));
 		
 		remotedServicesListView.setEmptyView(
-				                    frgView.findViewById(R.id.tpAppManifestRulesRemServicesRulesNotFound));
+				                    frgView.findViewById(R.id.connectorAppManifestRulesRemServicesRulesNotFound));
 		
-		exposedServicesAdapter  = new ManifestRulesAdapter(getActivity(), R.layout.third_party_manifest_rules_objectpath_item,
+		exposedServicesAdapter  = new ManifestRulesAdapter(getActivity(), R.layout.connector_manifest_rules_objectpath_item,
 				                                                 new ArrayList<VisualItem>());
 		
 		exposedServicesListView.setAdapter(exposedServicesAdapter);
 		
-		remotedServicesAdapter  = new ManifestRulesAdapter(getActivity(), R.layout.third_party_manifest_rules_objectpath_item,
+		remotedServicesAdapter  = new ManifestRulesAdapter(getActivity(), R.layout.connector_manifest_rules_objectpath_item,
 				                                                 new ArrayList<VisualItem>());
 		
 		remotedServicesListView.setAdapter(remotedServicesAdapter);
@@ -153,7 +153,7 @@ public class ThirdPartyApplicationManifestRulesFragment extends Fragment {
 			
 			adapter.add( new VisualManifestItem(rule.getObjectPath(), ItemType.OBJECT_PATH) );
 			
-			for (TPInterface iface : rule.getInterfaces() ) {
+			for (ConnAppInterface iface : rule.getInterfaces() ) {
 				
 				adapter.add( new VisualManifestItem(iface, ItemType.INTERFACE) );
 			}

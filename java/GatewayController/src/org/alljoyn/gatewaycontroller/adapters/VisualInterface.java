@@ -17,17 +17,17 @@
 package org.alljoyn.gatewaycontroller.adapters;
 
 import org.alljoyn.gatewaycontroller.sdk.AccessRules;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPInterface;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
 
 /**
- * Visualization of the {@link TPInterface}
+ * Visualization of the {@link ConnAppInterface}
  */
 public final class VisualInterface {
 	
 	/**
-	 * Reference to the {@link TPInterface} object
+	 * Reference to the {@link ConnAppInterface} object
 	 */
-	private TPInterface iface;
+	private ConnAppInterface iface;
 	
 	/**
 	 * Gets TRUE if the interface is selected to be part of the {@link AccessRules}
@@ -39,7 +39,7 @@ public final class VisualInterface {
 	 * @param iface
 	 * @param isConfigured
 	 */
-	public VisualInterface(TPInterface iface) {
+	public VisualInterface(ConnAppInterface iface) {
 		
 		this.iface = iface;
 	}
@@ -59,9 +59,9 @@ public final class VisualInterface {
 	}
 
 	/**
-	 * @return Return the wrapped {@link TPInterface} object
+	 * @return Return the wrapped {@link ConnAppInterface} object
 	 */
-	public TPInterface getIface() {
+	public ConnAppInterface getIface() {
 		return iface;
 	}
 	

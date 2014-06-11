@@ -29,32 +29,32 @@
     <string name="discovered_gateways_activity">Discovered Gateways</string>
     <string name="discovered_gateways_nogateway_txt">NO GATEWAYS FOUND ON THE NETWORK</string>
     
-    <string name="title_activity_third_party_apps">Third Party Applications</string>
-    <string name="tp_apps_not_found">NO THIRD PARTY APPLICATIONS FOUND</string>
-    <string name="tp_apps_discover_apps_btn">Discover Apps</string>
-    <string name="tp_apps_refresh_btn">Refresh</string>
+    <string name="title_activity_gw_connector_apps">Gateway Connector Applications</string>
+    <string name="connector_apps_not_found">NO CONNECTOR APPLICATIONS FOUND</string>
+    <string name="connector_apps_discover_apps_btn">Discover Apps</string>
+    <string name="connector_apps_refresh_btn">Refresh</string>
 
-    <string name="title_activity_third_party_application">Third Party Application</string>
-    <string name="tp_appname_lbl">App. Name:</string>
-    <string name="tp_appver_lbl">Version:</string>
-    <string name="tp_appstatus_connection_lbl">Connectivity:</string>
-    <string name="tp_appstatus_operation_lbl">Operation:</string>
-    <string name="tp_appstatus_install_lbl">Installation:</string>
-    <string name="tp_app_restart_btn">Restart</string>
+    <string name="title_activity_gw_connector_application">Gateway Connector Application</string>
+    <string name="connector_appname_lbl">App. Name:</string>
+    <string name="connector_appver_lbl">Version:</string>
+    <string name="connector_appstatus_connection_lbl">Connectivity:</string>
+    <string name="connector_appstatus_operation_lbl">Operation:</string>
+    <string name="connector_appstatus_install_lbl">Installation:</string>
+    <string name="connector_app_restart_btn">Restart</string>
     
-    <string name="tp_acls_not_found">NO ACLs FOUND</string>
-    <string name="tp_acls_active_lbl">Active:</string>
-    <string name="tp_acls_active_lbl_y">Yes</string>
-    <string name="tp_acls_active_lbl_n">No</string>
-    <string name="tp_acls_create_acl_menu_lbl">Create ACL</string>
-    <string name="tp_acls_show_manifest_menu_lbl">Show Manifest</string>
+    <string name="connector_acls_not_found">NO ACLs FOUND</string>
+    <string name="connector_acls_active_lbl">Active:</string>
+    <string name="connector_acls_active_lbl_y">Yes</string>
+    <string name="connector_acls_active_lbl_n">No</string>
+    <string name="connector_acls_create_acl_menu_lbl">Create ACL</string>
+    <string name="connector_acls_show_manifest_menu_lbl">Show Manifest</string>
     
-    <string name="title_activity_tp_manifest">Manifest</string>
-    <string name="tp_app_manifest_rules">Manifest Rules</string>
-    <string name="tp_app_manifest_rules_exp_services_not_found">NO EXPOSED SERVICES FOUND</string>
-    <string name="tp_app_manifest_rules_remoted_services">Remoted Services</string> <!-- Exposed Services are taken from acl_mgmt_exp_services_lbl -->
-    <string name="tp_app_manifest_rules_remoted_services_not_found">NO REMOTED SERVICES FOUND</string>
-    <string name="tp_app_manifest_file">Manifest File</string>
+    <string name="title_activity_connector_manifest">Manifest</string>
+    <string name="connector_app_manifest_rules">Manifest Rules</string>
+    <string name="connector_app_manifest_rules_exp_services_not_found">NO EXPOSED SERVICES FOUND</string>
+    <string name="connector_app_manifest_rules_remoted_services">Remoted Services</string> <!-- Exposed Services are taken from acl_mgmt_exp_services_lbl -->
+    <string name="connector_app_manifest_rules_remoted_services_not_found">NO REMOTED SERVICES FOUND</string>
+    <string name="connector_app_manifest_file">Manifest File</string>
     
     <string name="title_activity_acl_management">Access Control List</string>
     <string name="acl_mgmt_acl_name_lbl">ACL Name:</string>

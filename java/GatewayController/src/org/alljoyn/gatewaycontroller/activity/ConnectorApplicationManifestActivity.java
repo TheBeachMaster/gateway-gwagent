@@ -22,7 +22,7 @@ import org.alljoyn.gatewaycontroller.CallbackMethod;
 import org.alljoyn.gatewaycontroller.R;
 import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
 import org.alljoyn.gatewaycontroller.sdk.ManifestRules;
-import org.alljoyn.gatewaycontroller.sdk.TPApplication;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -38,10 +38,10 @@ import android.util.Log;
 
 /**
  * The activity presents the {@link ManifestRules} and the manifest file 
- * of a {@link TPApplication}.
+ * of a {@link ConnectorApplication}.
  */
-public class ThirdPartyApplicationManifestActivity extends BaseActivity implements ActionBar.TabListener  {
-	public static final String TAG = "gwcapp" + ThirdPartyApplicationManifestActivity.class.getSimpleName();
+public class ConnectorApplicationManifestActivity extends BaseActivity implements ActionBar.TabListener  {
+	public static final String TAG = "gwcapp" + ConnectorApplicationManifestActivity.class.getSimpleName();
 	
 	/**
 	 * Loads the fragment of the selected tab
@@ -69,12 +69,12 @@ public class ThirdPartyApplicationManifestActivity extends BaseActivity implemen
 				
 				case RULES_TAB_INDEX: {
 					
-					frg = ThirdPartyApplicationManifestRulesFragment.createInstance(manifestRules);
+					frg = ConnectorApplicationManifestRulesFragment.createInstance(manifestRules);
 					break;
 				}
 				case FILE_TAB_INDEX: {
 					
-					frg = ThirdPartyApplicationManifestFileFragment.createInstance(manifestFile);
+					frg = ConnectorApplicationManifestFileFragment.createInstance(manifestFile);
 					break;
 				}
 			}
@@ -103,8 +103,8 @@ public class ThirdPartyApplicationManifestActivity extends BaseActivity implemen
 	
 	//=========================================================//
 	
-	private static int[] manifestTabs            = new int[] {R.string.tp_app_manifest_rules,
-	     	                                                  R.string.tp_app_manifest_file};
+	private static int[] manifestTabs            = new int[] {R.string.connector_app_manifest_rules,
+	     	                                                  R.string.connector_app_manifest_file};
 	
 	private static final int RULES_TAB_INDEX     = 0;
 	private static final int FILE_TAB_INDEX      = 1;
@@ -148,7 +148,7 @@ public class ThirdPartyApplicationManifestActivity extends BaseActivity implemen
     	
         try {
         	
-            Class<ThirdPartyApplicationManifestActivity> activClass = ThirdPartyApplicationManifestActivity.class;
+            Class<ConnectorApplicationManifestActivity> activClass = ConnectorApplicationManifestActivity.class;
             retrieveDataMethod = activClass.getDeclaredMethod("retrieveData");
         } catch (NoSuchMethodException nsme) {
             Log.wtf(TAG, "NoSuchMethodException", nsme);
@@ -163,7 +163,7 @@ public class ThirdPartyApplicationManifestActivity extends BaseActivity implemen
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_third_party_application_manifest);
+		setContentView(R.layout.activity_connector_application_manifest);
 		
         if ( retrieveDataMethod == null ) {
         	
@@ -186,7 +186,7 @@ public class ThirdPartyApplicationManifestActivity extends BaseActivity implemen
              return;
         }
         
-        setTitle( getString(R.string.title_activity_tp_manifest) + ": " + app.getSelectedApp().getFriendlyName());
+        setTitle( getString(R.string.title_activity_connector_manifest) + ": " + app.getSelectedApp().getFriendlyName());
         
         retrieveData();
 	}
@@ -270,7 +270,7 @@ public class ThirdPartyApplicationManifestActivity extends BaseActivity implemen
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		
 		pageAdapter = new SelectedPageAdapter(getFragmentManager());
-		viewPager   = (ViewPager) findViewById(R.id.tpAppManifestPager);
+		viewPager   = (ViewPager) findViewById(R.id.connectorAppManifestPager);
 		viewPager.setAdapter(pageAdapter);
 		
 		viewPager.setOnPageChangeListener( new ViewPager.SimpleOnPageChangeListener() {
@@ -291,14 +291,14 @@ public class ThirdPartyApplicationManifestActivity extends BaseActivity implemen
     
     /**
      * Retrieves the {@link ManifestRules} and the manifest file of the selected
-     * {@link TPApplication}
+     * {@link ConnectorApplication}
      */
     private void retrieveData() {
     	
         final Integer sid = getSession();
         if ( sid == null ) {
 
-             Log.d(TAG, "Can't retrieve TP application manifest, no session with the GW is established, waiting for"
+             Log.d(TAG, "Can't retrieve Connector Application manifest, no session with the GW is established, waiting for"
                         + " the onSessionJoined event");
 
              invokeOnSessionReady = new CallbackMethod(retrieveDataMethod, new Object[]{});
@@ -318,7 +318,7 @@ public class ThirdPartyApplicationManifestActivity extends BaseActivity implemen
 
 				try {
 					
-					TPApplication selApp = app.getSelectedApp(); 
+					ConnectorApplication selApp = app.getSelectedApp(); 
 					manifestFile         = selApp.retrieveManifestFile(sid);
 					manifestRules        = selApp.retrieveManifestRules(sid);
 				} catch (GatewayControllerException gce) {

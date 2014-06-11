@@ -30,8 +30,8 @@ import android.util.Log;
  *  The events are called on the AllJoyn thread, so avoid blocking them with 
  *  long running tasks.
  */
-public class ControllerSessionListener extends SessionListener {
-	private static final String TAG = "gwc" +  ControllerSessionListener.class.getSimpleName();
+public class GatewayControllerSessionListener extends SessionListener {
+	private static final String TAG = "gwc" +  GatewayControllerSessionListener.class.getSimpleName();
 	
 	/**
 	 * Receives sessionLost event. 

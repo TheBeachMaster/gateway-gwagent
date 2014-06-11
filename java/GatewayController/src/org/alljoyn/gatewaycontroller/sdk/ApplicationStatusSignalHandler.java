@@ -19,15 +19,15 @@ package org.alljoyn.gatewaycontroller.sdk;
 
 
 /**
- * Implement this interface to be notified about changes in the Third Party Application status
+ * Implement this interface to be notified about changes in the status of the Gateway Connector Application
  */
 public interface ApplicationStatusSignalHandler {
 	
 	/**
-	 * The event is emitted when the status of the Third Party Application
+	 * The event is emitted when the status of the Gateway Connector Application
 	 * changes. Avoid blocking the thread on which the method is called.
 	 * @param appId The application id
-	 * @param status {@link TPApplicationStatus}
+	 * @param status {@link ConnectorApplicationStatus}
 	 */
-	public void onStatusChanged(String appId, TPApplicationStatus status);
+	public void onStatusChanged(String appId, ConnectorApplicationStatus status);
 }

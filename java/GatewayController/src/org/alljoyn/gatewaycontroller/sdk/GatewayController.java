@@ -22,7 +22,7 @@ import org.alljoyn.about.AboutServiceImpl;
 import org.alljoyn.bus.BusAttachment;
 import org.alljoyn.bus.Status;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
-import org.alljoyn.gatewaycontroller.sdk.ajcommunication.ControllerSessionListener;
+import org.alljoyn.gatewaycontroller.sdk.ajcommunication.GatewayControllerSessionListener;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil.SessionResult;
 import org.alljoyn.gatewaycontroller.sdk.announcement.AnnouncementManager;
 
@@ -120,7 +120,7 @@ public class GatewayController {
 
 	/**
 	 * Join session synchronously with the given gateway identified by the gwBusName.
-	 * This method doesn't require {@link ControllerSessionListener}. Use this method
+	 * This method doesn't require {@link GatewayControllerSessionListener}. Use this method
 	 * when there is no need to receive any session related event.
 	 * @param gwBusName The bus name of the gateway to connect to.
 	 * @return {@link SessionResult}
@@ -133,7 +133,7 @@ public class GatewayController {
 		}
 		
 		Log.d(TAG, "Join session synchronously with the Gateway: '" + gwBusName +"'");
-		return joinSession(gwBusName, new ControllerSessionListener());
+		return joinSession(gwBusName, new GatewayControllerSessionListener());
 	}
 	
 	/**
@@ -144,7 +144,7 @@ public class GatewayController {
 	 * @return {@link SessionResult}
 	 * @throws IllegalArgumentException is thrown if bad arguments have been received
 	 */
-	public SessionResult joinSession(String gwBusName, ControllerSessionListener listener) {
+	public SessionResult joinSession(String gwBusName, GatewayControllerSessionListener listener) {
 		
 		checkSessionValidity(gwBusName, listener);
 		return CommunicationUtil.joinSession(bus, gwBusName, listener);
@@ -156,7 +156,7 @@ public class GatewayController {
 	 * @param listener The listener is used to be notified about the session related events
 	 * @throws IllegalArgumentException is thrown if bad arguments have been received
 	 */
-	public void joinSessionAsync(String gwBusName, ControllerSessionListener listener) {
+	public void joinSessionAsync(String gwBusName, GatewayControllerSessionListener listener) {
 		
 		checkSessionValidity(gwBusName, listener);
 		
@@ -236,7 +236,7 @@ public class GatewayController {
 	 * @param listener Session events listener
 	 * @throws IllegalArgumentException If bad arguments have been received
 	 */
-	private void checkSessionValidity(String gwBusName, ControllerSessionListener listener) {
+	private void checkSessionValidity(String gwBusName, GatewayControllerSessionListener listener) {
 		
 		if ( gwBusName == null || gwBusName.length() == 0 ) {
 			throw new IllegalArgumentException("The given gwBusName is undefined");

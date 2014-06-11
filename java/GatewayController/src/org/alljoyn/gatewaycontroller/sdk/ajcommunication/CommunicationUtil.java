@@ -97,12 +97,12 @@ public class CommunicationUtil {
 			
 			GatewayController.getInstance().getBusAttachment().enableConcurrentCallbacks();
 			
-			if ( !(context instanceof ControllerSessionListener) ) {
+			if ( !(context instanceof GatewayControllerSessionListener) ) {
 				Log.wtf(TAG, "Received OnJoinSession with a wrong Context object");
 				return;
 			}
 			
-			ControllerSessionListener listener = (ControllerSessionListener) context;
+			GatewayControllerSessionListener listener = (GatewayControllerSessionListener) context;
 			SessionResult result               = new SessionResult(status, sessionId);
 			listener.sessionJoined(result);
 		}
@@ -121,7 +121,7 @@ public class CommunicationUtil {
 	 * @param listener
 	 * @return {@link SessionResult}
 	 */
-	public static SessionResult joinSession(BusAttachment bus, String busName, ControllerSessionListener listener) {
+	public static SessionResult joinSession(BusAttachment bus, String busName, GatewayControllerSessionListener listener) {
 		
 		Mutable.IntegerValue sid = new IntegerValue();
 		Status status = bus.joinSession(busName, GatewayController.PORT_NUM, sid, getSessionOpts(), listener);
@@ -137,7 +137,7 @@ public class CommunicationUtil {
 	 * @param busName Connect to this bus name
 	 * @param listener
 	 */
-	public static void joinSessionAsync(BusAttachment bus, String busName, ControllerSessionListener listener) {
+	public static void joinSessionAsync(BusAttachment bus, String busName, GatewayControllerSessionListener listener) {
 		
 	    Status  status = bus.joinSession(busName, 
 								         GatewayController.PORT_NUM,
