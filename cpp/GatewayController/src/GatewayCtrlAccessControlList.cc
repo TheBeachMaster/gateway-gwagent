@@ -888,15 +888,15 @@ bool GatewayCtrlAccessControlList::IsValidRule(GatewayCtrlManifestObjectDescript
     return validRuleFound;
 }
 
-    bool _stringStartWith(const qcc::String& prefix, const qcc::String& inString)
-    { //TODO: I copied this from somewhere, there hsould only be one function
-        bool ret = (inString.compare(0, prefix.size(), prefix) == 0);
-        return ret;
-    }
-    
+bool _stringStartWith(const qcc::String& prefix, const qcc::String& inString)
+{     //TODO: I copied this from somewhere, there hsould only be one function
+    bool ret = (inString.compare(0, prefix.size(), prefix) == 0);
+    return ret;
+}
+
 bool GatewayCtrlAccessControlList::isValidObjPath(const GatewayCtrlTPObjectPath*manifOp, qcc::String toValidOP, bool isPrefix)
 {
-    if ((manifOp->IsPrefix() && _stringStartWith(manifOp->GetPath(),toValidOP)) ||
+    if ((manifOp->IsPrefix() && _stringStartWith(manifOp->GetPath(), toValidOP)) ||
         (!manifOp->IsPrefix() && !isPrefix && (manifOp->GetPath() == toValidOP))) {
 
         return true;

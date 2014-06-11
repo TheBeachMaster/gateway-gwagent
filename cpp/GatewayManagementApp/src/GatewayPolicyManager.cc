@@ -374,7 +374,7 @@ int GatewayPolicyManager::writeDefaultUserPolicies(xmlTextWriterPtr writer, qcc:
     if (rc < 0) {
         return rc;
     }
-    //allow communication with gwConfigManager
+    //allow communication with gwManagementApp
     rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
     if (rc < 0) {
         return rc;

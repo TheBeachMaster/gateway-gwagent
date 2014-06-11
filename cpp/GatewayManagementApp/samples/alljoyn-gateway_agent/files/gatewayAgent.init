@@ -1,3 +1,5 @@
+#!/bin/sh /etc/rc.common
+
 # Copyright (c) 2014, AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
@@ -11,20 +13,21 @@
 #    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
 
-Import('gateway_env')
+START=75
+SERVICE_DAEMONIZE=1
+SERVICE_WRITE_PID=1
+SERVICE_SIG_STOP="INT"
 
-gateway_env['GWMA_DISTDIR'] = gateway_env['DISTDIR'] + '/gatewayManagementApp'
+boot() {
+	start
+}
 
-gateway_env.Append(LIBPATH = '$GWMA_DISTDIR/lib');
-gateway_env.Append(CPPPATH = '$GWMA_DISTDIR/inc');
+start() {
+	service_start /opt/alljoyn/gw-management/GatewayManagementApp 
+}
 
-gateway_env.Install('$GWMA_DISTDIR/inc/alljoyn/gateway', gateway_env.Glob('inc/alljoyn/gateway/*.h'))
-gateway_env.Install('$GWMA_DISTDIR/bin', gateway_env.SConscript('src/SConscript', exports = ['gateway_env']))
-gateway_env.Install('$GWMA_DISTDIR/bin', File('manifest.xsd'))
-gateway_env.Install('$GWMA_DISTDIR/bin', File('installPackage.sh'))
-gateway_env.Install('$GWMA_DISTDIR/bin', File('defaultConfig.xml'))
-
-# Build docs
-installDocs = gateway_env.SConscript('docs/SConscript', exports = ['gateway_env'])
-gateway_env.Depends(installDocs, gateway_env.Glob('$GWMA_DISTDIR/inc/alljoyn/gateway/*.h'));
+stop() {
+	service_stop /opt/alljoyn/gw-management/GatewayManagementApp
+}
