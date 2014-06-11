@@ -37,7 +37,7 @@ bool SrpKeyXListener::RequestCredentials(const char* authMechanism, const char* 
                                          uint16_t authCount, const char* userId, uint16_t credMask, Credentials& creds)
 {
     QCC_DbgPrintf(("RequestCredentials for authenticating %s using mechanism %s", authPeer, authMechanism));
-    if (strcmp(authMechanism, "ALLJOYN_SRP_KEYX") == 0 || strcmp(authMechanism, "ALLJOYN_PIN_KEYX") == 0) {
+    if (strcmp(authMechanism, "ALLJOYN_SRP_KEYX") == 0 || strcmp(authMechanism, "ALLJOYN_PIN_KEYX") == 0 || strcmp(authMechanism, "ALLJOYN_ECDHE_PSK") == 0) {
         if (credMask & AuthListener::CRED_PASSWORD) {
             if (authCount <= 3) {
                 QCC_DbgPrintf(("RequestCredentials setPasscode to %s", m_PassCode.c_str()));

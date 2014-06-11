@@ -226,7 +226,7 @@ start:
 
     keyListener = new SrpKeyXListener();
     keyListener->setPassCode("000000");
-    status = bus->EnablePeerSecurity("ALLJOYN_PIN_KEYX ALLJOYN_SRP_KEYX", keyListener);
+    status = bus->EnablePeerSecurity("ALLJOYN_PIN_KEYX ALLJOYN_SRP_KEYX ALLJOYN_ECDHE_PSK", keyListener);
     if (status != ER_OK) {
         QCC_LogError(status, ("Could not enable PeerSecurity"));
         cleanup();
