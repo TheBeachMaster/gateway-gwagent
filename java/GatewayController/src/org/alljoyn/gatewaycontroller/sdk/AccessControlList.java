@@ -30,8 +30,8 @@ import java.util.UUID;
 import org.alljoyn.bus.BusAttachment;
 import org.alljoyn.bus.BusException;
 import org.alljoyn.bus.ProxyBusObject;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
 import org.alljoyn.gatewaycontroller.sdk.announcement.AnnouncementData;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.AccessControlListAJ;
@@ -45,7 +45,7 @@ import android.util.Log;
 
 
 /**
- * The object contains access control configuration rules for a Third Party Application.
+ * The object contains access control configuration rules for a Gateway Connector Application.
  */
 public class AccessControlList {
 	private static final String TAG = "gwc" + AccessControlList.class.getSimpleName();
@@ -144,7 +144,7 @@ public class AccessControlList {
 	private final String objectPath;
 
 	/**
-	 * The name of the gateway {@link BusAttachment} a Third Party Application which is related to this ACL
+	 * The name of the gateway {@link BusAttachment} a Gateway Connector Application which is related to this ACL
 	 * is installed on
 	 */
 	private final String gwBusName;
@@ -167,7 +167,7 @@ public class AccessControlList {
 	
 	/**
 	 * Constructor
-	 * @param gwBusName The name of the gateway {@link BusAttachment} hosting a Third Party Application 
+	 * @param gwBusName The name of the gateway {@link BusAttachment} hosting a Gateway Connector Application 
 	 * that is related to this ACL
 	 * @param id Id of the Access Control List
 	 * @param objectPath The object path of the Access Control List
@@ -194,7 +194,7 @@ public class AccessControlList {
 	
 	/**
 	 * Constructor
-	 * @param gwBusName The name of the gateway {@link BusAttachment} hosting a Third Party Application 
+	 * @param gwBusName The name of the gateway {@link BusAttachment} hosting a Gateway Connector Application 
 	 * that is related to this ACL 
 	 * @param aclInfoAJ The ACL information
 	 * @throws GatewayControllerException if failed to initialize the object
@@ -255,7 +255,7 @@ public class AccessControlList {
 	}
 
 	/**
-	 * @return The name of the gateway {@link BusAttachment} hosting a Third Party Application 
+	 * @return The name of the gateway {@link BusAttachment} hosting a Gateway Connector Application 
 	 * that is related to this Access Control List 
 	 */
 	public String getGwBusName() {
@@ -366,7 +366,7 @@ public class AccessControlList {
 	 * @param sessionId The id of the session established with the gateway
 	 * @param accessRules The ACL access rules
 	 * @param manifestRules {@link ManifestRules} for validation of the received accessRules.
-	 * The {@link ManifestRules} to be retrieved by the call to{@link TPApplication#retrieveManifestRules(int)}
+	 * The {@link ManifestRules} to be retrieved by the call to{@link ConnectorApplication#retrieveManifestRules(int)}
 	 * @return {@link AclWriteResponse}
 	 * @throws GatewayControllerException if failed to send request to update the ACL
 	 * @throws IllegalArgumentException is thrown if bad arguments have been received
@@ -469,7 +469,7 @@ public class AccessControlList {
 	 * @param manifestRules {@link ManifestRules} that is used for the {@link AccessRules} creation.
 	 * The content of the {@link ManifestRules} object changes while executing this method. 
 	 * It's strongly recommended to retrieve a fresh copy of the {@link ManifestRules} by invoking the
-	 * {@link TPApplication#retrieveManifestRules(int)} for a further usage.
+	 * {@link ConnectorApplication#retrieveManifestRules(int)} for a further usage.
 	 * @return {@link AccessRules}.
 	 * execution of this method
 	 * @throws GatewayControllerException if failed to retrieve the rules
@@ -611,7 +611,7 @@ public class AccessControlList {
 	private List<ManifestObjectDescription> convertExposedServices(ManifestObjectDescriptionAJ[] aclExpServicesAJ, 
 			                                            List<ManifestObjectDescription> manifExpServices) {
 	
-		Map<TPObjectPath, Set<TPInterface>> usedManRules = new HashMap<TPObjectPath, Set<TPInterface>>();
+		Map<ConnAppObjectPath, Set<ConnAppInterface>> usedManRules = new HashMap<ConnAppObjectPath, Set<ConnAppInterface>>();
 		List<ManifestObjectDescription> aclExpServices   = convertObjectDescription(aclExpServicesAJ, 
 				                                                                    manifExpServices, 
 				                                                                    usedManRules);
@@ -619,11 +619,11 @@ public class AccessControlList {
 		//Find out the manifest exposed services rules that weren't used
 		for ( ManifestObjectDescription manifExpSrvc : manifExpServices ) {
 			
-			TPObjectPath manop          = manifExpSrvc.getObjectPath();
-			Set<TPInterface> manifs     = manifExpSrvc.getInterfaces();
+			ConnAppObjectPath manop          = manifExpSrvc.getObjectPath();
+			Set<ConnAppInterface> manifs     = manifExpSrvc.getInterfaces();
 			
-			Set<TPInterface> usedIfaces = usedManRules.get(manop);
-			TPObjectPath storeOp        = new TPObjectPath(manop.getPath(), manop.getFriendlyName(), false,
+			Set<ConnAppInterface> usedIfaces = usedManRules.get(manop);
+			ConnAppObjectPath storeOp        = new ConnAppObjectPath(manop.getPath(), manop.getFriendlyName(), false,
                                                            manop.isPrefixAllowed());
 			
 			//Check if this rule was NOT used then add it to the resExpServices
@@ -651,7 +651,7 @@ public class AccessControlList {
 	 * from the internal metadata or the {@link AnnouncementData}. If the {@link AnnouncementData} has appName or deviceName
 	 * that are different from the metadata values, the metadata is updated. The object description rules of the 
 	 * created {@link RemotedApp} are completed from the rules which are returned by the
-	 * {@link TPApplication#extractRemotedApp(List, AnnouncementData)}
+	 * {@link ConnectorApplication#extractRemotedApp(List, AnnouncementData)}
 	 * @param remotedAppsAJ The source for filling the remotedApps list
 	 * @param remotedApps The list to be filled
 	 * @param remotedServices The manifest data that is required for creation the {@link RemotedApp}
@@ -662,7 +662,7 @@ public class AccessControlList {
 		
 		//Gets TRUE if the metadata needs to be updated
 		boolean updatedMeta               = false;
-		List<RemotedApp> configurableApps = TPApplication.extractRemotedApps(remotedServices);
+		List<RemotedApp> configurableApps = ConnectorApplication.extractRemotedApps(remotedServices);
 		
 		//Iterate over the remoted apps 
 		for (RemotedAppAJ remAppAJ : remotedAppsAJ ) {
@@ -678,7 +678,7 @@ public class AccessControlList {
 			//by intersecting with the manifest data.
 			List<ManifestObjectDescription> configuredRules = convertObjectDescription(remAppAJ.objDescs,
 					                                                                   remotedServices,
-					                                                                   new HashMap<TPObjectPath, Set<TPInterface>>());
+					                                                                   new HashMap<ConnAppObjectPath, Set<ConnAppInterface>>());
 			
 			//Construct the standard deviceId_appId key
 			String key = CommunicationUtil.getKey(remAppAJ.deviceId, appId);
@@ -826,16 +826,16 @@ public class AccessControlList {
 			
 		for (ManifestObjectDescription unconfRule : unconfRules ) {
 			
-			TPObjectPath unconfOP          = unconfRule.getObjectPath();
-			Set<TPInterface> unconfIfaces  = unconfRule.getInterfaces();
+			ConnAppObjectPath unconfOP          = unconfRule.getObjectPath();
+			Set<ConnAppInterface> unconfIfaces  = unconfRule.getInterfaces();
 			
 			//Gets TRUE if unconfOP was found among the confRules
 			boolean unconfOpInConf = false;
 						
 			for (ManifestObjectDescription confRule : confRules) {
 				
-				TPObjectPath confOP         = confRule.getObjectPath();
-				Set<TPInterface> confIfaces = confRule.getInterfaces();
+				ConnAppObjectPath confOP         = confRule.getObjectPath();
+				Set<ConnAppInterface> confIfaces = confRule.getInterfaces();
 				
 				//Check if the unconfOP NOT equals confOP 
 				if ( !unconfOP.getPath().equals(confOP.getPath()) ) {
@@ -868,9 +868,9 @@ public class AccessControlList {
 	 * @return {@link ManifestObjectDescription} list converted from the {@link ManifestObjectDescriptionAJ} array
 	 */
 	private List<ManifestObjectDescription> convertObjectDescription(ManifestObjectDescriptionAJ[] objDescsAJ,
-			                      List<ManifestObjectDescription> manifest, Map<TPObjectPath, Set<TPInterface>> usedManRules ) {
+			                      List<ManifestObjectDescription> manifest, Map<ConnAppObjectPath, Set<ConnAppInterface>> usedManRules ) {
 		
-		Map<TPObjectPath, Set<TPInterface>> resRules = new HashMap<TPObjectPath, Set<TPInterface>>();
+		Map<ConnAppObjectPath, Set<ConnAppInterface>> resRules = new HashMap<ConnAppObjectPath, Set<ConnAppInterface>>();
  		
 		for (ManifestObjectDescriptionAJ objDescAJ : objDescsAJ) {
 			
@@ -878,36 +878,36 @@ public class AccessControlList {
 			
 			for (ManifestObjectDescription manifRule : manifest ) {
 				
-				TPObjectPath manop      = manifRule.getObjectPath();
-				Set<TPInterface> manifs = manifRule.getInterfaces();
+				ConnAppObjectPath manop      = manifRule.getObjectPath();
+				Set<ConnAppInterface> manifs = manifRule.getInterfaces();
 				int manifsSize          = manifs.size();
 				
 				if ( !isValidObjPath(manop, objDescAJ.objectPath, objDescAJ.isPrefix) ) {
 					continue;
 				}
 				
-				TPObjectPath resObjPath;
+				ConnAppObjectPath resObjPath;
 				
 				if ( manop.getPath().equals(objDescAJ.objectPath) ) {
-					resObjPath = new TPObjectPath(objDescAJ.objectPath, manop.getFriendlyName(), objDescAJ.isPrefix, 
+					resObjPath = new ConnAppObjectPath(objDescAJ.objectPath, manop.getFriendlyName(), objDescAJ.isPrefix, 
 							                      manop.isPrefixAllowed());
 				}
 				else {
-					resObjPath = new TPObjectPath(objDescAJ.objectPath, "", objDescAJ.isPrefix, 
+					resObjPath = new ConnAppObjectPath(objDescAJ.objectPath, "", objDescAJ.isPrefix, 
 							                      manop.isPrefixAllowed());
 				}
 				
 				//Add used manifest rules for the empty manifest interfaces array
 				if ( manifsSize == 0 ) {
 					
-					Set<TPInterface> usedIfaces = usedManRules.get(manop);
+					Set<ConnAppInterface> usedIfaces = usedManRules.get(manop);
 					if ( usedIfaces == null ) {
-						usedManRules.put(manop, new HashSet<TPInterface>());
+						usedManRules.put(manop, new HashSet<ConnAppInterface>());
 					}
 				}
 				
 				Iterator<String> ifacesToConvertIter = ifacesToConvert.iterator();
-				Set<TPInterface> resInterfaces       = new HashSet<TPInterface>();
+				Set<ConnAppInterface> resInterfaces       = new HashSet<ConnAppInterface>();
 				
 				//Validate interfaces
 				while ( ifacesToConvertIter.hasNext() ) {
@@ -917,17 +917,17 @@ public class AccessControlList {
 					//If there are not interfaces in the manifest, it means that all the interfaces are supported
 					//add them without display names
 					if ( manifsSize == 0 ) {
-						resInterfaces.add( new TPInterface(ajIface, "") );
+						resInterfaces.add( new ConnAppInterface(ajIface, "") );
 						ifacesToConvertIter.remove();
 						continue;
 					}
 					
-					for (TPInterface manIface : manifs ) {
+					for (ConnAppInterface manIface : manifs ) {
 						
 						//aclInterface is found in manifest
 						if ( ajIface.equals(manIface.getName()) ) {
 							
-							resInterfaces.add( new TPInterface(ajIface, manIface.getFriendlyName(), manIface.isSecured()) );
+							resInterfaces.add( new ConnAppInterface(ajIface, manIface.getFriendlyName(), manIface.isSecured()) );
 							ifacesToConvertIter.remove();
 							break;
 						}
@@ -940,7 +940,7 @@ public class AccessControlList {
 				}
 				
 				//Add the interfaces to the resObjPath
-				Set<TPInterface> ifaces = resRules.get(resObjPath);
+				Set<ConnAppInterface> ifaces = resRules.get(resObjPath);
 				if ( ifaces == null ) {
 					resRules.put(resObjPath, resInterfaces);
 				}
@@ -953,9 +953,9 @@ public class AccessControlList {
 				//Add used manifest rules
 				if ( manifsSize > 0 ) {
 					
-					Set<TPInterface> usedIfaces = usedManRules.get(manop);
+					Set<ConnAppInterface> usedIfaces = usedManRules.get(manop);
 					if ( usedIfaces == null ) {
-						usedManRules.put(manop, new HashSet<TPInterface>(resInterfaces));
+						usedManRules.put(manop, new HashSet<ConnAppInterface>(resInterfaces));
 					}
 					else {
 						usedIfaces.addAll(resInterfaces);
@@ -974,7 +974,7 @@ public class AccessControlList {
 		
 		//Create final list of the configured rules
 		List<ManifestObjectDescription> rules = new ArrayList<ManifestObjectDescription>(resRules.size()); 
-		for ( TPObjectPath op : resRules.keySet() ) {
+		for ( ConnAppObjectPath op : resRules.keySet() ) {
 			rules.add( new ManifestObjectDescription(op,  resRules.get(op), true) );
 		}
 		
@@ -983,7 +983,7 @@ public class AccessControlList {
 	
 	/**
 	 * Converts received {@link AccessRules} to the exposedServicesAJ and the remotedAppsAJ 
-	 * in order to be sent to a Third Party Application as a part of an acl creation or an update.
+	 * in order to be sent to a Gateway Connector Application as a part of an acl creation or an update.
 	 * Validates received {@link AccessRules} against the {@link ManifestRules}.
 	 * Fills the exposedServicesAJ and the remotedAppsAJ with the valid rules.
 	 * All the invalid rules are stored in the returned {@link AccessRules} object.
@@ -1063,7 +1063,7 @@ public class AccessControlList {
 		
 		for (ManifestObjectDescription mod : toMarshal ) {
 			
-			Set<TPInterface> invInterfaces = new HashSet<TPInterface>();
+			Set<ConnAppInterface> invInterfaces = new HashSet<ConnAppInterface>();
 			boolean isValid                = isValidRule(mod, invInterfaces, manifestRules);
 			
 			//If current ManifestObjectDescription is NOT valid it need to be added to the invalid rules
@@ -1096,11 +1096,11 @@ public class AccessControlList {
 	 * and not by the interfaces. As a result of this method execution, toValidate will contain 
 	 * only valid interfaces all the invalid interfaces will be moved to the notValid set.
 	 */
-	private static boolean isValidRule(ManifestObjectDescription toValidate, Set<TPInterface> notValid,
+	private static boolean isValidRule(ManifestObjectDescription toValidate, Set<ConnAppInterface> notValid,
 			                   List<ManifestObjectDescription> manifestRules) {
 		
 		boolean validRuleFound       = false;
-		Set<TPInterface> validIfaces = toValidate.getInterfaces();
+		Set<ConnAppInterface> validIfaces = toValidate.getInterfaces();
 		
 		notValid.addAll(validIfaces);
 		validIfaces.clear();
@@ -1112,8 +1112,8 @@ public class AccessControlList {
 		
 		for ( ManifestObjectDescription mRule : manifestRules ) {
 			
-			TPObjectPath manop      = mRule.getObjectPath();
-			Set<TPInterface> manifs = mRule.getInterfaces();
+			ConnAppObjectPath manop      = mRule.getObjectPath();
+			Set<ConnAppInterface> manifs = mRule.getInterfaces();
 			
 			//Check object path validity
 			if ( isValidObjPath(manop, toValidate.getObjectPath().getPath(), toValidate.getObjectPath().isPrefix()) ) {
@@ -1128,10 +1128,10 @@ public class AccessControlList {
 				}
 				
 				//Validate interfaces
-				Iterator<TPInterface> notValidIter = notValid.iterator();
+				Iterator<ConnAppInterface> notValidIter = notValid.iterator();
 				while( notValidIter.hasNext() ) {
 					
-					TPInterface ifaceToTest = notValidIter.next();
+					ConnAppInterface ifaceToTest = notValidIter.next();
 					
 					if ( manifs.contains(ifaceToTest) ) { // Check if the interface is valid
 						validRuleFound = true;
@@ -1159,7 +1159,7 @@ public class AccessControlList {
 	 * @param isPrefix If toValidOP is prefix
 	 * @return TRUE if toValidOP is valid
 	 */
-	private static boolean isValidObjPath(TPObjectPath manifOp, String toValidOP, boolean isPrefix) {
+	private static boolean isValidObjPath(ConnAppObjectPath manifOp, String toValidOP, boolean isPrefix) {
 		
 		if ( manifOp.isPrefix() && toValidOP.startsWith(manifOp.getPath()) || 
 				( !manifOp.isPrefix() && !isPrefix && manifOp.getPath().equals(toValidOP) ) ) {

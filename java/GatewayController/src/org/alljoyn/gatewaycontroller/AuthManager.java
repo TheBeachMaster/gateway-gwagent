@@ -19,34 +19,21 @@ package org.alljoyn.gatewaycontroller;
 import org.alljoyn.bus.AuthListener;
 import org.alljoyn.bus.BusAttachment;
 import org.alljoyn.bus.Status;
+import org.alljoyn.services.android.security.AuthPasswordHandler;
+import org.alljoyn.services.android.security.SrpAnonymousKeyListener;
+import org.alljoyn.services.android.utils.AndroidLogger;
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 /**
- *  Registers {@link AuthListener}. Answers the 
- *  {@link AuthListener#requested(String, String, int, String, org.alljoyn.bus.AuthListener.AuthRequest[])} 
- *  method call with a default password or with the given one. 
+ *  Registers {@link AuthListener}. The default passcode is defined as in {@link SrpAnonymousKeyListener#DEFAULT_PINCODE}
  *  If {@link AuthListener#completed(String, String, boolean)} method call is received with authenticated flag of FALSE, 
- *  then the {@link GWControllerActions#GWC_PASSWORD_REQUIRED} intent is bradcasted.  
+ *  then the {@link GWControllerActions#GWC_PASSWORD_REQUIRED} intent is broadcasted.  
  */
-public class AuthManager implements AuthListener {
+public class AuthManager implements AuthPasswordHandler {
 	private static final String TAG = "gwcapp" + AuthManager.class.getSimpleName();
-	
-	/**
-	 * Supported authentication mechanisms
-	 */
-	public static enum AuthMechanisms {
-		ALLJOYN_PIN_KEYX,
-		ALLJOYN_SRP_KEYX,
-		;
-	}
-	
-	/**
-	 * The default pass code which is used to authenticate devices, requesting a pin code
-	 */
-	public static final char [] DEFAULT_PASSCODE = new char[]{'0','0','0','0','0','0'};
 	
 	/**
 	 * The context object which is used to broadcast {@link Intent}
@@ -56,22 +43,35 @@ public class AuthManager implements AuthListener {
 	/**
 	 * Current pass code of a Gateway Agent
 	 */
-	private String passCode;
+	private char[] passCode;
+	
+	/**
+	 * The authentication mechanisms that this application supports
+	 */
+	private static final String[] AUTH_MECHANISMS = new String[]{"ALLJOYN_SRP_KEYX", "ALLJOYN_PIN_KEYX", "ALLJOYN_ECDHE_PSK"};
 	
 	/**
 	 * Constructor
 	 * @param context The {@link Context} object to be used for {@link Intent} broadcasting 
 	 */ 
 	public AuthManager(Context context) {
-		this.context = context;
+		
+		this.context  = context;
+		this.passCode = SrpAnonymousKeyListener.DEFAULT_PINCODE;
 	}
 
 	/**
 	 * Set current pass code to authenticate a Gateway Agent
-	 * @param pinCode
+	 * @param passCode
+	 * @throws IllegalArgumentException if the received passCode is undefined
 	 */
-	public void setPassCode(String pinCode) {
-		this.passCode = pinCode;
+	public void setPassCode(String passCode) {
+		
+		if ( passCode == null ) {
+			throw new IllegalArgumentException("passCode is undefined");
+		}
+		
+		this.passCode = passCode.toCharArray();
 	}
 	
 	/**
@@ -81,49 +81,28 @@ public class AuthManager implements AuthListener {
 	 */
 	public Status register(BusAttachment bus) {
 		
-		String keyStoreFileName = context.getFileStreamPath("alljoyn_keystore").getAbsolutePath();
-		Status status           = bus.registerAuthListener(AuthMechanisms.ALLJOYN_PIN_KEYX + " " + AuthMechanisms.ALLJOYN_SRP_KEYX,
-														   this,
-														   keyStoreFileName);
+		SrpAnonymousKeyListener authListener = new SrpAnonymousKeyListener(this, new AndroidLogger(), AUTH_MECHANISMS);
+		
+		String keyStoreFileName              = context.getFileStreamPath("alljoyn_keystore").getAbsolutePath();
+		Status status                        = bus.registerAuthListener(authListener.getAuthMechanismsAsString(),
+		                        									    authListener,
+														                keyStoreFileName);
 		
 		Log.d(TAG, "AuthListener has registered, Status: '" + status + "'");
 		return status;
 	}
 	
 	/**
-	 * @see org.alljoyn.bus.AuthListener#requested(java.lang.String, java.lang.String, int, 
-	 * java.lang.String, org.alljoyn.bus.AuthListener.AuthRequest[])
+	 * @see org.alljoyn.services.android.security.AuthPasswordHandler#getPassword(java.lang.String)
 	 */
 	@Override
-	public boolean requested(String mechanism, String peerName, int count, String userName, AuthRequest[] requests) {
+	public char[] getPassword(String busName) {
 		
-		char[] currentPasscode = (passCode == null) ? DEFAULT_PASSCODE : passCode.toCharArray();  
-		Log.d(TAG, "Received passcode REQUESTED, mechanism: '" + mechanism + "', peerName: '" + peerName + "'");
-		
-		if ( !AuthMechanisms.ALLJOYN_PIN_KEYX.name().equals(mechanism) && 
-				!AuthMechanisms.ALLJOYN_SRP_KEYX.name().equals(mechanism)) {
-			
-			Log.d(TAG, "An unsupported mechanism: '" + mechanism + "' has been received, returning FALSE");
-			return false;
-		}
-		
-		for ( AuthRequest authRequest : requests ) {
-			
-			if ( authRequest instanceof PasswordRequest ) {
-				Log.d(TAG, "The PasswordRequest interface has been found, giving the passcode: '" +
-							String.valueOf(currentPasscode) + "'");
-				
-				((PasswordRequest) authRequest).setPassword(currentPasscode);
-				return true;
-			}
-		}
-		
-		Log.d(TAG, "The PasswordRequest interface has NOT been found, returning FALSE");
-		return false;
+		return passCode;
 	}
 	
 	/**
-	 * @see org.alljoyn.bus.AuthListener#completed(java.lang.String, java.lang.String, boolean)
+	 * @see org.alljoyn.services.android.security.AuthPasswordHandler#completed(java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
 	public void completed(String mechanism, String peerName, boolean authenticated) {

@@ -29,9 +29,9 @@ import android.widget.TextView;
 
 /**
  * The class presents the manifest file {@link Fragment} 
- * of the {@link ThirdPartyApplicationManifestActivity} 
+ * of the {@link ConnectorApplicationManifestActivity} 
  */
-public class ThirdPartyApplicationManifestFileFragment extends Fragment {
+public class ConnectorApplicationManifestFileFragment extends Fragment {
 
 	/**
 	 * Manifest text file {@link TextView}
@@ -46,17 +46,17 @@ public class ThirdPartyApplicationManifestFileFragment extends Fragment {
 	/**
 	 * Constructor
 	 */
-	public ThirdPartyApplicationManifestFileFragment() {
+	public ConnectorApplicationManifestFileFragment() {
 	}
 	
     /**
      * !!! IMPORTANT !!! Use this method to create the {@link Fragment} object of this class.
      * @param rules {@link ManifestRules} 
-     * @return {@link ThirdPartyApplicationManifestRulesFragment}
+     * @return {@link ConnectorApplicationManifestRulesFragment}
      */
-	public static ThirdPartyApplicationManifestFileFragment createInstance(String text) {
+	public static ConnectorApplicationManifestFileFragment createInstance(String text) {
 		
-		ThirdPartyApplicationManifestFileFragment frg = new ThirdPartyApplicationManifestFileFragment();
+		ConnectorApplicationManifestFileFragment frg = new ConnectorApplicationManifestFileFragment();
 		frg.text = text;
 		
 		return frg;
@@ -79,8 +79,8 @@ public class ThirdPartyApplicationManifestFileFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
 		
-		View frgView = inflater.inflate(R.layout.third_party_manifest_file_fragment, container, false);
-		manifestText = (TextView) frgView.findViewById(R.id.tpAppManifestFile);
+		View frgView = inflater.inflate(R.layout.connector_manifest_file_fragment, container, false);
+		manifestText = (TextView) frgView.findViewById(R.id.connectorAppManifestFile);
 		manifestText.setMovementMethod(new ScrollingMovementMethod());
 		manifestText.setText(text);
 		

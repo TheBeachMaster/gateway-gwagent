@@ -26,8 +26,8 @@
         android:showAsAction="never"
         android:title="@string/action_settings"/ -->
         
-      <item android:id="@+id/menuCreateAcl" android:title="@string/tp_acls_create_acl_menu_lbl"></item>
-      <item android:id="@+id/menuTpAppRestartBtn" android:title="@string/tp_app_restart_btn"></item>
-      <item android:id="@+id/menuTpAppRefreshBtn" android:title="@string/tp_apps_refresh_btn"></item>
-      <item android:id="@+id/menuShowManifest" android:title="@string/tp_acls_show_manifest_menu_lbl"></item>
+      <item android:id="@+id/menuCreateAcl" android:title="@string/connector_acls_create_acl_menu_lbl"></item>
+      <item android:id="@+id/menuConnectorAppRestartBtn" android:title="@string/connector_app_restart_btn"></item>
+      <item android:id="@+id/menuConnectorAppRefreshBtn" android:title="@string/connector_apps_refresh_btn"></item>
+      <item android:id="@+id/menuShowManifest" android:title="@string/connector_acls_show_manifest_menu_lbl"></item>
 </menu>

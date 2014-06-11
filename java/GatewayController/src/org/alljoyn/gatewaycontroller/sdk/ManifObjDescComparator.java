@@ -18,10 +18,10 @@ package org.alljoyn.gatewaycontroller.sdk;
 
 import java.util.Comparator;
 
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
 
 /**
- * Allows to compare {@link ManifestObjectDescription} according to there {@link TPObjectPath}.
+ * Allows to compare {@link ManifestObjectDescription} according to there {@link ConnAppObjectPath}.
  * The algorithm performs lexicographical comparison of the object paths
  * with the condition that for equal object paths the object path that is not defined
  * as prefix is less than the object path that is prefix.

@@ -26,7 +26,7 @@
     android:layout_height="match_parent" >
 
     <Button
-        android:id="@+id/tpAppName"
+        android:id="@+id/connectorAppName"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="75dp"
         android:layout_height="wrap_content"
@@ -39,32 +39,28 @@
         android:lines="1"
         
         android:layout_marginLeft="5dp"
-        android:textSize="17sp"
-        android:text="ZZZZAFFFDFDGGGGGG"/>
+        android:textSize="17sp" />
     
     <TextView
-        android:id="@+id/tpAppConnStatus"
+        android:id="@+id/connectorAppConnStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="5dp"
-        android:text="Not initialized" />
+        android:layout_marginLeft="5dp" />
 
     <TextView
-        android:id="@+id/tpAppOperStatus"
+        android:id="@+id/connectorAppOperStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"  
-        android:text="Stopped"/>
+        android:layout_marginLeft="10dp" />
 
     <TextView
-        android:id="@+id/tpAppInstallStatus"
+        android:id="@+id/connectorAppInstallStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
-        android:text="Uninstalling" />
+        android:layout_marginLeft="10dp" />
 
 
 

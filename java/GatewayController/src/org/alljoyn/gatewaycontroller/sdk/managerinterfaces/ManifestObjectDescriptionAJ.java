@@ -18,7 +18,7 @@ package org.alljoyn.gatewaycontroller.sdk.managerinterfaces;
 
 import org.alljoyn.bus.annotation.Position;
 import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPInterface;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
 
 
 /**
@@ -63,7 +63,7 @@ public class ManifestObjectDescriptionAJ {
 		interfaces   = new String[size];
 		
 		int i = 0;
-		for ( TPInterface ifaceObj : mod.getInterfaces() ) {
+		for ( ConnAppInterface ifaceObj : mod.getInterfaces() ) {
 			interfaces[i++] = ifaceObj.getName();
 		}
 	}

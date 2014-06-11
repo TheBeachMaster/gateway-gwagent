@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The application that may be reached by the Third Party Application
+ * The application that may be reached by the Gateway Connector Application
  * via the configured interfaces and object paths
  */
 public class RemotedApp extends DiscoveredApp {
 	
 	/**
 	 * Configuration of the object paths and interfaces that are
-	 * used by the Third Party Application to reach this remoted application
+	 * used by the Gateway Connector Application to reach this remoted application
 	 */
 	private final List<ManifestObjectDescription> objDescRules;
 
@@ -82,7 +82,7 @@ public class RemotedApp extends DiscoveredApp {
 
 	/**
 	 * Configuration of the object paths and interfaces that are
-	 * used by the Third Party Application to reach this remoted application
+	 * used by the Gateway Connector Application to reach this remoted application
 	 * @return List of {@link ManifestObjectDescription} objects
 	 */
 	public List<ManifestObjectDescription> getObjDescRules() {

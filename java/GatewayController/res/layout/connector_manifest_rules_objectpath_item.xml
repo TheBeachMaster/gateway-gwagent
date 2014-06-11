@@ -16,39 +16,34 @@
   *    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
   *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   ******************************************************************************/
-
 -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@android:color/holo_orange_light">
 
     <TextView
-        android:id="@+id/tpAclName"
+        android:id="@+id/connectorAppManifestRulesObjPathFriendlyName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="2dp"
-        
-                
-        android:singleLine="true"
-        android:ellipsize="end"
-        android:maxEms="8"
-        android:lines="1"
-        
-        android:text="AclNameZZZZZZZZZZZZCCzzzz" />
-
-    <Switch
-        android:id="@+id/tpAclActiveSwitch"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp" />
+	    
+    <TextView
+        android:id="@+id/connectorAppManifestRulesObjPathName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/tp_acls_active_lbl"
-        android:textOff="@string/tp_acls_active_lbl_n"
-        android:textOn="@string/tp_acls_active_lbl_y" 
-        android:focusable="false"
-        android:focusableInTouchMode="false"/>
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp" />
 
-</RelativeLayout>
+     <TextView
+         android:id="@+id/connectorAppManifestRulesObjPathIsPrefix"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="5dp"
+         android:layout_marginLeft="5dp" />
+ 
+</LinearLayout>

@@ -27,6 +27,6 @@
         android:title="@string/action_settings"/ -->
         
            
-      <item android:id="@+id/menuRefresh" android:title="@string/tp_apps_refresh_btn"></item>
+      <item android:id="@+id/menuRefresh" android:title="@string/connector_apps_refresh_btn"></item>
 
 </menu>

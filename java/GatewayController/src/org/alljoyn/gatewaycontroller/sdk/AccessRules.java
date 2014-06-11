@@ -26,12 +26,12 @@ import java.util.Map;
 public class AccessRules {
 	
 	/**
-	 * The interfaces that the Third Party Application exposes to its clients 
+	 * The interfaces that the Gateway Connector Application exposes to its clients 
 	 */
 	private final List<ManifestObjectDescription> exposedServices; 
 	
 	/**
-	 * The applications that may be reached by the Third Party Application
+	 * The applications that may be reached by the Gateway Connector Application
 	 * via the configured interfaces and object paths
 	 */
 	private final List<RemotedApp> remotedApps;
@@ -43,8 +43,8 @@ public class AccessRules {
 	
 	/**
 	 * Constructor 
-	 * @param exposedServices The interfaces that Third Party Application exposes to its clients 
-	 * @param remotedApps The applications that may be reached by the Third Party Application
+	 * @param exposedServices The interfaces that the Gateway Connector Application exposes to its clients 
+	 * @param remotedApps The applications that may be reached by the Gateway Connector Application
 	 * via the configured interfaces and object paths
 	 * @throws IllegalArgumentException is thrown if bad arguments have been received
 	 */
@@ -64,7 +64,7 @@ public class AccessRules {
 	}
 	
 	/**
-	 * The interfaces that Third Party Application exposes to its clients
+	 * The interfaces that Gateway Connector Application exposes to its clients
 	 * @return List of exposed services
 	 */
 	public List<ManifestObjectDescription> getExposedServices() {
@@ -72,7 +72,7 @@ public class AccessRules {
 	}
 
 	/**
-	 * The applications that may be reached by the Third Party Application
+	 * The applications that may be reached by the Gateway Connector Application
 	 * via the configured interfaces and object paths
 	 * @return List of the remoted applications
 	 */

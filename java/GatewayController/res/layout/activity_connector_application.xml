@@ -25,10 +25,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ThirdPartyApplicationActivity" >
+    tools:context=".ConnectorApplicationActivity" >
     
      <TableLayout
-        android:id="@+id/tpAppDescData"
+        android:id="@+id/connectorAppDescData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -62,14 +62,14 @@
          android:layout_height="wrap_content">
        
 		    <TextView
-		        android:id="@+id/aclMgmtTpAppNameLbl"
+		        android:id="@+id/aclMgmtConnAppNameLbl"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="@string/tp_appname_lbl"
+		        android:text="@string/connector_appname_lbl"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
 		    
 		    <TextView
-		        android:id="@+id/aclMgmtTpAppNameTv"
+		        android:id="@+id/aclMgmtConnAppNameTv"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_marginLeft="2dp"
@@ -82,14 +82,14 @@
          android:layout_height="wrap_content">
 		    
 		     <TextView
-		        android:id="@+id/tpAppVerLbl"
+		        android:id="@+id/connectorAppVerLbl"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="@string/tp_appver_lbl"
+		        android:text="@string/connector_appver_lbl"
 		        android:textAppearance="?android:attr/textAppearanceMedium" />
 		
 		      <TextView
-		        android:id="@+id/tpAppVerTv"
+		        android:id="@+id/connectorAppVerTv"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:layout_marginLeft="2dp"
@@ -102,74 +102,74 @@
     <!-- STATUS  -->
  
     <TextView
-      android:id="@+id/tpAppConnStatusLbl"
+      android:id="@+id/connectorAppConnStatusLbl"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/tp_appstatus_connection_lbl" 
-      android:layout_below="@+id/tpAppDescData"
-      android:layout_alignLeft="@+id/tpAppDescData"
+      android:text="@string/connector_appstatus_connection_lbl" 
+      android:layout_below="@+id/connectorAppDescData"
+      android:layout_alignLeft="@+id/connectorAppDescData"
       android:layout_marginTop="16dp"/>
     
     <TextView
-      android:id="@+id/tpAppConnStatus"
+      android:id="@+id/connectorAppConnStatus"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="2dp"
-      android:layout_toRightOf="@+id/tpAppConnStatusLbl"
-      android:layout_alignBaseline="@+id/tpAppConnStatusLbl"/>
+      android:layout_toRightOf="@+id/connectorAppConnStatusLbl"
+      android:layout_alignBaseline="@+id/connectorAppConnStatusLbl"/>
     
     <TextView
-      android:id="@+id/tpAppOperStatusLbl"
+      android:id="@+id/connectorAppOperStatusLbl"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="6dp"
-      android:layout_toRightOf="@+id/tpAppConnStatus"
-      android:layout_alignBaseline="@+id/tpAppConnStatusLbl"
-      android:text="@string/tp_appstatus_operation_lbl" />
+      android:layout_toRightOf="@+id/connectorAppConnStatus"
+      android:layout_alignBaseline="@+id/connectorAppConnStatusLbl"
+      android:text="@string/connector_appstatus_operation_lbl" />
     
     <TextView
-      android:id="@+id/tpAppOperStatus"
+      android:id="@+id/connectorAppOperStatus"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginLeft="2dp"
-      android:layout_toRightOf="@+id/tpAppOperStatusLbl"
-      android:layout_alignBaseline="@+id/tpAppConnStatusLbl" />
+      android:layout_toRightOf="@+id/connectorAppOperStatusLbl"
+      android:layout_alignBaseline="@+id/connectorAppConnStatusLbl" />
     
     <TextView
-      android:id="@+id/tpAppInstallStatusLbl"
+      android:id="@+id/connectorAppInstallStatusLbl"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_below="@+id/tpAppConnStatusLbl"
-      android:layout_alignLeft="@+id/tpAppDescData"
+      android:layout_below="@+id/connectorAppConnStatusLbl"
+      android:layout_alignLeft="@+id/connectorAppDescData"
       android:layout_marginTop="3dp"
-      android:text="@string/tp_appstatus_install_lbl" />
+      android:text="@string/connector_appstatus_install_lbl" />
     
     <TextView
-      android:id="@+id/tpAppInstallStatus"
+      android:id="@+id/connectorAppInstallStatus"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_toRightOf="@+id/tpAppInstallStatusLbl"
-      android:layout_alignBaseline="@+id/tpAppInstallStatusLbl"
+      android:layout_toRightOf="@+id/connectorAppInstallStatusLbl"
+      android:layout_alignBaseline="@+id/connectorAppInstallStatusLbl"
       android:layout_marginLeft="2dp" />
  
     <!-- END STATUS -->
      
     <ListView
-        android:id="@+id/tpAppAclsLv"
+        android:id="@+id/connectorAppAclsLv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/tpAppInstallStatusLbl"
+        android:layout_below="@+id/connectorAppInstallStatusLbl"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="2dp"> 
     </ListView>
 
     <TextView
-        android:id="@+id/tpAppAclsLvNoAcls"
+        android:id="@+id/connectorAppAclsLvNoAcls"
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:gravity="center"
-        android:text="@string/tp_acls_not_found"
+        android:text="@string/connector_acls_not_found"
         android:textSize="17sp"
         android:visibility="gone">
     </TextView>

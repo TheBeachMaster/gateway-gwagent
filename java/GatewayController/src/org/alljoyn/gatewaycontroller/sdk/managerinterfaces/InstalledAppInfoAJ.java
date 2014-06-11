@@ -19,7 +19,7 @@ package org.alljoyn.gatewaycontroller.sdk.managerinterfaces;
 import org.alljoyn.bus.annotation.Position;
 
 /**
- *  This class stores data of the installed Third Party Application.
+ *  This class stores data of the installed Gateway Connector Application.
  *  This class is used only to received the unmarshalled data that is sent over AllJoyn
  */
 public class InstalledAppInfoAJ {

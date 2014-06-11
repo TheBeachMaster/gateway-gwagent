@@ -24,7 +24,7 @@ import org.alljoyn.bus.annotation.Secure;
 import org.alljoyn.gatewaycontroller.sdk.GatewayController;
 
 /**
- * AllJoyn interface for managing Third Party Application 
+ * AllJoyn interface for managing Gateway Connector Application 
  */
 @BusInterface(name=ApplicationManagement.IFNAME)
 @Secure

@@ -19,23 +19,23 @@ package org.alljoyn.gatewaycontroller.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ManifestObjectDescriptionAJ;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ManifestObjectDescriptionInfoAJ;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ManifestRulesAJ;
 
 /**
- * The manifest rules of the Third Party Application
+ * The manifest rules of the Gateway Connector Application
  */
 public class ManifestRules {
 	
 	/**
-	 * The interfaces that the Third Party Application exposes to its clients 
+	 * The interfaces that the Gateway Connector Application exposes to its clients 
 	 */
 	private final List<ManifestObjectDescription> exposedServices; 
 	
 	/**
-	 * The interfaces that the Third Party Application allows to remote
+	 * The interfaces that the Gateway Connector Application allows to remote
 	 */
 	private final List<ManifestObjectDescription> remotedServices;
 	
@@ -52,7 +52,7 @@ public class ManifestRules {
 	}
 	
 	/**
-	 * The {@link ManifestObjectDescription} objects that the Third Party Application 
+	 * The {@link ManifestObjectDescription} objects that the Gateway Connector Application 
 	 * exposes to its clients
 	 * @return List of exposed services
 	 */
@@ -61,7 +61,7 @@ public class ManifestRules {
 	}
 
 	/**
-     * The {@link ManifestObjectDescription} objects that the Third Party Application
+     * The {@link ManifestObjectDescription} objects that the Gateway Connector Application
      * supports for being remoted
 	 * @return List of remoted interfaces
 	 */
@@ -78,7 +78,7 @@ public class ManifestRules {
 		for ( ManifestObjectDescriptionInfoAJ objDescInfoAJ : from ) {
 			
 			ManifestObjectDescription mod = new ManifestObjectDescription(objDescInfoAJ);
-			TPObjectPath objPath          = mod.getObjectPath();
+			ConnAppObjectPath objPath          = mod.getObjectPath();
 			
 			//If manifest object path isPrefix true, then isAllowedObjectPath is TRUE 
 			objPath.setPrefixAllowed( objPath.isPrefix() );

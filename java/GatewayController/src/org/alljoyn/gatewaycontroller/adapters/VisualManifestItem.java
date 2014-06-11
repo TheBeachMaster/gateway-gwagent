@@ -16,8 +16,8 @@
 
 package org.alljoyn.gatewaycontroller.adapters;
 
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
 import org.alljoyn.gatewaycontroller.sdk.ManifestRules;
 
 /**
@@ -43,13 +43,13 @@ public class VisualManifestItem implements VisualItem {
 	
 	/**
 	 * Constructor
-	 * @param visualItem must be either {@link TPObjectPath} or {@link TPInterface}
+	 * @param visualItem must be either {@link ConnAppObjectPath} or {@link ConnAppInterface}
 	 * @param type
 	 * @throws IllegalArgumentException
 	 */
 	public VisualManifestItem(Object visualItem, ItemType type) {
 		
-		if ( !(visualItem instanceof TPObjectPath) && !(visualItem instanceof TPInterface) ) {
+		if ( !(visualItem instanceof ConnAppObjectPath) && !(visualItem instanceof ConnAppInterface) ) {
 			
 			throw new IllegalArgumentException("Wrong visualItem type");
 		}

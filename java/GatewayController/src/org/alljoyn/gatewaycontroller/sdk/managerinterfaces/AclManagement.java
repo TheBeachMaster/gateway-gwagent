@@ -27,7 +27,7 @@ import org.alljoyn.gatewaycontroller.sdk.GatewayController;
 
 
 /**
- * AllJoyn interface for managing Access Control List of a Third Party Application
+ * AllJoyn interface for managing Access Control List of a Gateway Connector Application
  */
 @BusInterface(name=AclManagement.IFNAME)
 @Secure

@@ -20,8 +20,8 @@ import java.util.List;
 
 import org.alljoyn.gatewaycontroller.R;
 import org.alljoyn.gatewaycontroller.adapters.VisualManifestItem.ItemType;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.TPObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
+import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
 
 import android.content.Context;
 import android.view.View;
@@ -77,19 +77,19 @@ public class ManifestRulesAdapter extends VisualArrayAdapter {
 		
 		if ( visItem.getType() == ItemType.OBJECT_PATH ) {
 			
-			row = inflater.inflate(R.layout.third_party_manifest_rules_objectpath_item, parent, false);
+			row = inflater.inflate(R.layout.connector_manifest_rules_objectpath_item, parent, false);
 			
-			manView.friendlyName = (TextView) row.findViewById(R.id.tpAppManifestRulesObjPathFriendlyName);
-			manView.name         = (TextView) row.findViewById(R.id.tpAppManifestRulesObjPathName);
-			manView.boolState    = (TextView) row.findViewById(R.id.tpAppManifestRulesObjPathIsPrefix);
+			manView.friendlyName = (TextView) row.findViewById(R.id.connectorAppManifestRulesObjPathFriendlyName);
+			manView.name         = (TextView) row.findViewById(R.id.connectorAppManifestRulesObjPathName);
+			manView.boolState    = (TextView) row.findViewById(R.id.connectorAppManifestRulesObjPathIsPrefix);
 		}
 		else if ( visItem.getType() == ItemType.INTERFACE ) {
 			
-			row = inflater.inflate(R.layout.third_party_manifest_rules_interface_item, parent, false);
+			row = inflater.inflate(R.layout.connector_manifest_rules_interface_item, parent, false);
 			
-			manView.friendlyName = (TextView) row.findViewById(R.id.tpAppManifestRulesInterfaceFriendlyName);
-			manView.name         = (TextView) row.findViewById(R.id.tpAppManifestRulesInterfaceName);
-			manView.boolState    = (TextView) row.findViewById(R.id.tpAppManifestRulesInterfaceIsSecured);
+			manView.friendlyName = (TextView) row.findViewById(R.id.connectorAppManifestRulesInterfaceFriendlyName);
+			manView.name         = (TextView) row.findViewById(R.id.connectorAppManifestRulesInterfaceName);
+			manView.boolState    = (TextView) row.findViewById(R.id.connectorAppManifestRulesInterfaceIsSecured);
 		}
 		
 		populateData(manView, visItem);
@@ -105,7 +105,7 @@ public class ManifestRulesAdapter extends VisualArrayAdapter {
 		
 		if ( visItem.getType() == ItemType.OBJECT_PATH ) {
 			
-			TPObjectPath objPath = (TPObjectPath) visItem.getVisualItem();
+			ConnAppObjectPath objPath = (ConnAppObjectPath) visItem.getVisualItem();
 			
 			manView.friendlyName.setText(objPath.getFriendlyName());
 			manView.name.setText(objPath.getPath());
@@ -115,7 +115,7 @@ public class ManifestRulesAdapter extends VisualArrayAdapter {
 		}
 		else if ( visItem.getType() == ItemType.INTERFACE ) {
 			
-			TPInterface iface = (TPInterface) visItem.getVisualItem();
+			ConnAppInterface iface = (ConnAppInterface) visItem.getVisualItem();
 			
 			manView.friendlyName.setText(iface.getFriendlyName());
 			manView.name.setText(iface.getName());

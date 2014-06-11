@@ -20,7 +20,7 @@ import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
 import org.alljoyn.gatewaycontroller.sdk.AccessControlList.AclStatus;
 
 /**
- * {@link AccessControlList} to be visualized by the {@link ThirdPartyApplicationAclsAdapter}
+ * {@link AccessControlList} to be visualized by the {@link ConnectorApplicationAclsAdapter}
  */
 public class VisualAcl implements VisualItem {
 

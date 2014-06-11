@@ -22,31 +22,30 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical" 
-    android:background="@android:color/holo_orange_light">"
+    android:background="@android:color/holo_blue_light">
+
 
     <TextView
-        android:id="@+id/tpAppManifestRulesObjPathFriendlyName"
+        android:id="@+id/connectorAppManifestRulesInterfaceFriendlyName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:text="Object path FRIENDLY NAMEzzzzzzzdddddddddddddddd" />
-	    
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="5dp" />
+  
     <TextView
-        android:id="@+id/tpAppManifestRulesObjPathName"
+        android:id="@+id/connectorAppManifestRulesInterfaceName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
+    
+      <TextView
+        android:id="@+id/connectorAppManifestRulesInterfaceIsSecured"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="org/alljoyn/Notification/NotificationSuperAgenttttttttttttttt" />
+        android:layout_marginLeft="40dp" />
+   
 
-     <TextView
-         android:id="@+id/tpAppManifestRulesObjPathIsPrefix"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="5dp"
-         android:layout_marginLeft="5dp"
-         android:text="Is Prefix" />
- 
 </LinearLayout>

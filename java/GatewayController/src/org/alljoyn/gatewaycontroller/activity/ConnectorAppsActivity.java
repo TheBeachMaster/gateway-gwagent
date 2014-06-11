@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.adapters.ThirdPartyAppsAdapter;
+import org.alljoyn.gatewaycontroller.adapters.ConnectorAppsAdapter;
 import org.alljoyn.gatewaycontroller.adapters.VisualItem;
-import org.alljoyn.gatewaycontroller.adapters.VisualTPApplication;
+import org.alljoyn.gatewaycontroller.adapters.VisualConnectorApplication;
 import org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler;
 import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
-import org.alljoyn.gatewaycontroller.sdk.TPApplication;
-import org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,12 +38,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 /**
- * Third Party Application activity 
+ * Gateway Connector Application activity 
  */
-public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListener,
-                                                                    ApplicationStatusSignalHandler {
+public class ConnectorAppsActivity extends BaseActivity implements OnClickListener,
+                                                                   ApplicationStatusSignalHandler {
 	
-	private static final String TAG = "gwcapp" + ThirdPartyAppsActivity.class.getSimpleName();
+	private static final String TAG = "gwcapp" + ConnectorAppsActivity.class.getSimpleName();
 
 	/**
 	 * Gateway name
@@ -51,14 +51,14 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 	private TextView gwNameTv;
 	
 	/**
-	 * Third Party Applications list
+	 * Connector Applications list
 	 */
-	private ListView tpListView;
+	private ListView connListView;
 	
 	/**
-	 * Adapter for the list of third party applications
+	 * Adapter for the list of connector applications
 	 */
-	private ThirdPartyAppsAdapter adapter;
+	private ConnectorAppsAdapter adapter;
 	
 	/**
 	 * Refresh button
@@ -76,7 +76,7 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_third_party_apps);
+		setContentView(R.layout.activity_connector_apps);
 	}
 
 	/**
@@ -98,13 +98,13 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 		gwNameTv   = (TextView) findViewById(R.id.gwNameTv);
 		gwNameTv.setText( app.getSelectedGateway().getAppName() );
 		
-		adapter    = new ThirdPartyAppsAdapter(this, R.layout.third_party_app_item, new ArrayList<VisualItem>());
-		tpListView = (ListView) findViewById(R.id.tpAppsLv);
-		tpListView.setAdapter(adapter);
-		tpListView.setEmptyView( findViewById(R.id.tpAppsLvNoApps) );
-		tpListView.setSelector(android.R.color.transparent);
+		adapter    = new ConnectorAppsAdapter(this, R.layout.connector_app_item, new ArrayList<VisualItem>());
+		connListView = (ListView) findViewById(R.id.connectorAppsLv);
+		connListView.setAdapter(adapter);
+		connListView.setEmptyView( findViewById(R.id.connectorAppsLvNoApps) );
+		connListView.setSelector(android.R.color.transparent);
 		
-		refreshBtn = (Button) findViewById(R.id.tpAppsRefresh);
+		refreshBtn = (Button) findViewById(R.id.connectorAppsRefresh);
 		refreshBtn.setOnClickListener(this);
 		
   	    retrieveApps();
@@ -129,7 +129,7 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 		Log.d(TAG, "Cleaning applications");
 		for ( VisualItem vItem : adapter.getItemsList() ) {
 			
-			VisualTPApplication vApp = (VisualTPApplication) vItem;
+			VisualConnectorApplication vApp = (VisualConnectorApplication) vItem;
 			
 			if ( vApp.getApp() != app.getSelectedApp() ) {
 				
@@ -147,11 +147,11 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 		
 		switch ( clickedView.getId() ) {
 		
-			case R.id.tpAppsRefresh: {
+			case R.id.connectorAppsRefresh: {
 				retrieveApps();
 				break;
 			}
-			case R.id.tpAppsDiscoverApps: {
+			case R.id.connectorAppsDiscoverApps: {
 				break;
 			}
 		}
@@ -177,11 +177,11 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 	}
 
 	/**
-	 * Search for the {@link TPApplication} with the given appId and update its status
-	 * @see org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler#onStatusChanged(java.lang.String, org.alljoyn.gatewaycontroller.sdk.TPApplicationStatus)
+	 * Search for the {@link ConnectorApplication} with the given appId and update its status
+	 * @see org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler#onStatusChanged(java.lang.String, org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus)
 	 */
 	@Override
-	public void onStatusChanged(final String appId, final TPApplicationStatus status) {
+	public void onStatusChanged(final String appId, final ConnectorApplicationStatus status) {
 		
 		asyncTask = new AsyncTask<Void, Void, String>() {
 			
@@ -192,7 +192,7 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 				
 				for ( VisualItem vItem : adapter.getItemsList() ) {
 					
-					VisualTPApplication vApp = (VisualTPApplication) vItem;
+					VisualConnectorApplication vApp = (VisualConnectorApplication) vItem;
 					
 					if ( !vApp.getApp().getAppId().equals(appId) ) {
 						continue;
@@ -215,20 +215,20 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 	}
 	
 	/**
-	 * Retrieve TP apps and their status
+	 * Retrieve Connector applications and their status
 	 */
 	private void retrieveApps() {
 		
 		final Integer sid = getSession();
 		if ( sid == null ) {
 			
-			Log.d(TAG, "Can't retrieve TP applications, no session with the GW is established, waiting for"
+			Log.d(TAG, "Can't retrieve Connector Applications, no session with the GW is established, waiting for"
 					   + " the onSessionJoined event");
 			return;
 		}
 		
 		//Check if there is previously selected app, then clean its resources
-		TPApplication prevSelApp = app.getSelectedApp();
+		ConnectorApplication prevSelApp = app.getSelectedApp();
 		if ( prevSelApp != null ) {
 			
 			prevSelApp.clear();
@@ -269,10 +269,10 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 	 */
 	private String retrieveAppsAsyncTask(Integer sid) {
 		
-		List<TPApplication> tpApps;
+		List<ConnectorApplication> connApps;
 		
   	    try {
-			tpApps = app.getSelectedGateway().retrieveInstalledApps(sid);
+			connApps = app.getSelectedGateway().retrieveInstalledApps(sid);
 		} catch (GatewayControllerException gce) {
 			
 			Log.e(TAG, "Failed to retrieve the installed apps", gce);
@@ -282,16 +282,16 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
   	    boolean sigHandlerErr = false;
   	    boolean retrStatErr   = false;
   	    
-  	    for (TPApplication app : tpApps ) {
+  	    for (ConnectorApplication app : connApps ) {
   	    	
   	    	try {
-				app.setStatusChangedHandler(ThirdPartyAppsActivity.this);
+				app.setStatusChangedHandler(ConnectorAppsActivity.this);
 			} catch (GatewayControllerException gce) {
 				Log.e(TAG, "Failed to register Status Change Handler", gce);
 				sigHandlerErr = true;
 			}
   	    	
-  	    	TPApplicationStatus status = null;
+  	    	ConnectorApplicationStatus status = null;
   	    	
   	    	try {
 				status = app.retrieveStatus(sid);
@@ -300,8 +300,8 @@ public class ThirdPartyAppsActivity extends BaseActivity implements OnClickListe
 				retrStatErr = true;
 			}
   	    	
-  	    	Log.d(TAG, "TPApp: '" + app.getObjectPath() + "', Status: '" + status + "'");
-  	    	adapter.add( new VisualTPApplication(app, status) );
+  	    	Log.d(TAG, "Connector App: '" + app.getObjectPath() + "', Status: '" + status + "'");
+  	    	adapter.add( new VisualConnectorApplication(app, status) );
   	    }
   	    
   	    String retStr = "";

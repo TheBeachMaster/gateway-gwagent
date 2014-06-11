@@ -25,15 +25,15 @@ import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ManifestObjectDescrip
 
 /**
  * This class stores object description provided with the manifest
- * of the Third Party Application
+ * of the Gateway Connector Application
  */
 public class ManifestObjectDescription {
 	
 	/**
 	 * This class represents an object path received with the {@link ManifestObjectDescription}
-	 * supported by the Third Party Application
+	 * supported by the Gateway Connector Application
 	 */
-	public static final class TPObjectPath {
+	public static final class ConnAppObjectPath {
 		
 		/**
 		 * AllJoyn object identification
@@ -62,10 +62,10 @@ public class ManifestObjectDescription {
 		 * @param friendlyName The friendly name of the object path. This name may be presented
 		 * @param isPrefix TRUE if the object path is a prefix for the full object path
 		 * @param isPrefixAllowed TRUE if the object path is allowed to be a prefix according 
-		 * to the {@link TPApplication} manifest
+		 * to the {@link ConnectorApplication} manifest
 		 * @throws IllegalArgumentException is thrown if bad arguments have been received
 		 */
-		public TPObjectPath(String objectPath, String friendlyName, boolean isPrefix, boolean isPrefixAllowed) {
+		public ConnAppObjectPath(String objectPath, String friendlyName, boolean isPrefix, boolean isPrefixAllowed) {
 			
 			if ( objectPath == null  || objectPath.length() == 0) {
 				throw new IllegalArgumentException("objPath is undefined");
@@ -85,7 +85,7 @@ public class ManifestObjectDescription {
 		 * Constructor
 		 * @param opInfo
 		 */
-		TPObjectPath(ObjectPathInfoAJ opInfo) {
+		ConnAppObjectPath(ObjectPathInfoAJ opInfo) {
 			
 			objectPath      = opInfo.objectPath;
 			friendlyName    = opInfo.objectPathFriendlyName;
@@ -126,7 +126,7 @@ public class ManifestObjectDescription {
 
 		/**
 		 * @return TRUE if the object path is allowed to be a prefix according 
-		 * to the {@link TPApplication} manifest
+		 * to the {@link ConnectorApplication} manifest
 		 */
 		public boolean isPrefixAllowed() {
 			return isPrefixAllowed;
@@ -134,7 +134,7 @@ public class ManifestObjectDescription {
 
 		/**
 		 * @param isPrefixAllowed Set whether the object path is allowed to be a prefix according 
-		 * to the {@link TPApplication} manifest
+		 * to the {@link ConnectorApplication} manifest
 		 */
 		void setPrefixAllowed(boolean isPrefixAllowed) {
 			this.isPrefixAllowed = isPrefixAllowed;
@@ -166,11 +166,11 @@ public class ManifestObjectDescription {
 				return true;
 			}
 
-			if ( !(obj instanceof TPObjectPath) ) {
+			if ( !(obj instanceof ConnAppObjectPath) ) {
 				return false;
 			}
 			
-			TPObjectPath other = (TPObjectPath) obj;
+			ConnAppObjectPath other = (ConnAppObjectPath) obj;
 			
 			if ( isPrefix != other.isPrefix ) {
 				return false;
@@ -201,9 +201,9 @@ public class ManifestObjectDescription {
 	
 	/**
 	 * This class represents an interface received with the {@link ManifestObjectDescription}
-	 * supported by a Third Party Application
+	 * supported by the Gateway Connector Application
 	 */
-	public static final class TPInterface {
+	public static final class ConnAppInterface {
 		
 		/**
 		 * The interface name
@@ -232,7 +232,7 @@ public class ManifestObjectDescription {
 		 * @param isSecured Whether the interface is secured
 		 * @throws IllegalArgumentException is thrown if bad arguments have been received
 		 */
-		public TPInterface(String name, String friendlyName, boolean isSecured) {
+		public ConnAppInterface(String name, String friendlyName, boolean isSecured) {
 			
 			if ( name == null  || name.length() == 0) {
 				throw new IllegalArgumentException("name is undefined");
@@ -254,7 +254,7 @@ public class ManifestObjectDescription {
 		 * @param friendlyName The interface friendly name
 		 * @throws IllegalArgumentException is thrown if bad arguments have been received
 		 */
-		public TPInterface(String name, String friendlyName) {
+		public ConnAppInterface(String name, String friendlyName) {
 			this(name, friendlyName, false);
 		}
 		
@@ -262,7 +262,7 @@ public class ManifestObjectDescription {
 		 * Constructor
 		 * @param interfaceInfo
 		 */
-		TPInterface(InterfaceInfoAJ interfaceInfo) {
+		ConnAppInterface(InterfaceInfoAJ interfaceInfo) {
 			
 			name 		 = interfaceInfo.interfaceName;
 			friendlyName = interfaceInfo.friendlyName;
@@ -309,7 +309,7 @@ public class ManifestObjectDescription {
 		}
 		
 		/**
-		 * Two {@link TPInterface} objects are equal if they have the same interface name
+		 * Two {@link ConnAppInterface} objects are equal if they have the same interface name
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
         @Override
@@ -319,11 +319,11 @@ public class ManifestObjectDescription {
 				return true;
 			}
         	
-        	if ( !(obj instanceof TPInterface) ) {   //Check type correctness and not null
+        	if ( !(obj instanceof ConnAppInterface) ) {   //Check type correctness and not null
         		return false;
         	}
         	
-			TPInterface other = (TPInterface) obj;
+			ConnAppInterface other = (ConnAppInterface) obj;
 			
 			if ( name == null ) {
 				
@@ -352,16 +352,16 @@ public class ManifestObjectDescription {
 	/**
 	 * The object path supported by the Service Provider Application manifest
 	 */
-	private final TPObjectPath objectPath;
+	private final ConnAppObjectPath objectPath;
 	
 	/**
 	 * The interfaces supported by the Service Provider Application manifest 
 	 */
-	private final Set<TPInterface> interfaces;
+	private final Set<ConnAppInterface> interfaces;
 
 	/**
 	 * The flag has TRUE if this {@link ManifestObjectDescription} is configured
-	 * to permit the object path and interfaces to be remoted by the Third Party Application 
+	 * to permit the object path and interfaces to be remoted by the Gateway Connector Application 
 	 */
 	private boolean isConfigured;
 	
@@ -371,7 +371,7 @@ public class ManifestObjectDescription {
 	 * @param interfaces Set of the interfaces related to the given object path
 	 * @throws IllegalArgumentException is thrown if bad arguments have been received
 	 */
-	public ManifestObjectDescription(TPObjectPath objectPath, Set<TPInterface> interfaces) {
+	public ManifestObjectDescription(ConnAppObjectPath objectPath, Set<ConnAppInterface> interfaces) {
 		
 		if ( objectPath == null ) {
 			throw new IllegalArgumentException("objectPath is undefined");
@@ -390,10 +390,10 @@ public class ManifestObjectDescription {
 	 * @param objectPath AllJoyn object identification
 	 * @param interfaces Set of the interfaces related to the given object path
 	 * @param configured  Set TRUE to permit this {@link ManifestObjectDescription} object path and interfaces
-	 * to be remoted by the Third Party Application
+	 * to be remoted by the Gateway Connector Application
 	 * @throws IllegalArgumentException is thrown if bad arguments have been received
 	 */
-	public ManifestObjectDescription(TPObjectPath objectPath, Set<TPInterface> interfaces, boolean configured) {
+	public ManifestObjectDescription(ConnAppObjectPath objectPath, Set<ConnAppInterface> interfaces, boolean configured) {
 		
 		this(objectPath, interfaces);
 		this.isConfigured = configured;
@@ -406,11 +406,11 @@ public class ManifestObjectDescription {
 	 */
 	ManifestObjectDescription(ManifestObjectDescriptionInfoAJ objDescInfo) {
 		
-		objectPath = new TPObjectPath(objDescInfo.objPathInfo);
-		interfaces = new HashSet<ManifestObjectDescription.TPInterface>(objDescInfo.interfaces.length);
+		objectPath = new ConnAppObjectPath(objDescInfo.objPathInfo);
+		interfaces = new HashSet<ManifestObjectDescription.ConnAppInterface>(objDescInfo.interfaces.length);
 		
 		for (InterfaceInfoAJ ifaceInfoAJ : objDescInfo.interfaces) {
-			interfaces.add( new TPInterface(ifaceInfoAJ) );
+			interfaces.add( new ConnAppInterface(ifaceInfoAJ) );
 		}
 	}
 	
@@ -418,21 +418,21 @@ public class ManifestObjectDescription {
 	 * The object path supported by the Service Provider Application manifest
 	 * @return Object path
 	 */
-	public TPObjectPath getObjectPath() {
+	public ConnAppObjectPath getObjectPath() {
 		return objectPath;
 	}
 
 	/**
 	 * The interfaces supported by the Service Provider Application manifest 
-	 * @return Set of the {@link TPInterface} objects
+	 * @return Set of the {@link ConnAppInterface} objects
 	 */
-	public Set<TPInterface> getInterfaces() {
+	public Set<ConnAppInterface> getInterfaces() {
 		return interfaces;
 	}
 
 	/**
 	 * The flag has TRUE if this {@link ManifestObjectDescription} is configured
-	 * to permit the object path and interfaces to be remoted by the Third Party Application 
+	 * to permit the object path and interfaces to be remoted by the Gateway Connector Application 
 	 * @return configured state
 	 */
 	public boolean isConfigured() {
@@ -441,7 +441,7 @@ public class ManifestObjectDescription {
 
 	/**
 	 * Set TRUE to permit this {@link ManifestObjectDescription} object path and interfaces
-	 * to be remoted by the Third Party Application
+	 * to be remoted by the Gateway Connector Application
 	 * @param configured
 	 */
 	public void setConfigured(boolean configured) {

@@ -16,39 +16,37 @@
   *    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
   *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
   ******************************************************************************/
+
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" 
-    android:background="@android:color/holo_blue_light">
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 
     <TextView
-        android:id="@+id/tpAppManifestRulesInterfaceFriendlyName"
+        android:id="@+id/connectorAclName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="5dp"
-        android:text="Control Panel Interface" />
-  
-    <TextView
-        android:id="@+id/tpAppManifestRulesInterfaceName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:text="org.alljoyn.Notification.NotificationSuperAgent"/>
-    
-      <TextView
-        android:id="@+id/tpAppManifestRulesInterfaceIsSecured"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginLeft="40dp"
-        android:text="Is Secured" />
-   
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="2dp"
+        
+                
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:maxEms="8"
+        android:lines="1" />
 
-</LinearLayout>
+    <Switch
+        android:id="@+id/connectorAclActiveSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/connector_acls_active_lbl"
+        android:textOff="@string/connector_acls_active_lbl_n"
+        android:textOn="@string/connector_acls_active_lbl_y" 
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
+
+</RelativeLayout>

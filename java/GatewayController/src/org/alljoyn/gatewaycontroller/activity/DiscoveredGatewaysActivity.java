@@ -119,7 +119,7 @@ public class DiscoveredGatewaysActivity extends BaseActivity implements OnItemCl
 		//If we have an old session, we need to close it when selecting a new gateway
 		app.leaveSession();
 		
-		Intent intent = new Intent(this, ThirdPartyAppsActivity.class);
+		Intent intent = new Intent(this, ConnectorAppsActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
 	}	
