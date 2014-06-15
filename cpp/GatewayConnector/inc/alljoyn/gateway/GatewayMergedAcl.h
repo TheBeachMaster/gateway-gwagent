@@ -25,7 +25,7 @@ namespace ajn {
 namespace services {
 
 
-class MergedAcl {
+class GatewayMergedAcl {
   public:
 
     QStatus unmarshal(Message& msg);

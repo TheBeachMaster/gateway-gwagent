@@ -109,7 +109,7 @@ const InterfaceDescription* GatewayConnector::initInterface(QStatus& status) {
     return bus->GetInterface(GW_CONNECTOR_IFC_NAME);
 }
 
-QStatus GatewayConnector::GetMergedAcl(MergedAcl& response) {
+QStatus GatewayConnector::GetMergedAcl(GatewayMergedAcl& response) {
     QStatus status = ER_OK;
 
     Message reply(*bus);
@@ -137,7 +137,7 @@ void GatewayConnector::ShutdownAppSignalHandler(const InterfaceDescription::Memb
     ShutdownApp();
 }
 
-QStatus GatewayConnector::GetMergedAclAsync(MergedAcl* response) {
+QStatus GatewayConnector::GetMergedAclAsync(GatewayMergedAcl* response) {
     Message reply(*bus);
     return remoteAppAccess->MethodCallAsync(GW_CONNECTOR_IFC_NAME, "GetMergedAcl", this,
                                             static_cast<MessageReceiver::ReplyHandler>(&GatewayConnector::GetMergedAclReplyHandler), NULL, 0, response);
@@ -145,7 +145,7 @@ QStatus GatewayConnector::GetMergedAclAsync(MergedAcl* response) {
 }
 
 void GatewayConnector::GetMergedAclReplyHandler(Message& msg, void* mergedAcl) {
-    MergedAcl* response = static_cast<MergedAcl*>(mergedAcl);
+    GatewayMergedAcl* response = static_cast<GatewayMergedAcl*>(mergedAcl);
     QStatus status = response->unmarshal(msg);
     ReceiveGetMergedAclAsync(status, response);
 }

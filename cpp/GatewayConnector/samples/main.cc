@@ -42,115 +42,6 @@ CommonBusListener*  busListener = 0;
 SrpKeyXListener* keyListener = 0;
 qcc::String tweetScript = "";
 
-void cleanup() {
-    if (!bus) {
-        return;
-    }
-
-    if (notificationService) {
-        notificationService->shutdown();
-    }
-    if (busListener) {
-        CommonSampleUtil::aboutServiceDestroy(bus, busListener);
-        delete busListener;
-    }
-
-    bus->Disconnect();
-    if (keyListener) {
-        delete keyListener;
-    }
-    bus->Stop();
-    delete bus;
-}
-
-void signal_callback_handler(int32_t signum) {
-    cleanup();
-    exit(signum);
-}
-
-void dumpObjectSpecs(std::list<MergedAcl::ObjectSpec>& specs, const char* indent) {
-    std::list<MergedAcl::ObjectSpec>::iterator it;
-    for (it = specs.begin(); it != specs.end(); it++) {
-        MergedAcl::ObjectSpec& spec = *it;
-        cout << indent << "objectPath: " << spec.objectPath.c_str() << endl;
-        cout << indent << "isPrefix: " << (spec.isPrefix ? "true" : "false") << endl;
-
-        std::list<qcc::String>::iterator innerator;
-        for (innerator = spec.interfaces.begin(); innerator != spec.interfaces.end(); innerator++) {
-            cout << indent << "    " << "interface: " << (*innerator).c_str() << endl;
-        }
-    }
-}
-
-void dumpAcl(MergedAcl* p) {
-    cout << "Exposed Services:" << endl;
-    dumpObjectSpecs(p->exposedServices, "");
-    cout << endl;
-
-
-    cout << "Remoted Apps:" << endl;
-    std::list<MergedAcl::RemoteApp>::iterator it;
-    for (it = p->remotedApps.begin(); it != p->remotedApps.end(); it++) {
-        MergedAcl::RemoteApp& rapp = *it;
-        cout << rapp.deviceId.c_str() << " ";
-        for (int i = 0; i < 16; i++) cout << std::hex << (unsigned int)rapp.appId[i];
-        cout << endl;
-        cout << "    Object Specs:" << endl;
-        dumpObjectSpecs(rapp.objectSpecs, "    ");
-    }
-}
-
-class MyApp : public GatewayConnector {
-  public:
-    MyApp(BusAttachment* bus, qcc::String wkn) : GatewayConnector(bus, wkn) { }
-
-  protected:
-    virtual void MergedAclUpdated() {
-        cout << "Merged Acl updated" << endl;
-        MergedAcl* mergedAcl = new MergedAcl();
-        QStatus status = GetMergedAclAsync(mergedAcl);
-        if (ER_OK != status) { delete mergedAcl; }
-    }
-    virtual void ShutdownApp() {
-        cout << "shutdown" << endl;
-        kill(getpid(), SIGINT);
-    }
-    virtual void ReceiveGetMergedAclAsync(QStatus unmarshalStatus, MergedAcl* response) {
-        if (ER_OK != unmarshalStatus) {
-            cout << "Profile failed to unmarshal " << unmarshalStatus << endl;
-        } else {
-            dumpAcl(response);
-        }
-
-        delete response;
-    }
-};
-
-class MyReceiver : public NotificationReceiver {
-  public:
-    virtual void Receive(Notification const& notification) {
-        std::vector<NotificationText> vecMessages = notification.getText();
-
-        for (std::vector<NotificationText>::const_iterator it = vecMessages.begin(); it != vecMessages.end(); ++it) {
-            cout << "Notification in: " << it->getLanguage().c_str() << "  Message: " << it->getText().c_str() << endl;
-
-            if (tweetScript.size() && it->getLanguage().compare("en") == 0) {
-                qcc::String cmd = "sh -i " + tweetScript + " \"" + notification.getAppName() +
-                                  " sent: " + it->getText().c_str() + "\"";
-                cout << "Command is: " << cmd.c_str() << std::endl;
-                int result = system(cmd.c_str());
-                result = WEXITSTATUS(result);
-                std::cout << "system result=" << result << std::endl;
-            }
-        }
-
-    }
-
-    virtual void Dismiss(const int32_t msgId, const qcc::String appId) {
-        cout << "Received notification dismiss for msg=" << msgId << " from app=" << appId.c_str() << endl;
-    }
-};
-
 class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionListener {
   public:
     virtual void JoinSessionCB(QStatus status, SessionId sessionId, const SessionOpts& opts, void* context) {
@@ -192,6 +83,126 @@ class ConfigAnnounceHandler : public AnnounceHandler {
         bus->JoinSessionAsync(busName, port, cs, opts, cs, strdup(busName));
     }
 
+};
+
+ConfigAnnounceHandler* announceHandler = 0;
+
+void cleanup() {
+    if (!bus) {
+        return;
+    }
+
+    if (announceHandler) {
+        AnnouncementRegistrar::UnRegisterAnnounceHandler(*bus, *announceHandler, NULL, 0);
+        delete announceHandler;
+    }
+
+    if (notificationService) {
+        notificationService->shutdown();
+        notificationService = 0;
+    }
+    if (busListener) {
+        CommonSampleUtil::aboutServiceDestroy(bus, busListener);
+        delete busListener;
+        busListener = 0;
+    }
+
+    bus->Disconnect();
+    if (keyListener) {
+        delete keyListener;
+        keyListener = 0;
+    }
+    bus->Stop();
+    delete bus;
+    bus = 0;
+}
+
+void signal_callback_handler(int32_t signum) {
+    cleanup();
+    exit(signum);
+}
+
+void dumpObjectSpecs(std::list<GatewayMergedAcl::ObjectSpec>& specs, const char* indent) {
+    std::list<GatewayMergedAcl::ObjectSpec>::iterator it;
+    for (it = specs.begin(); it != specs.end(); it++) {
+        GatewayMergedAcl::ObjectSpec& spec = *it;
+        cout << indent << "objectPath: " << spec.objectPath.c_str() << endl;
+        cout << indent << "isPrefix: " << (spec.isPrefix ? "true" : "false") << endl;
+
+        std::list<qcc::String>::iterator innerator;
+        for (innerator = spec.interfaces.begin(); innerator != spec.interfaces.end(); innerator++) {
+            cout << indent << "    " << "interface: " << (*innerator).c_str() << endl;
+        }
+    }
+}
+
+void dumpAcl(GatewayMergedAcl* p) {
+    cout << "Exposed Services:" << endl;
+    dumpObjectSpecs(p->exposedServices, "");
+    cout << endl;
+
+
+    cout << "Remoted Apps:" << endl;
+    std::list<GatewayMergedAcl::RemoteApp>::iterator it;
+    for (it = p->remotedApps.begin(); it != p->remotedApps.end(); it++) {
+        GatewayMergedAcl::RemoteApp& rapp = *it;
+        cout << rapp.deviceId.c_str() << " ";
+        for (int i = 0; i < 16; i++) cout << std::hex << (unsigned int)rapp.appId[i];
+        cout << endl;
+        cout << "    Object Specs:" << endl;
+        dumpObjectSpecs(rapp.objectSpecs, "    ");
+    }
+}
+
+class MyApp : public GatewayConnector {
+  public:
+    MyApp(BusAttachment* bus, qcc::String wkn) : GatewayConnector(bus, wkn) { }
+
+  protected:
+    virtual void MergedAclUpdated() {
+        cout << "Merged Acl updated" << endl;
+        GatewayMergedAcl* mergedAcl = new GatewayMergedAcl();
+        QStatus status = GetMergedAclAsync(mergedAcl);
+        if (ER_OK != status) { delete mergedAcl; }
+    }
+    virtual void ShutdownApp() {
+        cout << "shutdown" << endl;
+        kill(getpid(), SIGINT);
+    }
+    virtual void ReceiveGetMergedAclAsync(QStatus unmarshalStatus, GatewayMergedAcl* response) {
+        if (ER_OK != unmarshalStatus) {
+            cout << "Profile failed to unmarshal " << unmarshalStatus << endl;
+        } else {
+            dumpAcl(response);
+        }
+
+        delete response;
+    }
+};
+
+class MyReceiver : public NotificationReceiver {
+  public:
+    virtual void Receive(Notification const& notification) {
+        std::vector<NotificationText> vecMessages = notification.getText();
+
+        for (std::vector<NotificationText>::const_iterator it = vecMessages.begin(); it != vecMessages.end(); ++it) {
+            cout << "Notification in: " << it->getLanguage().c_str() << "  Message: " << it->getText().c_str() << endl;
+
+            if (tweetScript.size() && it->getLanguage().compare("en") == 0) {
+                qcc::String cmd = "sh -i " + tweetScript + " \"" + notification.getAppName() +
+                                  " sent: " + it->getText().c_str() + "\"";
+                cout << "Command is: " << cmd.c_str() << std::endl;
+                int result = system(cmd.c_str());
+                result = WEXITSTATUS(result);
+                std::cout << "system result=" << result << std::endl;
+            }
+        }
+
+    }
+
+    virtual void Dismiss(const int32_t msgId, const qcc::String appId) {
+        cout << "Received notification dismiss for msg=" << msgId << " from app=" << appId.c_str() << endl;
+    }
 };
 
 int main(int argc, char** argv) {
@@ -295,7 +306,7 @@ int main(int argc, char** argv) {
     //====================================
     // Register for config announcements
     //====================================
-    ConfigAnnounceHandler* announceHandler = new ConfigAnnounceHandler();
+    announceHandler = new ConfigAnnounceHandler();
     AnnouncementRegistrar::RegisterAnnounceHandler(*bus, *announceHandler, NULL, 0);
 
     //====================================
@@ -320,19 +331,26 @@ int main(int argc, char** argv) {
         cout << "Got command " << cmd << endl;
 
         if (0 == strcmp(cmd, "GetMergedAcl")) {
-            MergedAcl macl;
+            GatewayMergedAcl macl;
             QStatus status = myApp.GetMergedAcl(macl);
             cout << "GetMergedAcl returned " << status << endl;
-            dumpAcl(&macl);
+            if (status == ER_OK) {
+                dumpAcl(&macl);
+            }
         } else if (0 == strcmp(cmd, "UpdateConnectionStatus")) {
             char* s = strtok(NULL, " \r\t\n");
             if (NULL == s) {
                 cout << "Please try again and specify the new connection status" << endl;
+                continue;
             }
             int i = atoi(s);
             myApp.UpdateConnectionStatus((ConnectionStatus)i);
         } else if (0 == strcmp(cmd, "Notify")) {
             char* typeStr = strtok(NULL, " \r\t\n");
+            if (NULL == typeStr) {
+                cout << "Something went wrong sending message" << endl;
+                continue;
+            }
             char* msg = typeStr + strlen(typeStr) + 1;
 
             vector<NotificationText> msgs;

@@ -38,10 +38,10 @@ class GatewayConnector : public MessageReceiver {
 
     QStatus UpdateConnectionStatus(ConnectionStatus connStatus);
 
-    QStatus GetMergedAcl(MergedAcl& response);
-    QStatus GetMergedAclAsync(MergedAcl* response);
+    QStatus GetMergedAcl(GatewayMergedAcl& response);
+    QStatus GetMergedAclAsync(GatewayMergedAcl* response);
   protected:
-    virtual void ReceiveGetMergedAclAsync(QStatus unmarshalStatus, MergedAcl* response) { }
+    virtual void ReceiveGetMergedAclAsync(QStatus unmarshalStatus, GatewayMergedAcl* response) { }
 
     virtual void MergedAclUpdated() = 0;
     virtual void ShutdownApp() = 0;

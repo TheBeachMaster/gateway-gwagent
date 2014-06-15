@@ -21,7 +21,7 @@ using namespace services;
 using namespace std;
 
 
-QStatus MergedAcl::unmarshal(Message& msg) {
+QStatus GatewayMergedAcl::unmarshal(Message& msg) {
     QStatus status = ER_OK;
 
     //exposed services
@@ -70,7 +70,7 @@ QStatus MergedAcl::unmarshal(Message& msg) {
     return status;
 }
 
-QStatus MergedAcl::unmarshalObjectSpecs(MsgArg* objSpecArgs, size_t numObjSpecs, std::list<ObjectSpec>& dest) {
+QStatus GatewayMergedAcl::unmarshalObjectSpecs(MsgArg* objSpecArgs, size_t numObjSpecs, std::list<ObjectSpec>& dest) {
     QStatus status = ER_OK;
 
     for (size_t i = 0; i < numObjSpecs; i++) {
