@@ -45,16 +45,5 @@
         <property enable_ipv4="true"/>
         <property enable_ipv6="true"/>
     </ip_name_service>
-
-    <!--  Allow everything, D-Bus socket is protected by unix filesystem
-       permissions -->
-    <policy context="default">
-        <allow send_interface="*"/>
-        <allow receive_interface="*"/>
-        <allow own="*"/>
-        <allow user="*"/>
-        <allow send_requested_reply="true"/>
-        <allow receive_requested_reply="true"/>
-    </policy>
     <include>/opt/alljoyn/alljoyn-daemon.d/defaultConfig.xml</include>
 </busconfig>

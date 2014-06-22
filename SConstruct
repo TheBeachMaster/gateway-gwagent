@@ -1,4 +1,4 @@
-# Copyright (c) 2013, AllSeen Alliance. All rights reserved.
+# Copyright (c) 2013-2014, AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
 #    purpose with or without fee is hereby granted, provided that the above
@@ -25,7 +25,7 @@ vars.Add(PathVariable('ALLJOYN_DISTDIR',
 vars.Add(EnumVariable('BUILD_SERVICES_SAMPLES',
                       'Build the services samples.',
                       'off',
-                      allowed_values = ['off']))
+                      allowed_values = ['off', 'on']))
 
 vars.Add(PathVariable('APP_COMMON_DIR',
                       'Directory containing common sample application sources.',

@@ -42,7 +42,7 @@ std::map<String, GatewayApp*> GatewayAppManager::getApps() const
 
 QStatus GatewayAppManager::init(BusAttachment* bus)
 {
-    QStatus status;
+    QStatus status = ER_OK;
 
     if (!bus || !bus->IsStarted() || !bus->IsConnected()) {
         status = ER_BAD_ARG_1;
