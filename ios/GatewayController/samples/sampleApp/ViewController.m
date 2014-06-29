@@ -401,6 +401,9 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
     
 	NSLog(@"Start About Client");
     
+    // Create a dictionary to contain announcements using a key in the format of: "announcementUniqueName + announcementObj"
+	self.clientInformationDict = [[NSMutableDictionary alloc] init];
+    
 	status = [AJNPasswordManager setCredentialsForAuthMechanism:@"ALLJOYN_PIN_KEYX" usingPassword:@"000000"];
 	if (status != ER_OK) {
         [AppDelegate AlertAndLog:@"Failed to set credentials" status:status];
@@ -440,10 +443,7 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
 	}
     
     [AnnouncementManager sharedInstance]; //announcement manager for all no gw annoncement
-    
-	// Create a dictionary to contain announcements using a key in the format of: "announcementUniqueName + announcementObj"
-	self.clientInformationDict = [[NSMutableDictionary alloc] init];
-    
+   
 	// AddMatchRule
 	status = [self.clientBusAttachment addMatchRule:(@"sessionless='t',type='error'")]; // This is added because we want to listen to the about announcements which are sessionless
 	if (status != ER_OK) {
