@@ -148,7 +148,7 @@ QStatus PayloadAdapter::unmarshalMetaData(const MsgArg* metaDataArg, std::map<qc
     }
 
 
-    for (int x = 0; x != internalMetaDataCount; x++) {
+    for (size_t x = 0; x != internalMetaDataCount; x++) {
         char*key;
         char*value;
         status = internalMetaDataMap[x].Get("{ss}", &key, &value);
@@ -228,7 +228,7 @@ QStatus PayloadAdapter::MarshalAccessRules(const GatewayCtrlAccessRules& accessR
         MsgArg*exposedServicesArg = new MsgArg[exposedServices.size()];
 
 
-        for (int i = 0; i != exposedServices.size(); i++) {
+        for (size_t i = 0; i != exposedServices.size(); i++) {
             status = PayloadAdapter::marshalObjectDescriptions(*exposedServices[i], &exposedServicesArg[i]);
             if (status != ER_OK) {
                 QCC_LogError(status, ("GatewayCtrlManifestObjectDescription failed"));
@@ -255,12 +255,12 @@ QStatus PayloadAdapter::MarshalAccessRules(const GatewayCtrlAccessRules& accessR
 
         MsgArg*remotedAppsArg = new MsgArg[remotedApps.size()];
 
-        for (int i = 0; i != remotedApps.size(); i++) {
+        for (size_t i = 0; i != remotedApps.size(); i++) {
             GatewayCtrlRemotedApp*app = remotedApps[i];
 
             MsgArg*objDescRulesArg = new MsgArg[app->GetObjDescRules().size()];
 
-            for (int x = 0; x != app->GetObjDescRules().size(); x++) {
+            for (size_t x = 0; x != app->GetObjDescRules().size(); x++) {
                 status = PayloadAdapter::marshalObjectDescriptions(*app->GetObjDescRules()[x], &objDescRulesArg[x]);
                 if (status != ER_OK) {
                     QCC_LogError(status, ("GatewayCtrlAccessRules failed"));

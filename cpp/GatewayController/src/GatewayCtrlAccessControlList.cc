@@ -175,7 +175,7 @@ AclResponseCode GatewayCtrlAccessControlList::Activate(SessionId sessionId, QSta
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -234,7 +234,7 @@ AclResponseCode GatewayCtrlAccessControlList::Deactivate(SessionId sessionId, QS
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -395,7 +395,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -462,7 +462,7 @@ AclResponseCode GatewayCtrlAccessControlList::UpdateCustomMetadata(SessionId ses
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -516,15 +516,17 @@ AclResponseCode GatewayCtrlAccessControlList::UpdateAclMetadata(SessionId sessio
             goto end;
         }
 
+        MsgArg*internalMetaDataKeyValueMapArg = new MsgArg("a{ss}", metadata.size(), metadataArg);
+
         Message replyMsg(*busAttachment);
-        status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATEACLMETADATA.c_str(), metadataArg, 1, replyMsg);
+        status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATEACLMETADATA.c_str(), internalMetaDataKeyValueMapArg, 1, replyMsg);
         if (status != ER_OK) {
             QCC_LogError(status, ("Call to updateMetaData failed"));
             goto end;
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -584,7 +586,7 @@ AclStatus GatewayCtrlAccessControlList::RetrieveStatus(SessionId sessionId, QSta
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -674,7 +676,7 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 5) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -1244,7 +1246,7 @@ void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vec
 
 
         GatewayCtrlTPObjectPath*unconfOP          = unconfRule->GetObjectPath();
-        const std::set<GatewayCtrlTPInterface>* unconfIfaces  = unconfRule->GetInterfaces();
+        std::set<GatewayCtrlTPInterface>* unconfIfaces  = (std::set<GatewayCtrlTPInterface>*)unconfRule->GetInterfaces();
 
         //Gets TRUE if unconfOP was found among the confRules
         bool unconfOpInConf = false;
@@ -1262,7 +1264,12 @@ void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vec
             }
 
             unconfOpInConf = true;
-            ((std::set<GatewayCtrlTPInterface>*)unconfIfaces)->erase(confIfaces->begin(), confIfaces->end());
+
+            for (std::set<GatewayCtrlTPInterface>::const_iterator itr = confIfaces->begin(); itr != confIfaces->end(); itr++) {
+                QCC_SyncPrintf("erasing %s", itr->GetName().c_str());
+                unconfIfaces->erase(unconfIfaces->find(*itr));
+            }
+            //unconfIfaces->erase(confIfaces->begin(), confIfaces->end());
             break;
         }
 

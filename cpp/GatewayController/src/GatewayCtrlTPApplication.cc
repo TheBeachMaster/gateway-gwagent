@@ -231,7 +231,7 @@ qcc::String GatewayCtrlTPApplication::RetrieveManifestFile(SessionId sessionId, 
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -287,7 +287,7 @@ GatewayCtrlManifestRules*GatewayCtrlTPApplication::RetrieveManifestRules(Session
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 2) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -362,7 +362,7 @@ GatewayCtrlTPApplicationStatus*GatewayCtrlTPApplication::RetrieveStatus(SessionI
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 4) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -413,7 +413,7 @@ RestartStatus GatewayCtrlTPApplication::Restart(SessionId sessionId, QStatus& st
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -443,7 +443,7 @@ void GatewayCtrlTPApplication::handleSignal(const ajn::InterfaceDescription::Mem
     QCC_DbgHLPrintf((srcPath));
 
     const ajn::MsgArg* returnArgs;
-    size_t numArgs;
+    size_t numArgs = 0;
     msg->GetArgs(numArgs, returnArgs);
     if (numArgs != 4) {
         QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -628,7 +628,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlTPApplication::CreateAcl(SessionId sessi
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 3) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -700,7 +700,7 @@ const std::vector <GatewayCtrlAccessControlList*>& GatewayCtrlTPApplication::Ret
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -767,7 +767,7 @@ AclResponseCode GatewayCtrlTPApplication::DeleteAcl(SessionId sessionId, qcc::St
         }
 
         const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
