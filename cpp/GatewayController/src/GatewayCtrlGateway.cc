@@ -89,6 +89,12 @@ const std::vector<GatewayCtrlTPApplication*>&  GatewayCtrlGateway::RetrieveInsta
             interfaceDescription->Activate();
         }
 
+        if (!interfaceDescription) { //if for some reason we still don't have interfaceDescription
+            status = ER_FAIL;
+            QCC_LogError(status, ("Interface description missing"));
+            goto end;
+        }
+
         status = proxy.AddInterface(*interfaceDescription);
         if (status != ER_OK) {
             QCC_LogError(status, ("AddInterface failed"));
@@ -102,8 +108,8 @@ const std::vector<GatewayCtrlTPApplication*>&  GatewayCtrlGateway::RetrieveInsta
             goto end;
         }
 
-        const ajn::MsgArg* returnArgs;
-        size_t numArgs;
+        const ajn::MsgArg* returnArgs = NULL;
+        size_t numArgs = 0;
         replyMsg->GetArgs(numArgs, returnArgs);
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
@@ -162,7 +168,7 @@ GatewayCtrlSessionResult GatewayCtrlGateway::JoinSession(GatewayCtrlControllerSe
     }
 
     SessionOpts opts(SessionOpts::TRAFFIC_MESSAGES, false, SessionOpts::PROXIMITY_ANY, TRANSPORT_ANY);
-    SessionId sessionId;
+    SessionId sessionId = 0;
     ajn::SessionPort port = GATEWAYSERVICE_PORT;
     QStatus status = busAttachment->JoinSession(GetBusName().c_str(), port, &m_SessionHandler, sessionId, opts);
     if (status != ER_OK) {

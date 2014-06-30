@@ -41,6 +41,7 @@ GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, AboutCli
         QCC_LogError(status, ("Get appID failed"));
     }
 
+    SetAppId(appIdBin, len);
 
 //            GetAboutDataEntry(aboutData,"AppId")
     m_BusName = busName;

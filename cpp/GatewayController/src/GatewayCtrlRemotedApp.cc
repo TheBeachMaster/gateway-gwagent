@@ -81,7 +81,7 @@ GatewayCtrlRemotedApp::GatewayCtrlRemotedApp(const ajn::MsgArg*remotedAppInfo, c
         SetDeviceName(itr->second);
     }
 
-    for (int i = 0; i != ObjDescRulesCount; i++) {
+    for (size_t i = 0; i != ObjDescRulesCount; i++) {
 
         GatewayCtrlManifestObjectDescription* objDescRule = PayloadAdapter::unmarshalObjectDescriptionsWithoutNames(&ObjDescRulesArray[i], objDescRules, status);
         if (status != ER_OK) {

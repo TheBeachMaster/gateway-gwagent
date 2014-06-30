@@ -47,6 +47,7 @@
             VisualAccessRules *remotedAppRules = [[VisualAccessRules alloc]initWithArrayOfManifestObjectDescription:[remotedApp objDescRules]];
 
             self.accessRulesArray[pos] = remotedAppRules;
+            pos++;
         }
     }
     return self;
