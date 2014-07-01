@@ -486,6 +486,17 @@ QStatus GatewayCtrlTPApplication::SetStatusChangedHandler(const GatewayCtrlAppli
 
 void GatewayCtrlTPApplication::UnsetStatusChangedHandler() {
     m_ApplicationSignalQueue.Stop();
+
+    BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+
+    QStatus status = busAttachment->UnregisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(&GatewayCtrlTPApplication::handleSignal), m_SignalMethod, m_ObjectPath.c_str());
+
+    if (status != ER_OK) {
+        QCC_LogError(status, ("Could not unregister the SignalHandler"));
+    } else {
+        QCC_DbgPrintf(("Unregistered the SignalHandler successfully"));
+    }
+
     m_ChangedSignalTask.UnSetHandler();
     m_ApplicationSignalQueue.Start();
 }

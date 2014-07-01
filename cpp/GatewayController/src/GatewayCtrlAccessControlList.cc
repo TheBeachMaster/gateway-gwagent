@@ -345,6 +345,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
 
         GatewayCtrlAccessRules*transmittedAcessRules = new GatewayCtrlAccessRules(expServicesTargetOut, remotedAppsOut);
 
+        transmittedAcessRules->SetMetadata(m_InternalMetadata);
 
         std::vector<MsgArg*> inputArgsVector;
 
@@ -363,16 +364,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
 
         inputArgsVector.insert(inputArgsVector.begin(), aclNameArg);
 
-        MsgArg*internalMetaDataKeyValueArg = PayloadAdapter::MarshalMetaData(m_InternalMetadata, status);
-
-        if (status != ER_OK) {
-            QCC_LogError(status, ("Set failed"));
-            delete [] internalMetaDataKeyValueArg;
-
-            goto end;
-        }
-
-        MsgArg*internalMetaDataKeyValueMapArg = new MsgArg("a{ss}", m_InternalMetadata.size(), internalMetaDataKeyValueArg);
+        MsgArg*internalMetaDataKeyValueMapArg = new MsgArg("a{ss}", 0, NULL);
 
         inputArgsVector.push_back(internalMetaDataKeyValueMapArg);
 
@@ -749,6 +741,7 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
             QCC_LogError(status, ("ConvertRemotedApps failed"));
             goto end;
         }
+
 
 
         delete tmpAccessRules;
@@ -1183,7 +1176,7 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
 
         //Look for the configurable RemotedApp from intersection of the manifest
         //with announcement data
-        GatewayCtrlRemotedApp*configurableApp = GetRemotedApp(configurableApps, remApp->GetDeviceId(), binary_appid);
+        GatewayCtrlRemotedApp*configurableApp = GetRemotedApp(&configurableApps, remApp->GetDeviceId(), binary_appid);
 
         //If there is no configurableApp, but aclMetadata has appName and deviceName to construct the RemotedApp object
         //and the acl configuredRules were created successfully, then create the RemotedApp object
@@ -1221,6 +1214,12 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
     //These apps remained in the configurableApps after working the algorithm above
     for (std::vector<GatewayCtrlRemotedApp*>::const_iterator itr = configurableApps.begin(); itr != configurableApps.end(); itr++) {
         outputRemotedApps.push_back(*itr);
+
+        qcc::String AppId;
+
+        AppId = qcc::BytesToHexString((*itr)->GetAppId(), UUID_LENGTH);
+
+        QCC_SyncPrintf("ConvertRemotedApps: '%s'", AppId.c_str());
     }
 
 

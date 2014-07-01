@@ -26,7 +26,7 @@ using namespace gwcConsts;
 
 GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, qcc::String appName, uint8_t*appId, qcc::String deviceName, qcc::String deviceId) : m_BusName(busName), m_AppName(appName), m_DeviceName(deviceName), m_DeviceId(deviceId)
 {
-
+    SetAppId(appId, UUID_LENGTH);
 }
 
 GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, AboutClient::AboutData const& aboutData) : m_BusName(busName)

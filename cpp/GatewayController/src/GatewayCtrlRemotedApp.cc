@@ -60,8 +60,6 @@ GatewayCtrlRemotedApp::GatewayCtrlRemotedApp(const ajn::MsgArg*remotedAppInfo, c
 
     AppId = qcc::BytesToHexString(AppIdBuffer, len);
 
-    //TODO: check manifest first, this data may be outdated. also - should this be here or in GatewayCtrlAccessControlList::retrieveAcl?
-
     qcc::String keyPrefix = GetDeviceId() + "_" + AppId;
 
     qcc::String key =  keyPrefix + AJSUFFIX_APP_NAME;

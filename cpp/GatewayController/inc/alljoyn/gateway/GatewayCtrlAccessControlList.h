@@ -276,18 +276,18 @@ class GatewayCtrlAccessControlList {
      * @param appId
      * @return {@link RemotedApp} if found or NULL if NOT
      */
-    GatewayCtrlRemotedApp*GetRemotedApp(std::vector<GatewayCtrlRemotedApp*> remotedApps, qcc::String deviceId, const uint8_t*appId)
+    GatewayCtrlRemotedApp*GetRemotedApp(std::vector<GatewayCtrlRemotedApp*>*remotedApps, qcc::String deviceId, const uint8_t*appId)
     {
         std::vector<GatewayCtrlRemotedApp*>::iterator iter;
 
-        for (iter = remotedApps.begin(); iter != remotedApps.end(); iter++) {
+        for (iter = remotedApps->begin(); iter != remotedApps->end(); iter++) {
 
             GatewayCtrlRemotedApp*currApp = (*iter);
             if ((currApp->GetDeviceId().compare(deviceId) == 0)
                 &&
                 (::memcmp(currApp->GetAppId(), appId, UUID_LENGTH) == 0)) {
 
-                remotedApps.erase(iter);
+                remotedApps->erase(iter);
                 return currApp;
             }
         }

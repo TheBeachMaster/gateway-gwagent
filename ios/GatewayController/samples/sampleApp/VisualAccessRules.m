@@ -98,7 +98,8 @@
     self = [super init];
     
     self.accessRulesDictionary = [[NSMutableDictionary alloc]init];
-    
+
+    // Gather the object paths for each interface
     for (AJGWCGatewayCtrlManifestObjectDescription *objectDescription in ArrayOfManifestObjectDescription) {
         NSSet *interfaces = [objectDescription interfaces];
         
@@ -107,15 +108,27 @@
         for (AJGWCGatewayCtrlTPInterface *interface in interfaces) {
             
             VisualInterfaceInfo *interfaceInfo = [[VisualInterfaceInfo alloc]init:interface isConfigured:NO enabled:YES]; // we will populate the configured interfaces later in this function
-            
+
+            // check if this interface already has object paths connected to it
             NSMutableArray *array = (NSMutableArray *)[self objectPathsForInterface:interfaceInfo];
-            
+
+            // if not, allocate
             if ([array count] == 0) {
                 array = [[NSMutableArray alloc] init];
             }
-            
+
+            // Gather the object paths for this interface into the array
             [array addObject:objPathInfo];
-            
+
+            // Sorting the object paths so the same entries will show at the same lines, only for aesthetics
+            [array sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                VisualObjPathInfo *objPathInfo1 = (VisualObjPathInfo *)obj1;
+                VisualObjPathInfo *objPathInfo2 = (VisualObjPathInfo *)obj2;
+
+                return [objPathInfo1.objectPath.path compare:objPathInfo2.objectPath.path];
+            }];
+
+            // Add the list of object paths to the interface. this is the important part.
             [self.accessRulesDictionary setObject:array forKey:interfaceInfo];
         }
     }
