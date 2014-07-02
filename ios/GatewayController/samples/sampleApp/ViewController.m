@@ -439,14 +439,6 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
 	}
     
     [AnnouncementManager sharedInstance]; //announcement manager for all no gw annoncement
-   
-	// AddMatchRule
-	status = [self.clientBusAttachment addMatchRule:(@"sessionless='t',type='error'")]; // This is added because we want to listen to the about announcements which are sessionless
-	if (status != ER_OK) {
-        [AppDelegate AlertAndLog:@"Failed at AJNBusAttachment addMatchRule" status:status];
-        [self stopAboutClient];
-        return;
-    }
     
 	// Advertise Daemon for tcl
 	status = [self.clientBusAttachment requestWellKnownName:self.realmBusName withFlags:kAJNBusNameFlagDoNotQueue];
