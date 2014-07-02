@@ -35,6 +35,8 @@ GatewayCtrlAccessControlList::GatewayCtrlAccessControlList(qcc::String gwBusName
     short RetAclStatus;
     char* ObjectPath;
 
+    m_AclStatus = GW_AS_INACTIVE;
+
     QStatus status = aclInfoAJ->Get("(ssqo)", &AclID, &AclName, &RetAclStatus, &ObjectPath);
 
     if (status == ER_OK) {
@@ -381,6 +383,10 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
 
         Message replyMsg(*busAttachment);
         status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATEACL.c_str(), args, 5, replyMsg);
+
+        delete [] args;
+        args = NULL;
+
         if (status != ER_OK) {
             QCC_LogError(status, ("Call to UpdateAcl failed"));
             goto end;
@@ -448,6 +454,10 @@ AclResponseCode GatewayCtrlAccessControlList::UpdateCustomMetadata(SessionId ses
 
         Message replyMsg(*busAttachment);
         status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATECUSTOMMETADATA.c_str(), metadataArg, 1, replyMsg);
+
+        delete metadataArg;
+        metadataArg = NULL;
+
         if (status != ER_OK) {
             QCC_LogError(status, ("Call to updateMetaData failed"));
             goto end;
@@ -508,10 +518,10 @@ AclResponseCode GatewayCtrlAccessControlList::UpdateAclMetadata(SessionId sessio
             goto end;
         }
 
-        MsgArg*internalMetaDataKeyValueMapArg = new MsgArg("a{ss}", metadata.size(), metadataArg);
+        MsgArg internalMetaDataKeyValueMapArg("a{ss}", metadata.size(), metadataArg);
 
         Message replyMsg(*busAttachment);
-        status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATEACLMETADATA.c_str(), internalMetaDataKeyValueMapArg, 1, replyMsg);
+        status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATEACLMETADATA.c_str(), &internalMetaDataKeyValueMapArg, 1, replyMsg);
         if (status != ER_OK) {
             QCC_LogError(status, ("Call to updateMetaData failed"));
             goto end;
@@ -739,6 +749,9 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
 
         if (status != ER_OK) {
             QCC_LogError(status, ("ConvertRemotedApps failed"));
+            delete tmpAccessRules;
+            tmpAccessRules = NULL;
+
             goto end;
         }
 
@@ -923,12 +936,12 @@ GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCt
         if (usedManRules.find(*manop) != usedManRules.end()) {
             usedIfaces = &usedManRules.find(*manop)->second;
         }
-        GatewayCtrlTPObjectPath*storeOp = new GatewayCtrlTPObjectPath(manop->GetPath(), manop->GetFriendlyName(), false, manop->isPrefixAllowed());
+        GatewayCtrlTPObjectPath storeOp(manop->GetPath(), manop->GetFriendlyName(), false, manop->isPrefixAllowed());
 
 
         //Check if this rule was NOT used then add it to the resExpServices
         if (usedIfaces == NULL) {
-            aclExpServices.push_back(new GatewayCtrlManifestObjectDescription(*storeOp, *manifs, false));
+            aclExpServices.push_back(new GatewayCtrlManifestObjectDescription(storeOp, *manifs, false));
             continue;
         }
 
@@ -941,7 +954,7 @@ GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCt
 
         //Add to the resExpServices the object path and the interfaces that weren't used
         if (manifs->size() > 0) {
-            aclExpServices.push_back(new GatewayCtrlManifestObjectDescription(*storeOp, *manifs, false));
+            aclExpServices.push_back(new GatewayCtrlManifestObjectDescription(storeOp, *manifs, false));
         }
     }
 
@@ -1016,6 +1029,10 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
                     ifacesToConvert.erase(ifacesToConvertIter++);
                 }
 
+                if (ifacesToConvertIter == ifacesToConvert.end()) {
+                    break;
+                }
+
                 for (std::set<GatewayCtrlTPInterface>::const_iterator manIface = manifs->begin(); manIface != manifs->end(); manIface++) {
 
                     //aclInterface is found in manifest
@@ -1038,6 +1055,8 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
 
             //Not found any matched interfaces, continue to the next manifest rule
             if (resInterfaces.size() == 0) {
+                delete resObjPath;
+                resObjPath = NULL;
                 continue;
             }
 
@@ -1070,9 +1089,12 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
             //If all the objDescAJ interfaces have been handled, no need to continue iterating
             //over the manifest rules
             if (ifacesToConvert.size() == 0) {
+                delete resObjPath;
+                resObjPath = NULL;
                 break;
             }
-
+            delete resObjPath;
+            resObjPath = NULL;
         }        //for :: manifest
 
     }        //for :: objDescsAJ

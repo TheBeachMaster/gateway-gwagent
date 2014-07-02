@@ -95,21 +95,33 @@ GatewayCtrlGateway* GatewayCtrlGatewayController::CreateGateway(qcc::String cons
 
 GatewayCtrlGateway* GatewayCtrlGatewayController::getGateway(qcc::String const& gatewayBusName)
 {
-    return m_Gateways.find(gatewayBusName)->second;
+    std::map<qcc::String, GatewayCtrlGateway*>::const_iterator gateway = m_Gateways.find(gatewayBusName);
+
+    if (gateway != m_Gateways.end()) {
+        return gateway->second;
+    }
+    return NULL;
 }
 
 QStatus GatewayCtrlGatewayController::deleteGateway(qcc::String const& gatewayBusName)
 {
-    QStatus status = m_Gateways.find(gatewayBusName)->second->Release();
+    QStatus status = ER_OK;
 
-    if (status != ER_OK) {
-        QCC_LogError(status, ("While releasing a gateway"));
-        return status;
+    std::map<qcc::String, GatewayCtrlGateway*>::iterator gateway = m_Gateways.find(gatewayBusName);
+    if (gateway != m_Gateways.end()) {
+        status = gateway->second->Release();
+
+        if (status != ER_OK) {
+            QCC_LogError(status, ("While releasing a gateway"));
+            return status;
+        }
+
+        delete gateway->second;
     }
 
-    delete m_Gateways.find(gatewayBusName)->second;
 
-    m_Gateways.erase(m_Gateways.find(gatewayBusName));
+
+    m_Gateways.erase(gateway);
 
     return status;
 }

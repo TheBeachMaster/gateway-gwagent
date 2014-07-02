@@ -633,6 +633,10 @@ GatewayCtrlAclWriteResponse* GatewayCtrlTPApplication::CreateAcl(SessionId sessi
 
         Message replyMsg(*busAttachment);
         status = proxy.MethodCall(AJ_GATEWAYCONTROLLER_ACLMGMT_INTERFACE.c_str(), AJ_METHOD_CREATEACL.c_str(), args, 5, replyMsg);
+
+        delete [] args;
+        args = NULL;
+
         if (status != ER_OK) {
             QCC_LogError(status, ("Call to GetACLs failed"));
             goto end;
@@ -943,10 +947,10 @@ GatewayCtrlRemotedApp* GatewayCtrlTPApplication::ExtractRemotedApp(const std::ve
 
                 //We add the manifest rule, if the manifest OP is the prefix of the BOD.objPath
                 //or both object paths are equal
-                GatewayCtrlTPObjectPath*storeOp = new GatewayCtrlTPObjectPath(manop->GetPath(), manop->GetFriendlyName(), false, manop->isPrefixAllowed());
-                std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >::const_iterator remotedIfaces = remotedRules.find(*storeOp);
+                GatewayCtrlTPObjectPath storeOp(manop->GetPath(), manop->GetFriendlyName(), false, manop->isPrefixAllowed());
+                std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >::const_iterator remotedIfaces = remotedRules.find(storeOp);
                 if (remotedIfaces == remotedRules.end()) {
-                    remotedRules.insert(std::pair<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >(*storeOp,  resIfaces));
+                    remotedRules.insert(std::pair<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >(storeOp,  resIfaces));
                 } else {
                     resIfaces.insert(remotedIfaces->second.begin(), remotedIfaces->second.end());
                 }
@@ -956,10 +960,10 @@ GatewayCtrlRemotedApp* GatewayCtrlTPApplication::ExtractRemotedApp(const std::ve
                 if (manop->GetPath().compare(objPath)) {
 
                     //bodOp starts with the manOp but itself it's not a prefix
-                    GatewayCtrlTPObjectPath*bodOp = new GatewayCtrlTPObjectPath(objPath, "", false, manop->isPrefixAllowed());
-                    remotedIfaces      = remotedRules.find(*bodOp);
+                    GatewayCtrlTPObjectPath bodOp(objPath, "", false, manop->isPrefixAllowed());
+                    remotedIfaces      = remotedRules.find(bodOp);
                     if (remotedIfaces == remotedRules.end()) {
-                        remotedRules.insert(std::pair<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >(*bodOp,  resIfaces));
+                        remotedRules.insert(std::pair<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >(bodOp,  resIfaces));
                     } else {
                         resIfaces.insert(remotedIfaces->second.begin(), remotedIfaces->second.end());
                     }

@@ -106,6 +106,9 @@ class GatewayCtrlDiscoveredApp {
 
 
   private:
+    /**
+     * Create an entry. If information is missing from the aboutData map an empty string is entered instead
+     */
     qcc::String GetAboutDataEntry(AboutClient::AboutData const& aboutData, qcc::String key);
 
     /**

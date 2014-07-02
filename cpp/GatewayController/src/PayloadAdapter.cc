@@ -245,6 +245,8 @@ QStatus PayloadAdapter::MarshalAccessRules(const GatewayCtrlAccessRules& accessR
         if (status != ER_OK) {
             QCC_LogError(status, ("GatewayCtrlAccessRules failed"));
             delete [] exposedServicesArg;
+            delete exposedServicesArrayArg;
+
             goto failed;
         }
 
@@ -294,6 +296,7 @@ QStatus PayloadAdapter::MarshalAccessRules(const GatewayCtrlAccessRules& accessR
             QCC_LogError(status, ("Set failed"));
             delete [] exposedServicesArg;
             delete [] remotedAppsArg;
+            delete remotedAppsArrayArg;
 
             goto failed;
         }
@@ -322,6 +325,7 @@ QStatus PayloadAdapter::MarshalAccessRules(const GatewayCtrlAccessRules& accessR
             delete [] exposedServicesArg;
             delete [] remotedAppsArg;
             delete [] metaDataKeyValueArg;
+            delete metaDataKeyValueMapArg;
 
             goto failed;
         }

@@ -89,9 +89,16 @@ void GatewayCtrlAccessRules::SetMetadata(std::map<qcc::String, qcc::String> cons
     m_Metadata.insert(metadata.begin(), metadata.end());
 }
 
-qcc::String GatewayCtrlAccessRules::GetMetadata(qcc::String key)
+qcc::String*GatewayCtrlAccessRules::GetMetadata(qcc::String key)
 {
-    return m_Metadata.find(key)->second;
+    std::map<qcc::String, qcc::String>::iterator value = m_Metadata.find(key);
+
+    if (value != m_Metadata.end()) {
+        return &value->second;
+    } else {
+        return NULL;
+    }
+
 
 }
 

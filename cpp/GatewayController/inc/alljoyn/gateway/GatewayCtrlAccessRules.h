@@ -74,9 +74,9 @@ class GatewayCtrlAccessRules {
     /**
      * Returns metadata value for the given key
      * @param key The metadata key
-     * @return Metadata value
+     * @return Metadata value or NULL if not found
      */
-    qcc::String GetMetadata(qcc::String key);
+    qcc::String*GetMetadata(qcc::String key);
 
     /**
      * Returns current metadata object

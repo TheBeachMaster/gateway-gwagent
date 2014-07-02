@@ -35,14 +35,14 @@ namespace services {
 
 class ChangedSignalData : public TaskData {
   public:
-    ChangedSignalData(const ajn::MsgArg* returnArgs, qcc::String AppId) { m_TPApplicationStatus = new GatewayCtrlTPApplicationStatus(returnArgs); m_AppId = AppId; }
+    ChangedSignalData(const ajn::MsgArg* returnArgs, qcc::String AppId) : m_TPApplicationStatus(returnArgs) { m_AppId = AppId; }
 
-    const GatewayCtrlTPApplicationStatus*GetTPApplicationStatus() const { return m_TPApplicationStatus; }
+    const GatewayCtrlTPApplicationStatus*GetTPApplicationStatus() const { return &m_TPApplicationStatus; }
 
     qcc::String GetAppId() const { return m_AppId; }
 
   private:
-    GatewayCtrlTPApplicationStatus*m_TPApplicationStatus;
+    GatewayCtrlTPApplicationStatus m_TPApplicationStatus;
 
     qcc::String m_AppId;
 

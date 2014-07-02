@@ -31,6 +31,11 @@ GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, qcc::Str
 
 GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, AboutClient::AboutData const& aboutData) : m_BusName(busName)
 {
+    if (aboutData.find("AppId") == aboutData.end()) {
+        QCC_LogError(ER_FAIL, ("AppId missing in about structure, bus name is '%s'", busName.c_str()));
+        return;
+    }
+
     const MsgArg*value = &aboutData.find("AppId")->second;
 
 
@@ -39,6 +44,7 @@ GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, AboutCli
     QStatus status = value->Get("ay", &len, &appIdBin);
     if (status != ER_OK) {
         QCC_LogError(status, ("Get appID failed"));
+        return;
     }
 
     SetAppId(appIdBin, len);
@@ -53,13 +59,20 @@ GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, AboutCli
 
 qcc::String GatewayCtrlDiscoveredApp::GetAboutDataEntry(AboutClient::AboutData const& aboutData, qcc::String key)
 {
+    if (aboutData.find(key) == aboutData.end()) {
+        QCC_LogError(ER_FAIL, ("Called GetAboutDataEntry but couldn't find the key '%s' requested", key.c_str()));
+        return "";
+    }
+
     const MsgArg*value = &aboutData.find(key)->second;
 
     if (value->typeId == ALLJOYN_STRING) {
         return value->v_string.str;
     }
 
-    return "NA";
+    QCC_LogError(ER_FAIL, ("Called GetAboutDataEntry on a key '%s' that is not an ALLJOYN_STRING", key.c_str()));
+
+    return "";
 }
 
 /**

@@ -95,7 +95,13 @@
 
 - (NSString*)metadata:(NSString*) key
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetMetadata([AJNConvertUtil convertNSStringToQCCString:key])];
+    qcc::String *value = self.handle->GetMetadata([AJNConvertUtil convertNSStringToQCCString:key]);
+
+    if (value) {
+        return [AJNConvertUtil convertQCCStringtoNSString:*value];
+    } else {
+        return nil;
+    }
     
 }
 
