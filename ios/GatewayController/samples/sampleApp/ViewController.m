@@ -400,13 +400,6 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
     // Create a dictionary to contain announcements using a key in the format of: "announcementUniqueName + announcementObj"
 	self.clientInformationDict = [[NSMutableDictionary alloc] init];
     
-	status = [AJNPasswordManager setCredentialsForAuthMechanism:@"ALLJOYN_PIN_KEYX" usingPassword:@"000000"];
-	if (status != ER_OK) {
-        [AppDelegate AlertAndLog:@"Failed to set credentials" status:status];
-        [self stopAboutClient];
-        return;
-    }
-    
 	// Init AJNBusAttachment
 	self.clientBusAttachment = [[AJNBusAttachment alloc] initWithApplicationName:(APPNAME) allowRemoteMessages:(ALLOWREMOTEMESSAGES)];
     
