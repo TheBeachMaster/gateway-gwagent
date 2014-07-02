@@ -38,6 +38,7 @@ static NSString *const DEFAULT_PASSCODE = @"000000";
 static NSString *const KEYSTORE_FILE_PATH = @"Documents/alljoyn_keystore/s_central.ks";
 static NSString *const GW_OBJECT_PATH = @"/gw";  // GW Service
 static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Service
+static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALLJOYN_ECDHE_PSK";
 
 @interface ViewController ()
 
@@ -478,9 +479,20 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
 
 - (QStatus)enableClientSecurity
 {
-	QStatus status;
+    QStatus status;
+	status = [self.clientBusAttachment enablePeerSecurity:AUTH_MECHANISM authenticationListener:self keystoreFileName:KEYSTORE_FILE_PATH sharing:YES];
     
-	status = [self.clientBusAttachment enablePeerSecurity:@"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX" authenticationListener:self keystoreFileName:KEYSTORE_FILE_PATH sharing:YES];
+    if (status != ER_OK) { //try to delete the keystore and recreate it, if that fails return failure
+        NSError *error;
+        NSString *keystoreFilePath = [NSString stringWithFormat:@"%@/alljoyn_keystore/s_central.ks", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0]];
+        [[NSFileManager defaultManager] removeItemAtPath:keystoreFilePath error:&error];
+        if (error) {
+            NSLog(@"ERROR: Unable to delete keystore. %@", error);
+            return ER_AUTH_FAIL;
+        }
+        status = [self.clientBusAttachment enablePeerSecurity:AUTH_MECHANISM authenticationListener:self keystoreFileName:KEYSTORE_FILE_PATH sharing:YES];
+    }
+    
 	return status;
 }
 
@@ -608,7 +620,7 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
     
 	NSLog(@"requestSecurityCredentialsWithAuthenticationMechanism:%@ forRemotePeer%@ userName:%@", authenticationMechanism, peerName, userName);
     
-	if ([authenticationMechanism isEqualToString:@"ALLJOYN_SRP_KEYX"] || [authenticationMechanism isEqualToString:@"ALLJOYN_PIN_KEYX"]) {
+	if ([authenticationMechanism isEqualToString:@"ALLJOYN_SRP_KEYX"] || [authenticationMechanism isEqualToString:@"ALLJOYN_PIN_KEYX"] || [authenticationMechanism isEqualToString:@"ALLJOYN_ECDHE_PSK"]) {
 		if (mask & kAJNSecurityCredentialTypePassword) {
 			if (authenticationCount <= 3) {
 				creds = [[AJNSecurityCredentials alloc] init];
