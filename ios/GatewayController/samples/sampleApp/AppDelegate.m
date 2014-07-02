@@ -51,22 +51,6 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
--(void)showLoadingAlert:(NSString *)message
-{
-    self.av = [[UIAlertView alloc] initWithTitle:@"Please wait" message:message delegate:nil cancelButtonTitle:nil otherButtonTitles:nil]; //TODO: add delegate
-    UIActivityIndicatorView *v = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 80, 40)];
-    v.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    [v startAnimating];
-    [self.av setValue:v forKey:@"accessoryView"];
-    
-    [self.av show];
-}
-
--(void)dismissLoadingAlert
-{
-    [self.av dismissWithClickedButtonIndex:0 animated:YES];
-}
-
 + (void)AlertAndLog:(NSString *)message status:(QStatus)status
 {
     NSString *alertText = [NSString stringWithFormat:@"%@ (%@)",message, [AJNStatus descriptionForStatusCode:status]];

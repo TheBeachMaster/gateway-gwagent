@@ -21,7 +21,5 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UIAlertView *av;
 
--(void)showLoadingAlert:(NSString *)message;
--(void)dismissLoadingAlert;
 + (void)AlertAndLog:(NSString *)message status:(QStatus)status;
 @end

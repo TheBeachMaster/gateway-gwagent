@@ -26,6 +26,8 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *servicesTable;
 
+@property (weak, nonatomic) IBOutlet UILabel *loadingGWLabel;
+
 - (IBAction)connectButtonDidTouchUpInside:(id)sender;
 
 @end
