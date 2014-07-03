@@ -353,12 +353,12 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
 
         status = PayloadAdapter::MarshalAccessRules(*transmittedAcessRules, inputArgsVector);
 
-        transmittedAcessRules->Release();
-        delete transmittedAcessRules;
-        transmittedAcessRules = NULL;
-
         if (status != ER_OK) {
             QCC_LogError(status, ("PayloadAdapter::MarshalAccessRules failed"));
+            transmittedAcessRules->Release();
+            delete transmittedAcessRules;
+            transmittedAcessRules = NULL;
+
             goto end;
         }
 
@@ -374,18 +374,25 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
             (*itr)->SetOwnershipFlags(MsgArg::OwnsArgs, true);
         }
 
-        MsgArg*args = new MsgArg[inputArgsVector.size()];
+        if (inputArgsVector.size() != AJ_METHOD_UPDATEACL_INPUT_PARAM_COUNT) {
+            QCC_LogError(ER_FAIL, ("UpdateAcl failed - wrong number of arguments gathered to be sent"));
+            status = ER_FAIL;
+            goto end;
+        }
 
-        for (unsigned int x = 0; x != inputArgsVector.size(); x++) {
+        MsgArg args[AJ_METHOD_UPDATEACL_INPUT_PARAM_COUNT];
+
+        for (unsigned int x = 0; x != AJ_METHOD_UPDATEACL_INPUT_PARAM_COUNT; x++) {
             args[x] = *inputArgsVector[x];
         }
 
 
         Message replyMsg(*busAttachment);
-        status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATEACL.c_str(), args, 5, replyMsg);
+        status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATEACL.c_str(), args, AJ_METHOD_UPDATEACL_INPUT_PARAM_COUNT, replyMsg);
 
-        delete [] args;
-        args = NULL;
+        transmittedAcessRules->Release();
+        delete transmittedAcessRules;
+        transmittedAcessRules = NULL;
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Call to UpdateAcl failed"));
