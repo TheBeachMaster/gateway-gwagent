@@ -93,7 +93,7 @@ class AclAdapter {
      * @param objectsIndx - the index in the array to start marshaling into
      * @return status - success/failure
      */
-    static QStatus marshalObjectDesciptions(GatewayObjectDescriptions& objects, MsgArg* objectsArray, size_t* objectsIndx);
+    static QStatus marshalObjectDesciptions(const GatewayObjectDescriptions& objects, MsgArg* objectsArray, size_t* objectsIndx);
 
     /**
      * marshalMetaData - static function to Marshal the MetaData Array

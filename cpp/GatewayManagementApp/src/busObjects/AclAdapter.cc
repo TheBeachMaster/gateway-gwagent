@@ -163,7 +163,7 @@ QStatus AclAdapter::unmarshalAcl(Message& msg, qcc::String* aclName, GatewayPoli
     return status;
 }
 
-QStatus AclAdapter::marshalObjectDesciptions(GatewayObjectDescriptions& objects, MsgArg* objectsArray, size_t* objectsIndx)
+QStatus AclAdapter::marshalObjectDesciptions(const GatewayObjectDescriptions& objects, MsgArg* objectsArray, size_t* objectsIndx)
 {
     QStatus status = ER_OK;
 
@@ -231,7 +231,7 @@ QStatus AclAdapter::marshalAcl(GatewayAcl* acl, ajn::MsgArg* msgArg)
         return status;
     }
 
-    GatewayObjectDescriptions exposedServices = acl->getPolicy().getExposedServices();
+    const GatewayObjectDescriptions& exposedServices = acl->getPolicy().getExposedServices();
     MsgArg* exposedServicesArray = new MsgArg[exposedServices.size()];
     size_t exposedServicesIndx = 0;
 
@@ -248,8 +248,8 @@ QStatus AclAdapter::marshalAcl(GatewayAcl* acl, ajn::MsgArg* msgArg)
     }
     msgArg[indx++].SetOwnershipFlags(MsgArg::OwnsArgs, true);
 
-    GatewayRemoteAppPermissions remoteAppPerm = acl->getPolicy().getRemoteAppPermissions();
-    GatewayRemoteAppPermissions::iterator it;
+    const GatewayRemoteAppPermissions& remoteAppPerm = acl->getPolicy().getRemoteAppPermissions();
+    GatewayRemoteAppPermissions::const_iterator it;
 
     MsgArg* remoteAppPermsArray = new MsgArg[remoteAppPerm.size()];
     size_t remoteAppPermsIndx = 0;
@@ -349,7 +349,7 @@ QStatus AclAdapter::marshalMergedAcl(std::map<qcc::String, GatewayAcl*> const& a
             continue;
         }
 
-        GatewayObjectDescriptions exposedServices = it->second->getPolicy().getExposedServices();
+        const GatewayObjectDescriptions& exposedServices = it->second->getPolicy().getExposedServices();
         status = marshalObjectDesciptions(exposedServices, exposedServicesArray, &exposedServicesIndx);
         if (status != ER_OK) {
             delete[] exposedServicesArray;
@@ -357,8 +357,8 @@ QStatus AclAdapter::marshalMergedAcl(std::map<qcc::String, GatewayAcl*> const& a
             return status;
         }
 
-        GatewayRemoteAppPermissions remoteAppPerm = it->second->getPolicy().getRemoteAppPermissions();
-        GatewayRemoteAppPermissions::iterator iter;
+        const GatewayRemoteAppPermissions& remoteAppPerm = it->second->getPolicy().getRemoteAppPermissions();
+        GatewayRemoteAppPermissions::const_iterator iter;
 
         for (iter = remoteAppPerm.begin(); iter != remoteAppPerm.end(); iter++) {
 
