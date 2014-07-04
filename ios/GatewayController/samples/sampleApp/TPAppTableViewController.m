@@ -46,8 +46,6 @@
 {
     [super viewDidLoad];
     [self startGWController];
-    
-    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) dismissLoadingAlert];
 }
 
 

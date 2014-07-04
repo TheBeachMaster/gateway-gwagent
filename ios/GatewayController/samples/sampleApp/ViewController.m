@@ -147,9 +147,6 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
 		announceTextViewController.ajnAnnouncement = [(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement];
 	}
     else if ([segue.destinationViewController isKindOfClass:[TPAppTableViewController class]]) {
-        
-        [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showLoadingAlert:@"Loading third party Apps"];
-        
         TPAppTableViewController *tpAppTableViewController = segue.destinationViewController;
         tpAppTableViewController.title = [AJNAboutDataConverter messageArgumentToString:[[(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement] aboutData][@"DeviceName"]];
         tpAppTableViewController.busAttachment = self.clientBusAttachment;
@@ -163,12 +160,11 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
 {
 	// Connect to the bus with the default realm bus name
 	if (!self.isAboutClientConnected) {
-        [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showLoadingAlert:@"Loading gateway list"];
-        
         [self startAboutClient];
-	}
-	else {
+        self.loadingGWLabel.alpha = 1;
+	} else {
         [self stopAboutClient];
+        self.loadingGWLabel.alpha = 0;
 	}
 }
 
@@ -343,7 +339,7 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
 	self.connectButton.backgroundColor = [UIColor darkGrayColor]; //button bg color
 	[self.connectButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal]; //button font color
 	[self.connectButton setTitle:self.ajconnect forState:UIControlStateNormal]; //default text
-    
+    self.loadingGWLabel.alpha = 0;
 	[self prepareAlerts];
 }
 
@@ -590,10 +586,6 @@ static NSString *const GW_INTERFACE_NAME = @"org.alljoyn.gwagent.ctrl";  //GW Se
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSUInteger numberOfRows = [self.clientInformationDict count];
-    
-    if (numberOfRows > 0) {
-        [((AppDelegate *)[[UIApplication sharedApplication] delegate]) dismissLoadingAlert];
-    }
   
 	return numberOfRows;
 }
