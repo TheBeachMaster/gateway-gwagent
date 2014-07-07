@@ -45,18 +45,6 @@ class PayloadAdapter {
     virtual ~PayloadAdapter();
 
     /**
-     * UnmarshalAcl - static function to unmarshal an acl
-     * @param msg - message to unmarshal
-     * @param aclName - the aclName of the Acl
-     * @param metaData - the metaData of the Acl
-     * @param customMetaData - the customMetaData of the Acl
-     * @param status - success/failure
-     * @return ACL object
-     */
-//            static GatewayCtrlAccessControlList *unmarshalAcl(const Message& msg, const qcc::String &aclName, const std::map<qcc::String, qcc::String>& metaData,
-//                                        const std::map<qcc::String, qcc::String>& customMetaData, QStatus &status); TODO: do we need this?
-
-    /**
      * Unmarshal an ObjectDescription from the message - input is MsgArg with friendly names
      * @param objSpecArgs - the msgArgArray containing the objectDescription
      * @param objectDescriptions - the objectDescriptions to fill

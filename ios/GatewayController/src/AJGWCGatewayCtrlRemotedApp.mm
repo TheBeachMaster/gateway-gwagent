@@ -75,7 +75,6 @@
     return self;
 }
 
-//TODO: why is objDescRules **?
 - (id)initWithDiscoveredApp:(AJGWCGatewayCtrlDiscoveredApp*) discoveredApp objDescRules:(NSArray**) objDescRules
 {
     self = [super init];

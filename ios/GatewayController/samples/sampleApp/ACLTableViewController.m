@@ -73,14 +73,16 @@
     QStatus status;
     self.manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
     if (ER_OK != status) {
-        [AppDelegate AlertAndLog:@"Failed to retrieve manifest rules" status:status]; //TODO: deal with error - any reason to call the next lines?
+        [AppDelegate AlertAndLog:@"Failed to retrieve manifest rules" status:status];
+        return;
     }
     
     self.accessRulesContainer = [[AccessRulesContainer alloc]initWithACL:self.acl UsingSessionId:self.sessionId manifestRules:self.manifestRules announcements:[[AnnouncementManager sharedInstance] getAnnouncements] status:status];
     
     if (status != ER_OK) {
-        [AppDelegate AlertAndLog:@"Failed to retrieve Acl" status:status];//TODO: deal with error
+        [AppDelegate AlertAndLog:@"Failed to retrieve Acl" status:status];
         self.navigationItem.rightBarButtonItem = nil;
+        return;
     }
     
     [self.tableView reloadData];
@@ -142,6 +144,17 @@
     }
 }
 
+- (void)PrintObjectDescriptions:(AJGWCGatewayCtrlManifestObjectDescription *)objDesc
+{
+    NSMutableString *interfaces = [[NSMutableString alloc]init];
+
+    for (AJGWCGatewayCtrlConnAppInterface *interface in [objDesc interfaces]) {
+        [interfaces appendString:[interface interfaceName]];
+    }
+    NSLog(@"        ObjPath:%@ - interfaces are[%@]",[[objDesc objectPath] path], interfaces);
+}
+
+
 - (QStatus)updateACL
 {
     QStatus status;
@@ -162,11 +175,23 @@
     }
     
     if ([response.invalidRules.remotedApps count] > 0) {
-        NSLog(@"found invalid remoted app rules"); //TODO print more info
+        NSArray *invalidRemotedApps = response.invalidRules.remotedApps;
+
+        NSLog(@"found %d invalid remoted app rules:", [invalidRemotedApps count]);
+
+        for (AJGWCGatewayCtrlRemotedApp *invalidRemotedApp in invalidRemotedApps) {
+            NSLog(@"    AppName:%@",[invalidRemotedApp appName]);
+            for (AJGWCGatewayCtrlManifestObjectDescription *objDesc in [invalidRemotedApp objDescRules]) {
+                [self PrintObjectDescriptions:objDesc];
+            }
+        }
     }
 
     if ([response.invalidRules.exposedServices count] > 0) {
-        NSLog(@"found invalid exposed services rules"); //TODO print more info
+        NSLog(@"found invalid exposed services rules");
+        for (AJGWCGatewayCtrlManifestObjectDescription *objDesc in response.invalidRules.exposedServices) {
+            [self PrintObjectDescriptions:objDesc];
+        }
     }
 
     if (response.responseCode != GW_ACL_RC_SUCCESS) {
@@ -262,44 +287,6 @@
     }
 
 }
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 /*
 #pragma mark - Navigation

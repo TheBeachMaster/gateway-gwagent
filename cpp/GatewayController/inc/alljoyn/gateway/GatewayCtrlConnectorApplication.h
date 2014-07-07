@@ -223,6 +223,12 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      */
     QStatus Release();
 
+
+    static bool stringStartWith(const qcc::String& prefix, const qcc::String& inString)
+    {
+        return (inString.compare(0, prefix.size(), prefix) == 0);
+    }
+
   private:
 
     void MaintainProxyBusObject(SessionId sessionId);

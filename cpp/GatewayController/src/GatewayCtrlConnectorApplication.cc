@@ -861,11 +861,6 @@ GatewayCtrlConnectorApplication::ExtractRemotedApps(const std::vector<GatewayCtr
     return extractedRemotedApps;
 }
 
-bool stringStartWith(const qcc::String& prefix, const qcc::String& inString)
-{
-
-    return (inString.compare(0, prefix.size(), prefix) == 0);
-}
 
 GatewayCtrlRemotedApp* GatewayCtrlConnectorApplication::ExtractRemotedApp(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices, const AnnouncementData*ann, QStatus& status) {
 

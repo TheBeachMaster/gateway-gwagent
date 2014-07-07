@@ -254,7 +254,7 @@ class GatewayCtrlManifestObjectDescription {
     /**
      * The object path supported by the Service Provider Application manifest
      */
-    GatewayCtrlConnAppObjectPath*m_ObjectPath;          //TODO: why is this a pointer?
+    GatewayCtrlConnAppObjectPath*m_ObjectPath;
 
     /**
      * The interfaces supported by the Service Provider Application manifest
