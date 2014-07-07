@@ -14,11 +14,11 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#import "TPAppInfoAclsTableViewCell.h"
+#import "ConnectorAppInfoAclsTableViewCell.h"
 #import "alljoyn/gateway/AJGWCGatewayCtrlEnums.h"
 #import "AJNStatus.h"
 
-@implementation TPAppInfoAclsTableViewCell
+@implementation ConnectorAppInfoAclsTableViewCell
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {

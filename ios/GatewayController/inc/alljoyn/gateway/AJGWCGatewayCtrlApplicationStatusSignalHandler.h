@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-#import "AJGWCGatewayCtrlTPApplicationStatus.h"
+#import "AJGWCGatewayCtrlConnectorApplicationStatus.h"
 
 /**
  * Implement this interface to be notified about changes in the Third Party Application status
@@ -27,9 +27,9 @@
  * The event is emitted when the status of the Third Party Application
  * changes. Avoid blocking the thread on which the method is called.
  * @param appId The application id
- * @param status {@link AJGWCGatewayCtrlTPApplicationStatus}
+ * @param status {@link AJGWCGatewayCtrlConnectorApplicationStatus}
  */
-- (void)onStatusChanged:(NSString*) appId status:(AJGWCGatewayCtrlTPApplicationStatus*) status;
+- (void)onStatusChanged:(NSString*) appId status:(AJGWCGatewayCtrlConnectorApplicationStatus*) status;
 
 @end
 

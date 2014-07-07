@@ -28,7 +28,7 @@ namespace services {
 
 class GatewayCtrlManifestRules;
 
-class GatewayCtrlTPInterface {
+class GatewayCtrlConnAppInterface {
   public:
 
     /**
@@ -37,18 +37,18 @@ class GatewayCtrlTPInterface {
      * @param friendlyName The interface friendly name
      * @param isSecured Whether the interface is secured
      */
-    GatewayCtrlTPInterface(qcc::String name, qcc::String friendlyName, bool isSecured);
+    GatewayCtrlConnAppInterface(qcc::String name, qcc::String friendlyName, bool isSecured);
 
     /**
      * Copy Constructor
      * @param other Object to copy from
      */
-    GatewayCtrlTPInterface(const GatewayCtrlTPInterface& other) { m_Name = other.m_Name; m_FriendlyName = other.m_FriendlyName; m_IsSecured = other.m_IsSecured; }
+    GatewayCtrlConnAppInterface(const GatewayCtrlConnAppInterface& other) { m_Name = other.m_Name; m_FriendlyName = other.m_FriendlyName; m_IsSecured = other.m_IsSecured; }
 
     /**
      * Destructor
      */
-    virtual ~GatewayCtrlTPInterface() { }
+    virtual ~GatewayCtrlConnAppInterface() { }
 
     /**
      * Returns a name of the interface.
@@ -73,7 +73,7 @@ class GatewayCtrlTPInterface {
      * @param to check if the object is less than this param
      * @return TRUE if the object is less than 'to'
      */
-    bool operator<(const GatewayCtrlTPInterface to) const;
+    bool operator<(const GatewayCtrlConnAppInterface to) const;
 
 
   private:
@@ -94,7 +94,7 @@ class GatewayCtrlTPInterface {
 
 };
 
-class GatewayCtrlTPObjectPath {
+class GatewayCtrlConnAppObjectPath {
   public:
 
     /**
@@ -105,12 +105,12 @@ class GatewayCtrlTPObjectPath {
      * @param isPrefixAllowed TRUE if the object path is allowed to be a prefix according
      * to the end user.
      */
-    GatewayCtrlTPObjectPath(qcc::String objectPath, qcc::String friendlyName, bool isPrefix, bool isPrefixAllowed);
+    GatewayCtrlConnAppObjectPath(qcc::String objectPath, qcc::String friendlyName, bool isPrefix, bool isPrefixAllowed);
 
     /**
      * Destructor
      */
-    virtual ~GatewayCtrlTPObjectPath();
+    virtual ~GatewayCtrlConnAppObjectPath();
 
     /**
      * AllJoyn object identification
@@ -137,13 +137,13 @@ class GatewayCtrlTPObjectPath {
 
     /**
      * @return TRUE if the object path is allowed to be a prefix according
-     * to the {@link TPApplication} manifest
+     * to the {@link ConnectorApplication} manifest
      */
     bool isPrefixAllowed() const;
 
     /**
      * @param isPrefixAllowed Set whether the object path is allowed to be a prefix according
-     * to the {@link TPApplication} manifest
+     * to the {@link ConnectorApplication} manifest
      */
     void setPrefixAllowed(bool isPrefixAllowed);
 
@@ -153,7 +153,7 @@ class GatewayCtrlTPObjectPath {
      * @return TRUE if the object is less than 'other'
      */
 
-    bool operator<(const GatewayCtrlTPObjectPath& other) const {
+    bool operator<(const GatewayCtrlConnAppObjectPath& other) const {
         if (m_IsPrefix != other.m_IsPrefix) {
             return true;
         }
@@ -195,7 +195,7 @@ class GatewayCtrlManifestObjectDescription {
      * @param objectPath AllJoyn object identification
      * @param interfaces Set of the interfaces related to the given object path
      */
-    GatewayCtrlManifestObjectDescription(const GatewayCtrlTPObjectPath& objectPath, std::set<GatewayCtrlTPInterface> interfaces);
+    GatewayCtrlManifestObjectDescription(const GatewayCtrlConnAppObjectPath& objectPath, std::set<GatewayCtrlConnAppInterface> interfaces);
 
     /**
      * Constructor
@@ -204,7 +204,7 @@ class GatewayCtrlManifestObjectDescription {
      * @param configured  Set TRUE to permit this {@link GatewayCtrlManifestObjectDescription} object path and interfaces
      * to be remoted by the Third Party Application
      */
-    GatewayCtrlManifestObjectDescription(const GatewayCtrlTPObjectPath& objectPath, std::set<GatewayCtrlTPInterface> interfaces, bool isConfigured);
+    GatewayCtrlManifestObjectDescription(const GatewayCtrlConnAppObjectPath& objectPath, std::set<GatewayCtrlConnAppInterface> interfaces, bool isConfigured);
 
     /**
      * Destructor
@@ -215,13 +215,13 @@ class GatewayCtrlManifestObjectDescription {
      * The object path supported by the Service Provider Application manifest
      * @return Object path
      */
-    GatewayCtrlTPObjectPath* GetObjectPath() const;
+    GatewayCtrlConnAppObjectPath* GetObjectPath() const;
 
     /**
      * The interfaces supported by the Service Provider Application manifest
-     * @return Set of the {@link TPInterface} objects
+     * @return Set of the {@link ConnAppInterface} objects
      */
-    const std::set<GatewayCtrlTPInterface>*GetInterfaces() const;
+    const std::set<GatewayCtrlConnAppInterface>*GetInterfaces() const;
 
     /**
      * The flag has TRUE if this {@link ManifestObjectDescription} is configured
@@ -254,12 +254,12 @@ class GatewayCtrlManifestObjectDescription {
     /**
      * The object path supported by the Service Provider Application manifest
      */
-    GatewayCtrlTPObjectPath*m_ObjectPath;          //TODO: why is this a pointer?
+    GatewayCtrlConnAppObjectPath*m_ObjectPath;          //TODO: why is this a pointer?
 
     /**
      * The interfaces supported by the Service Provider Application manifest
      */
-    std::set<GatewayCtrlTPInterface> m_Interfaces;
+    std::set<GatewayCtrlConnAppInterface> m_Interfaces;
 };
 }
 }

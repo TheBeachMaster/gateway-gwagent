@@ -16,22 +16,22 @@
 
 #import <Foundation/Foundation.h>
 #import "alljoyn/Status.h"
-#import "alljoyn/gateway/GatewayCtrlTPApplication.h"
+#import "alljoyn/gateway/GatewayCtrlConnectorApplication.h"
 #import "AJNSessionOptions.h"
 #import "AJGWCGatewayCtrlManifestRules.h"
 #import "AJGWCGatewayCtrlAccessRules.h"
-#import "AJGWCGatewayCtrlTPApplicationStatus.h"
+#import "AJGWCGatewayCtrlConnectorApplicationStatus.h"
 #import "AJGWCGatewayCtrlEnums.h"
 #import "AJGWCGatewayCtrlAclWriteResponse.h"
 #import "AJGWCGatewayCtrlApplicationStatusSignalHandler.h"
 
-@interface AJGWCGatewayCtrlTPApplication : NSObject
+@interface AJGWCGatewayCtrlConnectorApplication : NSObject
 
 /**
  * Constructor
- * @param handle A handle to a cpp GatewayCtrlTPApplication object
+ * @param handle A handle to a cpp GatewayCtrlConnectorApplication object
  */
-- (id)initWithHandle:(ajn::services::GatewayCtrlTPApplication *) handle;
+- (id)initWithHandle:(ajn::services::GatewayCtrlConnectorApplication *) handle;
 
 /**
  * Constructor
@@ -47,17 +47,17 @@
 //- (id)initWithGwBusName:(NSString*) gwBusName appInfo:(AJNMessageArgument*) appInfo;
 
 /**
- * @return gwBusName the {@link AJGWCGatewayCtrlTPApplication} is installed on
+ * @return gwBusName the {@link AJGWCGatewayCtrlConnectorApplication} is installed on
  */
 - (NSString*)gwBusName;
 
 /**
- * @return The id of the {@link AJGWCGatewayCtrlTPApplication}
+ * @return The id of the {@link AJGWCGatewayCtrlConnectorApplication}
  */
 - (NSString*)appId;
 
 /**
- * @return The name of the {@link AJGWCGatewayCtrlTPApplication}.
+ * @return The name of the {@link AJGWCGatewayCtrlConnectorApplication}.
  */
 - (NSString*)friendlyName;
 
@@ -100,9 +100,9 @@
  * Retrieves the state of the application
  * @param sessionId The id of the session established with the gateway
  * @param status return status of operation
- * @return {@link GatewayCtrlTPApplicationStatus}
+ * @return {@link GatewayCtrlConnectorApplicationStatus}
  */
-- (AJGWCGatewayCtrlTPApplicationStatus*)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
+- (AJGWCGatewayCtrlConnectorApplicationStatus*)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
 
 /**
  * Restarts the application
@@ -116,7 +116,7 @@
  * Set an {@link AJGWCGatewayCtrlApplicationStatusSignalHandler} to receive application
  * related events. In order to receive the events, in addition to calling this method,
  * a session should be successfully established with the gateway hosting the application.
- * Use {@link AJGWCGatewayCtrlTPApplication#unsetStatusChangedHandler()} to stop receiving the events.
+ * Use {@link AJGWCGatewayCtrlConnectorApplication#unsetStatusChangedHandler()} to stop receiving the events.
  * @param handler Signal handler
  * @return {@link QStatus}
  */

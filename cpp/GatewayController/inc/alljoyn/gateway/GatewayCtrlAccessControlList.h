@@ -32,7 +32,7 @@
 namespace ajn {
 namespace services {
 class GatewayCtrlAccessControlList {
-    friend class GatewayCtrlTPApplication;
+    friend class GatewayCtrlConnectorApplication;
 
   public:
 
@@ -217,9 +217,9 @@ class GatewayCtrlAccessControlList {
      * and not by the interfaces. As a result of this method execution, toValidate will contain
      * only valid interfaces all the invalid interfaces will be moved to the notValid set.
      */
-    static bool IsValidRule(GatewayCtrlManifestObjectDescription*toValidate, std::set<GatewayCtrlTPInterface>& notValid, const std::vector<GatewayCtrlManifestObjectDescription*>& manifestRules);
+    static bool IsValidRule(GatewayCtrlManifestObjectDescription*toValidate, std::set<GatewayCtrlConnAppInterface>& notValid, const std::vector<GatewayCtrlManifestObjectDescription*>& manifestRules);
 
-    static bool isValidObjPath(const GatewayCtrlTPObjectPath*manifOp, qcc::String toValidOP, bool isPrefix);
+    static bool isValidObjPath(const GatewayCtrlConnAppObjectPath*manifOp, qcc::String toValidOP, bool isPrefix);
 
     /**
      * Gets exposed services of the ACL, intersects it with the manifest exposed services in order to create
@@ -239,7 +239,7 @@ class GatewayCtrlAccessControlList {
      * from the internal metadata or the {@link AnnouncementData}. If the {@link AnnouncementData} has appName or deviceName
      * that are different from the metadata values, the metadata is updated. The object description rules of the
      * created {@link RemotedApp} are completed from the rules which are returned by the
-     * {@link TPApplication#extractRemotedApp(List, AnnouncementData)}
+     * {@link ConnectorApplication#extractRemotedApp(List, AnnouncementData)}
      * @param inputRemotedApps The source for filling the remotedApps list
      * @param outputRemotedApps The list to be filled
      * @param remotedServices The manifest data that is required for creation of the {@link RemotedApp}
@@ -265,7 +265,7 @@ class GatewayCtrlAccessControlList {
      */
     std::vector<GatewayCtrlManifestObjectDescription*> ConvertObjectDescription(const std::vector<GatewayCtrlManifestObjectDescription*>& objDescs,
                                                                                 const std::vector<GatewayCtrlManifestObjectDescription*>& manifest,
-                                                                                std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >& usedManRules);
+                                                                                std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >& usedManRules);
 
     /**
      * Search for the {@link RemotedApp} in the given list of the remotedApps with the given

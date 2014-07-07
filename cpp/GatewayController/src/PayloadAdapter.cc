@@ -54,12 +54,12 @@ QStatus PayloadAdapter::marshalObjectDescriptions(const GatewayCtrlManifestObjec
 
     QStatus status = ER_OK;
 
-    const std::set<GatewayCtrlTPInterface>*interfaces = object.GetInterfaces();
+    const std::set<GatewayCtrlConnAppInterface>*interfaces = object.GetInterfaces();
 
     std::vector<const char*> interfacesVector(interfaces->size());
     int index = 0;
-    for (std::set<GatewayCtrlTPInterface>::const_iterator itr = interfaces->begin(); itr != interfaces->end(); itr++) {
-        interfacesVector[index++] = (GatewayCtrlTPInterface(*itr)).GetName().c_str();
+    for (std::set<GatewayCtrlConnAppInterface>::const_iterator itr = interfaces->begin(); itr != interfaces->end(); itr++) {
+        interfacesVector[index++] = (GatewayCtrlConnAppInterface(*itr)).GetName().c_str();
     }
 
     objectsArrayEntry->Set("(obas)", object.GetObjectPath()->GetPath().c_str(),
@@ -108,8 +108,8 @@ GatewayCtrlManifestObjectDescription*PayloadAdapter::unmarshalObjectDescriptions
         return NULL;
     }
 
-    std::set<GatewayCtrlTPInterface> interfaces;
-    GatewayCtrlTPObjectPath objectPath(ObjectPath, ObjectPathFriendlyName, IsPrefix, IsPrefix); // a manifest object path, we do not get the isPrefixAllowed from the server so we need to deduce it ourselves. for the manifest it is not important so insert the same as IsPrefix.
+    std::set<GatewayCtrlConnAppInterface> interfaces;
+    GatewayCtrlConnAppObjectPath objectPath(ObjectPath, ObjectPathFriendlyName, IsPrefix, IsPrefix); // a manifest object path, we do not get the isPrefixAllowed from the server so we need to deduce it ourselves. for the manifest it is not important so insert the same as IsPrefix.
 
     for (size_t x = 0; x < count; x++) {
         char*InterfaceName;
@@ -122,9 +122,9 @@ GatewayCtrlManifestObjectDescription*PayloadAdapter::unmarshalObjectDescriptions
             return NULL;
         }
 
-        GatewayCtrlTPInterface TPInterface(InterfaceName, InterfaceFriendlyName, isSecured);
+        GatewayCtrlConnAppInterface ConnAppInterface(InterfaceName, InterfaceFriendlyName, isSecured);
 
-        interfaces.insert(TPInterface);
+        interfaces.insert(ConnAppInterface);
     }
 
     GatewayCtrlManifestObjectDescription*manifestObjectDescriptionOut = new GatewayCtrlManifestObjectDescription(objectPath, interfaces);
@@ -181,7 +181,7 @@ GatewayCtrlManifestObjectDescription*PayloadAdapter::unmarshalObjectDescriptions
         return NULL;
     }
 
-    std::set<GatewayCtrlTPInterface> interfaces;
+    std::set<GatewayCtrlConnAppInterface> interfaces;
 
     for (size_t x = 0; x < interfaceCount; x++) {
         char*InterfaceName;
@@ -192,9 +192,9 @@ GatewayCtrlManifestObjectDescription*PayloadAdapter::unmarshalObjectDescriptions
             return NULL;
         }
 
-        GatewayCtrlTPInterface TPInterface(InterfaceName, "", false);
+        GatewayCtrlConnAppInterface ConnAppInterface(InterfaceName, "", false);
 
-        interfaces.insert(TPInterface);
+        interfaces.insert(ConnAppInterface);
     }
 
     std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator objDescRulesIter;
@@ -211,7 +211,7 @@ GatewayCtrlManifestObjectDescription*PayloadAdapter::unmarshalObjectDescriptions
         }
     }
 
-    GatewayCtrlTPObjectPath objectPath(ObjectPathString, friendlyName, IsPrefix, isPrefixAllowed);
+    GatewayCtrlConnAppObjectPath objectPath(ObjectPathString, friendlyName, IsPrefix, isPrefixAllowed);
 
     GatewayCtrlManifestObjectDescription*manifestObjectDescriptionOut = new GatewayCtrlManifestObjectDescription(objectPath, interfaces);
 

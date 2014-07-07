@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Ioo-au-HQi">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Ioo-au-HQi">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -373,31 +373,31 @@
                         <outlet property="servicesTable" destination="ddh-ub-g1u" id="sZl-jD-KQN"/>
                         <segue destination="duL-C5-Aj6" kind="push" identifier="AboutShowAnnounceSegue" id="HYW-lH-KYW"/>
                         <segue destination="yH8-bD-b2F" kind="push" identifier="AboutClientSegue" id="ctz-RM-swz"/>
-                        <segue destination="usv-qd-rIN" kind="push" identifier="TPAppSegue" id="80e-Jm-RXT"/>
+                        <segue destination="usv-qd-rIN" kind="push" identifier="ConnectorAppSegue" id="80e-Jm-RXT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kIw-7V-0hn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="305" y="909"/>
         </scene>
-        <!--App Table View Controller-->
+        <!--Connector App Table View Controller-->
         <scene sceneID="hyD-Mb-N2X">
             <objects>
-                <tableViewController id="usv-qd-rIN" customClass="TPAppTableViewController" sceneMemberID="viewController">
+                <tableViewController id="usv-qd-rIN" customClass="ConnectorAppTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="61" sectionHeaderHeight="22" sectionFooterHeight="22" id="46T-1h-aVw">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="413"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TPAppCell" rowHeight="61" id="7ac-kC-oS9" customClass="TPAppTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ConnectorAppCell" rowHeight="61" id="7ac-kC-oS9" customClass="ConnectorAppTableViewCell">
                                 <rect key="frame" x="0.0" y="22" width="320" height="61"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7ac-kC-oS9" id="GYh-IW-Bqa">
                                     <rect key="frame" x="0.0" y="0.0" width="287" height="60"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TPAppName" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibf-AJ-xqs">
-                                            <rect key="frame" x="6" y="3" width="127" height="23"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ConnectorAppName" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibf-AJ-xqs">
+                                            <rect key="frame" x="6" y="3" width="158" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -424,11 +424,11 @@
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="TPAppConnectionLbl" destination="7VV-Dg-bcU" id="2yb-9a-hna"/>
-                                    <outlet property="TPAppInstallLbl" destination="n4l-sE-Wze" id="2fc-bB-wKO"/>
-                                    <outlet property="TPAppNameLbl" destination="ibf-AJ-xqs" id="7WW-MF-qgi"/>
-                                    <outlet property="TPAppOperationalLbl" destination="ZfT-77-Wxw" id="hVG-mp-kTM"/>
-                                    <segue destination="3D7-ff-5LZ" kind="push" identifier="TPAppInfoSegue" id="YHL-b3-H5l"/>
+                                    <outlet property="ConnectorAppConnectionLbl" destination="7VV-Dg-bcU" id="61y-uO-Ghd"/>
+                                    <outlet property="ConnectorAppInstallLbl" destination="n4l-sE-Wze" id="I3E-r4-Ddm"/>
+                                    <outlet property="ConnectorAppNameLbl" destination="ibf-AJ-xqs" id="NQl-Oy-OJZ"/>
+                                    <outlet property="ConnectorAppOperationalLbl" destination="ZfT-77-Wxw" id="hlj-4j-Qrz"/>
+                                    <segue destination="3D7-ff-5LZ" kind="push" identifier="ConnectorAppInfoSegue" id="YHL-b3-H5l"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -443,10 +443,10 @@
             </objects>
             <point key="canvasLocation" x="791" y="763"/>
         </scene>
-        <!--App Info View Controller-->
+        <!--Connector App Info View Controller-->
         <scene sceneID="b4P-YP-NAl">
             <objects>
-                <viewController id="3D7-ff-5LZ" customClass="TPAppInfoViewController" sceneMemberID="viewController">
+                <viewController id="3D7-ff-5LZ" customClass="ConnectorAppInfoViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="0nW-Sr-kAP"/>
                         <viewControllerLayoutGuide type="bottom" id="K1n-d5-kYE"/>
@@ -460,7 +460,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AclCell" id="4Bm-fb-LTz" customClass="TPAppInfoAclsTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AclCell" id="4Bm-fb-LTz" customClass="ConnectorAppInfoAclsTableViewCell">
                                         <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4Bm-fb-LTz" id="dQE-Ed-ryh">
@@ -778,6 +778,6 @@ QWN0aXZlEDo
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Qgf-c5-EQX"/>
+        <segue reference="W3r-sc-O4c"/>
     </inferredMetricsTieBreakers>
 </document>

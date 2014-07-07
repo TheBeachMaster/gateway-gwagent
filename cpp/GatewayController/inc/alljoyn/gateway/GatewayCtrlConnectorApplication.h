@@ -14,15 +14,15 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#ifndef GatewayCtrlTPApplication_H
-#define GatewayCtrlTPApplication_H
+#ifndef GatewayCtrlConnectorApplication_H
+#define GatewayCtrlConnectorApplication_H
 
 #include <vector>
 #include <qcc/String.h>
 #include <alljoyn/gateway/GatewayCtrlAccessRules.h>
 #include <alljoyn/gateway/GatewayCtrlManifestRules.h>
 #include <alljoyn/gateway/GatewayCtrlAccessControlList.h>
-#include <alljoyn/gateway/GatewayCtrlTPApplicationStatus.h>
+#include <alljoyn/gateway/GatewayCtrlConnectorApplicationStatus.h>
 #include <alljoyn/gateway/GatewayCtrlApplicationStatusSignalHandler.h>
 #include <alljoyn/gateway/GatewayCtrlAclWriteResponse.h>
 #include <alljoyn/gateway/GatewayCtrlEnums.h>
@@ -35,14 +35,14 @@ namespace services {
 
 class ChangedSignalData : public TaskData {
   public:
-    ChangedSignalData(const ajn::MsgArg* returnArgs, qcc::String AppId) : m_TPApplicationStatus(returnArgs) { m_AppId = AppId; }
+    ChangedSignalData(const ajn::MsgArg* returnArgs, qcc::String AppId) : m_ConnectorApplicationStatus(returnArgs) { m_AppId = AppId; }
 
-    const GatewayCtrlTPApplicationStatus*GetTPApplicationStatus() const { return &m_TPApplicationStatus; }
+    const GatewayCtrlConnectorApplicationStatus*GetConnectorApplicationStatus() const { return &m_ConnectorApplicationStatus; }
 
     qcc::String GetAppId() const { return m_AppId; }
 
   private:
-    GatewayCtrlTPApplicationStatus m_TPApplicationStatus;
+    GatewayCtrlConnectorApplicationStatus m_ConnectorApplicationStatus;
 
     qcc::String m_AppId;
 
@@ -63,7 +63,7 @@ class ChangedSignalTask : public AsyncTask {
     {
         const ChangedSignalData* d = static_cast<const ChangedSignalData*>(taskdata);
         if (m_Handler) {
-            m_Handler->onStatusChanged(d->GetAppId(), d->GetTPApplicationStatus());
+            m_Handler->onStatusChanged(d->GetAppId(), d->GetConnectorApplicationStatus());
         } else {
             QCC_DbgHLPrintf(("Got signal, no handler"));
         }
@@ -72,7 +72,7 @@ class ChangedSignalTask : public AsyncTask {
     GatewayCtrlApplicationStatusSignalHandler*m_Handler;
 };
 
-class GatewayCtrlTPApplication : public MessageReceiver {
+class GatewayCtrlConnectorApplication : public MessageReceiver {
 
 
 
@@ -82,31 +82,31 @@ class GatewayCtrlTPApplication : public MessageReceiver {
      * @param gwBusName The name of the gateway {@link BusAttachment} the application is installed on
      * @param appObjPath The object path to reach the third party application on the gateway
      */
-// this may not be needed	GatewayCtrlTPApplication(qcc::String gwBusName, qcc::String appObjPath);
+// this may not be needed	GatewayCtrlConnectorApplication(qcc::String gwBusName, qcc::String appObjPath);
 
     /**
      * Constructor
      * @param appInfo
      */
-    GatewayCtrlTPApplication(qcc::String gwBusName, ajn::MsgArg*appInfo);
+    GatewayCtrlConnectorApplication(qcc::String gwBusName, ajn::MsgArg*appInfo);
 
     /**
      * Destructor
      */
-    virtual ~GatewayCtrlTPApplication();
+    virtual ~GatewayCtrlConnectorApplication();
 
     /**
-     * @return gwBusName the {@link TPApplication} is installed on
+     * @return gwBusName the {@link ConnectorApplication} is installed on
      */
     qcc::String GetGwBusName();
 
     /**
-     * @return The id of the {@link TPApplication}
+     * @return The id of the {@link ConnectorApplication}
      */
     qcc::String GetAppId();
 
     /**
-     * @return The name of the {@link TPApplication}.
+     * @return The name of the {@link ConnectorApplication}.
      */
     qcc::String GetFriendlyName();
 
@@ -150,9 +150,9 @@ class GatewayCtrlTPApplication : public MessageReceiver {
      * Retrieves the state of the application
      * @param sessionId The id of the session established with the gateway
      * @param status return status of operation
-     * @return {@link GatewayCtrlTPApplicationStatus}
+     * @return {@link GatewayCtrlConnectorApplicationStatus}
      */
-    GatewayCtrlTPApplicationStatus*RetrieveStatus(SessionId sessionId, QStatus& status);
+    GatewayCtrlConnectorApplicationStatus*RetrieveStatus(SessionId sessionId, QStatus& status);
 
     /**
      * Restarts the application
@@ -166,7 +166,7 @@ class GatewayCtrlTPApplication : public MessageReceiver {
      * Set an {@link ApplicationStatusSignalHandler} to receive application
      * related events. In order to receive the events, in addition to calling this method,
      * a session should be successfully established with the gateway hosting the application.
-     * Use {@link TPApplication#unsetStatusChangedHandler()} to stop receiving the events.
+     * Use {@link ConnectorApplication#unsetStatusChangedHandler()} to stop receiving the events.
      * @param handler Signal handler
      */
     QStatus SetStatusChangedHandler(const GatewayCtrlApplicationStatusSignalHandler*handler);
@@ -266,7 +266,7 @@ class GatewayCtrlTPApplication : public MessageReceiver {
 
     GatewayCtrlAccessRules*m_ConfigurableRules;
 
-    GatewayCtrlTPApplicationStatus*m_TPApplicationStatus;
+    GatewayCtrlConnectorApplicationStatus*m_ConnectorApplicationStatus;
 
     GatewayCtrlAclWriteResponse*m_AclWriteResponse;
 
@@ -298,4 +298,4 @@ class GatewayCtrlTPApplication : public MessageReceiver {
 };
 }
 }
-#endif /* defined(GatewayCtrlTPApplication_H) */
+#endif /* defined(GatewayCtrlConnectorApplication_H) */

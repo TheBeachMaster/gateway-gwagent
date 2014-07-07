@@ -16,8 +16,8 @@
 
 #import <Foundation/Foundation.h>
 #import "alljoyn/Status.h"
-#import "AJGWCGatewayCtrlTPObjectPath.h"
-#import "AJGWCGatewayCtrlTPInterface.h"
+#import "AJGWCGatewayCtrlConnAppObjectPath.h"
+#import "AJGWCGatewayCtrlConnAppInterface.h"
 #import "alljoyn/gateway/GatewayCtrlManifestObjectDescription.h"
 
 @interface AJGWCGatewayCtrlManifestObjectDescription : NSObject
@@ -33,26 +33,26 @@
  * @param objectPath AllJoyn object identification
  * @param interfaces Set of the interfaces related to the given object path
  */
-- (id)initWithObjectPath:(AJGWCGatewayCtrlTPObjectPath*) objectPath interfaces:(NSSet*) interfaces;
+- (id)initWithObjectPath:(AJGWCGatewayCtrlConnAppObjectPath*) objectPath interfaces:(NSSet*) interfaces;
 
 /**
  * Constructor
- * @param objectPath AllJoyn object identification {@link AJGWCGatewayCtrlTPObjectPath}
+ * @param objectPath AllJoyn object identification {@link AJGWCGatewayCtrlConnAppObjectPath}
  * @param interfaces Set of the interfaces related to the given object path
  * @param isConfigured Set TRUE to permit this {@link AJGWCGatewayCtrlManifestObjectDescription} object path and interfaces
  * to be remoted by the Third Party Application
  */
-- (id)initWithObjectPath:(AJGWCGatewayCtrlTPObjectPath*) objectPath interfaces:(NSSet*) interfaces isConfigured:(bool) isConfigured;
+- (id)initWithObjectPath:(AJGWCGatewayCtrlConnAppObjectPath*) objectPath interfaces:(NSSet*) interfaces isConfigured:(bool) isConfigured;
 
 /**
  * The object path supported by the Service Provider Application manifest
  * @return Object path
  */
-- (AJGWCGatewayCtrlTPObjectPath*)objectPath;
+- (AJGWCGatewayCtrlConnAppObjectPath*)objectPath;
 
 /**
  * The interfaces supported by the Service Provider Application manifest
- * @return Set of the {@link AJGWCGatewayCtrlTPInterface} objects
+ * @return Set of the {@link AJGWCGatewayCtrlConnAppInterface} objects
  */
 - (NSSet*)interfaces;
 

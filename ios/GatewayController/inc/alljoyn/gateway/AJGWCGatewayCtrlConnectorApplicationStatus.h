@@ -17,15 +17,15 @@
 #import <Foundation/Foundation.h>
 //@class AJNMessageArgument;
 #import "AJGWCGatewayCtrlEnums.h"
-#import "alljoyn/gateway/GatewayCtrlTPApplicationStatus.h"
+#import "alljoyn/gateway/GatewayCtrlConnectorApplicationStatus.h"
 
-@interface AJGWCGatewayCtrlTPApplicationStatus : NSObject
+@interface AJGWCGatewayCtrlConnectorApplicationStatus : NSObject
 
 /**
  * Constructor
- * @param handle A handle to a cpp GatewayCtrlTPApplicationStatus object
+ * @param handle A handle to a cpp GatewayCtrlConnectorApplicationStatus object
  */
-- (id)initWithHandle:(ajn::services::GatewayCtrlTPApplicationStatus*) handle;
+- (id)initWithHandle:(ajn::services::GatewayCtrlConnectorApplicationStatus*) handle;
 
 /**
  * Constructor

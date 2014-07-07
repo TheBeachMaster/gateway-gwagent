@@ -14,16 +14,16 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#import "AJGWCGatewayCtrlTPInterface.h"
+#import "AJGWCGatewayCtrlConnAppInterface.h"
 #import "alljoyn/about/AJNConvertUtil.h"
 
-@interface AJGWCGatewayCtrlTPInterface ()
+@interface AJGWCGatewayCtrlConnAppInterface ()
 
-@property (nonatomic) ajn::services::GatewayCtrlTPInterface* handle;
+@property (nonatomic) ajn::services::GatewayCtrlConnAppInterface* handle;
 
 @end
 
-@implementation AJGWCGatewayCtrlTPInterface
+@implementation AJGWCGatewayCtrlConnAppInterface
 
 - (void)dealloc
 {
@@ -31,11 +31,11 @@
     self.handle = NULL;
 }
 
-- (id)initWithHandle:(ajn::services::GatewayCtrlTPInterface) handle
+- (id)initWithHandle:(ajn::services::GatewayCtrlConnAppInterface) handle
 {
     self = [super init];
     if (self) {
-        self.handle = new ajn::services::GatewayCtrlTPInterface(handle.GetName(), handle.GetFriendlyName(), handle.IsSecured());
+        self.handle = new ajn::services::GatewayCtrlConnAppInterface(handle.GetName(), handle.GetFriendlyName(), handle.IsSecured());
     }
     return self;
 }
@@ -44,7 +44,7 @@
 {
     self = [super init];
 	if (self) {
-		self.handle = new ajn::services::GatewayCtrlTPInterface([AJNConvertUtil convertNSStringToQCCString:name], [AJNConvertUtil convertNSStringToQCCString:friendlyName], isSecured);
+		self.handle = new ajn::services::GatewayCtrlConnAppInterface([AJNConvertUtil convertNSStringToQCCString:name], [AJNConvertUtil convertNSStringToQCCString:friendlyName], isSecured);
         
 	}
 	return self;
@@ -67,13 +67,13 @@
     return self.handle->IsSecured();
 }
 
-- (ajn::services::GatewayCtrlTPInterface*)handle
+- (ajn::services::GatewayCtrlConnAppInterface*)handle
 {
     return _handle;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    AJGWCGatewayCtrlTPInterface *objectCopy = [[AJGWCGatewayCtrlTPInterface allocWithZone:zone] initWithHandle:*(self.handle)];
+    AJGWCGatewayCtrlConnAppInterface *objectCopy = [[AJGWCGatewayCtrlConnAppInterface allocWithZone:zone] initWithHandle:*(self.handle)];
     
     return objectCopy;
 }
@@ -83,9 +83,9 @@
 }
 
 - (BOOL)isEqual:(id)anObject {
-    if (![anObject isKindOfClass:[AJGWCGatewayCtrlTPInterface class]]) return NO;
-    AJGWCGatewayCtrlTPInterface *otherTPInterface = (AJGWCGatewayCtrlTPInterface *)anObject;
-    return [otherTPInterface.interfaceName isEqualToString:self.interfaceName];
+    if (![anObject isKindOfClass:[AJGWCGatewayCtrlConnAppInterface class]]) return NO;
+    AJGWCGatewayCtrlConnAppInterface *otherConnAppInterface = (AJGWCGatewayCtrlConnAppInterface *)anObject;
+    return [otherConnAppInterface.interfaceName isEqualToString:self.interfaceName];
 }
 
 

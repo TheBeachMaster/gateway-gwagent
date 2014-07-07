@@ -14,7 +14,7 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#import "AJGWCGatewayCtrlTPApplication.h"
+#import "AJGWCGatewayCtrlConnectorApplication.h"
 #import "alljoyn/about/AJNConvertUtil.h"
 #import "alljoyn/gateway/AnnouncementData.h"
 //#import "AJNMessageArgument.h"
@@ -23,14 +23,14 @@
 #import "AJGWCAnnouncementData.h"
 #import "AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter.h"
 
-@interface AJGWCGatewayCtrlTPApplication ()
+@interface AJGWCGatewayCtrlConnectorApplication ()
 
-@property (nonatomic) ajn::services::GatewayCtrlTPApplication* handle;
+@property (nonatomic) ajn::services::GatewayCtrlConnectorApplication* handle;
 
 @property (nonatomic) AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter* adapter;
 @end
 
-@implementation AJGWCGatewayCtrlTPApplication
+@implementation AJGWCGatewayCtrlConnectorApplication
 
 - (void)dealloc
 {
@@ -42,16 +42,16 @@
 //{
 //    self = [super init];
 //	if (self) {
-//		self.handle = new ajn::services::GatewayCtrlTPApplication([AJNConvertUtil convertNSStringToQCCString:gwBusName], [AJNConvertUtil convertNSStringToQCCString:appObjPath]);
+//		self.handle = new ajn::services::GatewayCtrlConnectorApplication([AJNConvertUtil convertNSStringToQCCString:gwBusName], [AJNConvertUtil convertNSStringToQCCString:appObjPath]);
 //	}
 //	return self;
 //}
 
-- (id)initWithHandle:(ajn::services::GatewayCtrlTPApplication *) handle
+- (id)initWithHandle:(ajn::services::GatewayCtrlConnectorApplication *) handle
 {
     self = [super init];
     if (self) {
-        self.handle = (ajn::services::GatewayCtrlTPApplication*)handle;
+        self.handle = (ajn::services::GatewayCtrlConnectorApplication*)handle;
     }
     return self;
 }
@@ -60,7 +60,7 @@
 //{
 //    self = [super init];
 //	if (self) {
-//		self.handle = new ajn::services::GatewayCtrlTPApplication([AJNConvertUtil convertNSStringToQCCString:gwBusName], (ajn::MsgArg*)appInfo.handle);
+//		self.handle = new ajn::services::GatewayCtrlConnectorApplication([AJNConvertUtil convertNSStringToQCCString:gwBusName], (ajn::MsgArg*)appInfo.handle);
 //	}
 //	return self;
 //}
@@ -146,11 +146,11 @@
     return [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:aRules];
 }
 
-- (AJGWCGatewayCtrlTPApplicationStatus*)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
+- (AJGWCGatewayCtrlConnectorApplicationStatus*)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
 {
-    ajn::services::GatewayCtrlTPApplicationStatus* tpAppStatus = self.handle->RetrieveStatus(sessionId, status);
+    ajn::services::GatewayCtrlConnectorApplicationStatus* connectorAppStatus = self.handle->RetrieveStatus(sessionId, status);
     
-    return [[AJGWCGatewayCtrlTPApplicationStatus alloc] initWithHandle:tpAppStatus];
+    return [[AJGWCGatewayCtrlConnectorApplicationStatus alloc] initWithHandle:connectorAppStatus];
 }
 
 - (AJGWCRestartStatus)restartUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status

@@ -17,11 +17,11 @@
 #import <UIKit/UIKit.h>
 #import "AJNSessionOptions.h"
 
-#import "alljoyn/gateway/AJGWCGatewayCtrlTPApplication.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplication.h"
 
 @interface ManifestTabBarController : UITabBarController
 
 @property (nonatomic) AJNSessionId sessionId;
-@property (weak, nonatomic) AJGWCGatewayCtrlTPApplication* tpApplication;
+@property (weak, nonatomic) AJGWCGatewayCtrlConnectorApplication* connectorApplication;
 
 @end

@@ -14,30 +14,18 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-@class AJGWCGatewayCtrlGateway;
+#import <UIKit/UIKit.h>
+#import "AJNSessionOptions.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlAccessControlList.h"
 
-/**
- *  This class is responsible for handling session related events from the AllJoyn system.
- *  Extend this class to receive the events of: <br>
- *  	- sessionEstablished <br>
- *  	- sessionLost    <br>
- *
- *  The events are called on the AllJoyn thread, so avoid blocking them with
- *  long running tasks.
- */
-@protocol AJGWCGatewayCtrlControllerSessionListener <NSObject>
 
-/**
- * sessionEstablished - callback when a session is established with a gateway
- * @param gateway The gateway that the session will established with
- */
-- (void)sessionEstablished:(AJGWCGatewayCtrlGateway*) gateway;
+@interface ConnectorAppInfoAclsTableViewCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *aclNameLbl;
+@property (weak, nonatomic) IBOutlet UISwitch *aclActiveSwitch;
 
-/**
- * sessionLost - callback when a session is lost with a gateway
- * @param gateway The gateway that the session was lost with
- */
-- (void)sessionLost:(AJGWCGatewayCtrlGateway*) gateway;
+@property (weak, nonatomic) AJGWCGatewayCtrlAccessControlList* aclObject;
+@property (nonatomic) AJNSessionId sessionId;
+
+- (IBAction)aclActiveSwitchValueChanged:(id)sender;
 
 @end

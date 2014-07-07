@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "alljoyn/gateway/AJGWCGatewayCtrlTPApplication.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplication.h"
 #import "AJNSessionOptions.h"
 
 static NSDictionary* STATUS_COLOR = [[NSDictionary alloc]
@@ -37,9 +37,9 @@ static NSDictionary* STATUS_COLOR = [[NSDictionary alloc]
                                      [UIColor orangeColor], @"Stopped",
                                      nil];
 
-@interface TPAppInfoViewController : UIViewController
+@interface ConnectorAppInfoViewController : UIViewController
 
-@property (weak, nonatomic) AJGWCGatewayCtrlTPApplication* tpApplication;
+@property (weak, nonatomic) AJGWCGatewayCtrlConnectorApplication* connectorApplication;
 @property (nonatomic) AJNSessionId sessionId;
 @property (strong, nonatomic) IBOutlet UILabel *friendlyNameLbl;
 @property (strong, nonatomic) IBOutlet UILabel *appVersionLbl;

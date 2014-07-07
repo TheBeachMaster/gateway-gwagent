@@ -43,7 +43,7 @@
  * Retrieve the list of applications installed on the gateway identified by the given gwBusName
  * @param sessionId The id of the session established with the gateway
  * @param status return status of operation
- * @return an array of The {@link AJGWCGatewayCtrlTPApplication} installed applications
+ * @return an array of The {@link AJGWCGatewayCtrlConnectorApplication} installed applications
  */
 - (NSArray*)retrieveInstalledApps:(AJNSessionId) sessionId status:(QStatus&) status;
 

@@ -16,17 +16,16 @@
 
 #import "ViewController.h"
 #import "AJNStatus.h"
-#import "AJNPasswordManager.h"
 #import "alljoyn/about/AJNAnnouncement.h"
 #import "alljoyn/about/AJNAboutDataConverter.h"
 #import "alljoyn/about/AJNAnnouncementReceiver.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlTPApplication.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlTPApplicationStatus.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplication.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplicationStatus.h"
 #import "alljoyn/gateway/AJGWCGatewayCtrlGatewayController.h"
 #import "alljoyn/gateway/AJGWCAnnouncementData.h"
 #import "AnnounceTextViewController.h"
 #import "GetAboutCallViewController.h"
-#import "TPAppTableViewController.h"
+#import "ConnectorAppTableViewController.h"
 #import "ClientInformation.h"
 #import "AnnouncementManager.h"
 #import "AppDelegate.h"
@@ -147,11 +146,11 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
 		AnnounceTextViewController *announceTextViewController = segue.destinationViewController;
 		announceTextViewController.ajnAnnouncement = [(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement];
 	}
-    else if ([segue.destinationViewController isKindOfClass:[TPAppTableViewController class]]) {
-        TPAppTableViewController *tpAppTableViewController = segue.destinationViewController;
-        tpAppTableViewController.title = [AJNAboutDataConverter messageArgumentToString:[[(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement] aboutData][@"DeviceName"]];
-        tpAppTableViewController.busAttachment = self.clientBusAttachment;
-        tpAppTableViewController.ajnAnnouncement = [(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement];
+    else if ([segue.destinationViewController isKindOfClass:[ConnectorAppTableViewController class]]) {
+        ConnectorAppTableViewController *connectorAppTableViewController = segue.destinationViewController;
+        connectorAppTableViewController.title = [AJNAboutDataConverter messageArgumentToString:[[(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement] aboutData][@"DeviceName"]];
+        connectorAppTableViewController.busAttachment = self.clientBusAttachment;
+        connectorAppTableViewController.ajnAnnouncement = [(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement];
         NSLog(@"AnnouncementManager entries: [%lu]",(unsigned long)[[[AnnouncementManager sharedInstance] getAnnouncements] count]);
     }
 } /* prepareForSegue: sender: */
@@ -378,7 +377,7 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
             
         case 3: //"Gateway"
         {
-            [self performSegueWithIdentifier:@"TPAppSegue" sender:self];
+            [self performSegueWithIdentifier:@"ConnectorAppSegue" sender:self];
         }
 		default:
 			break;

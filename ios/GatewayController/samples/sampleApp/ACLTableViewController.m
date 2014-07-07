@@ -71,7 +71,7 @@
     self.title = [self.acl aclName];
     
     QStatus status;
-    self.manifestRules = [self.tpApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
+    self.manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve manifest rules" status:status]; //TODO: deal with error - any reason to call the next lines?
     }
@@ -145,7 +145,7 @@
 - (QStatus)updateACL
 {
     QStatus status;
-    AJGWCGatewayCtrlManifestRules *manifestRules = [self.tpApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
+    AJGWCGatewayCtrlManifestRules *manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
     
     if (status != ER_OK) {
         NSLog(@"retrieveManifestRulesUsingSessionId failed:%@",[AJNStatus descriptionForStatusCode:status]);

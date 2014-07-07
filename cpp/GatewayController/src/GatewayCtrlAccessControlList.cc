@@ -624,7 +624,7 @@ end:
 }
 
 /**
- * Compare {@link ManifestObjectDescription} according to their {@link TPObjectPath}.
+ * Compare {@link ManifestObjectDescription} according to their {@link ConnAppObjectPath}.
  * The algorithm performs lexicographical comparison of the object paths
  * with the condition that for equal object paths the object path that is not defined
  * as prefix is less than the object path that is prefix.
@@ -821,7 +821,7 @@ GatewayCtrlAccessControlList::ValidateManifObjDescs(const std::vector<GatewayCtr
 
     for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator itr = toValidate.begin(); itr != toValidate.end(); itr++) {
 
-        std::set<GatewayCtrlTPInterface> invInterfaces;
+        std::set<GatewayCtrlConnAppInterface> invInterfaces;
         bool isValid                = IsValidRule(*itr, invInterfaces, manifestRules);
 
         //If current ManifestObjectDescription is NOT valid it need to be added to the invalid rules
@@ -841,10 +841,10 @@ GatewayCtrlAccessControlList::ValidateManifObjDescs(const std::vector<GatewayCtr
     return invalidRules;
 }
 
-bool GatewayCtrlAccessControlList::IsValidRule(GatewayCtrlManifestObjectDescription*toValidate, std::set<GatewayCtrlTPInterface>& notValid, const std::vector<GatewayCtrlManifestObjectDescription*>& manifestRules)
+bool GatewayCtrlAccessControlList::IsValidRule(GatewayCtrlManifestObjectDescription*toValidate, std::set<GatewayCtrlConnAppInterface>& notValid, const std::vector<GatewayCtrlManifestObjectDescription*>& manifestRules)
 {
     bool validRuleFound = false;
-    std::set<GatewayCtrlTPInterface>*validIfaces = (std::set<GatewayCtrlTPInterface>*)toValidate->GetInterfaces();           //this pointer to interfaces in "toValidate" is important - we change the set inside of the "toValidate" in/out variable.
+    std::set<GatewayCtrlConnAppInterface>*validIfaces = (std::set<GatewayCtrlConnAppInterface>*)toValidate->GetInterfaces();           //this pointer to interfaces in "toValidate" is important - we change the set inside of the "toValidate" in/out variable.
 
     notValid.insert(validIfaces->begin(), validIfaces->end());
 
@@ -861,8 +861,8 @@ bool GatewayCtrlAccessControlList::IsValidRule(GatewayCtrlManifestObjectDescript
 
         GatewayCtrlManifestObjectDescription* mRule = (*itr);
 
-        GatewayCtrlTPObjectPath*manop          = mRule->GetObjectPath();
-        const std::set<GatewayCtrlTPInterface>*manifs = mRule->GetInterfaces();
+        GatewayCtrlConnAppObjectPath*manop          = mRule->GetObjectPath();
+        const std::set<GatewayCtrlConnAppInterface>*manifs = mRule->GetInterfaces();
 
         //Check object path validity
         if (isValidObjPath(manop, toValidate->GetObjectPath()->GetPath(), toValidate->GetObjectPath()->IsPrefix())) {
@@ -877,10 +877,10 @@ bool GatewayCtrlAccessControlList::IsValidRule(GatewayCtrlManifestObjectDescript
             }
 
             //Validate interfaces
-            std::set<GatewayCtrlTPInterface>::const_iterator notValidIter = notValid.begin();
+            std::set<GatewayCtrlConnAppInterface>::const_iterator notValidIter = notValid.begin();
             while (notValidIter != notValid.end()) {
 
-                GatewayCtrlTPInterface ifaceToTest = *notValidIter;
+                GatewayCtrlConnAppInterface ifaceToTest = *notValidIter;
 
                 if (manifs->find(ifaceToTest) != manifs->end()) {                      // Check if the interface is valid
                     validRuleFound = true;
@@ -914,7 +914,7 @@ bool _stringStartWith(const qcc::String& prefix, const qcc::String& inString)
     return ret;
 }
 
-bool GatewayCtrlAccessControlList::isValidObjPath(const GatewayCtrlTPObjectPath*manifOp, qcc::String toValidOP, bool isPrefix)
+bool GatewayCtrlAccessControlList::isValidObjPath(const GatewayCtrlConnAppObjectPath*manifOp, qcc::String toValidOP, bool isPrefix)
 {
     if ((manifOp->IsPrefix() && _stringStartWith(manifOp->GetPath(), toValidOP)) ||
         (!manifOp->IsPrefix() && !isPrefix && (manifOp->GetPath() == toValidOP))) {
@@ -930,7 +930,7 @@ GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCt
                                                      const std::vector<GatewayCtrlManifestObjectDescription*>& manifExpServices)
 {
 
-    std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> > usedManRules;
+    std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> > usedManRules;
     std::vector<GatewayCtrlManifestObjectDescription*> aclExpServices   = ConvertObjectDescription(aclExpServicesAJ,
                                                                                                    manifExpServices,
                                                                                                    usedManRules);
@@ -938,17 +938,17 @@ GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCt
     //Find out the manifest exposed services rules that weren't used
     for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator manifExpSrvc = manifExpServices.begin(); manifExpSrvc != manifExpServices.end(); manifExpSrvc++) {
 
-        GatewayCtrlTPObjectPath*manop       = (*manifExpSrvc)->GetObjectPath();
-        std::set<GatewayCtrlTPInterface>*manifs      = (std::set<GatewayCtrlTPInterface>*)(*manifExpSrvc)->GetInterfaces();                 // we manipulate this array
+        GatewayCtrlConnAppObjectPath*manop       = (*manifExpSrvc)->GetObjectPath();
+        std::set<GatewayCtrlConnAppInterface>*manifs      = (std::set<GatewayCtrlConnAppInterface>*)(*manifExpSrvc)->GetInterfaces();                 // we manipulate this array
 
 
-        std::set<GatewayCtrlTPInterface>*usedIfaces = NULL;
+        std::set<GatewayCtrlConnAppInterface>*usedIfaces = NULL;
 
 
         if (usedManRules.find(*manop) != usedManRules.end()) {
             usedIfaces = &usedManRules.find(*manop)->second;
         }
-        GatewayCtrlTPObjectPath storeOp(manop->GetPath(), manop->GetFriendlyName(), false, manop->isPrefixAllowed());
+        GatewayCtrlConnAppObjectPath storeOp(manop->GetPath(), manop->GetFriendlyName(), false, manop->isPrefixAllowed());
 
 
         //Check if this rule was NOT used then add it to the resExpServices
@@ -958,7 +958,7 @@ GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCt
         }
 
         //Remove from the manifest interfaces the interfaces that have been used
-        for (std::set<GatewayCtrlTPInterface>::const_iterator itr = usedIfaces->begin(); itr != usedIfaces->end(); itr++) {
+        for (std::set<GatewayCtrlConnAppInterface>::const_iterator itr = usedIfaces->begin(); itr != usedIfaces->end(); itr++) {
             QCC_SyncPrintf("erasing %s", itr->GetName().c_str());
             manifs->erase(manifs->find(*itr));
         }
@@ -978,17 +978,17 @@ GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCt
 std::vector<GatewayCtrlManifestObjectDescription*>
 GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<GatewayCtrlManifestObjectDescription*>& objDescs,
                                                        const std::vector<GatewayCtrlManifestObjectDescription*>& manifest,
-                                                       std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >& usedManRules)
+                                                       std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >& usedManRules)
 
 {
 
-    std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >  resRules;
+    std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >  resRules;
 
     std::set<qcc::String> objDescInterfaceNames;
 
     // create a unique list of interface strings
     for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator objDesc = objDescs.begin(); objDesc != objDescs.end(); objDesc++) {
-        for (std::set<GatewayCtrlTPInterface>::const_iterator itr = (*objDesc)->GetInterfaces()->begin(); itr != (*objDesc)->GetInterfaces()->end(); itr++) {
+        for (std::set<GatewayCtrlConnAppInterface>::const_iterator itr = (*objDesc)->GetInterfaces()->begin(); itr != (*objDesc)->GetInterfaces()->end(); itr++) {
             objDescInterfaceNames.insert(itr->GetName());
         }
     }
@@ -998,37 +998,37 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
         std::set<qcc::String> ifacesToConvert = objDescInterfaceNames;
 
         for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator manifRule = manifest.begin(); manifRule != manifest.end(); manifRule++) {
-            GatewayCtrlTPObjectPath*manop               = (*manifRule)->GetObjectPath();
-            const std::set<GatewayCtrlTPInterface>*manifs              = (*manifRule)->GetInterfaces();
+            GatewayCtrlConnAppObjectPath*manop               = (*manifRule)->GetObjectPath();
+            const std::set<GatewayCtrlConnAppInterface>*manifs              = (*manifRule)->GetInterfaces();
             int manifsSize          = (int)manifs->size();
 
             if (!isValidObjPath(manop, (*objDesc)->GetObjectPath()->GetPath(), (*objDesc)->GetObjectPath()->IsPrefix())) {
                 continue;
             }
 
-            GatewayCtrlTPObjectPath*resObjPath = NULL;
+            GatewayCtrlConnAppObjectPath*resObjPath = NULL;
 
             if (manop->GetPath().compare((*objDesc)->GetObjectPath()->GetPath()) == 0) {
-                resObjPath = new GatewayCtrlTPObjectPath((*objDesc)->GetObjectPath()->GetPath(), manop->GetFriendlyName(), (*objDesc)->GetObjectPath()->IsPrefix(), manop->isPrefixAllowed());
+                resObjPath = new GatewayCtrlConnAppObjectPath((*objDesc)->GetObjectPath()->GetPath(), manop->GetFriendlyName(), (*objDesc)->GetObjectPath()->IsPrefix(), manop->isPrefixAllowed());
             } else {
-                resObjPath = new GatewayCtrlTPObjectPath((*objDesc)->GetObjectPath()->GetPath(), "", (*objDesc)->GetObjectPath()->IsPrefix(), manop->isPrefixAllowed());
+                resObjPath = new GatewayCtrlConnAppObjectPath((*objDesc)->GetObjectPath()->GetPath(), "", (*objDesc)->GetObjectPath()->IsPrefix(), manop->isPrefixAllowed());
             }
 
             //Add used manifest rules for the empty manifest interfaces array
             if (manifsSize == 0) {
-                std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >::const_iterator usedManOP = usedManRules.find(*manop);
+                std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >::const_iterator usedManOP = usedManRules.find(*manop);
                 if (usedManOP != usedManRules.end()) {
-                    std::set<GatewayCtrlTPInterface> usedIfaces = usedManOP->second;
+                    std::set<GatewayCtrlConnAppInterface> usedIfaces = usedManOP->second;
                     if (usedIfaces.size() == 0) {
-                        std::set<GatewayCtrlTPInterface> empty;
-                        usedManRules.insert(std::pair<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >(*manop, empty));
+                        std::set<GatewayCtrlConnAppInterface> empty;
+                        usedManRules.insert(std::pair<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >(*manop, empty));
                     }
                 }
             }
 
             std::set<qcc::String>::const_iterator ifacesToConvertIter = ifacesToConvert.begin();
 
-            std::set<GatewayCtrlTPInterface> resInterfaces;         //result interfaces
+            std::set<GatewayCtrlConnAppInterface> resInterfaces;         //result interfaces
 
             while (ifacesToConvertIter != ifacesToConvert.end()) {
 
@@ -1037,7 +1037,7 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
                 //If there are not interfaces in the manifest, it means that all the interfaces are supported
                 //add them without display names
                 if (manifsSize == 0) {
-                    resInterfaces.insert(GatewayCtrlTPInterface(ajIface, "", false));
+                    resInterfaces.insert(GatewayCtrlConnAppInterface(ajIface, "", false));
                     ifacesToConvert.erase(ifacesToConvertIter++);
                 }
 
@@ -1045,13 +1045,13 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
                     break;
                 }
 
-                for (std::set<GatewayCtrlTPInterface>::const_iterator manIface = manifs->begin(); manIface != manifs->end(); manIface++) {
+                for (std::set<GatewayCtrlConnAppInterface>::const_iterator manIface = manifs->begin(); manIface != manifs->end(); manIface++) {
 
                     //aclInterface is found in manifest
                     if (ajIface.compare(manIface->GetName()) == 0) {
 
 
-                        resInterfaces.insert(GatewayCtrlTPInterface(ajIface, (*manIface).GetFriendlyName(), manIface->IsSecured()));
+                        resInterfaces.insert(GatewayCtrlConnAppInterface(ajIface, (*manIface).GetFriendlyName(), manIface->IsSecured()));
                         ifacesToConvert.erase(ifacesToConvertIter++);
                         continue;
                     }
@@ -1073,7 +1073,7 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
             }
 
             //Add the interfaces to the resObjPath
-            std::set<GatewayCtrlTPInterface> ifaces;
+            std::set<GatewayCtrlConnAppInterface> ifaces;
 
             if (resRules.find(*resObjPath) != resRules.end()) {
                 ifaces = resRules.find(*resObjPath)->second;
@@ -1083,18 +1083,18 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
 
             } else {
 
-                resRules.insert(std::pair<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >(*resObjPath, resInterfaces));
+                resRules.insert(std::pair<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >(*resObjPath, resInterfaces));
             }
 
 
             //Add used manifest rules
             if (manifsSize > 0) {
 
-                std::set<GatewayCtrlTPInterface> usedIfaces;
+                std::set<GatewayCtrlConnAppInterface> usedIfaces;
                 if (usedManRules.find(*manop) != usedManRules.end()) {
                     usedIfaces.insert(resInterfaces.begin(), resInterfaces.end());
                 } else {
-                    usedManRules.insert(std::pair<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >(*manop, resInterfaces));
+                    usedManRules.insert(std::pair<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >(*manop, resInterfaces));
                 }
             }
 
@@ -1113,16 +1113,16 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
 
     //Create final list of the configured rules
 
-    std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >::const_iterator itr;
+    std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >::const_iterator itr;
     std::vector<GatewayCtrlManifestObjectDescription*> rules;
     for (itr = resRules.begin(); itr != resRules.end(); itr++) {
-        const GatewayCtrlTPObjectPath*path = &itr->first;
-        std::set<GatewayCtrlTPInterface> tpInterfacesSet = itr->second;
+        const GatewayCtrlConnAppObjectPath*path = &itr->first;
+        std::set<GatewayCtrlConnAppInterface> connAppInterfacesSet = itr->second;
 
         QCC_SyncPrintf("size:%d", resRules.size());
 
 
-        GatewayCtrlManifestObjectDescription*newOD = new GatewayCtrlManifestObjectDescription(*path, tpInterfacesSet, true);
+        GatewayCtrlManifestObjectDescription*newOD = new GatewayCtrlManifestObjectDescription(*path, connAppInterfacesSet, true);
         rules.push_back(newOD);
     }
 
@@ -1137,7 +1137,7 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
 {
     //Gets TRUE if the metadata needs to be updated
     bool updatedMeta               = false;
-    std::vector<GatewayCtrlRemotedApp*> configurableApps = GatewayCtrlTPApplication::ExtractRemotedApps(remotedServices, announcements, status);
+    std::vector<GatewayCtrlRemotedApp*> configurableApps = GatewayCtrlConnectorApplication::ExtractRemotedApps(remotedServices, announcements, status);
 
     if (status != ER_OK) {
         QCC_LogError(status, ("ExtractRemotedApps failed"));
@@ -1158,7 +1158,7 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
         }
 
 
-        std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> > usedManRules;
+        std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> > usedManRules;
         //Convert the acl remoted app object descriptions to the list of ManifestObjectDescriptions
         //by intersecting with the manifest data.
         std::vector<GatewayCtrlManifestObjectDescription*> configuredRules = ConvertObjectDescription(
@@ -1278,8 +1278,8 @@ void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vec
         GatewayCtrlManifestObjectDescription*unconfRule = (*iter);
 
 
-        GatewayCtrlTPObjectPath*unconfOP          = unconfRule->GetObjectPath();
-        std::set<GatewayCtrlTPInterface>* unconfIfaces  = (std::set<GatewayCtrlTPInterface>*)unconfRule->GetInterfaces();
+        GatewayCtrlConnAppObjectPath*unconfOP          = unconfRule->GetObjectPath();
+        std::set<GatewayCtrlConnAppInterface>* unconfIfaces  = (std::set<GatewayCtrlConnAppInterface>*)unconfRule->GetInterfaces();
 
         //Gets TRUE if unconfOP was found among the confRules
         bool unconfOpInConf = false;
@@ -1288,8 +1288,8 @@ void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vec
 
         for (confRulesIter = confRules.begin(); confRulesIter != confRules.end(); confRulesIter++) {
 
-            GatewayCtrlTPObjectPath* confOP         = (*confRulesIter)->GetObjectPath();
-            const std::set<GatewayCtrlTPInterface>* confIfaces = (*confRulesIter)->GetInterfaces();
+            GatewayCtrlConnAppObjectPath* confOP         = (*confRulesIter)->GetObjectPath();
+            const std::set<GatewayCtrlConnAppInterface>* confIfaces = (*confRulesIter)->GetInterfaces();
 
             //Check if the unconfOP not equals confOP
             if (unconfOP->GetPath().compare(confOP->GetPath())) {
@@ -1298,7 +1298,7 @@ void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vec
 
             unconfOpInConf = true;
 
-            for (std::set<GatewayCtrlTPInterface>::const_iterator itr = confIfaces->begin(); itr != confIfaces->end(); itr++) {
+            for (std::set<GatewayCtrlConnAppInterface>::const_iterator itr = confIfaces->begin(); itr != confIfaces->end(); itr++) {
                 QCC_SyncPrintf("erasing %s", itr->GetName().c_str());
                 unconfIfaces->erase(unconfIfaces->find(*itr));
             }

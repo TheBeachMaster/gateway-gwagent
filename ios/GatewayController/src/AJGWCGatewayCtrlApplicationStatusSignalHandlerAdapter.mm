@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 #import "AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter.h"
-#import "AJGWCGatewayCtrlTPApplicationStatus.h"
+#import "AJGWCGatewayCtrlConnectorApplicationStatus.h"
 #import "alljoyn/about/AJNConvertUtil.h"
 
 AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter::AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter(id <AJGWCGatewayCtrlApplicationStatusSignalHandler> handle)
@@ -28,8 +28,8 @@ AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter::~AJGWCGatewayCtrlApplicat
 }
 
 
-void AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter::onStatusChanged(qcc::String appId, const ajn::services::GatewayCtrlTPApplicationStatus *TPApplicationStatus)
+void AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter::onStatusChanged(qcc::String appId, const ajn::services::GatewayCtrlConnectorApplicationStatus *ConnectorApplicationStatus)
 {
-    AJGWCGatewayCtrlTPApplicationStatus* gwTPApplicationStatus = [[AJGWCGatewayCtrlTPApplicationStatus alloc] initWithHandle:const_cast<ajn::services::GatewayCtrlTPApplicationStatus*>(TPApplicationStatus)];
-    [applicationStatusSignalHandler onStatusChanged:[AJNConvertUtil convertQCCStringtoNSString:appId] status:gwTPApplicationStatus];
+    AJGWCGatewayCtrlConnectorApplicationStatus* gwConnectorApplicationStatus = [[AJGWCGatewayCtrlConnectorApplicationStatus alloc] initWithHandle:const_cast<ajn::services::GatewayCtrlConnectorApplicationStatus*>(ConnectorApplicationStatus)];
+    [applicationStatusSignalHandler onStatusChanged:[AJNConvertUtil convertQCCStringtoNSString:appId] status:gwConnectorApplicationStatus];
 }

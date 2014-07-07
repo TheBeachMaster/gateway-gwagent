@@ -21,10 +21,10 @@
 		19D279DE191BBB6700BEF943 /* AJGWCGatewayCtrlManifestRules.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CC191BBB6700BEF943 /* AJGWCGatewayCtrlManifestRules.mm */; };
 		19D279DF191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CD191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm */; };
 		19D279E0191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CE191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm */; };
-		19D279E1191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CF191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplication.mm */; };
-		19D279E2191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplicationStatus.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D0191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplicationStatus.mm */; };
-		19D279E3191BBB6700BEF943 /* AJGWCGatewayCtrlTPInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D1191BBB6700BEF943 /* AJGWCGatewayCtrlTPInterface.mm */; };
-		19D279E4191BBB6700BEF943 /* AJGWCGatewayCtrlTPObjectPath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D2191BBB6700BEF943 /* AJGWCGatewayCtrlTPObjectPath.mm */; };
+		19D279E1191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplication.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CF191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplication.mm */; };
+		19D279E2191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplicationStatus.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D0191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplicationStatus.mm */; };
+		19D279E3191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D1191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppInterface.mm */; };
+		19D279E4191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppObjectPath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D2191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppObjectPath.mm */; };
 		9AA935ED1854BC2B00378361 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA935EC1854BC2B00378361 /* Foundation.framework */; };
 		9AA935FB1854BC2B00378361 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA935FA1854BC2B00378361 /* XCTest.framework */; };
 		9AA935FC1854BC2B00378361 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA935EC1854BC2B00378361 /* Foundation.framework */; };
@@ -80,10 +80,10 @@
 		19D279B6191BBB6700BEF943 /* AJGWCGatewayCtrlManifestRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlManifestRules.h; sourceTree = "<group>"; };
 		19D279B7191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlRemotedApp.h; sourceTree = "<group>"; };
 		19D279B8191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlSessionResult.h; sourceTree = "<group>"; };
-		19D279B9191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlTPApplication.h; sourceTree = "<group>"; };
-		19D279BA191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplicationStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlTPApplicationStatus.h; sourceTree = "<group>"; };
-		19D279BB191BBB6700BEF943 /* AJGWCGatewayCtrlTPInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlTPInterface.h; sourceTree = "<group>"; };
-		19D279BC191BBB6700BEF943 /* AJGWCGatewayCtrlTPObjectPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlTPObjectPath.h; sourceTree = "<group>"; };
+		19D279B9191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlConnectorApplication.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279BA191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplicationStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlConnectorApplicationStatus.h; sourceTree = "<group>"; };
+		19D279BB191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlConnAppInterface.h; sourceTree = "<group>"; };
+		19D279BC191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppObjectPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlConnAppObjectPath.h; sourceTree = "<group>"; };
 		19D279BE191BBB6700BEF943 /* AJGWCAnnouncementData.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCAnnouncementData.mm; sourceTree = "<group>"; };
 		19D279BF191BBB6700BEF943 /* AJGWCGatewayCtrlAccessControlList.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlAccessControlList.mm; sourceTree = "<group>"; };
 		19D279C0191BBB6700BEF943 /* AJGWCGatewayCtrlAccessRules.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlAccessRules.mm; sourceTree = "<group>"; };
@@ -97,14 +97,14 @@
 		19D279C8191BBB6700BEF943 /* AJGWCGatewayCtrlEnums.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlEnums.mm; sourceTree = "<group>"; };
 		19D279C9191BBB6700BEF943 /* AJGWCGatewayCtrlGateway.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlGateway.mm; sourceTree = "<group>"; };
 		19D279CA191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlGatewayController.mm; sourceTree = "<group>"; };
-		19D279CB191BBB6700BEF943 /* AJGWCGatewayCtrlManifestObjectDescription.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlManifestObjectDescription.mm; sourceTree = "<group>"; };
+		19D279CB191BBB6700BEF943 /* AJGWCGatewayCtrlManifestObjectDescription.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlManifestObjectDescription.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		19D279CC191BBB6700BEF943 /* AJGWCGatewayCtrlManifestRules.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlManifestRules.mm; sourceTree = "<group>"; };
 		19D279CD191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlRemotedApp.mm; sourceTree = "<group>"; };
 		19D279CE191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlSessionResult.mm; sourceTree = "<group>"; };
-		19D279CF191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlTPApplication.mm; sourceTree = "<group>"; };
-		19D279D0191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplicationStatus.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlTPApplicationStatus.mm; sourceTree = "<group>"; };
-		19D279D1191BBB6700BEF943 /* AJGWCGatewayCtrlTPInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlTPInterface.mm; sourceTree = "<group>"; };
-		19D279D2191BBB6700BEF943 /* AJGWCGatewayCtrlTPObjectPath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlTPObjectPath.mm; sourceTree = "<group>"; };
+		19D279CF191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplication.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlConnectorApplication.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279D0191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplicationStatus.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlConnectorApplicationStatus.mm; sourceTree = "<group>"; };
+		19D279D1191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlConnAppInterface.mm; sourceTree = "<group>"; };
+		19D279D2191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppObjectPath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlConnAppObjectPath.mm; sourceTree = "<group>"; };
 		9AA935E91854BC2B00378361 /* liballjoyn_gateway_objc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liballjoyn_gateway_objc.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AA935EC1854BC2B00378361 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9AA935F01854BC2B00378361 /* alljoyn_gateway_objc-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "alljoyn_gateway_objc-Prefix.pch"; sourceTree = "<group>"; };
@@ -173,10 +173,10 @@
 				19D279B6191BBB6700BEF943 /* AJGWCGatewayCtrlManifestRules.h */,
 				19D279B7191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.h */,
 				19D279B8191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.h */,
-				19D279B9191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplication.h */,
-				19D279BA191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplicationStatus.h */,
-				19D279BB191BBB6700BEF943 /* AJGWCGatewayCtrlTPInterface.h */,
-				19D279BC191BBB6700BEF943 /* AJGWCGatewayCtrlTPObjectPath.h */,
+				19D279B9191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplication.h */,
+				19D279BA191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplicationStatus.h */,
+				19D279BB191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppInterface.h */,
+				19D279BC191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppObjectPath.h */,
 			);
 			path = gateway;
 			sourceTree = "<group>";
@@ -201,10 +201,10 @@
 				19D279CC191BBB6700BEF943 /* AJGWCGatewayCtrlManifestRules.mm */,
 				19D279CD191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm */,
 				19D279CE191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm */,
-				19D279CF191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplication.mm */,
-				19D279D0191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplicationStatus.mm */,
-				19D279D1191BBB6700BEF943 /* AJGWCGatewayCtrlTPInterface.mm */,
-				19D279D2191BBB6700BEF943 /* AJGWCGatewayCtrlTPObjectPath.mm */,
+				19D279CF191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplication.mm */,
+				19D279D0191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplicationStatus.mm */,
+				19D279D1191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppInterface.mm */,
+				19D279D2191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppObjectPath.mm */,
 			);
 			name = src;
 			path = GatewayController/src;
@@ -370,19 +370,19 @@
 				19D279D4191BBB6700BEF943 /* AJGWCGatewayCtrlAccessControlList.mm in Sources */,
 				19D279E0191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm in Sources */,
 				19D279D5191BBB6700BEF943 /* AJGWCGatewayCtrlAccessRules.mm in Sources */,
-				19D279E4191BBB6700BEF943 /* AJGWCGatewayCtrlTPObjectPath.mm in Sources */,
+				19D279E4191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppObjectPath.mm in Sources */,
 				19D279DD191BBB6700BEF943 /* AJGWCGatewayCtrlManifestObjectDescription.mm in Sources */,
 				19D279DC191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayController.mm in Sources */,
 				19D279DA191BBB6700BEF943 /* AJGWCGatewayCtrlEnums.mm in Sources */,
 				19D279DE191BBB6700BEF943 /* AJGWCGatewayCtrlManifestRules.mm in Sources */,
 				19D279DF191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm in Sources */,
 				19D279D9191BBB6700BEF943 /* AJGWCGatewayCtrlDiscoveredApp.mm in Sources */,
-				19D279E3191BBB6700BEF943 /* AJGWCGatewayCtrlTPInterface.mm in Sources */,
+				19D279E3191BBB6700BEF943 /* AJGWCGatewayCtrlConnAppInterface.mm in Sources */,
 				19D279D8191BBB6700BEF943 /* AJGWCGatewayCtrlControllerSessionListenerAdapter.mm in Sources */,
 				19D279D3191BBB6700BEF943 /* AJGWCAnnouncementData.mm in Sources */,
 				19D279DB191BBB6700BEF943 /* AJGWCGatewayCtrlGateway.mm in Sources */,
-				19D279E2191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplicationStatus.mm in Sources */,
-				19D279E1191BBB6700BEF943 /* AJGWCGatewayCtrlTPApplication.mm in Sources */,
+				19D279E2191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplicationStatus.mm in Sources */,
+				19D279E1191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApplication.mm in Sources */,
 				19D279D7191BBB6700BEF943 /* AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

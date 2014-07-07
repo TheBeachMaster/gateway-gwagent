@@ -21,26 +21,26 @@
 namespace ajn {
 namespace services {
 
-GatewayCtrlTPInterface::GatewayCtrlTPInterface(qcc::String name, qcc::String friendlyName, bool isSecured) : m_Name(name), m_FriendlyName(friendlyName), m_IsSecured(isSecured)
+GatewayCtrlConnAppInterface::GatewayCtrlConnAppInterface(qcc::String name, qcc::String friendlyName, bool isSecured) : m_Name(name), m_FriendlyName(friendlyName), m_IsSecured(isSecured)
 {
 }
 
-qcc::String GatewayCtrlTPInterface::GetName() const
+qcc::String GatewayCtrlConnAppInterface::GetName() const
 {
     return m_Name;
 }
 
-qcc::String GatewayCtrlTPInterface::GetFriendlyName() const
+qcc::String GatewayCtrlConnAppInterface::GetFriendlyName() const
 {
     return m_FriendlyName;
 }
 
-bool GatewayCtrlTPInterface::IsSecured() const
+bool GatewayCtrlConnAppInterface::IsSecured() const
 {
     return m_IsSecured;
 }
 
-bool GatewayCtrlTPInterface::operator<(const GatewayCtrlTPInterface to) const
+bool GatewayCtrlConnAppInterface::operator<(const GatewayCtrlConnAppInterface to) const
 {
     const bool ALessThanB = GetName().operator<(to.GetName());
 
@@ -48,50 +48,50 @@ bool GatewayCtrlTPInterface::operator<(const GatewayCtrlTPInterface to) const
 }
 
 
-GatewayCtrlTPObjectPath::GatewayCtrlTPObjectPath(qcc::String objectPath, qcc::String friendlyName, bool isPrefix, bool isPrefixAllowed) : m_ObjectPath(objectPath), m_FriendlyName(friendlyName), m_IsPrefix(isPrefix), m_isPrefixAllowed(isPrefixAllowed)
+GatewayCtrlConnAppObjectPath::GatewayCtrlConnAppObjectPath(qcc::String objectPath, qcc::String friendlyName, bool isPrefix, bool isPrefixAllowed) : m_ObjectPath(objectPath), m_FriendlyName(friendlyName), m_IsPrefix(isPrefix), m_isPrefixAllowed(isPrefixAllowed)
 {
 }
 
-GatewayCtrlTPObjectPath::~GatewayCtrlTPObjectPath()
+GatewayCtrlConnAppObjectPath::~GatewayCtrlConnAppObjectPath()
 {
 }
 
-qcc::String GatewayCtrlTPObjectPath::GetPath() const
+qcc::String GatewayCtrlConnAppObjectPath::GetPath() const
 {
     return m_ObjectPath;
 }
 
-qcc::String GatewayCtrlTPObjectPath::GetFriendlyName()
+qcc::String GatewayCtrlConnAppObjectPath::GetFriendlyName()
 {
     return m_FriendlyName;
 }
 
-bool GatewayCtrlTPObjectPath::IsPrefix() const
+bool GatewayCtrlConnAppObjectPath::IsPrefix() const
 {
     return m_IsPrefix;
 }
 
-void GatewayCtrlTPObjectPath::SetPrefix(bool isPrefix)
+void GatewayCtrlConnAppObjectPath::SetPrefix(bool isPrefix)
 {
     m_IsPrefix = isPrefix;
 }
 
-bool GatewayCtrlTPObjectPath::isPrefixAllowed() const {
+bool GatewayCtrlConnAppObjectPath::isPrefixAllowed() const {
     return m_isPrefixAllowed;
 }
 
-void GatewayCtrlTPObjectPath::setPrefixAllowed(bool isPrefixAllowed) {
+void GatewayCtrlConnAppObjectPath::setPrefixAllowed(bool isPrefixAllowed) {
     m_isPrefixAllowed = isPrefixAllowed;
 }
 
-GatewayCtrlManifestObjectDescription::GatewayCtrlManifestObjectDescription(const GatewayCtrlTPObjectPath& objectPath, std::set<GatewayCtrlTPInterface> interfaces) : m_IsConfigured(false), m_Interfaces(interfaces)
+GatewayCtrlManifestObjectDescription::GatewayCtrlManifestObjectDescription(const GatewayCtrlConnAppObjectPath& objectPath, std::set<GatewayCtrlConnAppInterface> interfaces) : m_Interfaces(interfaces), m_IsConfigured(false)
 {
-    m_ObjectPath = new GatewayCtrlTPObjectPath(objectPath);
+    m_ObjectPath = new GatewayCtrlConnAppObjectPath(objectPath);
 }
 
-GatewayCtrlManifestObjectDescription::GatewayCtrlManifestObjectDescription(const GatewayCtrlTPObjectPath& objectPath, std::set<GatewayCtrlTPInterface> interfaces, bool isConfigured) : m_IsConfigured(isConfigured), m_Interfaces(interfaces)
+GatewayCtrlManifestObjectDescription::GatewayCtrlManifestObjectDescription(const GatewayCtrlConnAppObjectPath& objectPath, std::set<GatewayCtrlConnAppInterface> interfaces, bool isConfigured) : m_Interfaces(interfaces), m_IsConfigured(isConfigured)
 {
-    m_ObjectPath = new GatewayCtrlTPObjectPath(objectPath);
+    m_ObjectPath = new GatewayCtrlConnAppObjectPath(objectPath);
 }
 
 GatewayCtrlManifestObjectDescription::~GatewayCtrlManifestObjectDescription()
@@ -99,12 +99,12 @@ GatewayCtrlManifestObjectDescription::~GatewayCtrlManifestObjectDescription()
 
 }
 
-GatewayCtrlTPObjectPath* GatewayCtrlManifestObjectDescription::GetObjectPath() const
+GatewayCtrlConnAppObjectPath* GatewayCtrlManifestObjectDescription::GetObjectPath() const
 {
     return m_ObjectPath;
 }
 
-const std::set<GatewayCtrlTPInterface>* GatewayCtrlManifestObjectDescription::GetInterfaces() const
+const std::set<GatewayCtrlConnAppInterface>* GatewayCtrlManifestObjectDescription::GetInterfaces() const
 {
     return &m_Interfaces;
 }

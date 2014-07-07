@@ -19,13 +19,13 @@
 #import "alljoyn/gateway/AJGWCGatewayCtrlManifestObjectDescription.h"
 
 @interface VisualInterfaceInfo : NSObject <NSCopying>
-@property (strong,nonatomic) AJGWCGatewayCtrlTPInterface *interface;
+@property (strong,nonatomic) AJGWCGatewayCtrlConnAppInterface *interface;
 @property (nonatomic) BOOL configured;              // is this interface configured to be included in the ACL - if YES, all object paths under it are included
 @property (nonatomic) BOOL enabled;                 // can this interface be configured or was a parent configured for it?
 @end
 
 @interface VisualObjPathInfo : NSObject <NSCopying>
-@property (strong,nonatomic) AJGWCGatewayCtrlTPObjectPath *objectPath;
+@property (strong,nonatomic) AJGWCGatewayCtrlConnAppObjectPath *objectPath;
 @property (nonatomic) BOOL enabled;                 // can this objPath be configured
 @property (nonatomic) BOOL configured;              // is this path configured to be included in the ACL
 @end
@@ -36,10 +36,10 @@
 
 -(id)initWithArrayOfManifestObjectDescription:(NSArray *)ArrayOfManifestObjectDescription;
 
-// return array of AJGWCGatewayCtrlTPInterface
+// return array of AJGWCGatewayCtrlConnAppInterface
 - (NSArray *)interfaces;
 
-// return array of AJGWCGatewayCtrlTPObjectPath
+// return array of AJGWCGatewayCtrlConnAppObjectPath
 - (NSArray *)objectPathsForInterface:(VisualInterfaceInfo *)interface;
 
 -(void) switchAllAccessRules;

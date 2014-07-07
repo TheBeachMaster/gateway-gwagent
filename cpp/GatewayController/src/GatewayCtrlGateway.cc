@@ -51,7 +51,7 @@ void GatewayCtrlGateway::EmptyVector()
     m_InstalledApps.clear();
 }
 
-const std::vector<GatewayCtrlTPApplication*>&  GatewayCtrlGateway::RetrieveInstalledApps(SessionId sessionId, QStatus& status)
+const std::vector<GatewayCtrlConnectorApplication*>&  GatewayCtrlGateway::RetrieveInstalledApps(SessionId sessionId, QStatus& status)
 {
     {
         //Release the current vector
@@ -127,9 +127,9 @@ const std::vector<GatewayCtrlTPApplication*>&  GatewayCtrlGateway::RetrieveInsta
 
         for (int i = 0; i < numApplications; i++) {
 
-            GatewayCtrlTPApplication*tpApp = new GatewayCtrlTPApplication(GetBusName(), &tempEntries[i]);
+            GatewayCtrlConnectorApplication*connectorApp = new GatewayCtrlConnectorApplication(GetBusName(), &tempEntries[i]);
 
-            m_InstalledApps.push_back(tpApp);
+            m_InstalledApps.push_back(connectorApp);
 
         }
     }

@@ -16,13 +16,13 @@
 
 
 #import "VisualAccessRules.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlTPInterface.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlTPObjectPath.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnAppInterface.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnAppObjectPath.h"
 
 
 @implementation VisualInterfaceInfo
 
--(id) init:(AJGWCGatewayCtrlTPInterface *)interface isConfigured:(BOOL)configured enabled:(BOOL)enabled
+-(id) init:(AJGWCGatewayCtrlConnAppInterface *)interface isConfigured:(BOOL)configured enabled:(BOOL)enabled
 {
     self = [super init];
     
@@ -47,14 +47,14 @@
 
 - (BOOL)isEqual:(id)anObject {
     if (![anObject isKindOfClass:[VisualInterfaceInfo class]]) return NO;
-    VisualInterfaceInfo *otherTPInterface = (VisualInterfaceInfo *)anObject;
+    VisualInterfaceInfo *otherConnAppInterface = (VisualInterfaceInfo *)anObject;
 
-    return [otherTPInterface.interface isEqual:self.interface];
+    return [otherConnAppInterface.interface isEqual:self.interface];
 }
 @end
 
 @implementation VisualObjPathInfo
--(id) init:(AJGWCGatewayCtrlTPObjectPath *)objectPath isConfigured:(BOOL)configured enabled:(BOOL)enabled
+-(id) init:(AJGWCGatewayCtrlConnAppObjectPath *)objectPath isConfigured:(BOOL)configured enabled:(BOOL)enabled
 {
     self = [super init];
     
@@ -105,7 +105,7 @@
         
         VisualObjPathInfo *objPathInfo = [[VisualObjPathInfo alloc] init:[objectDescription objectPath] isConfigured:[objectDescription isConfigured] enabled:YES] ;
         
-        for (AJGWCGatewayCtrlTPInterface *interface in interfaces) {
+        for (AJGWCGatewayCtrlConnAppInterface *interface in interfaces) {
             
             VisualInterfaceInfo *interfaceInfo = [[VisualInterfaceInfo alloc]init:interface isConfigured:NO enabled:YES]; // we will populate the configured interfaces later in this function
 

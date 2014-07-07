@@ -17,13 +17,13 @@
 #import <Foundation/Foundation.h>
 #import "alljoyn/gateway/GatewayCtrlManifestObjectDescription.h"
 
-@interface AJGWCGatewayCtrlTPObjectPath : NSObject
+@interface AJGWCGatewayCtrlConnAppObjectPath : NSObject
 
 /**
  * Constructor
- * @param handle A handle to a cpp GatewayCtrlTPObjectPath object
+ * @param handle A handle to a cpp GatewayCtrlConnAppObjectPath object
  */
-- (id)initWithHandle:(ajn::services::GatewayCtrlTPObjectPath *) handle;
+- (id)initWithHandle:(ajn::services::GatewayCtrlConnAppObjectPath *) handle;
 
 /**
  * Constructor
@@ -73,7 +73,7 @@
  * Returns the cpp handle of this class
  * @return GatewayCtrlAccessRules
  */
-- (ajn::services::GatewayCtrlTPObjectPath*)handle;
+- (ajn::services::GatewayCtrlConnAppObjectPath*)handle;
 
 
 @end

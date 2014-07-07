@@ -16,7 +16,7 @@
 
 #import "AJGWCGatewayCtrlGateway.h"
 #import "alljoyn/about/AJNConvertUtil.h"
-#import "AJGWCGatewayCtrlTPApplication.h"
+#import "AJGWCGatewayCtrlConnectorApplication.h"
 #import "AJGWCGatewayCtrlControllerSessionListenerAdapter.h"
 #import "AJNStatus.h"
 
@@ -63,11 +63,11 @@
 - (NSArray*)retrieveInstalledApps:(AJNSessionId) sessionId status:(QStatus&) status
 {
     NSMutableArray*  installedAppsArray = [[NSMutableArray alloc] init];
-    std::vector<ajn::services::GatewayCtrlTPApplication*> installedAppsVect = self.handle->RetrieveInstalledApps(sessionId, status);
+    std::vector<ajn::services::GatewayCtrlConnectorApplication*> installedAppsVect = self.handle->RetrieveInstalledApps(sessionId, status);
     
     // Populate NSMutableArray with std::vector data
-    for (std::vector<ajn::services::GatewayCtrlTPApplication*>::const_iterator vectIt = installedAppsVect.begin(); vectIt != installedAppsVect.end(); vectIt++) {
-        [installedAppsArray addObject:[[AJGWCGatewayCtrlTPApplication alloc] initWithHandle:*vectIt]];
+    for (std::vector<ajn::services::GatewayCtrlConnectorApplication*>::const_iterator vectIt = installedAppsVect.begin(); vectIt != installedAppsVect.end(); vectIt++) {
+        [installedAppsArray addObject:[[AJGWCGatewayCtrlConnectorApplication alloc] initWithHandle:*vectIt]];
     }
     return installedAppsArray;
 }

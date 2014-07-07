@@ -14,16 +14,16 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#import "TPAppTableViewController.h"
+#import "ConnectorAppTableViewController.h"
 #import "alljoyn/gateway/AJGWCGatewayCtrlGatewayController.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlTPApplication.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplication.h"
 #import "alljoyn/gateway/AJGWCGatewayCtrlApplicationStatusSignalHandler.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlTPApplicationStatus.h"
-#import "TPAppTableViewCell.h"
-#import "TPAppInfoViewController.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplicationStatus.h"
+#import "ConnectorAppTableViewCell.h"
+#import "ConnectorAppInfoViewController.h"
 #import "AppDelegate.h"
 
-@interface TPAppTableViewController () <AJGWCGatewayCtrlApplicationStatusSignalHandler, UIActionSheetDelegate>
+@interface ConnectorAppTableViewController () <AJGWCGatewayCtrlApplicationStatusSignalHandler, UIActionSheetDelegate>
 
 @property (strong, nonatomic) AJGWCGatewayCtrlGateway* gateway;
 @property (nonatomic) AJNSessionId sessionId;
@@ -31,7 +31,7 @@
 
 @end
 
-@implementation TPAppTableViewController
+@implementation ConnectorAppTableViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -85,15 +85,15 @@
 
 - (void)statusChangedHandler:(BOOL) flag
 {
-    for(AJGWCGatewayCtrlTPApplication* tpApp in self.gwApps)
+    for(AJGWCGatewayCtrlConnectorApplication* connectorApp in self.gwApps)
     {
         if (flag == YES) {
-            QStatus handlerStatus = [tpApp setStatusChangedHandler:self];
+            QStatus handlerStatus = [connectorApp setStatusChangedHandler:self];
             if (ER_OK != handlerStatus) {
                 NSLog(@"Failed to set status changed handler");
             }
         } else {
-            [tpApp unsetStatusChangedHandler];
+            [connectorApp unsetStatusChangedHandler];
         }
     }
 }
@@ -128,7 +128,7 @@
 }
 
 #pragma mark -  AJGWCGatewayCtrlApplicationStatusSignalHandler method
-- (void)onStatusChanged:(NSString*) appId status:(AJGWCGatewayCtrlTPApplicationStatus*) status
+- (void)onStatusChanged:(NSString*) appId status:(AJGWCGatewayCtrlConnectorApplicationStatus*) status
 {
     NSLog(@"AppID %@ status has changed", appId);
     [self.tableView reloadData];
@@ -145,37 +145,37 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    TPAppTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TPAppCell" forIndexPath:indexPath];
+    ConnectorAppTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ConnectorAppCell" forIndexPath:indexPath];
     
-    AJGWCGatewayCtrlTPApplication* tpApp = [self.gwApps objectAtIndex:indexPath.row];
-    cell.TPAppNameLbl.text = [tpApp friendlyName];
+    AJGWCGatewayCtrlConnectorApplication* connectorApp = [self.gwApps objectAtIndex:indexPath.row];
+    cell.ConnectorAppNameLbl.text = [connectorApp friendlyName];
     
     /* Retrieve Status */
     QStatus status = ER_FAIL;
-    AJGWCGatewayCtrlTPApplicationStatus* tpAppStatus = [tpApp retrieveStatusUsingSessionId:self.sessionId status:status];
+    AJGWCGatewayCtrlConnectorApplicationStatus* connectorAppStatus = [connectorApp retrieveStatusUsingSessionId:self.sessionId status:status];
     
     if (status == ER_OK) {
         
-        [TPAppInfoViewController setLabelTextColor:cell.TPAppInstallLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCInstallStatusToString:[tpAppStatus installStatus]]];
+        [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppInstallLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCInstallStatusToString:[connectorAppStatus installStatus]]];
         
-        [TPAppInfoViewController setLabelTextColor:cell.TPAppConnectionLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCConnectionStatusToString:[tpAppStatus connectionStatus]]];
+        [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppConnectionLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCConnectionStatusToString:[connectorAppStatus connectionStatus]]];
 
-        [TPAppInfoViewController setLabelTextColor:cell.TPAppOperationalLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCOperationalStatusToString:[tpAppStatus operationalStatus]]];        
+        [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppOperationalLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCOperationalStatusToString:[connectorAppStatus operationalStatus]]];        
     } else {
         [AppDelegate AlertAndLog:@"RetrieveStatus error happened, check log" status:status];
-        [TPAppInfoViewController setLabelTextColor:cell.TPAppInstallLbl forStatus:@"Error"];
-        [TPAppInfoViewController setLabelTextColor:cell.TPAppConnectionLbl forStatus:@"Error"];
-        [TPAppInfoViewController setLabelTextColor:cell.TPAppOperationalLbl forStatus:@"Error"];
+        [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppInstallLbl forStatus:@"Error"];
+        [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppConnectionLbl forStatus:@"Error"];
+        [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppOperationalLbl forStatus:@"Error"];
     }
     return cell;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.destinationViewController isKindOfClass:[TPAppInfoViewController class]]) {
-		TPAppInfoViewController *tpAppInfo = segue.destinationViewController;
-        tpAppInfo.tpApplication =  [self.gwApps objectAtIndex:[self.tableView indexPathForSelectedRow].row];
-        tpAppInfo.sessionId = self.sessionId;
+    if ([segue.destinationViewController isKindOfClass:[ConnectorAppInfoViewController class]]) {
+		ConnectorAppInfoViewController *connectorAppInfo = segue.destinationViewController;
+        connectorAppInfo.connectorApplication =  [self.gwApps objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        connectorAppInfo.sessionId = self.sessionId;
     }
 }
 

@@ -13,23 +13,11 @@
  *    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
+#import <UIKit/UIKit.h>
+#import "AJNBusAttachment.h"
+#import "alljoyn/about/AJNAnnouncement.h"
 
-#import <Foundation/Foundation.h>
-#import "AJGWCGatewayCtrlTPApplicationStatus.h"
-
-/**
- * Implement this interface to be notified about changes in the Third Party Application status
- */
-@protocol AJGWCGatewayCtrlApplicationStatusSignalHandler <NSObject>
-
-
-/**
- * The event is emitted when the status of the Third Party Application
- * changes. Avoid blocking the thread on which the method is called.
- * @param appId The application id
- * @param status {@link AJGWCGatewayCtrlTPApplicationStatus}
- */
-- (void)onStatusChanged:(NSString*) appId status:(AJGWCGatewayCtrlTPApplicationStatus*) status;
-
+@interface ConnectorAppTableViewController : UITableViewController
+@property (weak, nonatomic) AJNBusAttachment *busAttachment;
+@property (strong, nonatomic) AJNAnnouncement *ajnAnnouncement;
 @end
-

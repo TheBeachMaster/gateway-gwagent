@@ -18,7 +18,7 @@
 #define AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter_H
 
 #import "alljoyn/gateway/GatewayCtrlApplicationStatusSignalHandler.h"
-#import "alljoyn/gateway/GatewayCtrlTPApplicationStatus.h"
+#import "alljoyn/gateway/GatewayCtrlConnectorApplicationStatus.h"
 #import "AJGWCGatewayCtrlApplicationStatusSignalHandler.h"
 /**
  AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter class
@@ -41,9 +41,9 @@ public:
      * The event is emitted when the status of the Third Party Application
      * changes. Avoid blocking the thread on which the method is called.
      * @param appId The application id
-     * @param status {@link ajn::services::GatewayCtrlTPApplicationStatus}
+     * @param status {@link ajn::services::GatewayCtrlConnectorApplicationStatus}
      */
-    void onStatusChanged(qcc::String appId, const ajn::services::GatewayCtrlTPApplicationStatus *TPApplicationStatus);
+    void onStatusChanged(qcc::String appId, const ajn::services::GatewayCtrlConnectorApplicationStatus *ConnectorApplicationStatus);
     
 private:
 	/**

@@ -14,18 +14,18 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#include <alljoyn/gateway/GatewayCtrlTPApplicationStatus.h>
+#include <alljoyn/gateway/GatewayCtrlConnectorApplicationStatus.h>
 #include <alljoyn/gateway/LogModule.h>
 
 namespace ajn {
 namespace services {
 
-GatewayCtrlTPApplicationStatus::GatewayCtrlTPApplicationStatus(InstallStatus installStatus, qcc::String installDescription, ConnectionStatus connectionStatus, OperationalStatus operationalStatus)
+GatewayCtrlConnectorApplicationStatus::GatewayCtrlConnectorApplicationStatus(InstallStatus installStatus, qcc::String installDescription, ConnectionStatus connectionStatus, OperationalStatus operationalStatus)
     : m_InstallStatus((InstallStatus)installStatus), m_InstallDescription(installDescription), m_ConnectionStatus((ConnectionStatus)connectionStatus), m_OperationalStatus((OperationalStatus)operationalStatus)
 {
 }
 
-GatewayCtrlTPApplicationStatus::GatewayCtrlTPApplicationStatus(const ajn::MsgArg* returnArgs)
+GatewayCtrlConnectorApplicationStatus::GatewayCtrlConnectorApplicationStatus(const ajn::MsgArg* returnArgs)
 {
 
     QStatus status = ER_OK;
@@ -67,25 +67,25 @@ GatewayCtrlTPApplicationStatus::GatewayCtrlTPApplicationStatus(const ajn::MsgArg
     m_OperationalStatus = (OperationalStatus)operationalStatus;
 }
 
-GatewayCtrlTPApplicationStatus::~GatewayCtrlTPApplicationStatus() {
+GatewayCtrlConnectorApplicationStatus::~GatewayCtrlConnectorApplicationStatus() {
 }
 
-InstallStatus GatewayCtrlTPApplicationStatus::GetInstallStatus()
+InstallStatus GatewayCtrlConnectorApplicationStatus::GetInstallStatus()
 {
     return m_InstallStatus;
 }
 
-qcc::String GatewayCtrlTPApplicationStatus::GetInstallDescriptions()
+qcc::String GatewayCtrlConnectorApplicationStatus::GetInstallDescriptions()
 {
     return m_InstallDescription;
 }
 
-ConnectionStatus GatewayCtrlTPApplicationStatus::GetConnectionStatus()
+ConnectionStatus GatewayCtrlConnectorApplicationStatus::GetConnectionStatus()
 {
     return m_ConnectionStatus;
 }
 
-OperationalStatus GatewayCtrlTPApplicationStatus::GetOperationalStatus()
+OperationalStatus GatewayCtrlConnectorApplicationStatus::GetOperationalStatus()
 {
     return m_OperationalStatus;
 }

@@ -14,24 +14,24 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#import "AJGWCGatewayCtrlTPApplicationStatus.h"
+#import "AJGWCGatewayCtrlConnectorApplicationStatus.h"
 #import "alljoyn/about/AJNConvertUtil.h"
 //#import "AJNMessageArgument.h"
 #import "AJGWCGatewayCtrlEnums.h"
 
-@interface AJGWCGatewayCtrlTPApplicationStatus ()
+@interface AJGWCGatewayCtrlConnectorApplicationStatus ()
 
-@property (nonatomic) ajn::services::GatewayCtrlTPApplicationStatus* handle;
+@property (nonatomic) ajn::services::GatewayCtrlConnectorApplicationStatus* handle;
 
 @end
 
-@implementation AJGWCGatewayCtrlTPApplicationStatus
+@implementation AJGWCGatewayCtrlConnectorApplicationStatus
 
-- (id)initWithHandle:(ajn::services::GatewayCtrlTPApplicationStatus *)handle
+- (id)initWithHandle:(ajn::services::GatewayCtrlConnectorApplicationStatus *)handle
 {
     self = [super init];
     if (self) {
-        self.handle = (ajn::services::GatewayCtrlTPApplicationStatus *)handle;
+        self.handle = (ajn::services::GatewayCtrlConnectorApplicationStatus *)handle;
     }
     return self;
 }
@@ -40,7 +40,7 @@
 //{
 //    self = [super init];
 //	if (self) {
-//		self.handle = new ajn::services::GatewayCtrlTPApplicationStatus((ajn::MsgArg*)appStatus.handle);
+//		self.handle = new ajn::services::GatewayCtrlConnectorApplicationStatus((ajn::MsgArg*)appStatus.handle);
 //	}
 //	return self;
 //}
@@ -49,7 +49,7 @@
 {
     self = [super init];
 	if (self) {
-		self.handle = new ajn::services::GatewayCtrlTPApplicationStatus((ajn::services::InstallStatus)installStatus, [AJNConvertUtil convertNSStringToQCCString:installDescription], (ajn::services::ConnectionStatus)connectionStatus, (ajn::services::OperationalStatus)operationalStatus);
+		self.handle = new ajn::services::GatewayCtrlConnectorApplicationStatus((ajn::services::InstallStatus)installStatus, [AJNConvertUtil convertNSStringToQCCString:installDescription], (ajn::services::ConnectionStatus)connectionStatus, (ajn::services::OperationalStatus)operationalStatus);
 	}
 	return self;
 }

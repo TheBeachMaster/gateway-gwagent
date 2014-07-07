@@ -22,7 +22,7 @@
 #include <qcc/String.h>
 #include <alljoyn/about/AboutClient.h>
 #include <alljoyn/gateway/GatewayCtrlDiscoveredApp.h>
-#include <alljoyn/gateway/GatewayCtrlTPApplication.h>
+#include <alljoyn/gateway/GatewayCtrlConnectorApplication.h>
 #include <alljoyn/gateway/GatewayCtrlControllerSessionListener.h>
 #include <alljoyn/gateway/GatewayCtrlSessionHandler.h>
 #include <alljoyn/about/AboutClient.h>
@@ -62,11 +62,11 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
     /**
      * Retrieve the list of applications installed on the gateway identified by the given gwBusName
      * @param sessionId The id of the session established with the gateway
-     * @param installedApps The {@link TPApplication}
+     * @param installedApps The {@link ConnectorApplication}
      * @param status return status of operation
      * @return {@link Status}
      */
-    const std::vector<GatewayCtrlTPApplication*>&  RetrieveInstalledApps(SessionId sessionId, QStatus& status);
+    const std::vector<GatewayCtrlConnectorApplication*>&  RetrieveInstalledApps(SessionId sessionId, QStatus& status);
 
 
     /**
@@ -120,7 +120,7 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
 
     void EmptyVector();
 
-    std::vector<GatewayCtrlTPApplication*> m_InstalledApps;
+    std::vector<GatewayCtrlConnectorApplication*> m_InstalledApps;
 
     GatewayCtrlSessionHandler m_SessionHandler;
 

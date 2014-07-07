@@ -36,7 +36,7 @@
 
 - (void)startVC
 {
-    self.appNameLbl.text = [self.tpApplication friendlyName];
+    self.appNameLbl.text = [self.connectorApplication friendlyName];
     self.createAclBtn.enabled = NO;
 	self.aclNameTextField.delegate = self; // Set TextField.delegate to enable dissmiss keyboard
     
@@ -49,7 +49,7 @@
     QStatus status;
     NSArray* ann =[[AnnouncementManager sharedInstance] getAnnouncements];
     
-    self.accessRules = [self.tpApplication retrieveConfigurableRulesUsingSessionId:self.sessionId status:status announcements:ann];
+    self.accessRules = [self.connectorApplication retrieveConfigurableRulesUsingSessionId:self.sessionId status:status announcements:ann];
     
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve configurable rules" status:status];
@@ -61,7 +61,7 @@
 - (IBAction)didTouchCreateAclBtn:(id)sender {
     QStatus status;
     AJGWCGatewayCtrlAclWriteResponse* aclWResp;
-    aclWResp = [self.tpApplication createAclUsingSessionId:self.sessionId name:self.aclNameTextField.text accessRules:self.accessRules status:status];
+    aclWResp = [self.connectorApplication createAclUsingSessionId:self.sessionId name:self.aclNameTextField.text accessRules:self.accessRules status:status];
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to create acl" status:status];
     } else {
@@ -76,7 +76,7 @@
             }
         }
         
-        NSArray *acls = [[NSMutableArray alloc] initWithArray:[self.tpApplication retrieveAclsUsingSessionId:self.sessionId status:status]];
+        NSArray *acls = [[NSMutableArray alloc] initWithArray:[self.connectorApplication retrieveAclsUsingSessionId:self.sessionId status:status]];
         
         if (ER_OK != status) {
             [AppDelegate AlertAndLog:@"Failed to retrieve Acls" status:status]; //TODO
@@ -104,7 +104,7 @@
 		ACLTableViewController *aclTVC = segue.destinationViewController;
         aclTVC.sessionId = self.sessionId;
         aclTVC.acl = self.acl;
-        aclTVC.tpApplication = self.tpApplication;
+        aclTVC.connectorApplication = self.connectorApplication;
     }
 }
 

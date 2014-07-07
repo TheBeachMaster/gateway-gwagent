@@ -14,37 +14,24 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-/**
- * AJGWCAnnouncementData - information coming from the announcement
- * The application should create and maintain an array of AJGWCAnnouncementData objects based on the current set of
- * announcement in the network. See sample application for more.
- */
-@interface AJGWCAnnouncementData : NSObject
+#import "ConnectorAppTableViewCell.h"
 
-/**
- * Constructor
- * @param port The port used by the service
- * @param aboutData The data sent with the Announcement
- * @param objectDescs The objectDescriptions received in announce
- */
-- (id)initWithPort:(uint16_t) port aboutData:(NSDictionary *)aboutData objectDescriptions:(NSDictionary *)objectDescs;
+@implementation ConnectorAppTableViewCell
 
-/**
- * objectDescriptions getter
- * @return objectDescs The objectDescriptions received in announce
- */
-- (NSDictionary *)objectDescriptions;
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        // Initialization code
+    }
+    return self;
+}
 
-/**
- * aboutData getter
- * @return aboutData The data sent with the Announcement
- */
-- (NSDictionary *)aboutData;
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    [super setSelected:selected animated:animated];
 
-/**
- * port getter
- * @return The port used by the service
- */
-- (uint16_t)port;
+    // Configure the view for the selected state
+}
+
 @end

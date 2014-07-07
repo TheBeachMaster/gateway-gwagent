@@ -14,22 +14,22 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#import "AJGWCGatewayCtrlTPObjectPath.h"
+#import "AJGWCGatewayCtrlConnAppObjectPath.h"
 #import "alljoyn/about/AJNConvertUtil.h"
 
-@interface AJGWCGatewayCtrlTPObjectPath ()
+@interface AJGWCGatewayCtrlConnAppObjectPath ()
 
-@property (nonatomic) ajn::services::GatewayCtrlTPObjectPath* handle;
+@property (nonatomic) ajn::services::GatewayCtrlConnAppObjectPath* handle;
 
 @end
 
-@implementation AJGWCGatewayCtrlTPObjectPath
+@implementation AJGWCGatewayCtrlConnAppObjectPath
 
-- (id)initWithHandle:(ajn::services::GatewayCtrlTPObjectPath *) handle
+- (id)initWithHandle:(ajn::services::GatewayCtrlConnAppObjectPath *) handle
 {
     self = [super init];
     if (self) {
-        self.handle = (ajn::services::GatewayCtrlTPObjectPath *)handle;
+        self.handle = (ajn::services::GatewayCtrlConnAppObjectPath *)handle;
     }
     return self;
 }
@@ -38,7 +38,7 @@
 {
     self = [super init];
 	if (self) {
-		self.handle = new ajn::services::GatewayCtrlTPObjectPath([AJNConvertUtil convertNSStringToQCCString:objectPath], [AJNConvertUtil convertNSStringToQCCString:friendlyName], isPrefix, isPrefixAllowed);
+		self.handle = new ajn::services::GatewayCtrlConnAppObjectPath([AJNConvertUtil convertNSStringToQCCString:objectPath], [AJNConvertUtil convertNSStringToQCCString:friendlyName], isPrefix, isPrefixAllowed);
 	}
 	return self;
 }
@@ -74,7 +74,7 @@
     self.handle->setPrefixAllowed(isPrefixAllowed);
 }
 
-- (ajn::services::GatewayCtrlTPObjectPath*)handle
+- (ajn::services::GatewayCtrlConnAppObjectPath*)handle
 {
     return _handle;
 }

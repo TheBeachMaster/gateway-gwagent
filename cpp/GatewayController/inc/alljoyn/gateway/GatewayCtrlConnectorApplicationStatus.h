@@ -14,8 +14,8 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#ifndef GatewayCtrlTPApplicationStatus_H
-#define GatewayCtrlTPApplicationStatus_H
+#ifndef GatewayCtrlConnectorApplicationStatus_H
+#define GatewayCtrlConnectorApplicationStatus_H
 
 #include <qcc/String.h>
 #include <alljoyn/MsgArg.h>
@@ -24,10 +24,10 @@
 namespace ajn {
 namespace services {
 
-class GatewayCtrlTPApplicationStatus {
+class GatewayCtrlConnectorApplicationStatus {
   public:
 
-    GatewayCtrlTPApplicationStatus(const ajn::MsgArg* returnArgs);
+    GatewayCtrlConnectorApplicationStatus(const ajn::MsgArg* returnArgs);
 
     /**
      * Constructor
@@ -36,12 +36,12 @@ class GatewayCtrlTPApplicationStatus {
      * @param connectionStatus status of connection to Third Party Application
      * @param operationalStatus operational status of the Third Party Application
      */
-    GatewayCtrlTPApplicationStatus(InstallStatus installStatus, qcc::String installDescription, ConnectionStatus connectionStatus, OperationalStatus operationalStatus);
+    GatewayCtrlConnectorApplicationStatus(InstallStatus installStatus, qcc::String installDescription, ConnectionStatus connectionStatus, OperationalStatus operationalStatus);
 
     /**
      * Destructor
      */
-    virtual ~GatewayCtrlTPApplicationStatus();
+    virtual ~GatewayCtrlConnectorApplicationStatus();
 
     /**
      * @return The installation status of the Third Party Application
@@ -87,4 +87,4 @@ class GatewayCtrlTPApplicationStatus {
 };
 }
 }
-#endif /* defined(GatewayCtrlTPApplicationStatus_H) */
+#endif /* defined(GatewayCtrlConnectorApplicationStatus_H) */

@@ -44,7 +44,7 @@
     QStatus status;
     
     if([self.selectedViewController isKindOfClass:[ManifestFileViewController class]]) {
-        NSString* manifestFile = [self.tpApplication retrieveManifestFileUsingSessionId:self.sessionId status:status];
+        NSString* manifestFile = [self.connectorApplication retrieveManifestFileUsingSessionId:self.sessionId status:status];
         if (ER_OK != status) {
             NSLog(@"Failed to read manifest file. status:%@", [AJNStatus descriptionForStatusCode:status]);
             [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to read manifest file." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
@@ -53,7 +53,7 @@
         }
         
     } else {
-        AJGWCGatewayCtrlManifestRules* manifestRules = [self.tpApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
+        AJGWCGatewayCtrlManifestRules* manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
         if (ER_OK != status) {
             NSLog(@"Failed to read manifest rules. status:%@", [AJNStatus descriptionForStatusCode:status]);
             [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to read manifest rules." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
@@ -72,27 +72,27 @@
     for (AJGWCGatewayCtrlManifestObjectDescription* mObjDesc in objDescArray)
     {
         //objectPath
-        AJGWCGatewayCtrlTPObjectPath* tpObjPath = [mObjDesc objectPath];
-        NSString* tpObjPathStr = [NSString stringWithFormat:@"%@\n%@\n%@\n", [tpObjPath friendlyName], [tpObjPath path], [tpObjPath isPrefix] ? @"Prefix" : @"Not Prefix"];
-        NSLog(@"Final string(tpObjPathStr):\n%@", tpObjPathStr); // final str
+        AJGWCGatewayCtrlConnAppObjectPath* ConnAppObjPath = [mObjDesc objectPath];
+        NSString* ConnAppObjPathStr = [NSString stringWithFormat:@"%@\n%@\n%@\n", [ConnAppObjPath friendlyName], [ConnAppObjPath path], [ConnAppObjPath isPrefix] ? @"Prefix" : @"Not Prefix"];
+        NSLog(@"Final string(ConnAppObjPathStr):\n%@", ConnAppObjPathStr); // final str
         
         //interfaces
-        NSMutableString* tpInterfaceStr = [[NSMutableString alloc] init];
+        NSMutableString* connAppInterfaceStr = [[NSMutableString alloc] init];
         NSSet* interfaces = [mObjDesc interfaces];
-        for (AJGWCGatewayCtrlTPInterface* tpInterface in interfaces) {
-            tpInterfaceStr = [NSMutableString stringWithFormat:@"%@%@", tpInterfaceStr, [NSString stringWithFormat:@"    %@\n    %@\n    %@\n\n", [tpInterface friendlyName], [tpInterface interfaceName], [tpInterface isSecured] ? @"Secured" : @"Not Secured"]];
+        for (AJGWCGatewayCtrlConnAppInterface* connAppInterface in interfaces) {
+            connAppInterfaceStr = [NSMutableString stringWithFormat:@"%@%@", connAppInterfaceStr, [NSString stringWithFormat:@"    %@\n    %@\n    %@\n\n", [connAppInterface friendlyName], [connAppInterface interfaceName], [connAppInterface isSecured] ? @"Secured" : @"Not Secured"]];
         }
-        NSLog(@"Final string(tpInterfaceStr):\n%@", tpInterfaceStr); // final str
+        NSLog(@"Final string(connAppInterfaceStr):\n%@", connAppInterfaceStr); // final str
         
-        // add tpObjPathStr and set color
-        [objDescArrayStr appendAttributedString:[[NSAttributedString alloc] initWithString:tpObjPathStr]];
-        NSRange tpObjPathStrRange = NSMakeRange([objDescArrayStr length] ? [objDescArrayStr length] - [tpObjPathStr length] : [objDescArrayStr length], [tpObjPathStr length]);
-        [objDescArrayStr addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:tpObjPathStrRange];
+        // add ConnAppObjPathStr and set color
+        [objDescArrayStr appendAttributedString:[[NSAttributedString alloc] initWithString:ConnAppObjPathStr]];
+        NSRange ConnAppObjPathStrRange = NSMakeRange([objDescArrayStr length] ? [objDescArrayStr length] - [ConnAppObjPathStr length] : [objDescArrayStr length], [ConnAppObjPathStr length]);
+        [objDescArrayStr addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:ConnAppObjPathStrRange];
         
-        // add tpInterfaceStr and set color
-        [objDescArrayStr appendAttributedString:[[NSAttributedString alloc] initWithString:tpInterfaceStr]];
-        NSRange tpInterfaceStrRange = NSMakeRange([objDescArrayStr length] ? [objDescArrayStr length] - [tpInterfaceStr length] : [objDescArrayStr length], [tpInterfaceStr length]);
-        [objDescArrayStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:tpInterfaceStrRange];
+        // add connAppInterfaceStr and set color
+        [objDescArrayStr appendAttributedString:[[NSAttributedString alloc] initWithString:connAppInterfaceStr]];
+        NSRange connAppInterfaceStrRange = NSMakeRange([objDescArrayStr length] ? [objDescArrayStr length] - [connAppInterfaceStr length] : [objDescArrayStr length], [connAppInterfaceStr length]);
+        [objDescArrayStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:connAppInterfaceStrRange];
         
     }
     

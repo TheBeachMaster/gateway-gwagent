@@ -17,52 +17,43 @@
 #import <Foundation/Foundation.h>
 #import "alljoyn/gateway/GatewayCtrlManifestObjectDescription.h"
 
-@interface AJGWCGatewayCtrlTPObjectPath : NSObject
+@interface AJGWCGatewayCtrlConnAppInterface : NSObject <NSCopying>
 
 /**
  * Constructor
- * @param handle A handle to a cpp GatewayCtrlTPObjectPath object
+ * @param handle A handle to a cpp GatewayCtrlConnAppInterface object
  */
-- (id)initWithHandle:(ajn::services::GatewayCtrlTPObjectPath *) handle;
+- (id)initWithHandle:(ajn::services::GatewayCtrlConnAppInterface) handle;
 
 /**
  * Constructor
- * @param objectPath AllJoyn object identification
- * @param friendlyName The friendly name of the object path. This name may be presented
- * @param isPrefix TRUE if the object path is a prefix for the full object path
- * to the end user.
+ * @param name AllJoyn name of the interface
+ * @param friendlyName The interface friendly name
+ * @param isSecured Whether the interface is secured
  */
-- (id)initWithObjectPath:(NSString*) objectPath friendlyName:(NSString*) friendlyName isPrefix:(bool) isPrefix;
+- (id)initWithInterfaceName:(NSString*) name friendlyName:(NSString*) friendlyName  isSecured:(bool) isSecured;
 
 /**
- * AllJoyn object identification
- * @return The value of the object path
+ * Returns a name of the interface.
+ * @return interface name
  */
-- (NSString*)path;
+- (NSString*)interfaceName;
 
 /**
- * Returns the friendly name  of the object path.
- * This name may be presented to the end user.
- * @return Object path friendly name
+ * Returns a friendly name of the interface.
+ * The friendly name may be presented to the end user.
+ * @return Interface friendly name
  */
 - (NSString*)friendlyName;
 
 /**
- * @return Returns whether this object path is a prefix
+ * @return TRUE if the interface is secured
  */
-- (bool)isPrefix;
-
-/**
- * Set whether this object path is a prefix
- * @param isPrefix set the prefix flag to isPrefix
- */
-- (void)setPrefix:(bool) isPrefix;
+- (bool)isSecured;
 
 /**
  * Returns the cpp handle of this class
- * @return GatewayCtrlAccessRules
+ * @return GatewayCtrlConnAppInterface
  */
-- (ajn::services::GatewayCtrlTPObjectPath*)handle;
-
-
+- (ajn::services::GatewayCtrlConnAppInterface*)handle;
 @end

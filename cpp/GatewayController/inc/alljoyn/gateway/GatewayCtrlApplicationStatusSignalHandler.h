@@ -17,7 +17,7 @@
 #ifndef GatewayCtrlApplicationStatusSignalHandler_H
 #define GatewayCtrlApplicationStatusSignalHandler_H
 
-#include <alljoyn/gateway/GatewayCtrlTPApplicationStatus.h>
+#include <alljoyn/gateway/GatewayCtrlConnectorApplicationStatus.h>
 
 namespace ajn {
 namespace services {
@@ -32,9 +32,9 @@ class GatewayCtrlApplicationStatusSignalHandler {
      * The event is emitted when the status of the Third Party Application
      * changes. Avoid blocking the thread on which the method is called.
      * @param appId The application id
-     * @param status {@link TPApplicationStatus}
+     * @param status {@link ConnectorApplicationStatus}
      */
-    virtual void onStatusChanged(qcc::String appId, const GatewayCtrlTPApplicationStatus*TPApplicationStatus) = 0;
+    virtual void onStatusChanged(qcc::String appId, const GatewayCtrlConnectorApplicationStatus*ConnectorApplicationStatus) = 0;
 };
 }
 }

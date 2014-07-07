@@ -46,7 +46,7 @@ static dispatch_queue_t annQueue;
 
 - (void)destroyInstance
 {
-    _announcements = nil;
+    [_announcements removeAllObjects];
 }
 - (id)init
 {

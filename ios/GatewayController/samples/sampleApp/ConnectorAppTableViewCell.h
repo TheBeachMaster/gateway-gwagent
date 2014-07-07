@@ -16,11 +16,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TPAppTableViewCell : UITableViewCell
+@interface ConnectorAppTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *TPAppNameLbl;
-@property (weak, nonatomic) IBOutlet UILabel *TPAppInstallLbl;
-@property (weak, nonatomic) IBOutlet UILabel *TPAppConnectionLbl;
-@property (weak, nonatomic) IBOutlet UILabel *TPAppOperationalLbl;
+@property (weak, nonatomic) IBOutlet UILabel *ConnectorAppNameLbl;
+@property (weak, nonatomic) IBOutlet UILabel *ConnectorAppInstallLbl;
+@property (weak, nonatomic) IBOutlet UILabel *ConnectorAppConnectionLbl;
+@property (weak, nonatomic) IBOutlet UILabel *ConnectorAppOperationalLbl;
 
 @end

@@ -14,7 +14,7 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#include <alljoyn/gateway/GatewayCtrlTPApplication.h>
+#include <alljoyn/gateway/GatewayCtrlConnectorApplication.h>
 #include <alljoyn/gateway/GatewayCtrlGatewayController.h>
 #include <qcc/StringUtil.h>
 #include "GatewayCtrlConstants.h"
@@ -24,14 +24,14 @@
 namespace ajn {
 namespace services {
 using namespace gwcConsts;
-//            GatewayCtrlTPApplication::GatewayCtrlTPApplication(qcc::String gwBusName, qcc::String appObjPath){ }
+//            GatewayCtrlConnectorApplication::GatewayCtrlConnectorApplication(qcc::String gwBusName, qcc::String appObjPath){ }
 
-ChangedSignalTask GatewayCtrlTPApplication::m_ChangedSignalTask;
-AsyncTaskQueue GatewayCtrlTPApplication::m_ApplicationSignalQueue(&GatewayCtrlTPApplication::m_ChangedSignalTask);
+ChangedSignalTask GatewayCtrlConnectorApplication::m_ChangedSignalTask;
+AsyncTaskQueue GatewayCtrlConnectorApplication::m_ApplicationSignalQueue(&GatewayCtrlConnectorApplication::m_ChangedSignalTask);
 
-GatewayCtrlTPApplication::GatewayCtrlTPApplication(qcc::String gwBusName, ajn::MsgArg*appInfo) : m_ManifestRules(NULL), m_ConfigurableRules(NULL), m_TPApplicationStatus(NULL), m_AclWriteResponse(NULL), m_SignalMethod(NULL)
+GatewayCtrlConnectorApplication::GatewayCtrlConnectorApplication(qcc::String gwBusName, ajn::MsgArg*appInfo) : m_ManifestRules(NULL), m_ConfigurableRules(NULL), m_ConnectorApplicationStatus(NULL), m_AclWriteResponse(NULL), m_SignalMethod(NULL)
 {
-    GatewayCtrlTPApplication::m_ApplicationSignalQueue.Start();
+    GatewayCtrlConnectorApplication::m_ApplicationSignalQueue.Start();
 
     m_GwBusName = gwBusName;
 
@@ -55,7 +55,7 @@ GatewayCtrlTPApplication::GatewayCtrlTPApplication(qcc::String gwBusName, ajn::M
         m_AppVersion = AppVersion;
     } else { QCC_LogError(status, ("MsgArg get failed")); return; }
 
-    QCC_DbgTrace(("In GatewayCtrlTPApplication Constructor"));
+    QCC_DbgTrace(("In GatewayCtrlConnectorApplication Constructor"));
 
 
     BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
@@ -161,31 +161,31 @@ GatewayCtrlTPApplication::GatewayCtrlTPApplication(qcc::String gwBusName, ajn::M
 
 }
 
-GatewayCtrlTPApplication::~GatewayCtrlTPApplication() {
-    GatewayCtrlTPApplication::m_ApplicationSignalQueue.Stop();
+GatewayCtrlConnectorApplication::~GatewayCtrlConnectorApplication() {
+    GatewayCtrlConnectorApplication::m_ApplicationSignalQueue.Stop();
 }
 
-qcc::String GatewayCtrlTPApplication::GetGwBusName() {
+qcc::String GatewayCtrlConnectorApplication::GetGwBusName() {
     return m_GwBusName;
 }
 
-qcc::String GatewayCtrlTPApplication::GetAppId() {
+qcc::String GatewayCtrlConnectorApplication::GetAppId() {
     return m_AppId;
 }
 
-qcc::String GatewayCtrlTPApplication::GetFriendlyName() {
+qcc::String GatewayCtrlConnectorApplication::GetFriendlyName() {
     return m_FriendlyName;
 }
 
-qcc::String GatewayCtrlTPApplication::GetObjectPath() {
+qcc::String GatewayCtrlConnectorApplication::GetObjectPath() {
     return m_ObjectPath;
 }
 
-qcc::String GatewayCtrlTPApplication::GetAppVersion() {
+qcc::String GatewayCtrlConnectorApplication::GetAppVersion() {
     return m_AppVersion;
 }
 
-void GatewayCtrlTPApplication::EmptyVector()
+void GatewayCtrlConnectorApplication::EmptyVector()
 {
     for (size_t indx = 0; indx < m_Acls.size(); indx++) {
         QStatus status = m_Acls[indx]->Release();
@@ -199,7 +199,7 @@ void GatewayCtrlTPApplication::EmptyVector()
     m_Acls.clear();
 }
 
-qcc::String GatewayCtrlTPApplication::RetrieveManifestFile(SessionId sessionId, QStatus& status) {
+qcc::String GatewayCtrlConnectorApplication::RetrieveManifestFile(SessionId sessionId, QStatus& status) {
     {
 
         status = ER_OK;
@@ -252,7 +252,7 @@ end:
 }
 
 //Important: sessionId is used only to connect to the gateway, the access rules retrieved will always erase the previous access rules.
-GatewayCtrlManifestRules*GatewayCtrlTPApplication::RetrieveManifestRules(SessionId sessionId, QStatus& status) {
+GatewayCtrlManifestRules*GatewayCtrlConnectorApplication::RetrieveManifestRules(SessionId sessionId, QStatus& status) {
     {
         if (m_ManifestRules) {
             delete m_ManifestRules;
@@ -304,7 +304,7 @@ end:
 
 }
 
-GatewayCtrlAccessRules* GatewayCtrlTPApplication::RetrieveConfigurableRules(SessionId sessionId, std::vector<AnnouncementData*> const& announcements, QStatus& status) {
+GatewayCtrlAccessRules* GatewayCtrlConnectorApplication::RetrieveConfigurableRules(SessionId sessionId, std::vector<AnnouncementData*> const& announcements, QStatus& status) {
 
     if (m_ConfigurableRules) {
         delete m_ConfigurableRules;
@@ -327,11 +327,11 @@ GatewayCtrlAccessRules* GatewayCtrlTPApplication::RetrieveConfigurableRules(Sess
     return m_ConfigurableRules;
 }
 
-GatewayCtrlTPApplicationStatus*GatewayCtrlTPApplication::RetrieveStatus(SessionId sessionId, QStatus& status) {
+GatewayCtrlConnectorApplicationStatus*GatewayCtrlConnectorApplication::RetrieveStatus(SessionId sessionId, QStatus& status) {
     {
-        if (m_TPApplicationStatus) {
-            delete m_TPApplicationStatus;
-            m_TPApplicationStatus = NULL;
+        if (m_ConnectorApplicationStatus) {
+            delete m_ConnectorApplicationStatus;
+            m_ConnectorApplicationStatus = NULL;
         }
 
         status = ER_OK;
@@ -370,9 +370,9 @@ GatewayCtrlTPApplicationStatus*GatewayCtrlTPApplication::RetrieveStatus(SessionI
             goto end;
         }
 
-        m_TPApplicationStatus = new GatewayCtrlTPApplicationStatus(returnArgs);
+        m_ConnectorApplicationStatus = new GatewayCtrlConnectorApplicationStatus(returnArgs);
 
-        return m_TPApplicationStatus;
+        return m_ConnectorApplicationStatus;
 
     }
 end:
@@ -381,7 +381,7 @@ end:
 
 }
 
-RestartStatus GatewayCtrlTPApplication::Restart(SessionId sessionId, QStatus& status) {
+RestartStatus GatewayCtrlConnectorApplication::Restart(SessionId sessionId, QStatus& status) {
 
     status = ER_OK;
 
@@ -437,8 +437,8 @@ end:
 }
 
 
-void GatewayCtrlTPApplication::handleSignal(const ajn::InterfaceDescription::Member* member,
-                                            const char* srcPath, ajn::Message& msg)
+void GatewayCtrlConnectorApplication::handleSignal(const ajn::InterfaceDescription::Member* member,
+                                                   const char* srcPath, ajn::Message& msg)
 {
     QCC_DbgHLPrintf((srcPath));
 
@@ -455,7 +455,7 @@ void GatewayCtrlTPApplication::handleSignal(const ajn::InterfaceDescription::Mem
 }
 
 
-QStatus GatewayCtrlTPApplication::SetStatusChangedHandler(const GatewayCtrlApplicationStatusSignalHandler*handler)
+QStatus GatewayCtrlConnectorApplication::SetStatusChangedHandler(const GatewayCtrlApplicationStatusSignalHandler*handler)
 {
 
     QStatus status = ER_OK;
@@ -464,7 +464,7 @@ QStatus GatewayCtrlTPApplication::SetStatusChangedHandler(const GatewayCtrlAppli
 
     m_ChangedSignalTask.SetHandler(handler);
 
-    status = busAttachment->RegisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(&GatewayCtrlTPApplication::handleSignal), m_SignalMethod, m_ObjectPath.c_str());
+    status = busAttachment->RegisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(&GatewayCtrlConnectorApplication::handleSignal), m_SignalMethod, m_ObjectPath.c_str());
 
     if (status != ER_OK) {
         QCC_LogError(status, ("Could not register the SignalHandler"));
@@ -484,12 +484,12 @@ QStatus GatewayCtrlTPApplication::SetStatusChangedHandler(const GatewayCtrlAppli
     return status;
 }
 
-void GatewayCtrlTPApplication::UnsetStatusChangedHandler() {
+void GatewayCtrlConnectorApplication::UnsetStatusChangedHandler() {
     m_ApplicationSignalQueue.Stop();
 
     BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
 
-    QStatus status = busAttachment->UnregisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(&GatewayCtrlTPApplication::handleSignal), m_SignalMethod, m_ObjectPath.c_str());
+    QStatus status = busAttachment->UnregisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(&GatewayCtrlConnectorApplication::handleSignal), m_SignalMethod, m_ObjectPath.c_str());
 
     if (status != ER_OK) {
         QCC_LogError(status, ("Could not unregister the SignalHandler"));
@@ -503,7 +503,7 @@ void GatewayCtrlTPApplication::UnsetStatusChangedHandler() {
 
 
 
-GatewayCtrlAclWriteResponse* GatewayCtrlTPApplication::CreateAcl(SessionId sessionId, qcc::String name, GatewayCtrlAccessRules* accessRules, QStatus& status) {
+GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::CreateAcl(SessionId sessionId, qcc::String name, GatewayCtrlAccessRules* accessRules, QStatus& status) {
 
     if (m_AclWriteResponse) {
         delete m_AclWriteResponse;
@@ -681,7 +681,7 @@ end:
 }
 
 
-const std::vector <GatewayCtrlAccessControlList*>& GatewayCtrlTPApplication::RetrieveAcls(SessionId sessionId, QStatus& status) {
+const std::vector <GatewayCtrlAccessControlList*>& GatewayCtrlConnectorApplication::RetrieveAcls(SessionId sessionId, QStatus& status) {
 
     EmptyVector();
 
@@ -744,7 +744,7 @@ end:
     return m_Acls;
 }
 
-AclResponseCode GatewayCtrlTPApplication::DeleteAcl(SessionId sessionId, qcc::String aclId, QStatus& status) {
+AclResponseCode GatewayCtrlConnectorApplication::DeleteAcl(SessionId sessionId, qcc::String aclId, QStatus& status) {
 
     status = ER_OK;
 
@@ -805,7 +805,7 @@ end:
     return GW_ACL_RC_INVALID;
 }
 
-QStatus GatewayCtrlTPApplication::Release() {
+QStatus GatewayCtrlConnectorApplication::Release() {
 
     EmptyVector();
 
@@ -821,9 +821,9 @@ QStatus GatewayCtrlTPApplication::Release() {
         m_ConfigurableRules = NULL;
     }
 
-    if (m_TPApplicationStatus) {
-        delete m_TPApplicationStatus;
-        m_TPApplicationStatus = NULL;
+    if (m_ConnectorApplicationStatus) {
+        delete m_ConnectorApplicationStatus;
+        m_ConnectorApplicationStatus = NULL;
     }
 
     if (m_AclWriteResponse) {
@@ -836,9 +836,9 @@ QStatus GatewayCtrlTPApplication::Release() {
 }
 
 std::vector<GatewayCtrlRemotedApp*>
-GatewayCtrlTPApplication::ExtractRemotedApps(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices,
-                                             std::vector<AnnouncementData*> const& announcements,
-                                             QStatus& status)
+GatewayCtrlConnectorApplication::ExtractRemotedApps(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices,
+                                                    std::vector<AnnouncementData*> const& announcements,
+                                                    QStatus& status)
 {
 
     std::vector<AnnouncementData*>::const_iterator annIter;
@@ -867,14 +867,14 @@ bool stringStartWith(const qcc::String& prefix, const qcc::String& inString)
     return (inString.compare(0, prefix.size(), prefix) == 0);
 }
 
-GatewayCtrlRemotedApp* GatewayCtrlTPApplication::ExtractRemotedApp(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices, const AnnouncementData*ann, QStatus& status) {
+GatewayCtrlRemotedApp* GatewayCtrlConnectorApplication::ExtractRemotedApp(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices, const AnnouncementData*ann, QStatus& status) {
 
     if (ann == NULL) {
         status = ER_BAD_ARG_2;
         return NULL;
     }
 
-    std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> > remotedRules;
+    std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> > remotedRules;
 
     AboutClient::ObjectDescriptions::const_iterator bod;
 
@@ -890,8 +890,8 @@ GatewayCtrlRemotedApp* GatewayCtrlTPApplication::ExtractRemotedApp(const std::ve
 
             GatewayCtrlManifestObjectDescription*curr_moj = (*moj);
 
-            GatewayCtrlTPObjectPath*manop       = curr_moj->GetObjectPath();
-            const std::set<GatewayCtrlTPInterface>*manifs      = curr_moj->GetInterfaces();
+            GatewayCtrlConnAppObjectPath*manop       = curr_moj->GetObjectPath();
+            const std::set<GatewayCtrlConnAppInterface>*manifs      = curr_moj->GetInterfaces();
             int manifsSize  = (int)manifs->size();
 
             //Check object path suitability: if manifest objPath is a prefix of BusObjDesc objPath
@@ -902,7 +902,7 @@ GatewayCtrlRemotedApp* GatewayCtrlTPApplication::ExtractRemotedApp(const std::ve
             if ((manop->IsPrefix() && stringStartWith(manop->GetPath(), objPath)) ||
                 (manop->GetPath().compare(objPath) == 0)) {
 
-                std::set<GatewayCtrlTPInterface>  resIfaces;
+                std::set<GatewayCtrlConnAppInterface>  resIfaces;
 
                 std::vector<qcc::String>::iterator ifacesToMatchIter = ifacesToMatch.begin();
 
@@ -914,12 +914,12 @@ GatewayCtrlRemotedApp* GatewayCtrlTPApplication::ExtractRemotedApp(const std::ve
                     //If there are no interfaces in the manifest, it means that all the interfaces are supported
                     //add them without display names
                     if (manifsSize == 0) {
-                        resIfaces.insert(GatewayCtrlTPInterface(iface, "", false));
+                        resIfaces.insert(GatewayCtrlConnAppInterface(iface, "", false));
                         ifacesToMatch.erase(ifacesToMatchIter++);
                         continue;
                     }
 
-                    std::set<GatewayCtrlTPInterface>::iterator manIface;
+                    std::set<GatewayCtrlConnAppInterface>::iterator manIface;
 
 
                     for (manIface = manifs->begin(); manIface != manifs->end(); manIface++) {
@@ -947,10 +947,10 @@ GatewayCtrlRemotedApp* GatewayCtrlTPApplication::ExtractRemotedApp(const std::ve
 
                 //We add the manifest rule, if the manifest OP is the prefix of the BOD.objPath
                 //or both object paths are equal
-                GatewayCtrlTPObjectPath storeOp(manop->GetPath(), manop->GetFriendlyName(), false, manop->isPrefixAllowed());
-                std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >::const_iterator remotedIfaces = remotedRules.find(storeOp);
+                GatewayCtrlConnAppObjectPath storeOp(manop->GetPath(), manop->GetFriendlyName(), false, manop->isPrefixAllowed());
+                std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >::const_iterator remotedIfaces = remotedRules.find(storeOp);
                 if (remotedIfaces == remotedRules.end()) {
-                    remotedRules.insert(std::pair<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >(storeOp,  resIfaces));
+                    remotedRules.insert(std::pair<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >(storeOp,  resIfaces));
                 } else {
                     resIfaces.insert(remotedIfaces->second.begin(), remotedIfaces->second.end());
                 }
@@ -960,10 +960,10 @@ GatewayCtrlRemotedApp* GatewayCtrlTPApplication::ExtractRemotedApp(const std::ve
                 if (manop->GetPath().compare(objPath)) {
 
                     //bodOp starts with the manOp but itself it's not a prefix
-                    GatewayCtrlTPObjectPath bodOp(objPath, "", false, manop->isPrefixAllowed());
+                    GatewayCtrlConnAppObjectPath bodOp(objPath, "", false, manop->isPrefixAllowed());
                     remotedIfaces      = remotedRules.find(bodOp);
                     if (remotedIfaces == remotedRules.end()) {
-                        remotedRules.insert(std::pair<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >(bodOp,  resIfaces));
+                        remotedRules.insert(std::pair<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >(bodOp,  resIfaces));
                     } else {
                         resIfaces.insert(remotedIfaces->second.begin(), remotedIfaces->second.end());
                     }
@@ -991,7 +991,7 @@ GatewayCtrlRemotedApp* GatewayCtrlTPApplication::ExtractRemotedApp(const std::ve
     //Create Remoted rules list
     std::vector<GatewayCtrlManifestObjectDescription*> rules;
 
-    std::map<GatewayCtrlTPObjectPath, std::set<GatewayCtrlTPInterface> >::const_iterator op;
+    std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >::const_iterator op;
 
     for (op = remotedRules.begin(); op != remotedRules.end(); op++) {
         rules.push_back(new GatewayCtrlManifestObjectDescription(op->first,  op->second));
