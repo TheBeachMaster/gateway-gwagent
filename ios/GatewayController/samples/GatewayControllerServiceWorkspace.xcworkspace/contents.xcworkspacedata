@@ -11,12 +11,6 @@
       location = "group:../../../../../core/alljoyn/alljoyn_objc/AllJoynFramework_iOS/AllJoynFramework_iOS.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:../../../../../services/base/services_common/ios/samples/alljoyn_services_objc/alljoyn_services_common_objc.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:../../../../../services/base/services_common/ios/samples/alljoyn_services_cpp/alljoyn_services_common_cpp.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:sampleApp/GatewayControllerService.xcodeproj">
    </FileRef>
    <FileRef

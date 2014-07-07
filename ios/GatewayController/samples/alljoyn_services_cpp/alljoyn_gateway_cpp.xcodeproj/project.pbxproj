@@ -21,6 +21,7 @@
 		19D279A5191BBB3300BEF943 /* GatewayCtrlTPApplication.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27995191BBB3300BEF943 /* GatewayCtrlTPApplication.cc */; };
 		19D279A6191BBB3300BEF943 /* GatewayCtrlTPApplicationStatus.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27996191BBB3300BEF943 /* GatewayCtrlTPApplicationStatus.cc */; };
 		19D279A7191BBB3300BEF943 /* PayloadAdapter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27997191BBB3300BEF943 /* PayloadAdapter.cc */; };
+		9A58A4AE196AAD0F00A3E4B9 /* AsyncTaskQueue.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9A58A4AD196AAD0F00A3E4B9 /* AsyncTaskQueue.cc */; };
 		9AB9CDD618547B37004660C5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB9CDD518547B37004660C5 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -72,6 +73,8 @@
 		19D27997191BBB3300BEF943 /* PayloadAdapter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PayloadAdapter.cc; sourceTree = "<group>"; };
 		19D27998191BBB3300BEF943 /* PayloadAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayloadAdapter.h; sourceTree = "<group>"; };
 		19D27999191BBB3300BEF943 /* SConscript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SConscript; sourceTree = "<group>"; };
+		9A00C5D3196AAFF400D574CC /* AsyncTaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTaskQueue.h; sourceTree = "<group>"; };
+		9A58A4AD196AAD0F00A3E4B9 /* AsyncTaskQueue.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncTaskQueue.cc; sourceTree = "<group>"; };
 		9AB9CDD218547B37004660C5 /* liballjoyn_gateway_cpp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liballjoyn_gateway_cpp.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AB9CDD518547B37004660C5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9AB9CDD918547B37004660C5 /* alljoyn_gateway_cpp-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "alljoyn_gateway_cpp-Prefix.pch"; sourceTree = "<group>"; };
@@ -111,6 +114,7 @@
 		19D27976191BBB3300BEF943 /* gateway */ = {
 			isa = PBXGroup;
 			children = (
+				9A00C5D3196AAFF400D574CC /* AsyncTaskQueue.h */,
 				19D27977191BBB3300BEF943 /* AnnouncementData.h */,
 				19D27978191BBB3300BEF943 /* GatewayCtrlAccessControlList.h */,
 				19D27979191BBB3300BEF943 /* GatewayCtrlAccessRules.h */,
@@ -135,6 +139,7 @@
 		19D27988191BBB3300BEF943 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				9A58A4AD196AAD0F00A3E4B9 /* AsyncTaskQueue.cc */,
 				19D27989191BBB3300BEF943 /* AnnouncementData.cc */,
 				19D2798A191BBB3300BEF943 /* GatewayCtrlAccessControlList.cc */,
 				19D2798B191BBB3300BEF943 /* GatewayCtrlAccessRules.cc */,
@@ -271,6 +276,7 @@
 				19D279A7191BBB3300BEF943 /* PayloadAdapter.cc in Sources */,
 				19D2799B191BBB3300BEF943 /* GatewayCtrlAccessControlList.cc in Sources */,
 				19D279A4191BBB3300BEF943 /* GatewayCtrlSessionHandler.cc in Sources */,
+				9A58A4AE196AAD0F00A3E4B9 /* AsyncTaskQueue.cc in Sources */,
 				19D279A0191BBB3300BEF943 /* GatewayCtrlGatewayController.cc in Sources */,
 				19D279A3191BBB3300BEF943 /* GatewayCtrlRemotedApp.cc in Sources */,
 				19D279A5191BBB3300BEF943 /* GatewayCtrlTPApplication.cc in Sources */,

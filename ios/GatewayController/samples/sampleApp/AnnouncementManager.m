@@ -79,7 +79,6 @@ static dispatch_queue_t annQueue;
 	}
     
 	// Dealing with announcement entries should be syncronized, so we add it to a queue
-	    bool appIdExists = false;
 	    uint8_t *tmpAppIdBuffer;
 	    size_t tmpAppIdNumElements;
 	    QStatus tmpStatus;
@@ -104,7 +103,6 @@ static dispatch_queue_t annQueue;
 	        // found a matched (res=0)
 	        if (!res) {
 	            NSLog(@"AnnouncementManager got an announcement from a known appID - checking the DeviceId");
-	            appIdExists = true;
                 //check if deviceId is identical
                 AJNMessageArgument *deviceIdMsgArg = [announcement aboutData][@"DeviceId"];
                 NSString* deviceIdStr = [AJNAboutDataConverter messageArgumentToString:deviceIdMsgArg];
