@@ -306,7 +306,7 @@ class GatewayCtrlAccessControlList {
      * @param key metadata prefix key
      * @return TRUE if the metadata needs to be updated
      */
-    bool MetadataUpdated(qcc::String deviceNameMeta, qcc::String appNameMeta, const GatewayCtrlRemotedApp& annApp, qcc::String key);
+    bool MetadataUpdated(qcc::String deviceNameMeta, qcc::String appNameMeta, const GatewayCtrlRemotedApp& annApp, qcc::String keyPrefix);
 };
 }
 }
