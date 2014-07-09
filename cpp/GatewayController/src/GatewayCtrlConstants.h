@@ -83,6 +83,8 @@ static const qcc::String AJSUFFIX_APP_NAME = "_APP_NAME";
  */
 static const qcc::String AJSUFFIX_DEVICE_NAME = "_DEVICE_NAME";
 
+static const uint16_t AJ_METHOD_UPDATEACL_INPUT_PARAM_COUNT = 5;
+
 }         //namespace gwcConsts
 }     //namespace services
 } //namespace ajn

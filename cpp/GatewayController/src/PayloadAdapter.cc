@@ -31,13 +31,15 @@ MsgArg*PayloadAdapter::MarshalMetaData(const std::map<qcc::String, qcc::String>&
     for (std::map<qcc::String, qcc::String>::const_iterator it = metadata.begin(); it != metadata.end(); ++it) {
         const char*key = (*it).first.c_str();
         const char*value = (*it).second.c_str();
-        status = metaDataKeyValueArg[pos++].Set("{ss}", key, value);
+        status = metaDataKeyValueArg[pos].Set("{ss}", key, value);
         if (status != ER_OK) {
             QCC_LogError(status, ("Set failed"));
             delete [] metaDataKeyValueArg;
             return NULL;
         }
         metaDataKeyValueArg[pos].SetOwnershipFlags(MsgArg::OwnsArgs, true);
+
+        pos++;
     }
 
     return metaDataKeyValueArg;
