@@ -84,12 +84,12 @@ void GatewayCtrlTPObjectPath::setPrefixAllowed(bool isPrefixAllowed) {
     m_isPrefixAllowed = isPrefixAllowed;
 }
 
-GatewayCtrlManifestObjectDescription::GatewayCtrlManifestObjectDescription(const GatewayCtrlTPObjectPath& objectPath, std::set<GatewayCtrlTPInterface> interfaces) : m_Interfaces(interfaces), m_IsConfigured(false)
+GatewayCtrlManifestObjectDescription::GatewayCtrlManifestObjectDescription(const GatewayCtrlTPObjectPath& objectPath, std::set<GatewayCtrlTPInterface> interfaces) : m_IsConfigured(false), m_Interfaces(interfaces)
 {
     m_ObjectPath = new GatewayCtrlTPObjectPath(objectPath);
 }
 
-GatewayCtrlManifestObjectDescription::GatewayCtrlManifestObjectDescription(const GatewayCtrlTPObjectPath& objectPath, std::set<GatewayCtrlTPInterface> interfaces, bool isConfigured) : m_Interfaces(interfaces), m_IsConfigured(isConfigured)
+GatewayCtrlManifestObjectDescription::GatewayCtrlManifestObjectDescription(const GatewayCtrlTPObjectPath& objectPath, std::set<GatewayCtrlTPInterface> interfaces, bool isConfigured) : m_IsConfigured(isConfigured), m_Interfaces(interfaces)
 {
     m_ObjectPath = new GatewayCtrlTPObjectPath(objectPath);
 }

@@ -20,7 +20,7 @@
 namespace ajn {
 namespace services {
 
-GatewayCtrlAclWriteResponse::GatewayCtrlAclWriteResponse(qcc::String id, AclResponseCode code, GatewayCtrlAccessRules*invalidRules, qcc::String objPath) : m_AclId(id), m_AclCode(code), m_InvalidRules(invalidRules), m_ObjectPath(objPath)
+GatewayCtrlAclWriteResponse::GatewayCtrlAclWriteResponse(qcc::String id, AclResponseCode code, GatewayCtrlAccessRules*invalidRules, qcc::String objPath) : m_AclId(id), m_AclCode(code), m_ObjectPath(objPath), m_InvalidRules(invalidRules)
 {
 }
 

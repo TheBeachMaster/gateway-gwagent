@@ -377,6 +377,11 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
         if (inputArgsVector.size() != AJ_METHOD_UPDATEACL_INPUT_PARAM_COUNT) {
             QCC_LogError(ER_FAIL, ("UpdateAcl failed - wrong number of arguments gathered to be sent"));
             status = ER_FAIL;
+
+            transmittedAcessRules->Release();
+            delete transmittedAcessRules;
+            transmittedAcessRules = NULL;
+
             goto end;
         }
 

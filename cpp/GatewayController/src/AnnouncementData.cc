@@ -20,7 +20,7 @@ namespace ajn {
 namespace services {
 
 AnnouncementData::AnnouncementData(uint16_t portNumber, const AboutClient::AboutData& aboutData, const AboutClient::ObjectDescriptions& objectDescriptions) :
-    m_PortNumber(portNumber), m_AboutData(aboutData), m_ObjectDescriptions(objectDescriptions)
+    m_AboutData(aboutData), m_ObjectDescriptions(objectDescriptions), m_PortNumber(portNumber)
 {
 
 }

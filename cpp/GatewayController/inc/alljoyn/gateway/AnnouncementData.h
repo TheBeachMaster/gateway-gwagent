@@ -52,6 +52,8 @@ class AnnouncementData {
 
     const AboutClient::AboutData& GetAboutData() const { return m_AboutData; }
 
+    const short getPortNumber() const { return m_PortNumber; }
+
   private:
     AboutClient::AboutData m_AboutData;
     AboutClient::ObjectDescriptions m_ObjectDescriptions;
