@@ -51,6 +51,7 @@ AppBusObject::AppBusObject(BusAttachment* bus, GatewayApp* app, String const& ob
     if (!aboutService) {
         QCC_DbgHLPrintf(("AboutService is not defined"));
         *status = ER_FAIL;
+        return;
     }
 
     std::vector<String> interfaces;
