@@ -48,9 +48,11 @@ void GatewayCtrlSessionHandler::SessionLost(ajn::SessionId sessionId)
 
 void GatewayCtrlSessionHandler::JoinSessionCB(QStatus status, ajn::SessionId id, const ajn::SessionOpts& opts, void* context)
 {
+    GatewayCtrlControllerSessionListener* listener = m_Gateway->getListener();
+
     if (status != ER_OK) {
         QCC_LogError(status, ("Joining session failed."));
-        GatewayCtrlControllerSessionListener* listener = m_Gateway->getListener();
+
         if (listener) {
             listener->sessionLost(m_Gateway);
         }
@@ -60,6 +62,10 @@ void GatewayCtrlSessionHandler::JoinSessionCB(QStatus status, ajn::SessionId id,
     QCC_DbgPrintf(("Joining session succeeded. SessionId: %u", id));
 
     m_SessionId = id;
+
+    if (listener) {
+        listener->sessionEstablished(m_Gateway);
+    }
 }
 
 ajn::SessionId GatewayCtrlSessionHandler::getSessionId() const

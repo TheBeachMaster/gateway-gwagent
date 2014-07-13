@@ -23,7 +23,7 @@
 #import "ConnectorAppInfoViewController.h"
 #import "AppDelegate.h"
 
-@interface ConnectorAppTableViewController () <AJGWCGatewayCtrlApplicationStatusSignalHandler, UIActionSheetDelegate>
+@interface ConnectorAppTableViewController () <AJGWCGatewayCtrlApplicationStatusSignalHandler, UIActionSheetDelegate, AJGWCGatewayCtrlControllerSessionListener>
 
 @property (strong, nonatomic) AJGWCGatewayCtrlGateway* gateway;
 @property (nonatomic) AJNSessionId sessionId;
@@ -60,7 +60,7 @@
     
     self.gateway = [gwController createGatewayWithBusName:self.ajnAnnouncement.busName objectDescs:self.ajnAnnouncement.objectDescriptions aboutData:self.ajnAnnouncement.aboutData];
     
-    AJGWCGatewayCtrlSessionResult *sessionResult = [self.gateway joinSession];
+    AJGWCGatewayCtrlSessionResult *sessionResult = [self.gateway joinSession:self];
     
     if (sessionResult.status != ER_OK) {
         [AppDelegate AlertAndLog:@"Failed to retrieve installed apps" status:sessionResult.status];
@@ -192,4 +192,19 @@
 {
     [self statusChangedHandler:YES];
 }
+
+- (void)sessionEstablished:(AJGWCGatewayCtrlGateway*) gateway
+{
+    NSLog(@"Session established");
+}
+
+- (void)sessionLost:(AJGWCGatewayCtrlGateway*) gateway
+{
+    NSLog(@"Session lost");
+    [[[UIAlertView alloc]initWithTitle:@"Session lost" message:@"Connection to the gateway lost" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+
+    [self.navigationController popToRootViewControllerAnimated:YES];
+
+}
+
 @end

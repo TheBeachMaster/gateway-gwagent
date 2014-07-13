@@ -78,17 +78,17 @@
     return [[AJGWCGatewayCtrlSessionResult alloc]initWithStatus:ret.m_status sid:ret.m_sid];
 }
 
-- (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlControllerSessionListener>*) listener
+- (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlControllerSessionListener>) listener
 {
-    self.adapter = new AJGWCGatewayCtrlControllerSessionListenerAdapter(*listener);
+    self.adapter = new AJGWCGatewayCtrlControllerSessionListenerAdapter(listener);
     
     ajn::services::GatewayCtrlSessionResult ret = self.handle->JoinSession(self.adapter);
     return [[AJGWCGatewayCtrlSessionResult alloc]initWithStatus:ret.m_status sid:ret.m_sid];
 }
 
-- (QStatus)joinSessionAsync:(id<AJGWCGatewayCtrlControllerSessionListener>*) listener
+- (QStatus)joinSessionAsync:(id<AJGWCGatewayCtrlControllerSessionListener>) listener
 {
-    self.adapter = new AJGWCGatewayCtrlControllerSessionListenerAdapter(*listener);
+    self.adapter = new AJGWCGatewayCtrlControllerSessionListenerAdapter(listener);
     return self.handle->JoinSessionAsync(self.adapter);
 }
 

@@ -61,14 +61,14 @@
  * @param listener The listener is used to be notified about the session related events
  * @return {@link AJGWCGatewayCtrlSessionResult}
  */
-- (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlControllerSessionListener>*) listener;
+- (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlControllerSessionListener>) listener;
 
 /**
  * Join session asynchronously with the given gwBusName.
  * @param listener The listener is used to be notified about the session related events
  * @return Returns the joinSessionAsync status {@link QStatus}
  */
-- (QStatus)joinSessionAsync:(id<AJGWCGatewayCtrlControllerSessionListener>*) listener;
+- (QStatus)joinSessionAsync:(id<AJGWCGatewayCtrlControllerSessionListener>) listener;
 
 /**
  * Disconnect the given session

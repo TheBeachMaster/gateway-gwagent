@@ -55,7 +55,9 @@
 {
     NSString *alertText = [NSString stringWithFormat:@"%@ (%@)",message, [AJNStatus descriptionForStatusCode:status]];
     NSLog(@"%@", alertText);
-    
-    [[[UIAlertView alloc] initWithTitle:@"Startup Error" message:alertText delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[[UIAlertView alloc] initWithTitle:@"Startup Error" message:alertText delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
+    });
 }
 @end
