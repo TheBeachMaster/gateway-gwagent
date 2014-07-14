@@ -37,7 +37,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    [self startConnectorAppInfoViewController];
 	// Do any additional setup after loading the view.
 }
 
@@ -45,7 +44,7 @@
 {
     self.title = [self.connectorApplication friendlyName];
     
-    UIBarButtonItem *optionsBtn = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(didTouUpInsideOptionsBtn:)];
+    UIBarButtonItem *optionsBtn = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(didTouchUpInsideOptionsBtn:)];
     self.navigationItem.rightBarButtonItem = optionsBtn;
     
     self.friendlyNameLbl.text = [self.connectorApplication friendlyName];
@@ -58,13 +57,21 @@
     QStatus handlerStatus = [self.connectorApplication setStatusChangedHandler:self];
     if (ER_OK != handlerStatus) {
         [AppDelegate AlertAndLog:@"Failed to set status changed handler" status:handlerStatus];
+    } else {
+        NSLog(@"Successfully set status changed handler for %@", [self.connectorApplication friendlyName]);
     }
     
     self.deleteAclAlertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Delete selected acl?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: @"OK", nil];
-    
+
     self.deleteAclAlertView.tag = 1;
-    
+
     [self.aclsTableView reloadData];
+}
+
+
+- (void)stopConnectorAppInfoViewController
+{
+
 }
 
 - (void)retrieveAcls
@@ -96,7 +103,7 @@
         createAclVC.connectorApplication = self.connectorApplication;
     }
 }
-- (IBAction)didTouUpInsideOptionsBtn:(id)sender {
+- (void)didTouchUpInsideOptionsBtn:(id)sender {
     UIActionSheet *optionsActionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:
                                          @"Create ACL",
                                          @"Restart",
@@ -274,14 +281,23 @@
 
 + (void)setLabelTextColor:(UILabel*) label forStatus:(NSString*) statusString
 {
-    label.text = statusString;
-    [label setTextColor: [STATUS_COLOR objectForKey:statusString]];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        label.text = statusString;
+        [label setTextColor: [STATUS_COLOR objectForKey:statusString]];
+    });
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self.connectorApplication unsetStatusChangedHandler];
     [self startConnectorAppInfoViewController];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    NSLog(@"calling unset status changed handler for %@", [self.connectorApplication friendlyName]);
+    [self.connectorApplication unsetStatusChangedHandler];
+    [self stopConnectorAppInfoViewController];
 }
 
 @end
