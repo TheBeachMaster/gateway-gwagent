@@ -19,6 +19,7 @@
 #import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplication.h"
 #import "alljoyn/gateway/AJGWCGatewayCtrlApplicationStatusSignalHandler.h"
 #import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplicationStatus.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlEnums.h"
 #import "ConnectorAppTableViewCell.h"
 #import "ConnectorAppInfoViewController.h"
 #import "AppDelegate.h"
@@ -48,7 +49,16 @@
     [self startGWController];
 }
 
-
+- (void)stopGWController
+{
+    QStatus status = [self.gateway leaveSession];
+    if (status != ER_OK) {
+        [AppDelegate AlertAndLog:@"Failed to leaveSession" status:status];
+    } else {
+        NSLog(@"Successfully leave Session");
+    }
+    [[AJGWCGatewayCtrlGatewayController sharedInstance] shutdown];
+}
 - (void)startGWController
 {
     UIBarButtonItem *optionsBtn = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(didTouUpInsideOptionsBtn:)];
@@ -81,6 +91,10 @@
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve installed apps" status:status];
     }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
 }
 
 - (void)statusChangedHandler:(BOOL) flag
@@ -91,8 +105,11 @@
             QStatus handlerStatus = [connectorApp setStatusChangedHandler:self];
             if (ER_OK != handlerStatus) {
                 NSLog(@"Failed to set status changed handler");
+            } else {
+                NSLog(@"Successfully set status changed handler for %@", [connectorApp friendlyName]);
             }
         } else {
+            NSLog(@"calling unset status changed handler for %@", [connectorApp friendlyName]);
             [connectorApp unsetStatusChangedHandler];
         }
     }
@@ -115,7 +132,6 @@
                 case 0:
                     NSLog(@"Calling refresh");
                     [self retrieveInstalledApps]; //refresh
-                    [self.tableView reloadData];
                     break;
                 default:
                     break;
@@ -130,9 +146,16 @@
 #pragma mark -  AJGWCGatewayCtrlApplicationStatusSignalHandler method
 - (void)onStatusChanged:(NSString*) appId status:(AJGWCGatewayCtrlConnectorApplicationStatus*) status
 {
-    NSLog(@"AppID %@ status has changed", appId);
-    [self.tableView reloadData];
-    [self updateLabels];
+    NSLog(@"AppID %@ status has changed:", appId);
+    NSLog(@"installStatus: %@", [AJGWCGatewayCtrlEnums AJGWCInstallStatusToString:[status installStatus]]);
+    NSLog(@"installDescriptions: %@", [status installDescriptions]);
+    NSLog(@"ConnectionStatus: %@", [AJGWCGatewayCtrlEnums AJGWCConnectionStatusToString:[status connectionStatus]]);
+    NSLog(@"operationalStatus: %@", [AJGWCGatewayCtrlEnums AJGWCOperationalStatusToString:[status operationalStatus]]);
+    NSLog(@"---------------------");
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
 }
 
 #pragma mark - Table view data source
@@ -160,7 +183,10 @@
         
         [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppConnectionLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCConnectionStatusToString:[connectorAppStatus connectionStatus]]];
 
-        [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppOperationalLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCOperationalStatusToString:[connectorAppStatus operationalStatus]]];        
+        [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppOperationalLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCOperationalStatusToString:[connectorAppStatus operationalStatus]]];
+       
+        cell.ConnectorAppId = [connectorApp appId];
+        
     } else {
         [AppDelegate AlertAndLog:@"RetrieveStatus error happened, check log" status:status];
         [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppInstallLbl forStatus:@"Error"];
@@ -179,15 +205,18 @@
     }
 }
 
-- (void)updateLabels
-{
-    //TODO
-}
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self statusChangedHandler:NO];
 }
+
+- (void)didMoveToParentViewController:(UIViewController *)parent
+{
+    if (parent==nil) { //only on the way back
+        [self stopGWController];
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [self statusChangedHandler:YES];

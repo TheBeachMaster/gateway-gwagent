@@ -22,5 +22,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *ConnectorAppInstallLbl;
 @property (weak, nonatomic) IBOutlet UILabel *ConnectorAppConnectionLbl;
 @property (weak, nonatomic) IBOutlet UILabel *ConnectorAppOperationalLbl;
+@property (strong, nonatomic) NSString * ConnectorAppId;
+
+
 
 @end

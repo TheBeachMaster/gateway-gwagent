@@ -51,11 +51,6 @@ void GatewayCtrlGatewayController::Shutdown()
 {
     Release();
 
-    if (m_Bus) {
-        delete m_Bus;
-        m_Bus = NULL;
-    }
-
     if (m_instance) {
         delete m_instance;
         m_instance = NULL;
