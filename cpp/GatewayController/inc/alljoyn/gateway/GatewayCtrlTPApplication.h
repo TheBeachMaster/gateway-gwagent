@@ -26,7 +26,7 @@
 #include <alljoyn/gateway/GatewayCtrlApplicationStatusSignalHandler.h>
 #include <alljoyn/gateway/GatewayCtrlAclWriteResponse.h>
 #include <alljoyn/gateway/GatewayCtrlEnums.h>
-#include <alljoyn/services_common/AsyncTaskQueue.h>
+#include "alljoyn/gateway/AsyncTaskQueue.h"
 #include <alljoyn/gateway/LogModule.h>
 #include <alljoyn/gateway/AnnouncementData.h>
 

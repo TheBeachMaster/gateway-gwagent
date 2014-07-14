@@ -41,8 +41,6 @@
 		9A65BCFD1900116000784D9E /* liballjoyn_about_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A65BCF61900116000784D9E /* liballjoyn_about_objc.a */; };
 		9A65BCFE1900116000784D9E /* liballjoyn_gateway_cpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A65BCF71900116000784D9E /* liballjoyn_gateway_cpp.a */; };
 		9A65BCFF1900116000784D9E /* liballjoyn_gateway_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A65BCF81900116000784D9E /* liballjoyn_gateway_objc.a */; };
-		9A65BD001900116000784D9E /* liballjoyn_services_common_cpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A65BCF91900116000784D9E /* liballjoyn_services_common_cpp.a */; };
-		9A65BD011900116000784D9E /* liballjoyn_services_common_objc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A65BCFA1900116000784D9E /* liballjoyn_services_common_objc.a */; };
 		9A65BD021900116000784D9E /* libAllJoynFramework_iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A65BCFB1900116000784D9E /* libAllJoynFramework_iOS.a */; };
 		9A822B22191BC5FF00EB156E /* ObjectPathLevelRulesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A822B21191BC5FF00EB156E /* ObjectPathLevelRulesTableViewController.m */; };
 		9AAACF4119126804001D575E /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AAACF4019126804001D575E /* MainStoryboard_iPhone.storyboard */; };
@@ -139,8 +137,6 @@
 				9A65BCFD1900116000784D9E /* liballjoyn_about_objc.a in Frameworks */,
 				9A65BCFE1900116000784D9E /* liballjoyn_gateway_cpp.a in Frameworks */,
 				9A65BCFF1900116000784D9E /* liballjoyn_gateway_objc.a in Frameworks */,
-				9A65BD001900116000784D9E /* liballjoyn_services_common_cpp.a in Frameworks */,
-				9A65BD011900116000784D9E /* liballjoyn_services_common_objc.a in Frameworks */,
 				9A65BD021900116000784D9E /* libAllJoynFramework_iOS.a in Frameworks */,
 				9A3DB315183A19CB0063D6BE /* libc.dylib in Frameworks */,
 				19E2F07417E88B120005851F /* libc++.dylib in Frameworks */,
@@ -503,8 +499,6 @@
 				HEADER_SEARCH_PATHS = (
 					"\"../../../../cpp/GatewayController/inc/\"",
 					"\"../../../../ios/GatewayController/inc/\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/services_common/ios/inc\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/services_common/cpp/inc\"",
 					"\"$(ALLJOYN_SDK_ROOT)/build/darwin/arm/$(PLATFORM_NAME)/$(CONFIGURATION)/dist/cpp/inc\"",
 					"\"$(ALLJOYN_SDK_ROOT)/build/darwin/arm/$(PLATFORM_NAME)/$(CONFIGURATION)/dist/cpp/inc/alljoyn\"",
 					"$(SRCROOT)/../../../../../../../common/inc",
@@ -512,9 +506,6 @@
 					"\"$(ALLJOYN_SDK_ROOT)/services/about/ios/inc\"",
 					"\"$(ALLJOYN_SDK_ROOT)/services/about/cpp/inc\"",
 					"\"$(SRCROOT)\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/gateway/cpp/GatewayController/inc\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/gateway/ios/GatewayController/inc\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/gateway/cpp/GatewayController/src/\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/GatewayControllerService/GatewayControllerService-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -559,20 +550,15 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GatewayControllerService/GatewayControllerService-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../../../../../common/inc",
 					"\"../../../../cpp/GatewayController/inc/\"",
 					"\"../../../../ios/GatewayController/inc/\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/services_common/ios/inc\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/services_common/cpp/inc\"",
 					"\"$(ALLJOYN_SDK_ROOT)/build/darwin/arm/$(PLATFORM_NAME)/$(CONFIGURATION)/dist/cpp/inc\"",
 					"\"$(ALLJOYN_SDK_ROOT)/build/darwin/arm/$(PLATFORM_NAME)/$(CONFIGURATION)/dist/cpp/inc/alljoyn\"",
-					"$(SRCROOT)/../../../../../../../common/inc",
 					"\"$(ALLJOYN_SDK_ROOT)/alljoyn_objc/AllJoynFramework/AllJoynFramework/\"",
 					"\"$(ALLJOYN_SDK_ROOT)/services/about/ios/inc\"",
 					"\"$(ALLJOYN_SDK_ROOT)/services/about/cpp/inc\"",
 					"\"$(SRCROOT)\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/gateway/cpp/GatewayController/inc\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/gateway/ios/GatewayController/inc\"",
-					"\"$(ALLSEEN_BASE_SERVICES_ROOT)/gateway/cpp/GatewayController/src/\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/GatewayControllerService/GatewayControllerService-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

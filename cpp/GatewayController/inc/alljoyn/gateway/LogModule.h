@@ -20,7 +20,6 @@
 
 #include <qcc/Debug.h>
 #include <qcc/platform.h>
-#include <alljoyn/services_common/LogModulesNames.h>
 
 namespace ajn {
 namespace services {
