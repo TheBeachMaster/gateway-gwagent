@@ -21,9 +21,9 @@
 
 - (void)setAnnouncement:(AJNAnnouncement *)announcement
 {
-	_announcement = announcement;
-    
-	_currLang = [AJNAboutDataConverter messageArgumentToString:[_announcement aboutData][@"DefaultLanguage"]];
+    _announcement = announcement;
+
+    _currLang = [AJNAboutDataConverter messageArgumentToString:[_announcement aboutData][@"DefaultLanguage"]];
 }
 
 @end

@@ -45,46 +45,46 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
+
+
     UIBarButtonItem *optionsBtn = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(didTouUpInsideOptionsBtn:)];
     self.navigationItem.rightBarButtonItem = optionsBtn;
-    
+
     self.refreshControl = [[UIRefreshControl alloc]init];
-    
+
     self.refreshControl.tintColor = [UIColor blueColor];
-    
+
     [self.refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
-    
+
     [self retreiveACL];
 }
 
 -(void)refresh:(UIRefreshControl *)refresh
 {
     [self retreiveACL];
-    
+
     [self.refreshControl endRefreshing];
 }
 
 -(void)retreiveACL
 {
     self.title = [self.acl aclName];
-    
+
     QStatus status;
     self.manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve manifest rules" status:status];
         return;
     }
-    
+
     self.accessRulesContainer = [[AccessRulesContainer alloc]initWithACL:self.acl UsingSessionId:self.sessionId manifestRules:self.manifestRules announcements:[[AnnouncementManager sharedInstance] getAnnouncements] status:status];
-    
+
     if (status != ER_OK) {
         [AppDelegate AlertAndLog:@"Failed to retrieve Acl" status:status];
         self.navigationItem.rightBarButtonItem = nil;
         return;
     }
-    
+
     [self.tableView reloadData];
 }
 
@@ -159,21 +159,21 @@
 {
     QStatus status;
     AJGWCGatewayCtrlManifestRules *manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
-    
+
     if (status != ER_OK) {
         NSLog(@"retrieveManifestRulesUsingSessionId failed:%@",[AJNStatus descriptionForStatusCode:status]);
         return status;
     }
-    
+
     AJGWCGatewayCtrlAccessRules *gwAccessRules = [self.accessRulesContainer createAJGWCGatewayCtrlAccessRules];
-    
+
     AJGWCGatewayCtrlAclWriteResponse *response = [self.acl updateAcl:self.sessionId accessRules:gwAccessRules manifestRules:manifestRules status:status];
-    
+
     if (status != ER_OK) {
         NSLog(@"AJGWCGatewayCtrlAccessControlList updateAcl failed:%@",[AJNStatus descriptionForStatusCode:status]);
         return status;
     }
-    
+
     if ([response.invalidRules.remotedApps count] > 0) {
         NSArray *invalidRemotedApps = response.invalidRules.remotedApps;
 
@@ -198,7 +198,7 @@
         NSLog(@"update ACL failed with code:%d",response.responseCode);
     }
 
-    
+
     return status;
 }
 
@@ -219,11 +219,11 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     VisualAccessRules *rules =[self.accessRulesContainer accessRulesForSection:section];
-    
+
     NSDictionary *dict = [rules accessRulesDictionary];
-    
+
     NSArray *accessRulesKeys = [dict allKeys];
-    
+
     return [ accessRulesKeys count];
 }
 
@@ -231,20 +231,20 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     InterfaceRuleCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"InterfaceRuleCell" forIndexPath:indexPath];
-    
+
     NSUInteger section = [indexPath section];
-    
+
     cell.rules = [self.accessRulesContainer accessRulesForSection:section];
 
     cell.indexPath = indexPath;
-    
+
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     NSString *entryName = [self.accessRulesContainer entryNameAt:section];
-    
+
     return entryName;
 }
 
@@ -254,21 +254,21 @@
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 
     VisualAccessRules *rulesForSection = [self.accessRulesContainer accessRulesForSection:[indexPath section]];
-    
+
     NSArray *object_paths = [rulesForSection objectPathsForInterface:[rulesForSection.accessRulesDictionary allKeys][[indexPath row]]                         ];
-    
+
     if ([object_paths count] == 0) {
         NSLog(@"error, object path array for interface is 0");
-        
+
         [[[UIAlertView alloc]initWithTitle:@"no object paths" message:@"error, object path array for interface is 0" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-        
+
         return NO;
-        
+
     }
-    
+
     return YES;
     }
-    
+
     return NO;
 }
 
@@ -276,13 +276,13 @@
 {
     if ([segue.destinationViewController isKindOfClass:[ObjectPathLevelRulesTableViewController class]]){
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        
+
         VisualAccessRules *rulesForSection = [self.accessRulesContainer accessRulesForSection:[indexPath section]];
-        
+
         ObjectPathLevelRulesTableViewController *vc = segue.destinationViewController;
-        
+
         vc.accessRules = rulesForSection;
-        
+
         vc.key = [rulesForSection.accessRulesDictionary allKeys][[indexPath row]];
     }
 
@@ -312,38 +312,38 @@
     VisualAccessRules *rulesForSection = [self.accessRulesContainer accessRulesForSection:sender.tag];
 
     [rulesForSection switchAllAccessRules];
-    
+
     [self updateConfigButton:sender configured:[rulesForSection configured]];
-    
+
     [self.tableView reloadData];
-    
+
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    
+
     VisualAccessRules *rulesForSection = [self.accessRulesContainer accessRulesForSection:section];
-    
+
     CGRect frame = tableView.frame;
     NSString *titleTxt = @"Add All";
-    
+
     CGSize sizeOfTitle = [titleTxt sizeWithAttributes:@{NSFontAttributeName:
                                                             [UIFont systemFontOfSize:17.0f]}];
-    
+
     UIButton *configButton = [UIButton buttonWithType: UIButtonTypeSystem];
     [configButton setFrame:CGRectMake(frame.size.width-sizeOfTitle.width - 10 , 10, 50, 30)];
-    
+
     [configButton setTag:section];
     [configButton addTarget: self  action:@selector(serviceButtonCliecked:) forControlEvents: UIControlEventTouchUpInside];
-    
+
     [self updateConfigButton:configButton configured:rulesForSection.configured];
-    
+
     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 150, 30)];
     title.text = [self tableView:tableView titleForHeaderInSection:section];
-    
+
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
     [headerView addSubview:title];
     [headerView addSubview:configButton];
-    
+
     return headerView;
 }
 
@@ -355,7 +355,7 @@
     if ([aclNameTextField.text isEqualToString:[self.acl aclName]]) {
         return;
     }
-    
+
     NSLog(@"renaming '%@' to '%@'", [self.acl aclName], aclNameTextField.text);
     [self.acl setAclName:aclNameTextField.text];
 

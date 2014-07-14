@@ -35,13 +35,13 @@ static dispatch_queue_t annQueue;
 {
     static AnnouncementManager *announcementManager;
 
-	static dispatch_once_t donce;
-	dispatch_once(&donce, ^{
-	    announcementManager = [[self alloc] init];
+    static dispatch_once_t donce;
+    dispatch_once(&donce, ^{
+        announcementManager = [[self alloc] init];
         annQueue = dispatch_queue_create("org.alljoyn.annQueue", NULL);
-	});
+    });
 
-	return announcementManager;
+    return announcementManager;
 }
 
 - (void)destroyInstance
@@ -50,10 +50,10 @@ static dispatch_queue_t annQueue;
 }
 - (id)init
 {
-	if (self = [super init]) {
+    if (self = [super init]) {
         _announcements = [[NSMutableArray alloc] init];
-	}
-	return self;
+    }
+    return self;
 }
 
 
@@ -65,48 +65,48 @@ static dispatch_queue_t annQueue;
 - (void)addNewAnnouncement:(AJGWCAnnouncementData*) announcement
 {
     // Dealing with announcement entries should be syncronized, so we add it to a queue
-	dispatch_sync(annQueue, ^{
+    dispatch_sync(annQueue, ^{
     AJNMessageArgument *appIdMsgArg = [announcement aboutData][@"AppId"];
-	uint8_t *appIdBuffer;
-	size_t appIdNumElements;
-	QStatus status;
-	status = [appIdMsgArg value:@"ay", &appIdNumElements, &appIdBuffer];
-    
-	// Add the received announcement
-	if (status != ER_OK) {
-		NSLog(@"AnnouncementManager has failed to read appId:%@ - not using this announcement", [AJNStatus descriptionForStatusCode:status]);
-		return;
-	}
-    
-	// Dealing with announcement entries should be syncronized, so we add it to a queue
-	    uint8_t *tmpAppIdBuffer;
-	    size_t tmpAppIdNumElements;
-	    QStatus tmpStatus;
-	    int res;
-        
-	    // Iterate over the announcements dictionary
-	    for (AJGWCAnnouncementData *tmpAnn in self.announcements) {
-	        AJNMessageArgument *tmpMsgrg = [tmpAnn aboutData][@"AppId"];
-            
-	        tmpStatus = [tmpMsgrg value:@"ay", &tmpAppIdNumElements, &tmpAppIdBuffer];
-	        if (tmpStatus != ER_OK) {
-	            NSLog(@"AnnouncementManager has failed to read appId:%@", [AJNStatus descriptionForStatusCode:tmpStatus]);
-	            return;
-			}
-            
-	        res = 1;
+    uint8_t *appIdBuffer;
+    size_t appIdNumElements;
+    QStatus status;
+    status = [appIdMsgArg value:@"ay", &appIdNumElements, &appIdBuffer];
+
+    // Add the received announcement
+    if (status != ER_OK) {
+        NSLog(@"AnnouncementManager has failed to read appId:%@ - not using this announcement", [AJNStatus descriptionForStatusCode:status]);
+        return;
+    }
+
+    // Dealing with announcement entries should be syncronized, so we add it to a queue
+        uint8_t *tmpAppIdBuffer;
+        size_t tmpAppIdNumElements;
+        QStatus tmpStatus;
+        int res;
+
+        // Iterate over the announcements dictionary
+        for (AJGWCAnnouncementData *tmpAnn in self.announcements) {
+            AJNMessageArgument *tmpMsgrg = [tmpAnn aboutData][@"AppId"];
+
+            tmpStatus = [tmpMsgrg value:@"ay", &tmpAppIdNumElements, &tmpAppIdBuffer];
+            if (tmpStatus != ER_OK) {
+                NSLog(@"AnnouncementManager has failed to read appId:%@", [AJNStatus descriptionForStatusCode:tmpStatus]);
+                return;
+            }
+
+            res = 1;
             // compare if the announcement AppId already exists
-	        if (appIdNumElements == tmpAppIdNumElements) {
-	            res = memcmp(appIdBuffer, tmpAppIdBuffer, appIdNumElements);
-			}
-            
-	        // found a matched (res=0)
-	        if (!res) {
-	            NSLog(@"AnnouncementManager got an announcement from a known appID - checking the DeviceId");
+            if (appIdNumElements == tmpAppIdNumElements) {
+                res = memcmp(appIdBuffer, tmpAppIdBuffer, appIdNumElements);
+            }
+
+            // found a matched (res=0)
+            if (!res) {
+                NSLog(@"AnnouncementManager got an announcement from a known appID - checking the DeviceId");
                 //check if deviceId is identical
                 AJNMessageArgument *deviceIdMsgArg = [announcement aboutData][@"DeviceId"];
                 NSString* deviceIdStr = [AJNAboutDataConverter messageArgumentToString:deviceIdMsgArg];
-                
+
                 AJNMessageArgument *tmpDeviceIdMsgArg = [tmpAnn aboutData][@"DeviceId"];
                 NSString* tmpDeviceIdStr = [AJNAboutDataConverter messageArgumentToString:tmpDeviceIdMsgArg];
 
@@ -115,7 +115,7 @@ static dispatch_queue_t annQueue;
                     [_announcements removeObject:tmpAnn];
                 }
             }
-            
+
         }
     NSLog(@"adding a new announcement to AnnouncementManager");
     [_announcements addObject:announcement];

@@ -37,10 +37,10 @@
 - (id)initWithObjectPath:(NSString*) objectPath friendlyName:(NSString*) friendlyName isPrefix:(bool) isPrefix isPrefixAllowed:(bool)isPrefixAllowed
 {
     self = [super init];
-	if (self) {
-		self.handle = new ajn::services::GatewayCtrlConnAppObjectPath([AJNConvertUtil convertNSStringToQCCString:objectPath], [AJNConvertUtil convertNSStringToQCCString:friendlyName], isPrefix, isPrefixAllowed);
-	}
-	return self;
+    if (self) {
+        self.handle = new ajn::services::GatewayCtrlConnAppObjectPath([AJNConvertUtil convertNSStringToQCCString:objectPath], [AJNConvertUtil convertNSStringToQCCString:friendlyName], isPrefix, isPrefixAllowed);
+    }
+    return self;
 }
 
 - (NSString*)path
@@ -51,7 +51,7 @@
 - (NSString*)friendlyName
 {
     return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetFriendlyName()];
-    
+
 }
 
 - (bool)isPrefix

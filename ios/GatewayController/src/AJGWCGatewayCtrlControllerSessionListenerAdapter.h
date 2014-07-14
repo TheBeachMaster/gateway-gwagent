@@ -22,44 +22,44 @@
 #import "AJGWCGatewayCtrlControllerSessionListener.h"
 
 class AJGWCGatewayCtrlControllerSessionListenerAdapter : public ajn::services::GatewayCtrlControllerSessionListener {
-    
+
 public:
     AJGWCGatewayCtrlControllerSessionListenerAdapter() {};
-    
+
     /**
      * Constructor for AJGWCGatewayCtrlControllerSessionListenerAdapter
      */
     AJGWCGatewayCtrlControllerSessionListenerAdapter(id <AJGWCGatewayCtrlControllerSessionListener> handle);
-    
+
     /**
      * Destructor for AJGWCGatewayCtrlControllerSessionListenerAdapter
      */
     virtual ~AJGWCGatewayCtrlControllerSessionListenerAdapter() {};
-    
+
     /**
      * sessionEstablished - callback when a session is established with a device
      * @param device - the device that the session was established with
      */
     void sessionEstablished(ajn::services::GatewayCtrlGateway* gateway);
-    
+
     /**
      * sessionLost - callback when a session is lost with a device
      * @param device - device that the session was lost with
      */
     void sessionLost(ajn::services::GatewayCtrlGateway* gateway);
-    
+
     /**
      * Get the Listener defined for this Adapter
      * @return
      */
     id <AJGWCGatewayCtrlControllerSessionListener> getListener() const;
-    
-    
+
+
 private:
     /**
      {@link AJGWCGatewayCtrlControllerSessionListener} handle
-	 */
-	id <AJGWCGatewayCtrlControllerSessionListener> sessionListenerHandler;
-    
+     */
+    id <AJGWCGatewayCtrlControllerSessionListener> sessionListenerHandler;
+
 };
 #endif

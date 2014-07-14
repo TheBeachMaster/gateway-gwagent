@@ -43,17 +43,17 @@
 - (id)initWithInterfaceName:(NSString*) name friendlyName:(NSString*) friendlyName  isSecured:(bool) isSecured
 {
     self = [super init];
-	if (self) {
-		self.handle = new ajn::services::GatewayCtrlConnAppInterface([AJNConvertUtil convertNSStringToQCCString:name], [AJNConvertUtil convertNSStringToQCCString:friendlyName], isSecured);
-        
-	}
-	return self;
+    if (self) {
+        self.handle = new ajn::services::GatewayCtrlConnAppInterface([AJNConvertUtil convertNSStringToQCCString:name], [AJNConvertUtil convertNSStringToQCCString:friendlyName], isSecured);
+
+    }
+    return self;
 }
 
 - (NSString*)interfaceName
 {
     qcc::String name = self.handle->GetName();
-    
+
     return [AJNConvertUtil convertQCCStringtoNSString:name];
 }
 
@@ -74,7 +74,7 @@
 
 - (id)copyWithZone:(NSZone *)zone {
     AJGWCGatewayCtrlConnAppInterface *objectCopy = [[AJGWCGatewayCtrlConnAppInterface allocWithZone:zone] initWithHandle:*(self.handle)];
-    
+
     return objectCopy;
 }
 

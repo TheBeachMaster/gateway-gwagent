@@ -41,33 +41,33 @@
     self = [super init];
     std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> exposedServicesVect;
     std::vector<ajn::services::GatewayCtrlRemotedApp*> remotedAppsVect;
-	
+
     if (self) {
         // Populate std::vector with the NSArray data
         for(AJGWCGatewayCtrlManifestObjectDescription* manifestObjDesc in exposedServices) {
             exposedServicesVect.insert(exposedServicesVect.end(), [manifestObjDesc handle]);
         }
-        
+
         // Populate std::vector with the NSArray data
         for(AJGWCGatewayCtrlRemotedApp* remoteApp in remotedApps) {
             remotedAppsVect.insert(remotedAppsVect.end(), [remoteApp handle]);
         }
-	}
-    
+    }
+
     self.handle = new ajn::services::GatewayCtrlAccessRules(exposedServicesVect, remotedAppsVect);
-	return self;
+    return self;
 }
 
 -(NSArray*)remotedApps
 {
     std::vector<ajn::services::GatewayCtrlRemotedApp*> remotedAppsVect = self.handle->GetRemotedApps();
     NSMutableArray* remotedAppsArray = [[NSMutableArray alloc] init];
-    
+
     // Populate NSArray with std::vector data
     for(std::vector<ajn::services::GatewayCtrlRemotedApp*>::iterator it = remotedAppsVect.begin(); it != remotedAppsVect.end(); ++it) {
         [remotedAppsArray addObject:[[AJGWCGatewayCtrlRemotedApp alloc] initWithHandle:*it]];
     }
-    
+
     return remotedAppsArray;
 }
 
@@ -75,7 +75,7 @@
 {
     std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> exposedServicesVect = self.handle->GetExposedServices();
     NSMutableArray* exposedServicesArray = [[NSMutableArray alloc] init];
-    
+
     // Populate NSArray with std::vector data
     for(std::vector<ajn::services::GatewayCtrlManifestObjectDescription*>::iterator it = exposedServicesVect.begin(); it != exposedServicesVect.end(); ++it) {
         [exposedServicesArray addObject:[[AJGWCGatewayCtrlManifestObjectDescription alloc] initWithHandle:*it]];
@@ -102,7 +102,7 @@
     } else {
         return nil;
     }
-    
+
 }
 
 - (NSDictionary*)metadata
@@ -113,7 +113,7 @@
     for (std::map <qcc::String, qcc::String>::iterator it = metadataMap.begin(); it != metadataMap.end(); ++it) {
         [metadataDict setValue:[AJNConvertUtil convertQCCStringtoNSString:it->second] forKey:[AJNConvertUtil convertQCCStringtoNSString:it->first]];
     }
-    
+
     return metadataDict;
 }
 

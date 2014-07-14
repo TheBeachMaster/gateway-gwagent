@@ -38,8 +38,8 @@
 {
     self.appNameLbl.text = [self.connectorApplication friendlyName];
     self.createAclBtn.enabled = NO;
-	self.aclNameTextField.delegate = self; // Set TextField.delegate to enable dissmiss keyboard
-    
+    self.aclNameTextField.delegate = self; // Set TextField.delegate to enable dissmiss keyboard
+
     [self retrieveConfigurableRules];
 }
 
@@ -48,9 +48,9 @@
 {
     QStatus status;
     NSArray* ann =[[AnnouncementManager sharedInstance] getAnnouncements];
-    
+
     self.accessRules = [self.connectorApplication retrieveConfigurableRulesUsingSessionId:self.sessionId status:status announcements:ann];
-    
+
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve configurable rules" status:status];
     } else {
@@ -75,9 +75,9 @@
                 [(UILabel *)aSubview setTextColor:[UIColor grayColor]];
             }
         }
-        
+
         NSArray *acls = [[NSMutableArray alloc] initWithArray:[self.connectorApplication retrieveAclsUsingSessionId:self.sessionId status:status]];
-        
+
         if (ER_OK != status) {
             [AppDelegate AlertAndLog:@"Failed to retrieve Acls" status:status]; //TODO
         } else {
@@ -86,7 +86,7 @@
                 if ([[acl aclId] isEqualToString:[aclWResp aclId]])
                     self.acl = acl;
             }
-            
+
             if (!self.acl) {
                 status = ER_FAIL;
                 [AppDelegate AlertAndLog:@"New acl not found" status:status]; //TODO
@@ -101,7 +101,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.destinationViewController isKindOfClass:[ACLTableViewController class]]) {
-		ACLTableViewController *aclTVC = segue.destinationViewController;
+        ACLTableViewController *aclTVC = segue.destinationViewController;
         aclTVC.sessionId = self.sessionId;
         aclTVC.acl = self.acl;
         aclTVC.connectorApplication = self.connectorApplication;
@@ -115,18 +115,18 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-	[textField resignFirstResponder];
-	return YES;
+    [textField resignFirstResponder];
+    return YES;
 }
 
 // Set dismiss keyboard for each UITextField
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-	for (UIView *aSubview in[self.view subviews]) {
-		if ([aSubview isKindOfClass:[UITextField class]]) {
-			[(UITextField *)aSubview resignFirstResponder];
-		}
-	}
+    for (UIView *aSubview in[self.view subviews]) {
+        if ([aSubview isKindOfClass:[UITextField class]]) {
+            [(UITextField *)aSubview resignFirstResponder];
+        }
+    }
 }
 
 @end

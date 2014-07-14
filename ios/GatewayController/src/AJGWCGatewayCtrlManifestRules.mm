@@ -33,35 +33,35 @@
         self.handle = (ajn::services::GatewayCtrlManifestRules *)handle;
     }
     return self;
-    
+
 }
 
 //- (id)initWithManifestRules:(AJNMessageArgument*) manifRules
 //{
 //    self = [super init];
-//	if (self) {
-//		self.handle = new ajn::services::GatewayCtrlManifestRules((ajn::MsgArg*)manifRules.handle);
-//	}
-//	return self;
+//    if (self) {
+//        self.handle = new ajn::services::GatewayCtrlManifestRules((ajn::MsgArg*)manifRules.handle);
+//    }
+//    return self;
 //}
 
 - (NSArray*)exposedServices
 {
     std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> exposedServicesVect = self.handle->GetExposedServices();
     NSMutableArray* exposedServicesArray = [[NSMutableArray alloc] init];
-    
+
     // Populate NSMutableArray with std::vector data;
     for (std::vector<ajn::services::GatewayCtrlManifestObjectDescription*>::const_iterator vectIt = exposedServicesVect.begin(); vectIt != exposedServicesVect.end(); vectIt++) {
         [exposedServicesArray addObject:[[AJGWCGatewayCtrlManifestObjectDescription alloc] initWithHandle:*vectIt]];
     }
-    
+
     return exposedServicesArray;
 }
 
 - (NSArray*)remotedServices
 {
     std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> remotedServicesVect = self.handle->GetRemotedServices();
-    
+
     NSMutableArray* remotedServicesArray = [[NSMutableArray alloc] init];;
     // Populate NSMutableArray with std::vector data
     for (std::vector<ajn::services::GatewayCtrlManifestObjectDescription*>::const_iterator vectIt = remotedServicesVect.begin(); vectIt != remotedServicesVect.end(); vectIt++) {

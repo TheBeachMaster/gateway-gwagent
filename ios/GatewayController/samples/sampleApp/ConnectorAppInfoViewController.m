@@ -37,30 +37,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
 }
 
 - (void)startConnectorAppInfoViewController
 {
     self.title = [self.connectorApplication friendlyName];
-    
+
     UIBarButtonItem *optionsBtn = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(didTouchUpInsideOptionsBtn:)];
     self.navigationItem.rightBarButtonItem = optionsBtn;
-    
+
     self.friendlyNameLbl.text = [self.connectorApplication friendlyName];
     self.appVersionLbl.text = [self.connectorApplication appVersion];
-    
+
     [self retrieveStatus];
-    
+
     [self retrieveAcls];
-    
+
     QStatus handlerStatus = [self.connectorApplication setStatusChangedHandler:self];
     if (ER_OK != handlerStatus) {
         [AppDelegate AlertAndLog:@"Failed to set status changed handler" status:handlerStatus];
     } else {
         NSLog(@"Successfully set status changed handler for %@", [self.connectorApplication friendlyName]);
     }
-    
+
     self.deleteAclAlertView = [[UIAlertView alloc] initWithTitle:@"" message:@"Delete selected acl?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles: @"OK", nil];
 
     self.deleteAclAlertView.tag = 1;
@@ -78,18 +78,18 @@
 {
     QStatus status = ER_FAIL;
     self.acls = [[NSMutableArray alloc] initWithArray:[self.connectorApplication retrieveAclsUsingSessionId:self.sessionId status:status]];
-    
+
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve Acl(s)" status:status];
     } else {
         NSLog(@"got %lu acl(s)", (unsigned long)[self.acls count]);
     }
-    
+
 }
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.destinationViewController isKindOfClass:[ACLTableViewController class]]) {
-		ACLTableViewController *aclTVC = segue.destinationViewController;
+        ACLTableViewController *aclTVC = segue.destinationViewController;
         aclTVC.sessionId = self.sessionId;
         aclTVC.acl = [self.acls objectAtIndex:[self.aclsTableView indexPathForSelectedRow].row];
         aclTVC.connectorApplication = self.connectorApplication;
@@ -149,7 +149,7 @@
                 case 1: // Restart
                 {
                     NSLog(@"Calling restart");
-                    
+
                     QStatus status = ER_FAIL;
                     [self.connectorApplication restartUsingSessionId:self.sessionId status:status];
                     if (ER_OK != status) {
@@ -201,10 +201,10 @@
 {
     QStatus status;
     AJGWCAclResponseCode resCode;
-    
+
     NSString* aclId = [[self.acls objectAtIndex:self.indexPathToDelete.row] aclId];
     resCode = [self.connectorApplication deleteAclUsingSessionId:self.sessionId aclId:aclId status:status];
-    
+
     if (ER_OK != status || resCode != GW_ACL_RC_SUCCESS) {
         NSLog(@"Failed to delete acl. status:%@ responseCode:%@", [AJNStatus descriptionForStatusCode:status], [AJGWCGatewayCtrlEnums AJGWCAclResponseCodeToString:resCode]);
         [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to delete acl." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
@@ -222,11 +222,11 @@
             {
                 [self deleteAcl];
             }
-            
+
             break;
         default:
-			NSLog(@"alertView.tag is wrong");
-			break;
+            NSLog(@"alertView.tag is wrong");
+            break;
     }
 }
 
@@ -239,7 +239,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ConnectorAppInfoAclsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AclCell" forIndexPath:indexPath];
-    
+
     AJGWCGatewayCtrlAccessControlList* aclList = [self.acls objectAtIndex:indexPath.row];
     cell.aclObject = aclList;
     cell.sessionId = self.sessionId;
@@ -262,9 +262,9 @@
 {
     NSLog(@"Retrieving application status for %@", [self.connectorApplication appId]);
     QStatus status = ER_FAIL;
-    
+
     AJGWCGatewayCtrlConnectorApplicationStatus* connectorAppStatus = [self.connectorApplication retrieveStatusUsingSessionId:self.sessionId status:status];
-    
+
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve application status" status:status];
     } else {

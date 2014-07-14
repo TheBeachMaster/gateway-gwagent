@@ -63,15 +63,15 @@
 {
     UIBarButtonItem *optionsBtn = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(didTouUpInsideOptionsBtn:)];
     self.navigationItem.rightBarButtonItem = optionsBtn;
-    
+
     [AJGWCGatewayCtrlGatewayController startWithBus:self.busAttachment];
-    
+
     AJGWCGatewayCtrlGatewayController* gwController = [AJGWCGatewayCtrlGatewayController sharedInstance];
-    
+
     self.gateway = [gwController createGatewayWithBusName:self.ajnAnnouncement.busName objectDescs:self.ajnAnnouncement.objectDescriptions aboutData:self.ajnAnnouncement.aboutData];
-    
+
     AJGWCGatewayCtrlSessionResult *sessionResult = [self.gateway joinSession:self];
-    
+
     if (sessionResult.status != ER_OK) {
         [AppDelegate AlertAndLog:@"Failed to retrieve installed apps" status:sessionResult.status];
     } else {
@@ -79,7 +79,7 @@
     }
 
     NSLog(@"SessionId is %u", self.sessionId);
-    
+
     [self retrieveInstalledApps];
 }
 
@@ -169,24 +169,24 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     ConnectorAppTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ConnectorAppCell" forIndexPath:indexPath];
-    
+
     AJGWCGatewayCtrlConnectorApplication* connectorApp = [self.gwApps objectAtIndex:indexPath.row];
     cell.ConnectorAppNameLbl.text = [connectorApp friendlyName];
-    
+
     /* Retrieve Status */
     QStatus status = ER_FAIL;
     AJGWCGatewayCtrlConnectorApplicationStatus* connectorAppStatus = [connectorApp retrieveStatusUsingSessionId:self.sessionId status:status];
-    
+
     if (status == ER_OK) {
-        
+
         [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppInstallLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCInstallStatusToString:[connectorAppStatus installStatus]]];
-        
+
         [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppConnectionLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCConnectionStatusToString:[connectorAppStatus connectionStatus]]];
 
         [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppOperationalLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCOperationalStatusToString:[connectorAppStatus operationalStatus]]];
-       
+
         cell.ConnectorAppId = [connectorApp appId];
-        
+
     } else {
         [AppDelegate AlertAndLog:@"RetrieveStatus error happened, check log" status:status];
         [ConnectorAppInfoViewController setLabelTextColor:cell.ConnectorAppInstallLbl forStatus:@"Error"];
@@ -199,7 +199,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.destinationViewController isKindOfClass:[ConnectorAppInfoViewController class]]) {
-		ConnectorAppInfoViewController *connectorAppInfo = segue.destinationViewController;
+        ConnectorAppInfoViewController *connectorAppInfo = segue.destinationViewController;
         connectorAppInfo.connectorApplication =  [self.gwApps objectAtIndex:[self.tableView indexPathForSelectedRow].row];
         connectorAppInfo.sessionId = self.sessionId;
     }

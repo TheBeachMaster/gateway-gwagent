@@ -25,19 +25,19 @@
 -(id) init:(AJGWCGatewayCtrlConnAppInterface *)interface isConfigured:(BOOL)configured enabled:(BOOL)enabled
 {
     self = [super init];
-    
+
     _interface = interface;
 
     _configured = configured;
-    
+
     _enabled = enabled;
-    
+
     return self;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
     VisualInterfaceInfo *objectCopy = [[VisualInterfaceInfo allocWithZone:zone] init:self.interface isConfigured:self.configured enabled:self.enabled];
-    
+
     return objectCopy;
 }
 
@@ -57,20 +57,20 @@
 -(id) init:(AJGWCGatewayCtrlConnAppObjectPath *)objectPath isConfigured:(BOOL)configured enabled:(BOOL)enabled
 {
     self = [super init];
-    
+
     _objectPath = objectPath;
-    
+
     _configured = configured;
-    
+
     _enabled = enabled;
-    
+
     return self;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
     VisualObjPathInfo *objectCopy = [[VisualObjPathInfo allocWithZone:zone] init:self.objectPath isConfigured:self.configured enabled:self.enabled];
 
-    
+
     return objectCopy;
 }
 
@@ -81,7 +81,7 @@
 - (BOOL)isEqual:(id)anObject {
     if (![anObject isKindOfClass:[VisualObjPathInfo class]]) return NO;
     VisualObjPathInfo *otherObjPathInfo = (VisualObjPathInfo *)anObject;
-    
+
     return [otherObjPathInfo.objectPath isEqual:self.objectPath];
 }
 
@@ -96,17 +96,17 @@
 -(id)initWithArrayOfManifestObjectDescription:(NSArray *)ArrayOfManifestObjectDescription
 {
     self = [super init];
-    
+
     self.accessRulesDictionary = [[NSMutableDictionary alloc]init];
 
     // Gather the object paths for each interface
     for (AJGWCGatewayCtrlManifestObjectDescription *objectDescription in ArrayOfManifestObjectDescription) {
         NSSet *interfaces = [objectDescription interfaces];
-        
+
         VisualObjPathInfo *objPathInfo = [[VisualObjPathInfo alloc] init:[objectDescription objectPath] isConfigured:[objectDescription isConfigured] enabled:YES] ;
-        
+
         for (AJGWCGatewayCtrlConnAppInterface *interface in interfaces) {
-            
+
             VisualInterfaceInfo *interfaceInfo = [[VisualInterfaceInfo alloc]init:interface isConfigured:NO enabled:YES]; // we will populate the configured interfaces later in this function
 
             // check if this interface already has object paths connected to it
@@ -132,27 +132,27 @@
             [self.accessRulesDictionary setObject:array forKey:interfaceInfo];
         }
     }
-    
+
     // run through all of the interfaces and disable object paths that are all enabled under an interface. set that interface to be enabled
     for (VisualInterfaceInfo *interfaceInfo in [self.accessRulesDictionary allKeys]) {
         NSArray *array = [self objectPathsForInterface:interfaceInfo];
-        
+
         BOOL allPathsAreConfigured = YES;
         for (VisualObjPathInfo *objPathInfo in array) {
             allPathsAreConfigured &= [objPathInfo configured];
         }
-        
+
         if (allPathsAreConfigured) {
             [interfaceInfo setConfigured:YES];
             NSArray *array = [self objectPathsForInterface:interfaceInfo];
-            
+
             for (VisualObjPathInfo *objPathInfo in array) {
                 [objPathInfo setEnabled:NO];
             }
-            
+
         }
     }
-    
+
     return self;
 }
 
@@ -170,20 +170,20 @@
 -(void) switchAllAccessRules
 {
     self.configured=!self.configured;
-    
+
     if (self.configured==YES) { //configure all elements
         for (VisualInterfaceInfo *interfaceInfo in [self.accessRulesDictionary allKeys]) {
             NSArray *array = [self objectPathsForInterface:interfaceInfo];
             interfaceInfo.configured = YES;
-            
+
             for (VisualObjPathInfo *objPathInfo in array) {
                 objPathInfo.configured = YES;
             }
         }
     }
-    
+
     [self changeAllAccessRulesElements:!self.configured]; //this should be the opposite of the configured state at the top level. if all access rules should be configured in gui then all of the elements should be disabled, and vice versa.
-    
+
 }
 
 
@@ -192,7 +192,7 @@
     for (VisualInterfaceInfo *interfaceInfo in [self.accessRulesDictionary allKeys]) {
         NSArray *array = [self objectPathsForInterface:interfaceInfo];
         interfaceInfo.enabled=enable;
-        
+
         if ((!interfaceInfo.configured && (enable == YES)) || (enable == NO)) {
             for (VisualObjPathInfo *objPathInfo in array) {
                 objPathInfo.enabled=enable;
@@ -205,7 +205,7 @@
 {
     NSArray *array = [self objectPathsForInterface:interfaceInfo];
     interfaceInfo.configured=!interfaceInfo.configured;
-    
+
     for (VisualObjPathInfo *objPathInfo in array) {
         objPathInfo.enabled=!interfaceInfo.configured;
     }
@@ -224,27 +224,27 @@
 -(NSArray *) createAJGWCGatewayCtrlManifestObjectDescriptions
 {
     NSMutableArray *objectDescriptions = [[NSMutableArray alloc]init];
-    
+
     NSMutableDictionary *objectPathToInterfaces = [[NSMutableDictionary alloc]init]; //key - VisualObjPathInfo, value - array of VisualInterfaceInfo
-    
+
     for (VisualInterfaceInfo *interfaceInfo in [self.accessRulesDictionary allKeys]) {
         NSArray *array = [self objectPathsForInterface:interfaceInfo];
-        
+
             for (VisualObjPathInfo *objPathInfo in array) {
                 if (objPathInfo.configured == YES || interfaceInfo.configured == YES || self.configured == YES) {
                     NSMutableArray *arrayOfInterfaces = [objectPathToInterfaces objectForKey:objPathInfo];
-                    
+
                     if (arrayOfInterfaces==nil) {
                         arrayOfInterfaces = [[NSMutableArray alloc]init];
                     }
-                    
+
                     [arrayOfInterfaces addObject:interfaceInfo];
-                    
+
                     [objectPathToInterfaces setObject:arrayOfInterfaces forKey:objPathInfo];
                 }
             }
     }
-    
+
     for (VisualObjPathInfo *objPathInfo in [objectPathToInterfaces allKeys]) {
         NSArray *interfacesForObjPath = [objectPathToInterfaces objectForKey:objPathInfo];
 
@@ -255,14 +255,14 @@
 
         AJGWCGatewayCtrlManifestObjectDescription *objDesc = [[AJGWCGatewayCtrlManifestObjectDescription alloc]
                                                               initWithObjectPath:objPathInfo.objectPath interfaces:arrayOfInterfaces isConfigured:YES];
-        
-        
+
+
         [objectDescriptions addObject:objDesc];
-        
+
     }
-    
+
     return objectDescriptions;
-    
+
 }
 
 @end

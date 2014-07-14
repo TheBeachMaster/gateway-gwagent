@@ -30,19 +30,19 @@
 
 + (id)sharedInstance
 {
-	static AJGWCGatewayCtrlGatewayController *gwController;
-	static dispatch_once_t donce;
-	dispatch_once(&donce, ^{
-	    gwController = [[self alloc] init];
-	});
-	return gwController;
+    static AJGWCGatewayCtrlGatewayController *gwController;
+    static dispatch_once_t donce;
+    dispatch_once(&donce, ^{
+        gwController = [[self alloc] init];
+    });
+    return gwController;
 }
 
 - (id)init
 {
-	if (self = [super init]) {
-	}
-	return self;
+    if (self = [super init]) {
+    }
+    return self;
 }
 
 + (void)startWithBus:(AJNBusAttachment *) bus
@@ -65,7 +65,7 @@
 {
     ajn::services::AboutClient::ObjectDescriptions objectDescsMap;
     ajn::services::AboutClient::AboutData aboutDataMap;
-    
+
     // Iterate over the NSDictionary and convert to std::map<qcc::String, std::vector<qcc::String> > (ObjectDescriptions)
     for (NSString *key in objectDescs.allKeys)
     {
@@ -75,16 +75,16 @@
         }
         objectDescsMap.insert(std::make_pair([AJNConvertUtil convertNSStringToConstChar:key], *tVect));
     }
-    
+
     // Iterate over the NSDictionary and convert to std::map<qcc::String, ajn::MsgArg> (AboutData)
-	for (NSString *key in aboutData.allKeys) {
-		// Put key/ value in the std::map<qcc::String, ajn::MsgArg>
-		AJNMessageArgument *ajnMsgArg = [aboutData objectForKey :key];
-        
-		ajn::MsgArg *cppValue = (ajn::MsgArg *)ajnMsgArg.handle;
-		aboutDataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], *cppValue));
-	}
-    
+    for (NSString *key in aboutData.allKeys) {
+        // Put key/ value in the std::map<qcc::String, ajn::MsgArg>
+        AJNMessageArgument *ajnMsgArg = [aboutData objectForKey :key];
+
+        ajn::MsgArg *cppValue = (ajn::MsgArg *)ajnMsgArg.handle;
+        aboutDataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], *cppValue));
+    }
+
     //Convert from NSDictionary * to ObjectDescriptions
     return [[AJGWCGatewayCtrlGateway alloc] initWithHandle: ajn::services::GatewayCtrlGatewayController::getInstance()->CreateGateway([AJNConvertUtil convertNSStringToConstChar:gatewayBusName], objectDescsMap, aboutDataMap) ];
 }
@@ -112,7 +112,7 @@
     for (std::map <qcc::String, ajn::services::GatewayCtrlGateway*>::iterator it = gwMap.begin(); it != gwMap.end(); ++it) {
         [gwsDict setValue:[[AJGWCGatewayCtrlGateway alloc] initWithHandle:it->second ] forKey:[AJNConvertUtil convertQCCStringtoNSString:it->first]];
     }
-    
+
     return gwsDict;
 }
 

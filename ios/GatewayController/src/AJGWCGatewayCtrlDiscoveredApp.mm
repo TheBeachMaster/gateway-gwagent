@@ -28,20 +28,20 @@
 - (id)initWithBusName:(NSString*) busName appName:(NSString*) appName appId:(uint8_t*) appId deviceName:(NSString*) deviceName deviceId:(NSString*)deviceId
 {
     self = [super init];
-	if (self) {
-		self.handle = new ajn::services::GatewayCtrlDiscoveredApp([AJNConvertUtil convertNSStringToQCCString:busName],
+    if (self) {
+        self.handle = new ajn::services::GatewayCtrlDiscoveredApp([AJNConvertUtil convertNSStringToQCCString:busName],
                                                                   [AJNConvertUtil convertNSStringToQCCString:appName],
                                                                   appId,
                                                                   [AJNConvertUtil convertNSStringToQCCString:deviceName],
                                                                   [AJNConvertUtil convertNSStringToQCCString:deviceId]);
-	}
-	return self;
+    }
+    return self;
 }
 
 - (id)initWithBusName:(NSString*) busName aboutData:(NSDictionary*) aboutData
 {
     self = [super init];
-	if (self) {
+    if (self) {
         ajn::services::AboutClient::AboutData aboutDataMap;
         //Populate AboutData with NSDictionary data
         for(NSString* key in aboutData.allKeys) {
@@ -49,9 +49,9 @@
             ajn::MsgArg* aboutDataMapVal = (ajn::MsgArg*)[[aboutData objectForKey:key] handle]; //value
             aboutDataMap.insert(std::make_pair(aboutDataMapKey, *aboutDataMapVal));
         }
-		self.handle = new ajn::services::GatewayCtrlDiscoveredApp([AJNConvertUtil convertNSStringToQCCString:busName], aboutDataMap);
-	}
-	return self;
+        self.handle = new ajn::services::GatewayCtrlDiscoveredApp([AJNConvertUtil convertNSStringToQCCString:busName], aboutDataMap);
+    }
+    return self;
 }
 
 - (NSString*)busName

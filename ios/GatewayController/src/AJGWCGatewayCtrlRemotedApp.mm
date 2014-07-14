@@ -40,19 +40,19 @@
 {
     self = [super init];
     std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> objDescRulesVect;
-	if (self) {
+    if (self) {
         // Populate std::vector with NSArray data
         for(AJGWCGatewayCtrlManifestObjectDescription* manifestObjDesc in *objDescRules) {
             objDescRulesVect.insert(objDescRulesVect.end(), [manifestObjDesc handle]);
         }
-		self.handle = new ajn::services::GatewayCtrlRemotedApp([AJNConvertUtil convertNSStringToQCCString:busUniqueName],
+        self.handle = new ajn::services::GatewayCtrlRemotedApp([AJNConvertUtil convertNSStringToQCCString:busUniqueName],
                                                                [AJNConvertUtil convertNSStringToQCCString:appName],
                                                                appId,
                                                                [AJNConvertUtil convertNSStringToQCCString:deviceName],
                                                                [AJNConvertUtil convertNSStringToQCCString:deviceId],
                                                                objDescRulesVect);
-	}
-	return self;
+    }
+    return self;
 }
 
 - (id)initWithAboutData:(NSDictionary*) aboutData objDescRules:(NSArray*) objDescRules
@@ -79,15 +79,15 @@
 {
     self = [super init];
     std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> objDescRulesVect;
-    
-	if (self) {
+
+    if (self) {
         // Populate std::vector with NSArray data
         for(AJGWCGatewayCtrlManifestObjectDescription* manifestObjDesc in *objDescRules) {
             objDescRulesVect.insert(objDescRulesVect.end(), [manifestObjDesc handle]);
         }
         self.handle = new ajn::services::GatewayCtrlRemotedApp([discoveredApp handle], objDescRulesVect);
     }
-	return self;
+    return self;
 }
 
 - (NSArray*)objDescRules
