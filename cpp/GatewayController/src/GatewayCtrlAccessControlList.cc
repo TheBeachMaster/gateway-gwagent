@@ -1223,7 +1223,7 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
             QCC_SyncPrintf("retrieveRemotedApps - found announcement for the remoted app: '%s', objPath: '%s'", key.c_str(), m_ObjectPath.c_str());
 
 
-            if (MetadataUpdated(deviceNameMeta, appNameMeta, *configurableApp, key)) {
+            if (MetadataUpdated(deviceNameMeta, appNameMeta, *configurableApp, keyPrefix)) {
                 updatedMeta = true;
             }
 
@@ -1307,18 +1307,18 @@ void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vec
     }        //for::unconfRule
 }
 
-bool GatewayCtrlAccessControlList::MetadataUpdated(qcc::String deviceNameMeta, qcc::String appNameMeta, const GatewayCtrlRemotedApp& annApp, qcc::String key) {
+bool GatewayCtrlAccessControlList::MetadataUpdated(qcc::String deviceNameMeta, qcc::String appNameMeta, const GatewayCtrlRemotedApp& annApp, qcc::String keyPrefix) {
 
     bool updatedMeta      = false;
 
     qcc::String annAppName        = annApp.GetAppName();
     qcc::String annDeviceName     = annApp.GetDeviceName();
 
-    qcc::String appNameMetaKey    = key + AJSUFFIX_APP_NAME;
-    qcc::String deviceNameMetaKey = key + AJSUFFIX_DEVICE_NAME;
+    qcc::String appNameMetaKey    = keyPrefix + AJSUFFIX_APP_NAME;
+    qcc::String deviceNameMetaKey = keyPrefix + AJSUFFIX_DEVICE_NAME;
 
     //Check appName, deviceName correctness vs. announcements
-    if (!annAppName.compare(appNameMeta)) {
+    if (annAppName.compare(appNameMeta)) {
 
         QCC_SyncPrintf("retrieveRemotedApps - metaAppName differs from the announcement app name, update the metadata with the app name: '%s', objPath: '%s'", annAppName.c_str(), m_ObjectPath.c_str());
 
@@ -1326,7 +1326,7 @@ bool GatewayCtrlAccessControlList::MetadataUpdated(qcc::String deviceNameMeta, q
         updatedMeta = true;
     }
 
-    if (!annDeviceName.compare(deviceNameMeta)) {
+    if (annDeviceName.compare(deviceNameMeta)) {
 
         QCC_SyncPrintf("retrieveRemotedApps - metaDeviceName differs from the announcement device name, update the metadata with the device name: '%s', objPath: '%s'", annDeviceName.c_str(), m_ObjectPath.c_str());
 
