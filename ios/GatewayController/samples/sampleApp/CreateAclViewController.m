@@ -79,7 +79,7 @@
         NSArray *acls = [[NSMutableArray alloc] initWithArray:[self.connectorApplication retrieveAclsUsingSessionId:self.sessionId status:status]];
         
         if (ER_OK != status) {
-            [AppDelegate AlertAndLog:@"Failed to retrieve Acls" status:status]; //TODO
+            [AppDelegate AlertAndLog:@"Failed to retrieve Acls" status:status];
         } else {
             for (AJGWCGatewayCtrlAccessControlList* acl in acls)
             {
@@ -89,7 +89,7 @@
             
             if (!self.acl) {
                 status = ER_FAIL;
-                [AppDelegate AlertAndLog:@"New acl not found" status:status]; //TODO
+                [AppDelegate AlertAndLog:@"New acl not found" status:status];
             } else {
                 [self performSegueWithIdentifier:@"PostAclCreateSegue" sender:self];
             }
