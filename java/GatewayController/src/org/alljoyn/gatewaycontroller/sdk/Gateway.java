@@ -19,6 +19,7 @@ package org.alljoyn.gatewaycontroller.sdk;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.alljoyn.bus.BusAttachment;
 import org.alljoyn.bus.BusException;
@@ -60,8 +61,19 @@ public class Gateway extends DiscoveredApp {
 		
 		super(gwBusName, aboutData);
 		
-		if ( gwBusName == null || gwBusName.length() == 0) {
+		if ( gwBusName == null || gwBusName.length() == 0 ) {
 			throw new IllegalArgumentException("Received undefined gwBusName");
+		}
+		
+		String deviceId = getDeviceId();
+		UUID appId      = getAppId();
+		
+		if ( deviceId == null || deviceId.length() == 0) {
+	            throw new IllegalArgumentException("DeviceId is undefined");
+	        }
+		
+		if ( appId == null ) {
+		    throw new IllegalArgumentException("AppId is undefined");
 		}
 	}
 
