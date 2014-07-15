@@ -47,7 +47,7 @@
 - (id)initWithbusUniqueName:(NSString*) busUniqueName aboutData:(NSDictionary *) aboutData
 {
     self = [super init];
-	if (self) {
+    if (self) {
         ajn::services::AboutClient::AboutData aboutDataMap;
         //Populate AboutData with NSDictionary data
         for(NSString* key in aboutData.allKeys) {
@@ -55,16 +55,16 @@
             ajn::MsgArg* aboutDataMapVal = (ajn::MsgArg*)[[aboutData objectForKey:key] handle]; //value
             aboutDataMap.insert(std::make_pair(aboutDataMapKey, *aboutDataMapVal));
         }
-		self.handle = new ajn::services::GatewayCtrlGateway([AJNConvertUtil convertNSStringToQCCString:busUniqueName], aboutDataMap);
-	}
-	return self;
+        self.handle = new ajn::services::GatewayCtrlGateway([AJNConvertUtil convertNSStringToQCCString:busUniqueName], aboutDataMap);
+    }
+    return self;
 }
 
 - (NSArray*)retrieveInstalledApps:(AJNSessionId) sessionId status:(QStatus&) status
 {
     NSMutableArray*  installedAppsArray = [[NSMutableArray alloc] init];
     std::vector<ajn::services::GatewayCtrlConnectorApplication*> installedAppsVect = self.handle->RetrieveInstalledApps(sessionId, status);
-    
+
     // Populate NSMutableArray with std::vector data
     for (std::vector<ajn::services::GatewayCtrlConnectorApplication*>::const_iterator vectIt = installedAppsVect.begin(); vectIt != installedAppsVect.end(); vectIt++) {
         [installedAppsArray addObject:[[AJGWCGatewayCtrlConnectorApplication alloc] initWithHandle:*vectIt]];
@@ -81,7 +81,7 @@
 - (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlControllerSessionListener>) listener
 {
     self.adapter = new AJGWCGatewayCtrlControllerSessionListenerAdapter(listener);
-    
+
     ajn::services::GatewayCtrlSessionResult ret = self.handle->JoinSession(self.adapter);
     return [[AJGWCGatewayCtrlSessionResult alloc]initWithStatus:ret.m_status sid:ret.m_sid];
 }
@@ -98,7 +98,7 @@
 }
 
 - (id<AJGWCGatewayCtrlControllerSessionListener>)listener
-{    
+{
     return self.adapter->getListener();
 }
 

@@ -38,10 +38,10 @@
 //- (id)initWithGwBusName:(NSString*) gwBusName aclInfo:(AJNMessageArgument*) aclInfo
 //{
 //    self = [super init];
-//	if (self) {
-//		self.handle = new ajn::services::GatewayCtrlAccessControlList([AJNConvertUtil convertNSStringToQCCString:gwBusName], (ajn::MsgArg*)aclInfo.handle);
-//	}
-//	return self;
+//    if (self) {
+//        self.handle = new ajn::services::GatewayCtrlAccessControlList([AJNConvertUtil convertNSStringToQCCString:gwBusName], (ajn::MsgArg*)aclInfo.handle);
+//    }
+//    return self;
 //}
 
 - (NSString*)aclName
@@ -94,7 +94,7 @@
     for (NSString* key in metadata.allKeys) {
         metadataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], [AJNConvertUtil convertNSStringToQCCString:[metadata objectForKey:key]]));
     }
-    
+
     return (AJGWCAclResponseCode)self.handle->UpdateCustomMetadata(sessionId, metadataMap, status);
 }
 - (AJGWCAclResponseCode)updateAclMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(QStatus&) status
@@ -104,7 +104,7 @@
     for (NSString* key in metadata.allKeys) {
         metadataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], [AJNConvertUtil convertNSStringToQCCString:[metadata objectForKey:key]]));
     }
-    
+
     return (AJGWCAclResponseCode)self.handle->UpdateAclMetadata(sessionId, metadataMap, status);
 }
 
@@ -123,13 +123,13 @@
 - (AJGWCGatewayCtrlAccessRules *)retrieveAclUsingSessionId:(AJNSessionId) sessionId manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules announcements:(NSArray*) announcements status:(QStatus&) status
 {
     std::vector<ajn::services::AnnouncementData *>  announcementsVect;
-    
+
     // Populate std::vector of AnnouncementData with NSArray of AJGWCAnnouncementData
     for(AJGWCAnnouncementData* announcementData in announcements)
     {
         // port
         uint16_t port = [announcementData port];
-        
+
         // Populate AboutData (std::map<qcc::String, ajn::MsgArg> AboutData)
         NSDictionary* aboutDataDict = [announcementData aboutData];
         ajn::services::AboutClient::AboutData aboutDataMap;
@@ -139,32 +139,32 @@
             ajn::MsgArg* aboutDataMapVal = (ajn::MsgArg*)[[aboutDataDict objectForKey:key] handle]; //value
             aboutDataMap.insert(std::make_pair(aboutDataMapKey, *aboutDataMapVal));
         }
-        
+
         // ObjectDescriptions (std::map<qcc::String, std::vector<qcc::String> > )
         NSDictionary* objectDescriptionsDict = [announcementData objectDescriptions];
         ajn::services::AboutClient::ObjectDescriptions objectDescriptionsMap;
-        
+
         for(NSString* key in objectDescriptionsDict.allKeys)
         {
             std::vector<qcc::String> objDescVect;
-            
+
             for (NSString* str in [objectDescriptionsDict objectForKey:key])
             {
                 objDescVect.insert(objDescVect.end(), [AJNConvertUtil convertNSStringToQCCString:str]); // add the strings to std::vector
             }
             objectDescriptionsMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], objDescVect)); //insert into objectDescriptionMap
         }
-        
+
         ajn::services::AnnouncementData* annData = new ajn::services::AnnouncementData(port, aboutDataMap, objectDescriptionsMap);
         announcementsVect.insert(announcementsVect.end(), annData);
     } //for
-    
+
     const ajn::services::GatewayCtrlManifestRules* gwManifestRules = const_cast<ajn::services::GatewayCtrlManifestRules*>([manifestRules handle]);
-    
+
     ajn::services::GatewayCtrlAccessRules* gwAccessRule = self.handle->retrieveAcl(sessionId, *gwManifestRules, announcementsVect, status);
-    
+
     AJGWCGatewayCtrlAccessRules* gwAccessRules = [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:gwAccessRule];
-    
+
     return gwAccessRules;
 }
 @end

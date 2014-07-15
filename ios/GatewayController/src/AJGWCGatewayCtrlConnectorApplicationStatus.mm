@@ -39,19 +39,19 @@
 //- (id)initWithAppStatus:(AJNMessageArgument*) appStatus
 //{
 //    self = [super init];
-//	if (self) {
-//		self.handle = new ajn::services::GatewayCtrlConnectorApplicationStatus((ajn::MsgArg*)appStatus.handle);
-//	}
-//	return self;
+//    if (self) {
+//        self.handle = new ajn::services::GatewayCtrlConnectorApplicationStatus((ajn::MsgArg*)appStatus.handle);
+//    }
+//    return self;
 //}
 
 - (id)initWithInstallStatus:(AJGWCInstallStatus) installStatus installDescription:(NSString*) installDescription connectionStatus:(AJGWCConnectionStatus) connectionStatus operationalStatus:(AJGWCOperationalStatus) operationalStatus
 {
     self = [super init];
-	if (self) {
-		self.handle = new ajn::services::GatewayCtrlConnectorApplicationStatus((ajn::services::InstallStatus)installStatus, [AJNConvertUtil convertNSStringToQCCString:installDescription], (ajn::services::ConnectionStatus)connectionStatus, (ajn::services::OperationalStatus)operationalStatus);
-	}
-	return self;
+    if (self) {
+        self.handle = new ajn::services::GatewayCtrlConnectorApplicationStatus((ajn::services::InstallStatus)installStatus, [AJNConvertUtil convertNSStringToQCCString:installDescription], (ajn::services::ConnectionStatus)connectionStatus, (ajn::services::OperationalStatus)operationalStatus);
+    }
+    return self;
 }
 
 - (AJGWCInstallStatus)installStatus

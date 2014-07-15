@@ -26,17 +26,17 @@
 
 class AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter : public ajn::services::GatewayCtrlApplicationStatusSignalHandler {
 public:
-	/**
+    /**
      Constructor
      @param handle {@link AJGWCGatewayCtrlApplicationStatusSignalHandler} handle
-	 */
-	AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter(id <AJGWCGatewayCtrlApplicationStatusSignalHandler> handle);
-    
+     */
+    AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter(id <AJGWCGatewayCtrlApplicationStatusSignalHandler> handle);
+
     /**
      * Destructor for AJGWCGatewayCtrlControllerSessionListenerAdapter
      */
     ~AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter();
-    
+
     /**
      * The event is emitted when the status of the Third Party Application
      * changes. Avoid blocking the thread on which the method is called.
@@ -44,12 +44,12 @@ public:
      * @param status {@link ajn::services::GatewayCtrlConnectorApplicationStatus}
      */
     void onStatusChanged(qcc::String appId, const ajn::services::GatewayCtrlConnectorApplicationStatus *ConnectorApplicationStatus);
-    
+
 private:
-	/**
+    /**
      {@link AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter} handle
-	 */
-	id <AJGWCGatewayCtrlApplicationStatusSignalHandler> applicationStatusSignalHandler;
+     */
+    id <AJGWCGatewayCtrlApplicationStatusSignalHandler> applicationStatusSignalHandler;
 };
 
 #endif

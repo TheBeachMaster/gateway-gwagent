@@ -28,20 +28,20 @@
     [super setSelected:selected animated:animated];
 }
 - (IBAction)configureButtonTouchUpInside:(id)sender {
-   
+
     [self.rules switchInterfaceConfiguration:_interfaceInfo];
-    
+
     [self updateCell];
 }
 
 -(void)setIndexPath:(NSIndexPath  *)indexPath
 {
     _indexPath = indexPath;
-    
+
     _interfaceInfo = [self.rules.accessRulesDictionary allKeys][[indexPath row]];
-    
+
     self.ruleNameLbl.text = [_interfaceInfo.interface friendlyName];
-    
+
    [self updateCell];
 }
 
@@ -52,7 +52,7 @@
     } else {
         [self.configureButton setTitle:@"Add" forState:UIControlStateNormal];
     }
-    
+
     self.configureButton.enabled = _interfaceInfo.enabled;
 }
 

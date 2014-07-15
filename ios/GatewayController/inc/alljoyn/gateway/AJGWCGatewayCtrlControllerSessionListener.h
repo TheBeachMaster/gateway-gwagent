@@ -20,8 +20,8 @@
 /**
  *  This class is responsible for handling session related events from the AllJoyn system.
  *  Extend this class to receive the events of: <br>
- *  	- sessionEstablished <br>
- *  	- sessionLost    <br>
+ *      - sessionEstablished <br>
+ *      - sessionLost    <br>
  *
  *  The events are called on the AllJoyn thread, so avoid blocking them with
  *  long running tasks.

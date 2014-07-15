@@ -38,30 +38,30 @@
 {
     self = [super init];
     std::set<ajn::services::GatewayCtrlConnAppInterface> interfacesSet;
-    
-	if (self) {
+
+    if (self) {
         // Populate std::set with NSArray data
         for (AJGWCGatewayCtrlConnAppInterface* connAppInterface in interfaces) {
             interfacesSet.insert(*[connAppInterface handle]);
         }
-        
-		self.handle = new ajn::services::GatewayCtrlManifestObjectDescription(*[objectPath handle], interfacesSet);
-	}
-	return self;
+
+        self.handle = new ajn::services::GatewayCtrlManifestObjectDescription(*[objectPath handle], interfacesSet);
+    }
+    return self;
 }
 
 - (id)initWithObjectPath:(AJGWCGatewayCtrlConnAppObjectPath*) objectPath interfaces:(NSSet*) interfaces isConfigured:(bool) isConfigured
 {
     self = [super init];
     std::set<ajn::services::GatewayCtrlConnAppInterface> interfacesSet;
-	if (self) {
+    if (self) {
         // Populate std::set with NSSet data
         for (AJGWCGatewayCtrlConnAppInterface* connAppInterface in interfaces) {
             interfacesSet.insert(*[connAppInterface handle]);
         }
-		self.handle = new ajn::services::GatewayCtrlManifestObjectDescription(*[objectPath handle], interfacesSet, isConfigured);
-	}
-	return self;
+        self.handle = new ajn::services::GatewayCtrlManifestObjectDescription(*[objectPath handle], interfacesSet, isConfigured);
+    }
+    return self;
 }
 
 - (AJGWCGatewayCtrlConnAppObjectPath*)objectPath
@@ -73,12 +73,12 @@
 {
     NSMutableSet* interfacesSet = [[NSMutableSet alloc] init];
     const std::set<ajn::services::GatewayCtrlConnAppInterface>* interfacesVect = self.handle->GetInterfaces();
-    
+
     // Populate NSArray with std::set data
     for (std::set<ajn::services::GatewayCtrlConnAppInterface>::const_iterator it = (*interfacesVect).begin(); it != (*interfacesVect).end(); it++) {
         [interfacesSet addObject:[[AJGWCGatewayCtrlConnAppInterface alloc] initWithHandle:*it]];
     }
-    
+
     return interfacesSet;
 }
 

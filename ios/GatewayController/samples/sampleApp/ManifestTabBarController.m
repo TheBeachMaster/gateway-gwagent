@@ -42,7 +42,7 @@
 -(void)loadManifestContent
 {
     QStatus status;
-    
+
     if([self.selectedViewController isKindOfClass:[ManifestFileViewController class]]) {
         NSString* manifestFile = [self.connectorApplication retrieveManifestFileUsingSessionId:self.sessionId status:status];
         if (ER_OK != status) {
@@ -51,7 +51,7 @@
         } else {
             [((ManifestFileViewController*)self.selectedViewController).manifestFileTextView setText:manifestFile];
         }
-        
+
     } else {
         AJGWCGatewayCtrlManifestRules* manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
         if (ER_OK != status) {
@@ -68,14 +68,14 @@
 - (NSAttributedString*)manifestObjectDescriptionArrayToString:(NSArray*) objDescArray
 {
     NSMutableAttributedString* objDescArrayStr = [[NSMutableAttributedString alloc] init];
-    
+
     for (AJGWCGatewayCtrlManifestObjectDescription* mObjDesc in objDescArray)
     {
         //objectPath
         AJGWCGatewayCtrlConnAppObjectPath* ConnAppObjPath = [mObjDesc objectPath];
         NSString* ConnAppObjPathStr = [NSString stringWithFormat:@"%@\n%@\n%@\n", [ConnAppObjPath friendlyName], [ConnAppObjPath path], [ConnAppObjPath isPrefix] ? @"Prefix" : @"Not Prefix"];
         NSLog(@"Final string(ConnAppObjPathStr):\n%@", ConnAppObjPathStr); // final str
-        
+
         //interfaces
         NSMutableString* connAppInterfaceStr = [[NSMutableString alloc] init];
         NSSet* interfaces = [mObjDesc interfaces];
@@ -83,22 +83,22 @@
             connAppInterfaceStr = [NSMutableString stringWithFormat:@"%@%@", connAppInterfaceStr, [NSString stringWithFormat:@"    %@\n    %@\n    %@\n\n", [connAppInterface friendlyName], [connAppInterface interfaceName], [connAppInterface isSecured] ? @"Secured" : @"Not Secured"]];
         }
         NSLog(@"Final string(connAppInterfaceStr):\n%@", connAppInterfaceStr); // final str
-        
+
         // add ConnAppObjPathStr and set color
         [objDescArrayStr appendAttributedString:[[NSAttributedString alloc] initWithString:ConnAppObjPathStr]];
         NSRange ConnAppObjPathStrRange = NSMakeRange([objDescArrayStr length] ? [objDescArrayStr length] - [ConnAppObjPathStr length] : [objDescArrayStr length], [ConnAppObjPathStr length]);
         [objDescArrayStr addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:ConnAppObjPathStrRange];
-        
+
         // add connAppInterfaceStr and set color
         [objDescArrayStr appendAttributedString:[[NSAttributedString alloc] initWithString:connAppInterfaceStr]];
         NSRange connAppInterfaceStrRange = NSMakeRange([objDescArrayStr length] ? [objDescArrayStr length] - [connAppInterfaceStr length] : [objDescArrayStr length], [connAppInterfaceStr length]);
         [objDescArrayStr addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:connAppInterfaceStrRange];
-        
+
     }
-    
+
     // set string font size
     [objDescArrayStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:7] range:NSMakeRange(0, [objDescArrayStr length])];
-    
+
     return objDescArrayStr;
 }
 

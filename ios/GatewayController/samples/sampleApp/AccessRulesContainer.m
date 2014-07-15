@@ -31,15 +31,15 @@
     self = [super init];
     if (self) {
         self.accessRulesArray = [[NSMutableArray alloc]init];
-        
+
         self.ajgwcGatewayCtrlAccessRules = [acl retrieveAclUsingSessionId:sessionId manifestRules:manifestRules announcements:announcements status:status];
-        
+
         if (status != ER_OK) {
             return nil;
         }
 
         VisualAccessRules *exposeServicesRules = [[VisualAccessRules alloc]initWithArrayOfManifestObjectDescription:[self.ajgwcGatewayCtrlAccessRules exposedServices]];
-        
+
         self.accessRulesArray[0] = exposeServicesRules;
 
         int pos = 1;
@@ -80,27 +80,27 @@
 - (AJGWCGatewayCtrlAccessRules *)createAJGWCGatewayCtrlAccessRules
 {
     AJGWCGatewayCtrlAccessRules *rules = nil;
-    
+
     // Create a list of AJGWCGatewayCtrlManifestObjectDescription based on the configured exposed services rules
     NSArray *exposedServices;
     NSMutableArray *remotedApps = [[NSMutableArray alloc]init]; // array of AJGWCGatewayCtrlRemotedApp
-    
+
     exposedServices = [((VisualAccessRules *)_accessRulesArray[0]) createAJGWCGatewayCtrlManifestObjectDescriptions];
-    
+
     for (NSInteger pos = 1; pos != [_accessRulesArray count]; pos++) {
         VisualAccessRules *accessRules = _accessRulesArray[pos];
-        
+
         NSArray *remotedServicesObjectDescriptions = [accessRules createAJGWCGatewayCtrlManifestObjectDescriptions];
-            
+
         AJGWCGatewayCtrlRemotedApp *remotedApp = [[AJGWCGatewayCtrlRemotedApp alloc] initWithDiscoveredApp:[self findRemotedAppInAjgwcGatewayCtrlAccessRules:pos] objDescRules:&remotedServicesObjectDescriptions];
-        
+
         remotedApps[pos-1] = remotedApp;
 
     }
-    
-    
+
+
     rules = [[AJGWCGatewayCtrlAccessRules alloc] initWithExposedServices:exposedServices remotedApps:remotedApps];
-    
+
     return rules;
 }
 

@@ -37,10 +37,10 @@
 - (id)initWithAclId:(NSString*) aclId code:(AJGWCAclResponseCode) code invalidRules:(AJGWCGatewayCtrlAccessRules *) invalidRules objPath:(NSString*) objPath
 {
     self = [super init];
-	if (self) {
-		self.handle = new ajn::services::GatewayCtrlAclWriteResponse([AJNConvertUtil convertNSStringToQCCString:aclId], (ajn::services::AclResponseCode)code, [invalidRules handle], [AJNConvertUtil convertNSStringToQCCString:objPath]);
-	}
-	return self;
+    if (self) {
+        self.handle = new ajn::services::GatewayCtrlAclWriteResponse([AJNConvertUtil convertNSStringToQCCString:aclId], (ajn::services::AclResponseCode)code, [invalidRules handle], [AJNConvertUtil convertNSStringToQCCString:objPath]);
+    }
+    return self;
 }
 
 - (NSString*)aclId

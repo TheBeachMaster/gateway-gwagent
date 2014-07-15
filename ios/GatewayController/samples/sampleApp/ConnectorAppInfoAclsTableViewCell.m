@@ -28,7 +28,7 @@
 }
 
 - (IBAction)aclActiveSwitchValueChanged:(id)sender {
-    
+
     QStatus status = ER_FAIL;
     AJGWCAclResponseCode resCode;
 
@@ -40,10 +40,10 @@
         resCode = [self.aclObject deactivateUsingSessionId:self.sessionId status:status];
         //call deactivate
     }
-    
+
     if (ER_OK != status || resCode != GW_ACL_RC_SUCCESS) {
         NSLog(@"Failed to change acl state. status:%@ responseCode:%@", [AJNStatus descriptionForStatusCode:status], [AJGWCGatewayCtrlEnums AJGWCAclResponseCodeToString:resCode]);
-        
+
         [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to change acl state." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
 
         [sender setOn:![sender isOn] ];

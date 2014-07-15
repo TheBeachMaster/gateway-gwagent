@@ -25,27 +25,27 @@
 }
 - (IBAction)configureButtonTouchUpInside:(id)sender {
     [self.rules switchObjectPathConfiguration:_objPathInfo];
-    
+
     [self updateCell];
 }
 - (IBAction)allowSubObjectsTouchUpInside:(id)sender {
     [self.rules switchObjectPathAllowSubObjects:_objPathInfo];
-    
+
     [self updateCell];
 }
 
 -(void)setObjPathInfo:(VisualObjPathInfo *)objPathInfo
 {
     _objPathInfo = objPathInfo;
-    
+
     NSString *friendlyName = [objPathInfo.objectPath friendlyName];
-    
+
     if (![friendlyName isEqual:@""]) {
         self.ruleNameLbl.text = friendlyName;
     } else {
         self.ruleNameLbl.text = [objPathInfo.objectPath path];
     }
-   
+
     [self updateCell];
 }
 
@@ -56,13 +56,13 @@
     } else {
         [self.configureButton setTitle:@"Add" forState:UIControlStateNormal];
     }
-    
+
     if ([_objPathInfo.objectPath isPrefix]) {
         [self.allowSubObjectsButton setTitle:@"Sub Objects Allowed" forState:UIControlStateNormal];
     } else {
         [self.allowSubObjectsButton setTitle:@"Allow Sub Objects" forState:UIControlStateNormal];
     }
-    
+
     self.configureButton.enabled = _objPathInfo.enabled;
     if (![_objPathInfo.objectPath isPrefixAllowed]) {
         [self.allowSubObjectsButton setTitle:@"Sub Obj Not Allowed" forState:UIControlStateNormal];
