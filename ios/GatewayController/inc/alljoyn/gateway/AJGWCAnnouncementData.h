@@ -25,6 +25,7 @@
 /**
  * Constructor
  * @param port The port used by the service
+ * @param busName Bus name for this announcement
  * @param aboutData The data sent with the Announcement
  * @param objectDescs The objectDescriptions received in announce
  */

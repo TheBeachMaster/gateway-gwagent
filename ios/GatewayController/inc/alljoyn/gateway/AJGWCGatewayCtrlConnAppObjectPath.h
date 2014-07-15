@@ -30,6 +30,7 @@
  * @param objectPath AllJoyn object identification
  * @param friendlyName The friendly name of the object path. This name may be presented
  * @param isPrefix TRUE if the object path is a prefix for the full object path
+ * @param isPrefixAllowed TRUE if the object path can be treated as a prefix
  * to the end user.
  */
 - (id)initWithObjectPath:(NSString*) objectPath friendlyName:(NSString*) friendlyName isPrefix:(bool) isPrefix isPrefixAllowed:(bool)isPrefixAllowed;
