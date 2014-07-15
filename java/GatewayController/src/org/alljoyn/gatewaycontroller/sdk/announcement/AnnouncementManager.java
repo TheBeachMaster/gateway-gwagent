@@ -192,7 +192,17 @@ public class AnnouncementManager implements AnnouncementHandler {
 			
 			Log.d(TAG, "Received Announcement from Gateway, bus: '" + busName + "', storing");
 			
-			Gateway gw = new Gateway(busName, aboutData);
+			Gateway gw;
+			
+			try {
+			    gw = new Gateway(busName, aboutData);
+			}
+			catch (IllegalArgumentException ilae) {
+			    
+			    Log.e(TAG, "Received announcement from gateway, but failed to create the Gateway object", ilae);
+			    return;
+			}
+			
 			String key = CommunicationUtil.getKey(gw.getDeviceId(), gw.getAppId());
 			
 			if ( gatewayApps.put(key, gw) == null && gwChangedListener != null ) {
@@ -202,11 +212,23 @@ public class AnnouncementManager implements AnnouncementHandler {
 			return;
 		}
 		
-		DiscoveredApp app        = new DiscoveredApp(busName, aboutData);
+		DiscoveredApp app = new DiscoveredApp(busName, aboutData);
+		
+		UUID appId        = app.getAppId();
+		String deviceId   = app.getDeviceId();
+		
+		if ( appId == null || deviceId == null || deviceId.length() == 0 ) {
+		    
+		    Log.e(TAG, "Received Announcement from the application: '" + app + 
+		                "', but deviceId or appId are not defined");
+		    
+		    return;
+		}
+	
 		Log.d(TAG, "Received Announcement from the application: '" + app + "' storing");
 		
 		AnnouncementData annData = new AnnouncementData(port, objectDescriptions, aboutData, app);
-		String key               = CommunicationUtil.getKey( app.getDeviceId(), app.getAppId() );
+		String key               = CommunicationUtil.getKey(deviceId, appId);
 		
 		//Store the AnnouncementData object
 		appAnnouncements.put(key, annData);
