@@ -166,6 +166,24 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
 		super.onSessionJoined();
 		retrieveApps();
 	}
+	
+	/**
+         * @see org.alljoyn.gatewaycontroller.activity.BaseActivity#onGatewayListChanged()
+         */
+        @Override
+        protected void onGatewayListChanged() {
+            
+            super.onGatewayListChanged();
+            
+            //Check that my Gateway wasn't lost because of the GatewayListChanged
+            if ( app.getSelectedGateway() == null ) {
+                
+                return;
+            }
+            
+            Log.d(TAG, "GatewayListChanged was called, refreshing the activity");
+            retrieveApps();
+        }
 
 	/**
 	 * @see org.alljoyn.gatewaycontroller.activity.BaseActivity#onSelectedGatewayLost()

@@ -35,7 +35,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -120,24 +119,26 @@ public abstract class BaseActivity extends Activity {
 	 */
 	private ProgressDialog progressDialog;
 	
+
 	/**
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
+	 * @see android.app.Activity#onStart()
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		
-		super.onCreate(savedInstanceState);
-		app = (GWControllerSampleApplication) getApplicationContext();
-		registerBaseIntentReceiver();
+	protected void onStart() {
+	    
+	    super.onStart();
+	    app = (GWControllerSampleApplication) getApplicationContext();
+            registerBaseIntentReceiver();
 	}
 	
 	/**
-	 * @see android.app.Activity#onDestroy()
+	 * @see android.app.Activity#onStop()
 	 */
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		unregisterReceiver(broadcastReceiver);
+	protected void onStop() {
+	    
+	    super.onStop();
+	    unregisterReceiver(broadcastReceiver);
 	}
 
 	/**
@@ -185,7 +186,9 @@ public abstract class BaseActivity extends Activity {
 	 * Override this method to be notified when the GW is lost
 	 */
 	protected void onSelectedGatewayLost(){
+	    
 		Log.d(TAG, "Selected gateway has been lost");
+		app.setSelectedGateway(null);
 	}
 	
 	/**
@@ -196,6 +199,9 @@ public abstract class BaseActivity extends Activity {
 	 */
 	protected void onGatewayListChanged() {
 		
+	    
+	        Log.d(TAG, "GatewayListChanged was called");
+	    
 		Gateway selGw = app.getSelectedGateway();
 		if ( selGw == null ) {
 			onSelectedGatewayLost();
@@ -284,6 +290,8 @@ public abstract class BaseActivity extends Activity {
 		showOkDialog("Message", "Selected gateway lost", "Discover gateways", new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+			    
+			        dialog.dismiss();
 				Intent intent = new Intent(app, DiscoveredGatewaysActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 				startActivity(intent);

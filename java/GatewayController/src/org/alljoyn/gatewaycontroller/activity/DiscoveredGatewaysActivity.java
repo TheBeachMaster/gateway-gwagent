@@ -103,7 +103,6 @@ public class DiscoveredGatewaysActivity extends BaseActivity implements OnItemCl
 		
 		Log.d(TAG, "Found gateways: '" + gateways + "'");
 		adapter.notifyDataSetChanged();
-		app.setSelectedGateway(null);
 	}
 	
 	/**

@@ -205,8 +205,10 @@ public class AnnouncementManager implements AnnouncementHandler {
 			
 			String key = CommunicationUtil.getKey(gw.getDeviceId(), gw.getAppId());
 			
-			if ( gatewayApps.put(key, gw) == null && gwChangedListener != null ) {
-				gwChangedListener.gatewayChanged();  // Notify -> New gateway has added
+			gatewayApps.put(key, gw);
+			
+			if ( gwChangedListener != null ) {
+			    gwChangedListener.gatewayChanged();  // Notify -> There was a change in the gateway list
 			}
 			
 			return;
