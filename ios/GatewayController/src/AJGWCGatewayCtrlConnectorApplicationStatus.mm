@@ -56,22 +56,22 @@
 
 - (AJGWCInstallStatus)installStatus
 {
-    return (AJGWCInstallStatus)self.handle->GetInstallStatus();
+    return (AJGWCInstallStatus)self.handle->getInstallStatus();
 }
 
 - (NSString*)installDescriptions
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetInstallDescriptions()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getInstallDescriptions()];
 }
 
 - (AJGWCConnectionStatus)connectionStatus
 {
-    return (AJGWCConnectionStatus)self.handle->GetConnectionStatus();
+    return (AJGWCConnectionStatus)self.handle->getConnectionStatus();
 }
 
 - (AJGWCOperationalStatus)operationalStatus
 {
-    return (AJGWCOperationalStatus)self.handle->GetOperationalStatus();
+    return (AJGWCOperationalStatus)self.handle->getOperationalStatus();
 }
 
 @end

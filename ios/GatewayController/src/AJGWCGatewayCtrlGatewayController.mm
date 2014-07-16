@@ -47,17 +47,17 @@
 
 + (void)startWithBus:(AJNBusAttachment *) bus
 {
-    ajn::services::GatewayCtrlGatewayController::getInstance()->Init((ajn::BusAttachment *)bus.handle);
+    ajn::services::GatewayCtrlGatewayController::getInstance()->init((ajn::BusAttachment *)bus.handle);
 }
 
 - (void)shutdown
 {
-    ajn::services::GatewayCtrlGatewayController::getInstance()->Shutdown();
+    ajn::services::GatewayCtrlGatewayController::getInstance()->shutdown();
 }
 
 - (AJNBusAttachment*)busAttachment
 {
-    AJNBusAttachment* bus = [[AJNBusAttachment alloc] initWithHandle:ajn::services::GatewayCtrlGatewayController::getInstance()->GetBusAttachment()];
+    AJNBusAttachment* bus = [[AJNBusAttachment alloc] initWithHandle:ajn::services::GatewayCtrlGatewayController::getInstance()->getBusAttachment()];
     return bus;
 }
 
@@ -86,7 +86,7 @@
     }
 
     //Convert from NSDictionary * to ObjectDescriptions
-    return [[AJGWCGatewayCtrlGateway alloc] initWithHandle: ajn::services::GatewayCtrlGatewayController::getInstance()->CreateGateway([AJNConvertUtil convertNSStringToConstChar:gatewayBusName], objectDescsMap, aboutDataMap) ];
+    return [[AJGWCGatewayCtrlGateway alloc] initWithHandle: ajn::services::GatewayCtrlGatewayController::getInstance()->createGateway([AJNConvertUtil convertNSStringToConstChar:gatewayBusName], objectDescsMap, aboutDataMap) ];
 }
 
 - (AJGWCGatewayCtrlGateway*)gateway:(NSString *) gatewayBusName

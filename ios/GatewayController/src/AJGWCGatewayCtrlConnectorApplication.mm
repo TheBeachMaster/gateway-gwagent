@@ -67,37 +67,37 @@
 
 - (NSString*)gwBusName
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetGwBusName()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getGwBusName()];
 }
 
 - (NSString*)appId
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetAppId()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getAppId()];
 }
 
 - (NSString*)friendlyName
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetFriendlyName()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getFriendlyName()];
 }
 
 - (NSString*)objectPath
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetObjectPath()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getObjectPath()];
 }
 
 - (NSString*)appVersion
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetAppVersion()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getAppVersion()];
 }
 
 - (NSString*)retrieveManifestFileUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->RetrieveManifestFile(sessionId, status)];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->retrieveManifestFile(sessionId, status)];
 }
 
 - (AJGWCGatewayCtrlManifestRules*)retrieveManifestRulesUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
 {
-    ajn::services::GatewayCtrlManifestRules* mRules = self.handle->RetrieveManifestRules(sessionId, status);
+    ajn::services::GatewayCtrlManifestRules* mRules = self.handle->retrieveManifestRules(sessionId, status);
 
     return [[AJGWCGatewayCtrlManifestRules alloc] initWithHandle:mRules];
 }
@@ -141,46 +141,45 @@
         announcementsVect.insert(announcementsVect.end(), annData);
     } //for
 
-    ajn::services::GatewayCtrlAccessRules* aRules = self.handle->RetrieveConfigurableRules(sessionId, announcementsVect, status);
+    ajn::services::GatewayCtrlAccessRules* aRules = self.handle->retrieveConfigurableRules(sessionId, announcementsVect, status);
 
     return [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:aRules];
 }
 
 - (AJGWCGatewayCtrlConnectorApplicationStatus*)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
 {
-    ajn::services::GatewayCtrlConnectorApplicationStatus* connectorAppStatus = self.handle->RetrieveStatus(sessionId, status);
+    ajn::services::GatewayCtrlConnectorApplicationStatus* connectorAppStatus = self.handle->retrieveStatus(sessionId, status);
 
     return [[AJGWCGatewayCtrlConnectorApplicationStatus alloc] initWithHandle:connectorAppStatus];
 }
 
 - (AJGWCRestartStatus)restartUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
 {
-    return (AJGWCRestartStatus)self.handle->Restart(sessionId, status);
+    return (AJGWCRestartStatus)self.handle->restart(sessionId, status);
 }
 
 - (QStatus)setStatusChangedHandler:(id<AJGWCGatewayCtrlApplicationStatusSignalHandler>) handler
 {
     self.adapter = new AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter(handler);
 
-    return self.handle->SetStatusChangedHandler(self.adapter);
+    return self.handle->setStatusChangedHandler(self.adapter);
 }
 
 - (void)unsetStatusChangedHandler
 {
-    self.handle->UnsetStatusChangedHandler();
+    self.handle->unsetStatusChangedHandler();
 }
 
 - (AJGWCGatewayCtrlAclWriteResponse*)createAclUsingSessionId:(AJNSessionId) sessionId name:(NSString*) name accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules status:(QStatus&) status
 {
-    ajn::services::GatewayCtrlAclWriteResponse* aclWRespose = self.handle->CreateAcl(sessionId, [AJNConvertUtil convertNSStringToQCCString:name], [accessRules handle], status);
-
+    ajn::services::GatewayCtrlAclWriteResponse* aclWRespose = self.handle->createAcl(sessionId, [AJNConvertUtil convertNSStringToQCCString:name], [accessRules handle], status);
     return [[AJGWCGatewayCtrlAclWriteResponse alloc] initWithHandle:aclWRespose];
 }
 
 - (NSArray*)retrieveAclsUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
 {
     NSMutableArray* aclListArray =  [[NSMutableArray alloc] init];
-    std::vector <ajn::services::GatewayCtrlAccessControlList*> aclListVect =  self.handle->RetrieveAcls(sessionId, status);
+    std::vector <ajn::services::GatewayCtrlAccessControlList*> aclListVect =  self.handle->retrieveAcls(sessionId, status);
     // Populate NSArray with std::vector data
     for (std::vector<ajn::services::GatewayCtrlAccessControlList*>::const_iterator vectIt = aclListVect.begin(); vectIt != aclListVect.end(); vectIt++) {
         [aclListArray addObject:[[AJGWCGatewayCtrlAccessControlList alloc] initWithHandle:*vectIt]];
@@ -191,6 +190,6 @@
 
 - (AJGWCAclResponseCode)deleteAclUsingSessionId:(AJNSessionId) sessionId aclId:(NSString*) aclId status:(QStatus&) status
 {
-    return (AJGWCAclResponseCode)self.handle->DeleteAcl(sessionId, [AJNConvertUtil convertNSStringToQCCString:aclId], status);
+    return (AJGWCAclResponseCode)self.handle->deleteAcl(sessionId, [AJNConvertUtil convertNSStringToQCCString:aclId], status);
 }
 @end

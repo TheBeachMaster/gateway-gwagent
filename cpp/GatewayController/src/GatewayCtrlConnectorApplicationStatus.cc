@@ -70,22 +70,22 @@ GatewayCtrlConnectorApplicationStatus::GatewayCtrlConnectorApplicationStatus(con
 GatewayCtrlConnectorApplicationStatus::~GatewayCtrlConnectorApplicationStatus() {
 }
 
-InstallStatus GatewayCtrlConnectorApplicationStatus::GetInstallStatus()
+InstallStatus GatewayCtrlConnectorApplicationStatus::getInstallStatus()
 {
     return m_InstallStatus;
 }
 
-qcc::String GatewayCtrlConnectorApplicationStatus::GetInstallDescriptions()
+qcc::String GatewayCtrlConnectorApplicationStatus::getInstallDescriptions()
 {
     return m_InstallDescription;
 }
 
-ConnectionStatus GatewayCtrlConnectorApplicationStatus::GetConnectionStatus()
+ConnectionStatus GatewayCtrlConnectorApplicationStatus::getConnectionStatus()
 {
     return m_ConnectionStatus;
 }
 
-OperationalStatus GatewayCtrlConnectorApplicationStatus::GetOperationalStatus()
+OperationalStatus GatewayCtrlConnectorApplicationStatus::getOperationalStatus()
 {
     return m_OperationalStatus;
 }

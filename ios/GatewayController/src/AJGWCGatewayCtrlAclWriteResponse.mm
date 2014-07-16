@@ -45,22 +45,22 @@
 
 - (NSString*)aclId
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetAclId()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getAclId()];
 }
 
 - (AJGWCAclResponseCode)responseCode
 {
-    return (AJGWCAclResponseCode)self.handle->GetResponseCode();
+    return (AJGWCAclResponseCode)self.handle->getResponseCode();
 }
 
 - (AJGWCGatewayCtrlAccessRules*)invalidRules
 {
-    return [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:self.handle->GetInvalidRules()];
+    return [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:self.handle->getInvalidRules()];
 }
 
 - (NSString*)objectPath
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetObjectPath()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getObjectPath()];
 }
 
 @end

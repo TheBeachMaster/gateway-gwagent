@@ -37,9 +37,9 @@ class ChangedSignalData : public TaskData {
   public:
     ChangedSignalData(const ajn::MsgArg* returnArgs, qcc::String AppId) : m_ConnectorApplicationStatus(returnArgs) { m_AppId = AppId; }
 
-    const GatewayCtrlConnectorApplicationStatus*GetConnectorApplicationStatus() const { return &m_ConnectorApplicationStatus; }
+    const GatewayCtrlConnectorApplicationStatus*getConnectorApplicationStatus() const { return &m_ConnectorApplicationStatus; }
 
-    qcc::String GetAppId() const { return m_AppId; }
+    qcc::String getAppId() const { return m_AppId; }
 
   private:
     GatewayCtrlConnectorApplicationStatus m_ConnectorApplicationStatus;
@@ -51,9 +51,9 @@ class ChangedSignalData : public TaskData {
 class ChangedSignalTask : public AsyncTask {
   public:
 
-    void SetHandler(const GatewayCtrlApplicationStatusSignalHandler*handler) { m_Handler = (GatewayCtrlApplicationStatusSignalHandler*)handler; }
+    void setHandler(const GatewayCtrlApplicationStatusSignalHandler*handler) { m_Handler = (GatewayCtrlApplicationStatusSignalHandler*)handler; }
 
-    void UnSetHandler() { m_Handler = NULL; }
+    void unSetHandler() { m_Handler = NULL; }
 
   private:
 
@@ -63,7 +63,7 @@ class ChangedSignalTask : public AsyncTask {
     {
         const ChangedSignalData* d = static_cast<const ChangedSignalData*>(taskdata);
         if (m_Handler) {
-            m_Handler->onStatusChanged(d->GetAppId(), d->GetConnectorApplicationStatus());
+            m_Handler->onStatusChanged(d->getAppId(), d->getConnectorApplicationStatus());
         } else {
             QCC_DbgHLPrintf(("Got signal, no handler"));
         }
@@ -98,27 +98,27 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
     /**
      * @return gwBusName the {@link ConnectorApplication} is installed on
      */
-    qcc::String GetGwBusName();
+    qcc::String getGwBusName();
 
     /**
      * @return The id of the {@link ConnectorApplication}
      */
-    qcc::String GetAppId();
+    qcc::String getAppId();
 
     /**
      * @return The name of the {@link ConnectorApplication}.
      */
-    qcc::String GetFriendlyName();
+    qcc::String getFriendlyName();
 
     /**
      * @return The object path to reach the application on the gateway
      */
-    qcc::String GetObjectPath();
+    qcc::String getObjectPath();
 
     /**
      * @return The application version
      */
-    qcc::String GetAppVersion();
+    qcc::String getAppVersion();
 
     /**
      * Retrieves the Manifest file of the application.
@@ -126,7 +126,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param status return status of operation
      * @return qcc::String representation of the Manifest file in XML format.
      */
-    qcc::String RetrieveManifestFile(SessionId sessionId, QStatus& status);
+    qcc::String retrieveManifestFile(SessionId sessionId, QStatus& status);
 
     /**
      * Retrieves the Manifest rules of the application
@@ -134,7 +134,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param status return status of operation
      * @return {@link GatewayCtrlAccessRules}
      */
-    GatewayCtrlManifestRules*RetrieveManifestRules(SessionId sessionId, QStatus& status);
+    GatewayCtrlManifestRules*retrieveManifestRules(SessionId sessionId, QStatus& status);
 
     /**
      * @param sessionId The id of the session established with the gateway
@@ -143,7 +143,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param status return status of operation
      * @return {@link GatewayCtrlAccessRules}
      */
-    GatewayCtrlAccessRules* RetrieveConfigurableRules(SessionId sessionId, std::vector<AnnouncementData*> const& announcements, QStatus& status);
+    GatewayCtrlAccessRules* retrieveConfigurableRules(SessionId sessionId, std::vector<AnnouncementData*> const& announcements, QStatus& status);
 
 
     /**
@@ -152,7 +152,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param status return status of operation
      * @return {@link GatewayCtrlConnectorApplicationStatus}
      */
-    GatewayCtrlConnectorApplicationStatus*RetrieveStatus(SessionId sessionId, QStatus& status);
+    GatewayCtrlConnectorApplicationStatus*retrieveStatus(SessionId sessionId, QStatus& status);
 
     /**
      * Restarts the application
@@ -160,7 +160,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param status return status of operation
      * @return {@link RestartStatus}
      */
-    RestartStatus Restart(SessionId sessionId, QStatus& status);
+    RestartStatus restart(SessionId sessionId, QStatus& status);
 
     /**
      * Set an {@link ApplicationStatusSignalHandler} to receive application
@@ -169,12 +169,12 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * Use {@link ConnectorApplication#unsetStatusChangedHandler()} to stop receiving the events.
      * @param handler Signal handler
      */
-    QStatus SetStatusChangedHandler(const GatewayCtrlApplicationStatusSignalHandler*handler);
+    QStatus setStatusChangedHandler(const GatewayCtrlApplicationStatusSignalHandler*handler);
 
     /**
      * Stop handler from receiving Service Provider Application related signals
      */
-    void UnsetStatusChangedHandler();
+    void unsetStatusChangedHandler();
 
     /**
      * Sends request to create {@link AccessControlList} object with the received name and
@@ -188,7 +188,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @return {@link AclWriteResponse}
      */
 
-    GatewayCtrlAclWriteResponse* CreateAcl(SessionId sessionId, qcc::String name, GatewayCtrlAccessRules* accessRules, QStatus& status);
+    GatewayCtrlAclWriteResponse* createAcl(SessionId sessionId, qcc::String name, GatewayCtrlAccessRules* accessRules, QStatus& status);
 
     /**
      * Retrieves a list of the Access Control Lists installed on the application
@@ -196,7 +196,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param status return status of operation
      * @return List of the {@link AccessControlList}
      */
-    const std::vector <GatewayCtrlAccessControlList*>& RetrieveAcls(SessionId sessionId, QStatus& status);
+    const std::vector <GatewayCtrlAccessControlList*>& retrieveAcls(SessionId sessionId, QStatus& status);
 
     /**
      * Delete the Access Control List of this application
@@ -205,7 +205,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param status return status of operation
      * @return {@link AclResponseCode}
      */
-    AclResponseCode DeleteAcl(SessionId sessionId, qcc::String aclId, QStatus& status);
+    AclResponseCode deleteAcl(SessionId sessionId, qcc::String aclId, QStatus& status);
 
     /**
      * Intersects {@link AnnouncementData} with the received remotedServices, creates
@@ -214,14 +214,14 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param announcements up to date vector of AnnouncementData
      * @return List of {@link RemotedApp}
      */
-    static std::vector<GatewayCtrlRemotedApp*> ExtractRemotedApps(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices,
+    static std::vector<GatewayCtrlRemotedApp*> extractRemotedApps(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices,
                                                                   std::vector<AnnouncementData*> const& announcements,
                                                                   QStatus& status);
 
     /**
      * @return Status of release
      */
-    QStatus Release();
+    QStatus release();
 
 
     static bool stringStartWith(const qcc::String& prefix, const qcc::String& inString)
@@ -231,7 +231,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
 
   private:
 
-    void MaintainProxyBusObject(SessionId sessionId);
+    void maintainProxyBusObject(SessionId sessionId);
 
     void handleSignal(const ajn::InterfaceDescription::Member* member,
                       const char* srcPath, ajn::Message& msg);
@@ -297,9 +297,9 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * Additionally NULL is returned if the {@link AnnouncementData} doesn't have mandatory values
      * for {@link RemotedApp} creation.
      */
-    static GatewayCtrlRemotedApp* ExtractRemotedApp(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices, const AnnouncementData*ann, QStatus& status);
+    static GatewayCtrlRemotedApp* extractRemotedApp(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices, const AnnouncementData*ann, QStatus& status);
 
-    void EmptyVector();
+    void emptyVector();
 
 };
 }

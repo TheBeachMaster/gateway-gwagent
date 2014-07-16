@@ -37,10 +37,10 @@ GatewayCtrlGateway::~GatewayCtrlGateway()
 
 }
 
-void GatewayCtrlGateway::EmptyVector()
+void GatewayCtrlGateway::emptyVector()
 {
     for (size_t indx = 0; indx < m_InstalledApps.size(); indx++) {
-        QStatus status = m_InstalledApps[indx]->Release();
+        QStatus status = m_InstalledApps[indx]->release();
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Could not release object"));
@@ -51,18 +51,18 @@ void GatewayCtrlGateway::EmptyVector()
     m_InstalledApps.clear();
 }
 
-const std::vector<GatewayCtrlConnectorApplication*>&  GatewayCtrlGateway::RetrieveInstalledApps(SessionId sessionId, QStatus& status)
+const std::vector<GatewayCtrlConnectorApplication*>&  GatewayCtrlGateway::retrieveInstalledApps(SessionId sessionId, QStatus& status)
 {
     {
         //Release the current vector
-        EmptyVector();
+        emptyVector();
 
         status = ER_OK;
 
-        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
-        ProxyBusObject proxy(*busAttachment, GetBusName().c_str(), AJ_OBJECTPATH_PREFIX.c_str(), sessionId, true);
+        ProxyBusObject proxy(*busAttachment, getBusName().c_str(), AJ_OBJECTPATH_PREFIX.c_str(), sessionId, true);
 
         qcc::String interfaceName = AJ_GATEWAYCONTROLLER_APPMGMT_INTERFACE;
         InterfaceDescription* interfaceDescription = (InterfaceDescription*) busAttachment->GetInterface(interfaceName.c_str());
@@ -127,7 +127,7 @@ const std::vector<GatewayCtrlConnectorApplication*>&  GatewayCtrlGateway::Retrie
 
         for (int i = 0; i < numApplications; i++) {
 
-            GatewayCtrlConnectorApplication*connectorApp = new GatewayCtrlConnectorApplication(GetBusName(), &tempEntries[i]);
+            GatewayCtrlConnectorApplication*connectorApp = new GatewayCtrlConnectorApplication(getBusName(), &tempEntries[i]);
 
             m_InstalledApps.push_back(connectorApp);
 
@@ -139,16 +139,16 @@ end:
 }
 
 
-GatewayCtrlSessionResult GatewayCtrlGateway::JoinSession() {
-    return JoinSession(NULL);
+GatewayCtrlSessionResult GatewayCtrlGateway::joinSession() {
+    return joinSession(NULL);
 }
 
 
-GatewayCtrlSessionResult GatewayCtrlGateway::JoinSession(GatewayCtrlControllerSessionListener*listener) {
+GatewayCtrlSessionResult GatewayCtrlGateway::joinSession(GatewayCtrlControllerSessionListener*listener) {
 
     m_Listener = listener;
 
-    BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+    BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
     if (!busAttachment) {
         QCC_DbgHLPrintf(("BusAttachment is not set"));
@@ -170,19 +170,19 @@ GatewayCtrlSessionResult GatewayCtrlGateway::JoinSession(GatewayCtrlControllerSe
     SessionOpts opts(SessionOpts::TRAFFIC_MESSAGES, false, SessionOpts::PROXIMITY_ANY, TRANSPORT_ANY);
     SessionId sessionId = 0;
     ajn::SessionPort port = GATEWAYSERVICE_PORT;
-    QStatus status = busAttachment->JoinSession(GetBusName().c_str(), port, &m_SessionHandler, sessionId, opts);
+    QStatus status = busAttachment->JoinSession(getBusName().c_str(), port, &m_SessionHandler, sessionId, opts);
     if (status != ER_OK) {
-        QCC_LogError(status, ("Unable to JoinSession with %s", GetBusName().c_str()));
+        QCC_LogError(status, ("Unable to JoinSession with %s", getBusName().c_str()));
     }
     m_SessionHandler.JoinSessionCB(status, sessionId, opts, this);
     return { status, static_cast<int>(sessionId) };
 }
 
-QStatus GatewayCtrlGateway::JoinSessionAsync(GatewayCtrlControllerSessionListener*listener)
+QStatus GatewayCtrlGateway::joinSessionAsync(GatewayCtrlControllerSessionListener*listener)
 {
     m_Listener = listener;
 
-    BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+    BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
     if (!busAttachment) {
         QCC_DbgHLPrintf(("BusAttachment is not set"));
         return ER_BUS_BUS_NOT_STARTED;
@@ -200,20 +200,20 @@ QStatus GatewayCtrlGateway::JoinSessionAsync(GatewayCtrlControllerSessionListene
     }
 
     SessionOpts opts(SessionOpts::TRAFFIC_MESSAGES, true, SessionOpts::PROXIMITY_ANY, TRANSPORT_ANY);
-    QStatus status = busAttachment->JoinSessionAsync(GetBusName().c_str(), (ajn::SessionPort)GATEWAYSERVICE_PORT, &m_SessionHandler,
+    QStatus status = busAttachment->JoinSessionAsync(getBusName().c_str(), (ajn::SessionPort)GATEWAYSERVICE_PORT, &m_SessionHandler,
                                                      opts, &m_SessionHandler, NULL);
 
     if (status != ER_OK) {
-        QCC_LogError(status, ("Unable to JoinSession with %s", GetBusName().c_str()));
+        QCC_LogError(status, ("Unable to JoinSession with %s", getBusName().c_str()));
     }
     return status;
 
 
 }
 
-QStatus GatewayCtrlGateway::LeaveSession()
+QStatus GatewayCtrlGateway::leaveSession()
 {
-    BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+    BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
     if (!busAttachment) {
         QCC_DbgHLPrintf(("BusAttachment is not set"));
@@ -241,9 +241,9 @@ GatewayCtrlControllerSessionListener* GatewayCtrlGateway::getListener() const
 }
 
 
-QStatus GatewayCtrlGateway::Release()
+QStatus GatewayCtrlGateway::release()
 {
-    EmptyVector();
+    emptyVector();
 
     // m_Listener is NOT deleted here since it comes from the outside
 

@@ -46,22 +46,22 @@ class GatewayCtrlConnectorApplicationStatus {
     /**
      * @return The installation status of the Third Party Application
      */
-    InstallStatus GetInstallStatus();
+    InstallStatus getInstallStatus();
 
     /**
      * @return The installation description of the Third Party Application
      */
-    qcc::String GetInstallDescriptions();
+    qcc::String getInstallDescriptions();
 
     /**
      * @return Connection status of the Third Party Application to its cloud service
      */
-    ConnectionStatus GetConnectionStatus();
+    ConnectionStatus getConnectionStatus();
 
     /**
      * @return The state whether the Third Party Application is running
      */
-    OperationalStatus GetOperationalStatus();
+    OperationalStatus getOperationalStatus();
 
   private:
     /**

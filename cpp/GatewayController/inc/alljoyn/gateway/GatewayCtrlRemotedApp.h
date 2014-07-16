@@ -60,12 +60,12 @@ class GatewayCtrlRemotedApp : public GatewayCtrlDiscoveredApp {
      * used by the Third Party Application to reach this remoted application
      * @return List of {@link ManifestObjectDescription} objects
      */
-    const std::vector<GatewayCtrlManifestObjectDescription*>& GetObjDescRules();
+    const std::vector<GatewayCtrlManifestObjectDescription*>& getObjDescRules();
 
     /**
      * @return Status of release
      */
-    QStatus Release();
+    QStatus release();
 
   private:
     /**
@@ -74,7 +74,7 @@ class GatewayCtrlRemotedApp : public GatewayCtrlDiscoveredApp {
      */
     std::vector<GatewayCtrlManifestObjectDescription*> m_ObjDescRules;
 
-    void EmptyVector();
+    void emptyVector();
 };
 }
 }

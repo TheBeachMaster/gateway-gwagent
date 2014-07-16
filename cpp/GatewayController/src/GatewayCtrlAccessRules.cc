@@ -40,7 +40,7 @@ GatewayCtrlAccessRules::GatewayCtrlAccessRules(const MsgArg*exposedServicesArray
 
     for (int i = 0; i != exposedServicesCount; i++) {
 
-        GatewayCtrlManifestObjectDescription* exposedService = PayloadAdapter::unmarshalObjectDescriptionsWithoutNames(&exposedServicesArray[i], manifestRules.GetExposedServices(), status);
+        GatewayCtrlManifestObjectDescription* exposedService = PayloadAdapter::unmarshalObjectDescriptionsWithoutNames(&exposedServicesArray[i], manifestRules.getExposedServices(), status);
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Failed unmarshalObjectDesciptionsWithoutNames"));
@@ -61,7 +61,7 @@ GatewayCtrlAccessRules::GatewayCtrlAccessRules(const MsgArg*exposedServicesArray
     }
 
     for (int i = 0; i != remotedAppsCount; i++) {
-        GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp(&remotedAppsArray[i], manifestRules.GetRemotedServices(), internalMetaData);
+        GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp(&remotedAppsArray[i], manifestRules.getRemotedServices(), internalMetaData);
 
         m_RemotedApps.push_back(remotedApp);
     }
@@ -74,22 +74,22 @@ GatewayCtrlAccessRules::~GatewayCtrlAccessRules()
 
 }
 
-const std::vector<GatewayCtrlRemotedApp*>&  GatewayCtrlAccessRules::GetRemotedApps()
+const std::vector<GatewayCtrlRemotedApp*>&  GatewayCtrlAccessRules::getRemotedApps()
 {
     return m_RemotedApps;
 }
 
-const std::vector<GatewayCtrlManifestObjectDescription*>& GatewayCtrlAccessRules::GetExposedServices()
+const std::vector<GatewayCtrlManifestObjectDescription*>& GatewayCtrlAccessRules::getExposedServices()
 {
     return m_ExposedServices;
 }
 
-void GatewayCtrlAccessRules::SetMetadata(std::map<qcc::String, qcc::String> const& metadata)
+void GatewayCtrlAccessRules::setMetadata(std::map<qcc::String, qcc::String> const& metadata)
 {
     m_Metadata.insert(metadata.begin(), metadata.end());
 }
 
-qcc::String*GatewayCtrlAccessRules::GetMetadata(qcc::String key)
+qcc::String*GatewayCtrlAccessRules::getMetadata(qcc::String key)
 {
     std::map<qcc::String, qcc::String>::iterator value = m_Metadata.find(key);
 
@@ -102,16 +102,16 @@ qcc::String*GatewayCtrlAccessRules::GetMetadata(qcc::String key)
 
 }
 
-const std::map<qcc::String, qcc::String>& GatewayCtrlAccessRules::GetMetadata()
+const std::map<qcc::String, qcc::String>& GatewayCtrlAccessRules::getMetadata()
 {
     return m_Metadata;
 }
 
 
-void GatewayCtrlAccessRules::EmptyVectors()
+void GatewayCtrlAccessRules::emptyVectors()
 {
     for (size_t indx = 0; indx < m_ExposedServices.size(); indx++) {
-        QStatus status = m_ExposedServices[indx]->Release();
+        QStatus status = m_ExposedServices[indx]->release();
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Could not release object"));
@@ -123,7 +123,7 @@ void GatewayCtrlAccessRules::EmptyVectors()
 
 
     for (size_t indx = 0; indx < m_RemotedApps.size(); indx++) {
-        QStatus status = m_RemotedApps[indx]->Release();
+        QStatus status = m_RemotedApps[indx]->release();
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Could not release object"));
@@ -136,9 +136,9 @@ void GatewayCtrlAccessRules::EmptyVectors()
 
 }
 
-QStatus GatewayCtrlAccessRules::Release()
+QStatus GatewayCtrlAccessRules::release()
 {
-    EmptyVectors();
+    emptyVectors();
 
     return ER_OK;
 }

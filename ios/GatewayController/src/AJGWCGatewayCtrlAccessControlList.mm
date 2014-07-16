@@ -46,42 +46,42 @@
 
 - (NSString*)aclName
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetName()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getName()];
 }
 
 - (void)setAclName:(NSString*) name
 {
-    self.handle->SetName([AJNConvertUtil convertNSStringToQCCString:name]);
+    self.handle->setName([AJNConvertUtil convertNSStringToQCCString:name]);
 }
 
 - (NSString*)aclId
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetId()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getId()];
 }
 
 - (NSString*)aclObjectPath
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetObjectPath()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getObjectPath()];
 }
 
 - (NSString*)gwBusName
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetGwBusName()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getGwBusName()];
 }
 
 - (AJGWCAclResponseCode)activateUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
 {
-    return (AJGWCAclResponseCode)self.handle->Activate(sessionId, status);
+    return (AJGWCAclResponseCode)self.handle->activate(sessionId, status);
 }
 
 - (AJGWCAclResponseCode)deactivateUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
 {
-    return (AJGWCAclResponseCode)self.handle->Deactivate(sessionId, status);
+    return (AJGWCAclResponseCode)self.handle->deactivate(sessionId, status);
 }
 
 - (AJGWCGatewayCtrlAclWriteResponse*)updateAcl:(AJNSessionId) sessionId accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules status:(QStatus&) status
 {
-    return [[AJGWCGatewayCtrlAclWriteResponse alloc] initWithHandle:self.handle->UpdateAcl(sessionId,
+    return [[AJGWCGatewayCtrlAclWriteResponse alloc] initWithHandle:self.handle->updateAcl(sessionId,
                                                                                            [accessRules handle],
                                                                                            [manifestRules handle],
                                                                                            status)];
@@ -94,8 +94,7 @@
     for (NSString* key in metadata.allKeys) {
         metadataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], [AJNConvertUtil convertNSStringToQCCString:[metadata objectForKey:key]]));
     }
-
-    return (AJGWCAclResponseCode)self.handle->UpdateCustomMetadata(sessionId, metadataMap, status);
+    return (AJGWCAclResponseCode)self.handle->updateCustomMetadata(sessionId, metadataMap, status);
 }
 - (AJGWCAclResponseCode)updateAclMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(QStatus&) status
 {
@@ -105,19 +104,19 @@
         metadataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], [AJNConvertUtil convertNSStringToQCCString:[metadata objectForKey:key]]));
     }
 
-    return (AJGWCAclResponseCode)self.handle->UpdateAclMetadata(sessionId, metadataMap, status);
+    return (AJGWCAclResponseCode)self.handle->updateAclMetadata(sessionId, metadataMap, status);
 }
 
 
 - (AJGWCAclStatus)status
 {
-    return (AJGWCAclStatus)self.handle->GetStatus();
+    return (AJGWCAclStatus)self.handle->getStatus();
 }
 
 
 - (AJGWCAclStatus)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
 {
-    return (AJGWCAclStatus)self.handle->RetrieveStatus(sessionId, status);
+    return (AJGWCAclStatus)self.handle->retrieveStatus(sessionId, status);
 }
 
 - (AJGWCGatewayCtrlAccessRules *)retrieveAclUsingSessionId:(AJNSessionId) sessionId manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules announcements:(NSArray*) announcements status:(QStatus&) status

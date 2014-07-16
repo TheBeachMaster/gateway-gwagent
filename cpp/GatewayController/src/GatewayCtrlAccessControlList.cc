@@ -49,7 +49,7 @@ GatewayCtrlAccessControlList::GatewayCtrlAccessControlList(qcc::String gwBusName
         m_ObjectPath = ObjectPath;
     }
 
-    BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+    BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
     {
         qcc::String interfaceName = AJ_GATEWAYCONTROLLERACL_INTERFACE;
@@ -118,40 +118,40 @@ GatewayCtrlAccessControlList::GatewayCtrlAccessControlList(qcc::String gwBusName
 GatewayCtrlAccessControlList::~GatewayCtrlAccessControlList() {
 }
 
-qcc::String GatewayCtrlAccessControlList::GetName()
+qcc::String GatewayCtrlAccessControlList::getName()
 {
     return m_AclName;
 }
 
-void GatewayCtrlAccessControlList::SetName(qcc::String name)
+void GatewayCtrlAccessControlList::setName(qcc::String name)
 {
     m_AclName = name;
 }
 
 
-qcc::String GatewayCtrlAccessControlList::GetId()
+qcc::String GatewayCtrlAccessControlList::getId()
 {
     return m_AclId;
 }
 
 
-qcc::String GatewayCtrlAccessControlList::GetObjectPath()
+qcc::String GatewayCtrlAccessControlList::getObjectPath()
 {
     return m_ObjectPath;
 }
 
-qcc::String GatewayCtrlAccessControlList::GetGwBusName()
+qcc::String GatewayCtrlAccessControlList::getGwBusName()
 {
     return m_GwBusName;
 }
 
-AclResponseCode GatewayCtrlAccessControlList::Activate(SessionId sessionId, QStatus& status)
+AclResponseCode GatewayCtrlAccessControlList::activate(SessionId sessionId, QStatus& status)
 {
     status = ER_OK;
 
     {
 
-        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
         ProxyBusObject proxy(*busAttachment, m_GwBusName.c_str(), m_ObjectPath.c_str(), sessionId, true);
@@ -205,12 +205,12 @@ end:
     return GW_ACL_RC_INVALID;
 }
 
-AclResponseCode GatewayCtrlAccessControlList::Deactivate(SessionId sessionId, QStatus& status)
+AclResponseCode GatewayCtrlAccessControlList::deactivate(SessionId sessionId, QStatus& status)
 {
     status = ER_OK;
 
     {
-        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
         ProxyBusObject proxy(*busAttachment, m_GwBusName.c_str(), m_ObjectPath.c_str(), sessionId, true);
@@ -265,7 +265,7 @@ end:
 
 }
 
-GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId sessionId,
+GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId sessionId,
                                                                      GatewayCtrlAccessRules* accessRules,
                                                                      GatewayCtrlManifestRules* manifestRules,
                                                                      QStatus& status)
@@ -280,7 +280,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
 
     {
 
-        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
         ProxyBusObject proxy(*busAttachment, m_GwBusName.c_str(), m_ObjectPath.c_str(), sessionId, true);
@@ -302,11 +302,11 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
 
         std::vector<GatewayCtrlManifestObjectDescription*> expServicesTargetOut;
 
-        std::vector<GatewayCtrlManifestObjectDescription*> invalidExpServices = ValidateManifObjDescs(accessRules->GetExposedServices(),
+        std::vector<GatewayCtrlManifestObjectDescription*> invalidExpServices = validateManifObjDescs(accessRules->getExposedServices(),
                                                                                                       expServicesTargetOut,
-                                                                                                      manifestRules->GetExposedServices());
+                                                                                                      manifestRules->getExposedServices());
 
-        const std::vector<GatewayCtrlRemotedApp*> remotedAppsIn =  accessRules->GetRemotedApps();
+        const std::vector<GatewayCtrlRemotedApp*> remotedAppsIn =  accessRules->getRemotedApps();
 
         std::vector<GatewayCtrlRemotedApp*> invalidRemotedApps;
 
@@ -316,9 +316,9 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
             std::vector<GatewayCtrlManifestObjectDescription*> remotedAppsTarget;
 
             std::vector<GatewayCtrlManifestObjectDescription*> invalidRemAppRules =
-                ValidateManifObjDescs((*itr)->GetObjDescRules(),
+                validateManifObjDescs((*itr)->getObjDescRules(),
                                       remotedAppsTarget,
-                                      manifestRules->GetRemotedServices());
+                                      manifestRules->getRemotedServices());
 
             if (invalidRemAppRules.size() > 0) {
                 invalidRemotedApps.push_back(new GatewayCtrlRemotedApp((*itr), invalidRemAppRules));
@@ -336,18 +336,18 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
 
             //Store this application data in the internal metadata
             qcc::String AppId;
-            const uint8_t*binary_appid = (*itr)->GetAppId();
+            const uint8_t*binary_appid = (*itr)->getAppId();
 
             AppId = qcc::BytesToHexString(binary_appid, UUID_LENGTH);
 
-            qcc::String keyPrefix = (*itr)->GetDeviceId() + "_" + AppId;
-            m_InternalMetadata.insert(std::pair<qcc::String, qcc::String>(keyPrefix + AJSUFFIX_APP_NAME, remotedApp->GetAppName()));
-            m_InternalMetadata.insert(std::pair<qcc::String, qcc::String>(keyPrefix + AJSUFFIX_DEVICE_NAME, remotedApp->GetDeviceName()));
+            qcc::String keyPrefix = (*itr)->getDeviceId() + "_" + AppId;
+            m_InternalMetadata.insert(std::pair<qcc::String, qcc::String>(keyPrefix + AJSUFFIX_APP_NAME, remotedApp->getAppName()));
+            m_InternalMetadata.insert(std::pair<qcc::String, qcc::String>(keyPrefix + AJSUFFIX_DEVICE_NAME, remotedApp->getDeviceName()));
         }
 
         GatewayCtrlAccessRules*transmittedAcessRules = new GatewayCtrlAccessRules(expServicesTargetOut, remotedAppsOut);
 
-        transmittedAcessRules->SetMetadata(m_InternalMetadata);
+        transmittedAcessRules->setMetadata(m_InternalMetadata);
 
         std::vector<MsgArg*> inputArgsVector;
 
@@ -355,7 +355,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
 
         if (status != ER_OK) {
             QCC_LogError(status, ("PayloadAdapter::MarshalAccessRules failed"));
-            transmittedAcessRules->Release();
+            transmittedAcessRules->release();
             delete transmittedAcessRules;
             transmittedAcessRules = NULL;
 
@@ -378,7 +378,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
             QCC_LogError(ER_FAIL, ("UpdateAcl failed - wrong number of arguments gathered to be sent"));
             status = ER_FAIL;
 
-            transmittedAcessRules->Release();
+            transmittedAcessRules->release();
             delete transmittedAcessRules;
             transmittedAcessRules = NULL;
 
@@ -395,7 +395,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::UpdateAcl(SessionId s
         Message replyMsg(*busAttachment);
         status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATEACL.c_str(), args, AJ_METHOD_UPDATEACL_INPUT_PARAM_COUNT, replyMsg);
 
-        transmittedAcessRules->Release();
+        transmittedAcessRules->release();
         delete transmittedAcessRules;
         transmittedAcessRules = NULL;
 
@@ -433,13 +433,13 @@ end:
     return NULL;
 }
 
-AclResponseCode GatewayCtrlAccessControlList::UpdateCustomMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, QStatus& status)
+AclResponseCode GatewayCtrlAccessControlList::updateCustomMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, QStatus& status)
 {
     status = ER_OK;
 
     {
 
-        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
         ProxyBusObject proxy(*busAttachment, m_GwBusName.c_str(), m_ObjectPath.c_str(), sessionId, true);
@@ -499,13 +499,13 @@ end:
     return GW_ACL_RC_INVALID;
 }
 
-AclResponseCode GatewayCtrlAccessControlList::UpdateAclMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, QStatus& status)
+AclResponseCode GatewayCtrlAccessControlList::updateAclMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, QStatus& status)
 {
     status = ER_OK;
 
     {
 
-        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
         ProxyBusObject proxy(*busAttachment, m_GwBusName.c_str(), m_ObjectPath.c_str(), sessionId, true);
@@ -563,18 +563,18 @@ end:
     return GW_ACL_RC_INVALID;
 }
 
-AclStatus GatewayCtrlAccessControlList::GetStatus()
+AclStatus GatewayCtrlAccessControlList::getStatus()
 {
     return m_AclStatus;
 }
 
-AclStatus GatewayCtrlAccessControlList::RetrieveStatus(SessionId sessionId, QStatus& status)
+AclStatus GatewayCtrlAccessControlList::retrieveStatus(SessionId sessionId, QStatus& status)
 {
     status = ER_OK;
 
     {
 
-        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
         ProxyBusObject proxy(*busAttachment, m_GwBusName.c_str(), m_ObjectPath.c_str(), sessionId, true);
@@ -616,6 +616,9 @@ AclStatus GatewayCtrlAccessControlList::RetrieveStatus(SessionId sessionId, QSta
             QCC_LogError(status, ("Failed calling getAclStatus"));
             goto end;
         }
+
+        m_AclStatus = (AclStatus)aclResponse;
+
         return (AclStatus)aclResponse;
     }
 end:
@@ -632,13 +635,13 @@ end:
 
 int ManifestObjectDescriptionComparator(const GatewayCtrlManifestObjectDescription*lhs, const GatewayCtrlManifestObjectDescription*rhs) {
 
-    qcc::String lhsOP = lhs->GetObjectPath()->GetPath();
-    qcc::String rhsOP = rhs->GetObjectPath()->GetPath();
+    qcc::String lhsOP = lhs->getObjectPath()->getPath();
+    qcc::String rhsOP = rhs->getObjectPath()->getPath();
 
     int compRes  = rhsOP.compare(lhsOP);
     if (compRes == 0) {
 
-        if (lhs->GetObjectPath()->IsPrefix()) {
+        if (lhs->getObjectPath()->isPrefix()) {
             return 1;
         } else {
             return -1;
@@ -654,16 +657,23 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
                                                                  QStatus& status)
 {
     if (m_AccessRules) {
-        m_AccessRules->Release();
+        m_AccessRules->release();
         delete m_AccessRules;
         m_AccessRules = NULL;
     }
 
     status = ER_OK;
 
+    retrieveStatus(sessionId, status);
+
+    if (status != ER_OK) {
+        QCC_LogError(status, ("RetrieveStatus failed"));
+        goto end;
+    }
+
     {
 
-        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->GetBusAttachment();
+        BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
         ProxyBusObject proxy(*busAttachment, m_GwBusName.c_str(), m_ObjectPath.c_str(), sessionId, true);
@@ -727,34 +737,34 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
 
 
         // prepare the returned accessRules by intersecting them with the manifest rules
-        std::vector<GatewayCtrlManifestObjectDescription*> expServices     = manifestRules.GetExposedServices();
-        std::vector<GatewayCtrlManifestObjectDescription*> remServices     = manifestRules.GetRemotedServices();
+        std::vector<GatewayCtrlManifestObjectDescription*> expServices     = manifestRules.getExposedServices();
+        std::vector<GatewayCtrlManifestObjectDescription*> remServices     = manifestRules.getRemotedServices();
         std::sort(expServices.begin(), expServices.end(), ManifestObjectDescriptionComparator);
         std::sort(remServices.begin(), remServices.end(), ManifestObjectDescriptionComparator);
 
         GatewayCtrlAccessRules*tmpAccessRules = new GatewayCtrlAccessRules(&returnArgs[1], &returnArgs[2], manifestRules, m_InternalMetadata);
 
         // The information retreived from the gateway manager will always include configured rules and configured rules only.
-        for (std::vector<GatewayCtrlRemotedApp*>::const_iterator remotedAppIter = tmpAccessRules->GetRemotedApps().begin(); remotedAppIter != tmpAccessRules->GetRemotedApps().end(); remotedAppIter++) {
-            const std::vector<GatewayCtrlManifestObjectDescription*> objDescs = ((GatewayCtrlRemotedApp*)*remotedAppIter)->GetObjDescRules();
+        for (std::vector<GatewayCtrlRemotedApp*>::const_iterator remotedAppIter = tmpAccessRules->getRemotedApps().begin(); remotedAppIter != tmpAccessRules->getRemotedApps().end(); remotedAppIter++) {
+            const std::vector<GatewayCtrlManifestObjectDescription*> objDescs = ((GatewayCtrlRemotedApp*)*remotedAppIter)->getObjDescRules();
 
             for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator objDescsIter = objDescs.begin(); objDescsIter != objDescs.end(); objDescsIter++) {
                 GatewayCtrlManifestObjectDescription*objDesc = *objDescsIter;
-                objDesc->SetConfigured(true);
+                objDesc->setConfigured(true);
             }
 
 
         }
 
-        for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator objDescsIter = tmpAccessRules->GetExposedServices().begin(); objDescsIter != tmpAccessRules->GetExposedServices().end(); objDescsIter++) {
+        for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator objDescsIter = tmpAccessRules->getExposedServices().begin(); objDescsIter != tmpAccessRules->getExposedServices().end(); objDescsIter++) {
             GatewayCtrlManifestObjectDescription*objDesc = *objDescsIter;
-            objDesc->SetConfigured(true);
+            objDesc->setConfigured(true);
         }
 
-        std::vector<GatewayCtrlManifestObjectDescription*> exposedServices = ConvertExposedServices(tmpAccessRules->GetExposedServices(), expServices);
+        std::vector<GatewayCtrlManifestObjectDescription*> exposedServices = convertExposedServices(tmpAccessRules->getExposedServices(), expServices);
 
         std::vector<GatewayCtrlRemotedApp*> remotedApps;
-        bool updateMetadata       =  ConvertRemotedApps(tmpAccessRules->GetRemotedApps(),
+        bool updateMetadata       =  convertRemotedApps(tmpAccessRules->getRemotedApps(),
                                                         remotedApps,
                                                         remServices,
                                                         announcements, status);
@@ -774,7 +784,7 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
 
         if (updateMetadata) {
             if (m_InternalMetadata.size() > 0) {
-                UpdateAclMetadata(sessionId, m_InternalMetadata, status);
+                updateAclMetadata(sessionId, m_InternalMetadata, status);
 
                 if (status != ER_OK) {
                     QCC_LogError(status, ("Failed UpdateAclMetadata"));
@@ -783,7 +793,7 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
         }
 
         m_AccessRules = new GatewayCtrlAccessRules(exposedServices, remotedApps);
-        m_AccessRules->SetMetadata(customMetadata);
+        m_AccessRules->setMetadata(customMetadata);
 
         return m_AccessRules;
     }
@@ -794,16 +804,16 @@ end:
 }
 
 
-QStatus GatewayCtrlAccessControlList::Release()
+QStatus GatewayCtrlAccessControlList::release()
 {
     if (m_AclWriteResponse) {
-        m_AclWriteResponse->Release();
+        m_AclWriteResponse->release();
         delete m_AclWriteResponse;
         m_AclWriteResponse = NULL;
     }
 
     if (m_AccessRules) {
-        m_AccessRules->Release();
+        m_AccessRules->release();
         delete m_AccessRules;
         m_AccessRules = NULL;
     }
@@ -812,7 +822,7 @@ QStatus GatewayCtrlAccessControlList::Release()
 }
 
 std::vector<GatewayCtrlManifestObjectDescription*>
-GatewayCtrlAccessControlList::ValidateManifObjDescs(const std::vector<GatewayCtrlManifestObjectDescription*>& toValidate,
+GatewayCtrlAccessControlList::validateManifObjDescs(const std::vector<GatewayCtrlManifestObjectDescription*>& toValidate,
                                                     std::vector<GatewayCtrlManifestObjectDescription*>& target,
                                                     const std::vector<GatewayCtrlManifestObjectDescription*>& manifestRules) {
 
@@ -822,12 +832,12 @@ GatewayCtrlAccessControlList::ValidateManifObjDescs(const std::vector<GatewayCtr
     for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator itr = toValidate.begin(); itr != toValidate.end(); itr++) {
 
         std::set<GatewayCtrlConnAppInterface> invInterfaces;
-        bool isValid                = IsValidRule(*itr, invInterfaces, manifestRules);
+        bool isValid                = isValidRule(*itr, invInterfaces, manifestRules);
 
         //If current ManifestObjectDescription is NOT valid it need to be added to the invalid rules
         //OR the ManifestObjectDescription could be valid but some of its interfaces are not
         if (!isValid || invInterfaces.size() > 0) {
-            invalidRules.push_back(new GatewayCtrlManifestObjectDescription(*(*itr)->GetObjectPath(), invInterfaces));
+            invalidRules.push_back(new GatewayCtrlManifestObjectDescription(*(*itr)->getObjectPath(), invInterfaces));
         }
 
         if (!isValid) {
@@ -841,17 +851,17 @@ GatewayCtrlAccessControlList::ValidateManifObjDescs(const std::vector<GatewayCtr
     return invalidRules;
 }
 
-bool GatewayCtrlAccessControlList::IsValidRule(GatewayCtrlManifestObjectDescription*toValidate, std::set<GatewayCtrlConnAppInterface>& notValid, const std::vector<GatewayCtrlManifestObjectDescription*>& manifestRules)
+bool GatewayCtrlAccessControlList::isValidRule(GatewayCtrlManifestObjectDescription*toValidate, std::set<GatewayCtrlConnAppInterface>& notValid, const std::vector<GatewayCtrlManifestObjectDescription*>& manifestRules)
 {
     bool validRuleFound = false;
-    std::set<GatewayCtrlConnAppInterface>*validIfaces = (std::set<GatewayCtrlConnAppInterface>*)toValidate->GetInterfaces();           //this pointer to interfaces in "toValidate" is important - we change the set inside of the "toValidate" in/out variable.
+    std::set<GatewayCtrlConnAppInterface>*validIfaces = (std::set<GatewayCtrlConnAppInterface>*)toValidate->getInterfaces();           //this pointer to interfaces in "toValidate" is important - we change the set inside of the "toValidate" in/out variable.
 
     notValid.insert(validIfaces->begin(), validIfaces->end());
 
     validIfaces->empty();
 
     //If toValidate is not configured it considered as an invalid rule and won't be sent to the gateway
-    if (!toValidate->IsConfigured()) {
+    if (!toValidate->isConfigured()) {
         return false;
     }
 
@@ -861,11 +871,11 @@ bool GatewayCtrlAccessControlList::IsValidRule(GatewayCtrlManifestObjectDescript
 
         GatewayCtrlManifestObjectDescription* mRule = (*itr);
 
-        GatewayCtrlConnAppObjectPath*manop          = mRule->GetObjectPath();
-        const std::set<GatewayCtrlConnAppInterface>*manifs = mRule->GetInterfaces();
+        GatewayCtrlConnAppObjectPath*manop          = mRule->getObjectPath();
+        const std::set<GatewayCtrlConnAppInterface>*manifs = mRule->getInterfaces();
 
         //Check object path validity
-        if (isValidObjPath(manop, toValidate->GetObjectPath()->GetPath(), toValidate->GetObjectPath()->IsPrefix())) {
+        if (isValidObjPath(manop, toValidate->getObjectPath()->getPath(), toValidate->getObjectPath()->isPrefix())) {
 
             //If the the list of the manifest interfaces is empty, it means that all the interfaces
             //of the toValidate object path are supported, so toValidate object is fully valid ==> return true
@@ -910,8 +920,8 @@ bool GatewayCtrlAccessControlList::IsValidRule(GatewayCtrlManifestObjectDescript
 
 bool GatewayCtrlAccessControlList::isValidObjPath(const GatewayCtrlConnAppObjectPath*manifOp, qcc::String toValidOP, bool isPrefix)
 {
-    if ((manifOp->IsPrefix() && GatewayCtrlConnectorApplication::stringStartWith(manifOp->GetPath(), toValidOP)) ||
-        (!manifOp->IsPrefix() && !isPrefix && (manifOp->GetPath() == toValidOP))) {
+    if ((manifOp->isPrefix() && GatewayCtrlConnectorApplication::stringStartWith(manifOp->getPath(), toValidOP)) ||
+        (!manifOp->isPrefix() && !isPrefix && (manifOp->getPath() == toValidOP))) {
 
         return true;
     }
@@ -920,20 +930,20 @@ bool GatewayCtrlAccessControlList::isValidObjPath(const GatewayCtrlConnAppObject
 }
 
 std::vector<GatewayCtrlManifestObjectDescription*>
-GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCtrlManifestObjectDescription*>& aclExpServicesAJ,
+GatewayCtrlAccessControlList::convertExposedServices(const std::vector<GatewayCtrlManifestObjectDescription*>& aclExpServicesAJ,
                                                      const std::vector<GatewayCtrlManifestObjectDescription*>& manifExpServices)
 {
 
     std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> > usedManRules;
-    std::vector<GatewayCtrlManifestObjectDescription*> aclExpServices   = ConvertObjectDescription(aclExpServicesAJ,
+    std::vector<GatewayCtrlManifestObjectDescription*> aclExpServices   = convertObjectDescription(aclExpServicesAJ,
                                                                                                    manifExpServices,
                                                                                                    usedManRules);
 
     //Find out the manifest exposed services rules that weren't used
     for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator manifExpSrvc = manifExpServices.begin(); manifExpSrvc != manifExpServices.end(); manifExpSrvc++) {
 
-        GatewayCtrlConnAppObjectPath*manop       = (*manifExpSrvc)->GetObjectPath();
-        std::set<GatewayCtrlConnAppInterface>*manifs      = (std::set<GatewayCtrlConnAppInterface>*)(*manifExpSrvc)->GetInterfaces();                 // we manipulate this array
+        GatewayCtrlConnAppObjectPath*manop       = (*manifExpSrvc)->getObjectPath();
+        std::set<GatewayCtrlConnAppInterface>*manifs      = (std::set<GatewayCtrlConnAppInterface>*)(*manifExpSrvc)->getInterfaces();                 // we manipulate this array
 
 
         std::set<GatewayCtrlConnAppInterface>*usedIfaces = NULL;
@@ -942,7 +952,7 @@ GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCt
         if (usedManRules.find(*manop) != usedManRules.end()) {
             usedIfaces = &usedManRules.find(*manop)->second;
         }
-        GatewayCtrlConnAppObjectPath storeOp(manop->GetPath(), manop->GetFriendlyName(), false, manop->isPrefixAllowed());
+        GatewayCtrlConnAppObjectPath storeOp(manop->getPath(), manop->getFriendlyName(), false, manop->isPrefixAllowed());
 
 
         //Check if this rule was NOT used then add it to the resExpServices
@@ -953,7 +963,7 @@ GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCt
 
         //Remove from the manifest interfaces the interfaces that have been used
         for (std::set<GatewayCtrlConnAppInterface>::const_iterator itr = usedIfaces->begin(); itr != usedIfaces->end(); itr++) {
-            QCC_SyncPrintf("erasing %s", itr->GetName().c_str());
+            QCC_SyncPrintf("erasing %s", itr->getName().c_str());
             manifs->erase(manifs->find(*itr));
         }
 
@@ -970,7 +980,7 @@ GatewayCtrlAccessControlList::ConvertExposedServices(const std::vector<GatewayCt
 
 
 std::vector<GatewayCtrlManifestObjectDescription*>
-GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<GatewayCtrlManifestObjectDescription*>& objDescs,
+GatewayCtrlAccessControlList::convertObjectDescription(const std::vector<GatewayCtrlManifestObjectDescription*>& objDescs,
                                                        const std::vector<GatewayCtrlManifestObjectDescription*>& manifest,
                                                        std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> >& usedManRules)
 
@@ -982,8 +992,8 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
 
     // create a unique list of interface strings
     for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator objDesc = objDescs.begin(); objDesc != objDescs.end(); objDesc++) {
-        for (std::set<GatewayCtrlConnAppInterface>::const_iterator itr = (*objDesc)->GetInterfaces()->begin(); itr != (*objDesc)->GetInterfaces()->end(); itr++) {
-            objDescInterfaceNames.insert(itr->GetName());
+        for (std::set<GatewayCtrlConnAppInterface>::const_iterator itr = (*objDesc)->getInterfaces()->begin(); itr != (*objDesc)->getInterfaces()->end(); itr++) {
+            objDescInterfaceNames.insert(itr->getName());
         }
     }
 
@@ -992,20 +1002,20 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
         std::set<qcc::String> ifacesToConvert = objDescInterfaceNames;
 
         for (std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator manifRule = manifest.begin(); manifRule != manifest.end(); manifRule++) {
-            GatewayCtrlConnAppObjectPath*manop               = (*manifRule)->GetObjectPath();
-            const std::set<GatewayCtrlConnAppInterface>*manifs              = (*manifRule)->GetInterfaces();
+            GatewayCtrlConnAppObjectPath*manop               = (*manifRule)->getObjectPath();
+            const std::set<GatewayCtrlConnAppInterface>*manifs              = (*manifRule)->getInterfaces();
             int manifsSize          = (int)manifs->size();
 
-            if (!isValidObjPath(manop, (*objDesc)->GetObjectPath()->GetPath(), (*objDesc)->GetObjectPath()->IsPrefix())) {
+            if (!isValidObjPath(manop, (*objDesc)->getObjectPath()->getPath(), (*objDesc)->getObjectPath()->isPrefix())) {
                 continue;
             }
 
             GatewayCtrlConnAppObjectPath*resObjPath = NULL;
 
-            if (manop->GetPath().compare((*objDesc)->GetObjectPath()->GetPath()) == 0) {
-                resObjPath = new GatewayCtrlConnAppObjectPath((*objDesc)->GetObjectPath()->GetPath(), manop->GetFriendlyName(), (*objDesc)->GetObjectPath()->IsPrefix(), manop->isPrefixAllowed());
+            if (manop->getPath().compare((*objDesc)->getObjectPath()->getPath()) == 0) {
+                resObjPath = new GatewayCtrlConnAppObjectPath((*objDesc)->getObjectPath()->getPath(), manop->getFriendlyName(), (*objDesc)->getObjectPath()->isPrefix(), manop->isPrefixAllowed());
             } else {
-                resObjPath = new GatewayCtrlConnAppObjectPath((*objDesc)->GetObjectPath()->GetPath(), "", (*objDesc)->GetObjectPath()->IsPrefix(), manop->isPrefixAllowed());
+                resObjPath = new GatewayCtrlConnAppObjectPath((*objDesc)->getObjectPath()->getPath(), "", (*objDesc)->getObjectPath()->isPrefix(), manop->isPrefixAllowed());
             }
 
             //Add used manifest rules for the empty manifest interfaces array
@@ -1042,10 +1052,10 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
                 for (std::set<GatewayCtrlConnAppInterface>::const_iterator manIface = manifs->begin(); manIface != manifs->end(); manIface++) {
 
                     //aclInterface is found in manifest
-                    if (ajIface.compare(manIface->GetName()) == 0) {
+                    if (ajIface.compare(manIface->getName()) == 0) {
 
 
-                        resInterfaces.insert(GatewayCtrlConnAppInterface(ajIface, (*manIface).GetFriendlyName(), manIface->IsSecured()));
+                        resInterfaces.insert(GatewayCtrlConnAppInterface(ajIface, (*manIface).getFriendlyName(), manIface->isSecured()));
                         ifacesToConvert.erase(ifacesToConvertIter++);
                         continue;
                     }
@@ -1124,14 +1134,14 @@ GatewayCtrlAccessControlList::ConvertObjectDescription(const std::vector<Gateway
 }        //convertObjectDescription
 
 
-bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayCtrlRemotedApp*>& inputRemotedApps,
+bool GatewayCtrlAccessControlList::convertRemotedApps(const std::vector<GatewayCtrlRemotedApp*>& inputRemotedApps,
                                                       std::vector<GatewayCtrlRemotedApp*>& outputRemotedApps,
                                                       std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices,
                                                       std::vector<AnnouncementData*> const& announcements, QStatus& status)
 {
     //Gets TRUE if the metadata needs to be updated
     bool updatedMeta               = false;
-    std::vector<GatewayCtrlRemotedApp*> configurableApps = GatewayCtrlConnectorApplication::ExtractRemotedApps(remotedServices, announcements, status);
+    std::vector<GatewayCtrlRemotedApp*> configurableApps = GatewayCtrlConnectorApplication::extractRemotedApps(remotedServices, announcements, status);
 
     if (status != ER_OK) {
         QCC_LogError(status, ("ExtractRemotedApps failed"));
@@ -1146,7 +1156,7 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
         GatewayCtrlRemotedApp*remApp = (*remAppIter);
 
         //Retrieve announcement data to check whether the aclRemApps should be completed
-        if (remApp->GetAppId() == NULL) {
+        if (remApp->getAppId() == NULL) {
             QCC_SyncPrintf("retrieveRemotedApps - remotedApp with a bad appId has been received, objPath: '%s'", m_ObjectPath.c_str());
             continue;
         }
@@ -1155,17 +1165,17 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
         std::map<GatewayCtrlConnAppObjectPath, std::set<GatewayCtrlConnAppInterface> > usedManRules;
         //Convert the acl remoted app object descriptions to the list of ManifestObjectDescriptions
         //by intersecting with the manifest data.
-        std::vector<GatewayCtrlManifestObjectDescription*> configuredRules = ConvertObjectDescription(
-            remApp->GetObjDescRules(), remotedServices, usedManRules);
+        std::vector<GatewayCtrlManifestObjectDescription*> configuredRules = convertObjectDescription(
+            remApp->getObjDescRules(), remotedServices, usedManRules);
 
         //Construct the standard deviceId_appId key
         qcc::String AppId;
-        const uint8_t*binary_appid = remApp->GetAppId();
+        const uint8_t*binary_appid = remApp->getAppId();
 
 
         AppId = qcc::BytesToHexString(binary_appid, UUID_LENGTH);
 
-        qcc::String keyPrefix = remApp->GetDeviceId() + "_" + AppId;
+        qcc::String keyPrefix = remApp->getDeviceId() + "_" + AppId;
 
         int confRulesSize = (int)configuredRules.size();
         QCC_SyncPrintf("retrieveRemotedApps - Created ObjDesc rules of the remoted app: '%s' rules size: '%d', objPath: '%s'", keyPrefix.c_str(), confRulesSize, m_ObjectPath.c_str());
@@ -1204,7 +1214,7 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
 
         //Look for the configurable RemotedApp from intersection of the manifest
         //with announcement data
-        GatewayCtrlRemotedApp*configurableApp = GetRemotedApp(&configurableApps, remApp->GetDeviceId(), binary_appid);
+        GatewayCtrlRemotedApp*configurableApp = getRemotedApp(&configurableApps, remApp->getDeviceId(), binary_appid);
 
         //If there is no configurableApp, but aclMetadata has appName and deviceName to construct the RemotedApp object
         //and the acl configuredRules were created successfully, then create the RemotedApp object
@@ -1216,19 +1226,19 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
 
                 QCC_SyncPrintf("retrieveRemotedApps - metadata has the required values, creating the remoted app");
                 //Create RemotedApp
-                outputRemotedApps.push_back(new GatewayCtrlRemotedApp(qcc::String(""), appNameMeta, (uint8_t*)binary_appid, deviceNameMeta, remApp->GetDeviceId(), configuredRules));
+                outputRemotedApps.push_back(new GatewayCtrlRemotedApp(qcc::String(""), appNameMeta, (uint8_t*)binary_appid, deviceNameMeta, remApp->getDeviceId(), configuredRules));
             }
         } else {         //There is a configurableApp
 
             QCC_SyncPrintf("retrieveRemotedApps - found announcement for the remoted app: '%s', objPath: '%s'", key.c_str(), m_ObjectPath.c_str());
 
 
-            if (MetadataUpdated(deviceNameMeta, appNameMeta, *configurableApp, keyPrefix)) {
+            if (metadataUpdated(deviceNameMeta, appNameMeta, *configurableApp, keyPrefix)) {
                 updatedMeta = true;
             }
 
             //Completes already configured rules with rules that haven't configured yet
-            AddUnconfiguredRemotedAppRules(configurableApp->GetObjDescRules(), configuredRules);
+            addUnconfiguredRemotedAppRules(configurableApp->getObjDescRules(), configuredRules);
 
             if (configuredRules.size() > 0) {
                 outputRemotedApps.push_back(new GatewayCtrlRemotedApp(configurableApp, configuredRules));
@@ -1245,7 +1255,7 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
 
         qcc::String AppId;
 
-        AppId = qcc::BytesToHexString((*itr)->GetAppId(), UUID_LENGTH);
+        AppId = qcc::BytesToHexString((*itr)->getAppId(), UUID_LENGTH);
 
         QCC_SyncPrintf("ConvertRemotedApps: '%s'", AppId.c_str());
     }
@@ -1261,7 +1271,7 @@ bool GatewayCtrlAccessControlList::ConvertRemotedApps(const std::vector<GatewayC
  * @param unconfRules
  * @param confRules
  */
-void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vector<GatewayCtrlManifestObjectDescription*>& unconfRules,
+void GatewayCtrlAccessControlList::addUnconfiguredRemotedAppRules(const std::vector<GatewayCtrlManifestObjectDescription*>& unconfRules,
                                                                   std::vector<GatewayCtrlManifestObjectDescription*>& confRules) {
 
     std::vector<GatewayCtrlManifestObjectDescription*>::const_iterator iter;
@@ -1272,8 +1282,8 @@ void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vec
         GatewayCtrlManifestObjectDescription*unconfRule = (*iter);
 
 
-        GatewayCtrlConnAppObjectPath*unconfOP          = unconfRule->GetObjectPath();
-        std::set<GatewayCtrlConnAppInterface>* unconfIfaces  = (std::set<GatewayCtrlConnAppInterface>*)unconfRule->GetInterfaces();
+        GatewayCtrlConnAppObjectPath*unconfOP          = unconfRule->getObjectPath();
+        std::set<GatewayCtrlConnAppInterface>* unconfIfaces  = (std::set<GatewayCtrlConnAppInterface>*)unconfRule->getInterfaces();
 
         //Gets TRUE if unconfOP was found among the confRules
         bool unconfOpInConf = false;
@@ -1282,18 +1292,18 @@ void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vec
 
         for (confRulesIter = confRules.begin(); confRulesIter != confRules.end(); confRulesIter++) {
 
-            GatewayCtrlConnAppObjectPath* confOP         = (*confRulesIter)->GetObjectPath();
-            const std::set<GatewayCtrlConnAppInterface>* confIfaces = (*confRulesIter)->GetInterfaces();
+            GatewayCtrlConnAppObjectPath* confOP         = (*confRulesIter)->getObjectPath();
+            const std::set<GatewayCtrlConnAppInterface>* confIfaces = (*confRulesIter)->getInterfaces();
 
             //Check if the unconfOP not equals confOP
-            if (unconfOP->GetPath().compare(confOP->GetPath())) {
+            if (unconfOP->getPath().compare(confOP->getPath())) {
                 continue;
             }
 
             unconfOpInConf = true;
 
             for (std::set<GatewayCtrlConnAppInterface>::const_iterator itr = confIfaces->begin(); itr != confIfaces->end(); itr++) {
-                QCC_SyncPrintf("erasing %s", itr->GetName().c_str());
+                QCC_SyncPrintf("erasing %s", itr->getName().c_str());
                 unconfIfaces->erase(unconfIfaces->find(*itr));
             }
             //unconfIfaces->erase(confIfaces->begin(), confIfaces->end());
@@ -1307,12 +1317,12 @@ void GatewayCtrlAccessControlList::AddUnconfiguredRemotedAppRules(const std::vec
     }        //for::unconfRule
 }
 
-bool GatewayCtrlAccessControlList::MetadataUpdated(qcc::String deviceNameMeta, qcc::String appNameMeta, const GatewayCtrlRemotedApp& annApp, qcc::String keyPrefix) {
+bool GatewayCtrlAccessControlList::metadataUpdated(qcc::String deviceNameMeta, qcc::String appNameMeta, const GatewayCtrlRemotedApp& annApp, qcc::String keyPrefix) {
 
     bool updatedMeta      = false;
 
-    qcc::String annAppName        = annApp.GetAppName();
-    qcc::String annDeviceName     = annApp.GetDeviceName();
+    qcc::String annAppName        = annApp.getAppName();
+    qcc::String annDeviceName     = annApp.getDeviceName();
 
     qcc::String appNameMetaKey    = keyPrefix + AJSUFFIX_APP_NAME;
     qcc::String deviceNameMetaKey = keyPrefix + AJSUFFIX_DEVICE_NAME;

@@ -95,7 +95,7 @@
     NSMutableArray* objDescRulesArray = [[NSMutableArray alloc] init];
     //std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> objDescRulesVect = self.handle->GetObjDescRules();
     // Populate NSMutableArray with std::vector data
-    for (std::vector<ajn::services::GatewayCtrlManifestObjectDescription*>::const_iterator vectIt = self.handle->GetObjDescRules().begin(); vectIt != self.handle->GetObjDescRules().end(); vectIt++) {
+    for (std::vector<ajn::services::GatewayCtrlManifestObjectDescription*>::const_iterator vectIt = self.handle->getObjDescRules().begin(); vectIt != self.handle->getObjDescRules().end(); vectIt++) {
         [objDescRulesArray addObject:[[AJGWCGatewayCtrlManifestObjectDescription alloc] initWithHandle:*vectIt]];
     }
     return objDescRulesArray;

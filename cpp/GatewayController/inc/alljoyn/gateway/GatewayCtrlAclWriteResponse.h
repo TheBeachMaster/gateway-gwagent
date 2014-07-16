@@ -43,28 +43,28 @@ class GatewayCtrlAclWriteResponse {
     /**
      * @return The id of the ACL that the write operation was referred to
      */
-    qcc::String GetAclId();
+    qcc::String getAclId();
 
 
     /**
      * @return {@link AclResponseCode} of the ACL write action
      */
-    AclResponseCode GetResponseCode();
+    AclResponseCode getResponseCode();
 
     /**
      * @return {@link GatewayCtrlAccessRules} with the rules that don't comply with the {@link GatewayCtrlManifestRules}
      */
-    GatewayCtrlAccessRules* GetInvalidRules();
+    GatewayCtrlAccessRules* getInvalidRules();
 
     /**
      * @return {@link AccessControlList} object path
      */
-    qcc::String GetObjectPath();
+    qcc::String getObjectPath();
 
     /**
      * @return Status of release
      */
-    QStatus Release();
+    QStatus release();
   private:
     /**
      * Acl id

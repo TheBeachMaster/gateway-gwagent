@@ -56,60 +56,60 @@ class GatewayCtrlDiscoveredApp {
     /**
      * @return The bus name
      */
-    qcc::String GetBusName();
+    qcc::String getBusName();
 
     /**
      * @return The name of the application that sent the announcement
      */
-    qcc::String GetAppName() const;
+    qcc::String getAppName() const;
 
     /**
      * @return Id of the application that sent the announcement
      */
-    uint8_t*GetAppId();
+    uint8_t*getAppId();
 
     /**
      * @return The name of the device that the application belongs to
      */
-    qcc::String GetDeviceName() const;
+    qcc::String getDeviceName() const;
 
     /**
      * @return The id of the device that the application belongs to
      */
-    qcc::String GetDeviceId();
+    qcc::String getDeviceId();
 
     /**
      * set bus name
      */
 
-    void SetBusName(qcc::String busName);
+    void setBusName(qcc::String busName);
 
     /**
      * set bus name
      */
-    void SetAppName(qcc::String appName);
+    void setAppName(qcc::String appName);
 
     /**
      * set app Id
      */
-    void SetAppId(uint8_t*appId, size_t len);
+    void setAppId(uint8_t*appId, size_t len);
 
     /**
      * set device name
      */
-    void SetDeviceName(qcc::String deviceName);
+    void setDeviceName(qcc::String deviceName);
 
     /**
      * set device Id
      */
-    void SetDeviceId(qcc::String deviceId);
+    void setDeviceId(qcc::String deviceId);
 
 
   private:
     /**
      * Create an entry. If information is missing from the aboutData map an empty string is entered instead
      */
-    qcc::String GetAboutDataEntry(AboutClient::AboutData const& aboutData, qcc::String key);
+    qcc::String getAboutDataEntry(AboutClient::AboutData const& aboutData, qcc::String key);
 
     /**
      * The unique name of the {@link BusAttachment} that sent the Announcement signal

@@ -26,7 +26,7 @@ using namespace gwcConsts;
 
 GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, qcc::String appName, uint8_t*appId, qcc::String deviceName, qcc::String deviceId) : m_BusName(busName), m_AppName(appName), m_DeviceName(deviceName), m_DeviceId(deviceId)
 {
-    SetAppId(appId, UUID_LENGTH);
+    setAppId(appId, UUID_LENGTH);
 }
 
 GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, AboutClient::AboutData const& aboutData) : m_BusName(busName)
@@ -47,17 +47,17 @@ GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(qcc::String busName, AboutCli
         return;
     }
 
-    SetAppId(appIdBin, len);
+    setAppId(appIdBin, len);
 
 //            GetAboutDataEntry(aboutData,"AppId")
     m_BusName = busName;
-    m_AppName = GetAboutDataEntry(aboutData, "AppName");
-    m_DeviceName  = GetAboutDataEntry(aboutData, "DeviceName");
-    m_DeviceId = GetAboutDataEntry(aboutData, "DeviceId");
+    m_AppName = getAboutDataEntry(aboutData, "AppName");
+    m_DeviceName  = getAboutDataEntry(aboutData, "DeviceName");
+    m_DeviceId = getAboutDataEntry(aboutData, "DeviceId");
 }
 
 
-qcc::String GatewayCtrlDiscoveredApp::GetAboutDataEntry(AboutClient::AboutData const& aboutData, qcc::String key)
+qcc::String GatewayCtrlDiscoveredApp::getAboutDataEntry(AboutClient::AboutData const& aboutData, qcc::String key)
 {
     if (aboutData.find(key) == aboutData.end()) {
         QCC_LogError(ER_FAIL, ("Called GetAboutDataEntry but couldn't find the key '%s' requested", key.c_str()));
@@ -82,44 +82,44 @@ GatewayCtrlDiscoveredApp::~GatewayCtrlDiscoveredApp()
 {
 }
 
-qcc::String GatewayCtrlDiscoveredApp::GetBusName()
+qcc::String GatewayCtrlDiscoveredApp::getBusName()
 {
     return m_BusName;
 }
 
 
-qcc::String GatewayCtrlDiscoveredApp::GetAppName() const
+qcc::String GatewayCtrlDiscoveredApp::getAppName() const
 {
     return m_AppName;
 }
 
-uint8_t*GatewayCtrlDiscoveredApp::GetAppId()
+uint8_t*GatewayCtrlDiscoveredApp::getAppId()
 {
     return m_AppId;
 }
 
-qcc::String GatewayCtrlDiscoveredApp::GetDeviceName() const
+qcc::String GatewayCtrlDiscoveredApp::getDeviceName() const
 {
     return m_DeviceName;
 }
 
-qcc::String GatewayCtrlDiscoveredApp::GetDeviceId()
+qcc::String GatewayCtrlDiscoveredApp::getDeviceId()
 {
     return m_DeviceId;
 }
 
-void GatewayCtrlDiscoveredApp::SetBusName(qcc::String busName)
+void GatewayCtrlDiscoveredApp::setBusName(qcc::String busName)
 {
     m_BusName = busName;
 }
 
 
-void GatewayCtrlDiscoveredApp::SetAppName(qcc::String appName)
+void GatewayCtrlDiscoveredApp::setAppName(qcc::String appName)
 {
     m_AppName = appName;
 }
 
-void GatewayCtrlDiscoveredApp::SetAppId(uint8_t*appId, size_t len)
+void GatewayCtrlDiscoveredApp::setAppId(uint8_t*appId, size_t len)
 {
     if (appId) {
         if (len <= UUID_LENGTH) {
@@ -128,12 +128,12 @@ void GatewayCtrlDiscoveredApp::SetAppId(uint8_t*appId, size_t len)
     }
 }
 
-void GatewayCtrlDiscoveredApp::SetDeviceName(qcc::String deviceName)
+void GatewayCtrlDiscoveredApp::setDeviceName(qcc::String deviceName)
 {
     m_DeviceName = deviceName;
 }
 
-void GatewayCtrlDiscoveredApp::SetDeviceId(qcc::String deviceId)
+void GatewayCtrlDiscoveredApp::setDeviceId(qcc::String deviceId)
 {
     m_DeviceId = deviceId;
 }

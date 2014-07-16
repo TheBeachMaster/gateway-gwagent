@@ -25,24 +25,24 @@ GatewayCtrlConnAppInterface::GatewayCtrlConnAppInterface(qcc::String name, qcc::
 {
 }
 
-qcc::String GatewayCtrlConnAppInterface::GetName() const
+qcc::String GatewayCtrlConnAppInterface::getName() const
 {
     return m_Name;
 }
 
-qcc::String GatewayCtrlConnAppInterface::GetFriendlyName() const
+qcc::String GatewayCtrlConnAppInterface::getFriendlyName() const
 {
     return m_FriendlyName;
 }
 
-bool GatewayCtrlConnAppInterface::IsSecured() const
+bool GatewayCtrlConnAppInterface::isSecured() const
 {
     return m_IsSecured;
 }
 
 bool GatewayCtrlConnAppInterface::operator<(const GatewayCtrlConnAppInterface to) const
 {
-    const bool ALessThanB = GetName().operator<(to.GetName());
+    const bool ALessThanB = getName().operator<(to.getName());
 
     return ALessThanB;
 }
@@ -56,22 +56,22 @@ GatewayCtrlConnAppObjectPath::~GatewayCtrlConnAppObjectPath()
 {
 }
 
-qcc::String GatewayCtrlConnAppObjectPath::GetPath() const
+qcc::String GatewayCtrlConnAppObjectPath::getPath() const
 {
     return m_ObjectPath;
 }
 
-qcc::String GatewayCtrlConnAppObjectPath::GetFriendlyName()
+qcc::String GatewayCtrlConnAppObjectPath::getFriendlyName()
 {
     return m_FriendlyName;
 }
 
-bool GatewayCtrlConnAppObjectPath::IsPrefix() const
+bool GatewayCtrlConnAppObjectPath::isPrefix() const
 {
     return m_IsPrefix;
 }
 
-void GatewayCtrlConnAppObjectPath::SetPrefix(bool isPrefix)
+void GatewayCtrlConnAppObjectPath::setPrefix(bool isPrefix)
 {
     m_IsPrefix = isPrefix;
 }
@@ -99,23 +99,23 @@ GatewayCtrlManifestObjectDescription::~GatewayCtrlManifestObjectDescription()
 
 }
 
-GatewayCtrlConnAppObjectPath* GatewayCtrlManifestObjectDescription::GetObjectPath() const
+GatewayCtrlConnAppObjectPath* GatewayCtrlManifestObjectDescription::getObjectPath() const
 {
     return m_ObjectPath;
 }
 
-const std::set<GatewayCtrlConnAppInterface>* GatewayCtrlManifestObjectDescription::GetInterfaces() const
+const std::set<GatewayCtrlConnAppInterface>* GatewayCtrlManifestObjectDescription::getInterfaces() const
 {
     return &m_Interfaces;
 }
 
-bool GatewayCtrlManifestObjectDescription::IsConfigured() const
+bool GatewayCtrlManifestObjectDescription::isConfigured() const
 {
     return m_IsConfigured;
 
 }
 
-void GatewayCtrlManifestObjectDescription::SetConfigured(bool configured)
+void GatewayCtrlManifestObjectDescription::setConfigured(bool configured)
 {
     m_IsConfigured = configured;
 
@@ -123,7 +123,7 @@ void GatewayCtrlManifestObjectDescription::SetConfigured(bool configured)
 
 
 
-QStatus GatewayCtrlManifestObjectDescription::Release()
+QStatus GatewayCtrlManifestObjectDescription::release()
 {
     if (m_ObjectPath) {
         delete m_ObjectPath;
