@@ -28,8 +28,14 @@ AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter::~AJGWCGatewayCtrlApplicat
 }
 
 
-void AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter::onStatusChanged(qcc::String appId, const ajn::services::GatewayCtrlConnectorApplicationStatus *ConnectorApplicationStatus)
+void AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter::onStatusChanged(const qcc::String &appId, const ajn::services::GatewayCtrlConnectorApplicationStatus *ConnectorApplicationStatus)
 {
     AJGWCGatewayCtrlConnectorApplicationStatus* gwConnectorApplicationStatus = [[AJGWCGatewayCtrlConnectorApplicationStatus alloc] initWithHandle:const_cast<ajn::services::GatewayCtrlConnectorApplicationStatus*>(ConnectorApplicationStatus)];
     [applicationStatusSignalHandler onStatusChanged:[AJNConvertUtil convertQCCStringtoNSString:appId] status:gwConnectorApplicationStatus];
 }
+
+void AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter::onError(const qcc::String& appId, const QStatus &status)
+{
+    [applicationStatusSignalHandler onError:[AJNConvertUtil convertQCCStringtoNSString:appId] errorCode:status];
+}
+

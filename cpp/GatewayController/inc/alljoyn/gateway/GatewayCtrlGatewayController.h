@@ -41,7 +41,7 @@ class GatewayCtrlGatewayController {
     static GatewayCtrlGatewayController*getInstance();
 
     /**
-     * Initialize the gateway controller
+     * Initialize the gateway controller. You must call this function before using GatewayCtrlGatewayController
      * @param bus {@link BusAttachment} to use
      */
     void init(BusAttachment*bus);
@@ -63,27 +63,14 @@ class GatewayCtrlGatewayController {
      * @param objectDescs - ObjectDescriptions received in announce
      * @return a GatewayCtrlGateway
      */
-    GatewayCtrlGateway* createGateway(qcc::String const& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData);
+    GatewayCtrlGateway* createGateway(const qcc::String& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData);
 
     /**
      * getGateway - get a Gateway using the busName
      * @param deviceBusName - gatewayBusName to get
      * @return GatewayCtrlGateway* - returns the Gateway or NULL if not found
      */
-    GatewayCtrlGateway* getGateway(qcc::String const& gatewayBusName);
-
-    /**
-     * deleteGateway - delete a GateWay from the map
-     * @param gatewayBusName - deviceName to delete
-     * @return status - success-failure
-     */
-    QStatus deleteGateway(qcc::String const& gatewayBusName);
-
-    /**
-     * deleteAllGateways - shutdown and delete all GateWays from the controller
-     * @return status - success-failure
-     */
-    QStatus deleteAllGateways();
+    GatewayCtrlGateway* getGateway(const qcc::String& gatewayBusName);
 
     /**
      * Get map of All Gateways
@@ -92,6 +79,7 @@ class GatewayCtrlGatewayController {
     const std::map<qcc::String, GatewayCtrlGateway*>& getGateways() const;
 
     /**
+     * release allocations and empty object. must be called before deletion of object.
      * @return Status of release
      */
     QStatus release();

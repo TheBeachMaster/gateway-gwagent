@@ -45,12 +45,23 @@
         for(AJGWCGatewayCtrlManifestObjectDescription* manifestObjDesc in *objDescRules) {
             objDescRulesVect.insert(objDescRulesVect.end(), [manifestObjDesc handle]);
         }
-        self.handle = new ajn::services::GatewayCtrlRemotedApp([AJNConvertUtil convertNSStringToQCCString:busUniqueName],
-                                                               [AJNConvertUtil convertNSStringToQCCString:appName],
-                                                               appId,
-                                                               [AJNConvertUtil convertNSStringToQCCString:deviceName],
-                                                               [AJNConvertUtil convertNSStringToQCCString:deviceId],
-                                                               objDescRulesVect);
+        self.handle = new ajn::services::GatewayCtrlRemotedApp();
+
+        QStatus status = self.handle->init([AJNConvertUtil convertNSStringToQCCString:busUniqueName],
+                                           [AJNConvertUtil convertNSStringToQCCString:appName],
+                                           appId,
+                                           [AJNConvertUtil convertNSStringToQCCString:deviceName],
+                                           [AJNConvertUtil convertNSStringToQCCString:deviceId],
+                                           objDescRulesVect);
+
+        if (status!=ER_OK) {
+            delete self.handle;
+            self.handle = NULL;
+            NSLog(@"failed init of GatewayCtrlRemotedApp");
+            return nil;
+        }
+
+
     }
     return self;
 }
@@ -85,7 +96,17 @@
         for(AJGWCGatewayCtrlManifestObjectDescription* manifestObjDesc in *objDescRules) {
             objDescRulesVect.insert(objDescRulesVect.end(), [manifestObjDesc handle]);
         }
-        self.handle = new ajn::services::GatewayCtrlRemotedApp([discoveredApp handle], objDescRulesVect);
+        self.handle = new ajn::services::GatewayCtrlRemotedApp();
+
+        QStatus status = self.handle->init([discoveredApp handle], objDescRulesVect);
+
+        if (status!=ER_OK) {
+            delete self.handle;
+            self.handle = NULL;
+
+            NSLog(@"failed init of GatewayCtrlRemotedApp in initWithDiscoveredApp");
+            return nil;
+        }
     }
     return self;
 }

@@ -24,7 +24,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#ifndef __APPLE__
 #include <linux/limits.h>
+#else
+#include <limits.h>
+#endif
 
 static const char DEVICE_ID_FILE_NAME[] = "alljoyn-deviceId.txt";
 

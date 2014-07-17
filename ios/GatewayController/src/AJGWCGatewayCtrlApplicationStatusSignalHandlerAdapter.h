@@ -43,7 +43,9 @@ public:
      * @param appId The application id
      * @param status {@link ajn::services::GatewayCtrlConnectorApplicationStatus}
      */
-    void onStatusChanged(qcc::String appId, const ajn::services::GatewayCtrlConnectorApplicationStatus *ConnectorApplicationStatus);
+    void onStatusChanged(const qcc::String &appId, const ajn::services::GatewayCtrlConnectorApplicationStatus *ConnectorApplicationStatus);
+
+    void onError(const qcc::String& appId, const QStatus &status);
 
 private:
     /**

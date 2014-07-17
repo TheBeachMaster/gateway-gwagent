@@ -35,60 +35,71 @@ namespace services {
 
 class ChangedSignalData : public TaskData {
   public:
-    ChangedSignalData(const ajn::MsgArg* returnArgs, qcc::String AppId) : m_ConnectorApplicationStatus(returnArgs) { m_AppId = AppId; }
+    /**
+     * Constructor
+     * @param returnArgs MsgArg with the signal information
+     * @param AppId
+     */
+    ChangedSignalData(const ajn::MsgArg* returnArgs, const qcc::String& AppId);
 
+    /**
+     * Get the connector application status
+     * @return GatewayCtrlConnectorApplicationStatus
+     */
     const GatewayCtrlConnectorApplicationStatus*getConnectorApplicationStatus() const { return &m_ConnectorApplicationStatus; }
 
-    qcc::String getAppId() const { return m_AppId; }
+    const qcc::String& getAppId() const { return m_AppId; }
+
+    QStatus getStatus() const { return m_Status; }
 
   private:
     GatewayCtrlConnectorApplicationStatus m_ConnectorApplicationStatus;
 
     qcc::String m_AppId;
 
+    QStatus m_Status;
+
 };
 
 class ChangedSignalTask : public AsyncTask {
   public:
 
+    /**
+     * set the signal handler
+     * @param handler signal handler
+     */
     void setHandler(const GatewayCtrlApplicationStatusSignalHandler*handler) { m_Handler = (GatewayCtrlApplicationStatusSignalHandler*)handler; }
 
+    /**
+     * unset the signal handler
+     */
     void unSetHandler() { m_Handler = NULL; }
 
   private:
 
     virtual void OnEmptyQueue() { }
 
-    virtual void OnTask(TaskData const* taskdata)
-    {
-        const ChangedSignalData* d = static_cast<const ChangedSignalData*>(taskdata);
-        if (m_Handler) {
-            m_Handler->onStatusChanged(d->getAppId(), d->getConnectorApplicationStatus());
-        } else {
-            QCC_DbgHLPrintf(("Got signal, no handler"));
-        }
-    }
+    virtual void OnTask(TaskData const* taskdata);
 
     GatewayCtrlApplicationStatusSignalHandler*m_Handler;
 };
 
 class GatewayCtrlConnectorApplication : public MessageReceiver {
 
-
-
   public:
-    /**
-     * Constructor
-     * @param gwBusName The name of the gateway {@link BusAttachment} the application is installed on
-     * @param appObjPath The object path to reach the third party application on the gateway
-     */
-// this may not be needed	GatewayCtrlConnectorApplication(qcc::String gwBusName, qcc::String appObjPath);
 
     /**
-     * Constructor
-     * @param appInfo
+     * Constructor - must call init
      */
-    GatewayCtrlConnectorApplication(qcc::String gwBusName, ajn::MsgArg*appInfo);
+    GatewayCtrlConnectorApplication() { }
+
+    /**
+     * init
+     * @param gwBusName bus name
+     * @param appInfo MsgArg containing the application info
+     * @return {@link QStatus}
+     */
+    QStatus init(const qcc::String& gwBusName, ajn::MsgArg*appInfo);
 
     /**
      * Destructor
@@ -98,27 +109,27 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
     /**
      * @return gwBusName the {@link ConnectorApplication} is installed on
      */
-    qcc::String getGwBusName();
+    const qcc::String& getGwBusName();
 
     /**
      * @return The id of the {@link ConnectorApplication}
      */
-    qcc::String getAppId();
+    const qcc::String& getAppId();
 
     /**
      * @return The name of the {@link ConnectorApplication}.
      */
-    qcc::String getFriendlyName();
+    const qcc::String& getFriendlyName();
 
     /**
      * @return The object path to reach the application on the gateway
      */
-    qcc::String getObjectPath();
+    const qcc::String& getObjectPath();
 
     /**
      * @return The application version
      */
-    qcc::String getAppVersion();
+    const qcc::String& getAppVersion();
 
     /**
      * Retrieves the Manifest file of the application.
@@ -188,7 +199,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @return {@link AclWriteResponse}
      */
 
-    GatewayCtrlAclWriteResponse* createAcl(SessionId sessionId, qcc::String name, GatewayCtrlAccessRules* accessRules, QStatus& status);
+    GatewayCtrlAclWriteResponse* createAcl(SessionId sessionId, const qcc::String& name, GatewayCtrlAccessRules* accessRules, QStatus& status);
 
     /**
      * Retrieves a list of the Access Control Lists installed on the application
@@ -205,7 +216,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param status return status of operation
      * @return {@link AclResponseCode}
      */
-    AclResponseCode deleteAcl(SessionId sessionId, qcc::String aclId, QStatus& status);
+    AclResponseCode deleteAcl(SessionId sessionId, const qcc::String& aclId, QStatus& status);
 
     /**
      * Intersects {@link AnnouncementData} with the received remotedServices, creates
@@ -219,6 +230,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
                                                                   QStatus& status);
 
     /**
+     * release allocations and empty object. must be called before deletion of object.
      * @return Status of release
      */
     QStatus release();

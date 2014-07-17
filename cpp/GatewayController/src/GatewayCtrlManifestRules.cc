@@ -24,7 +24,7 @@ namespace services {
 
 
 
-GatewayCtrlManifestRules::GatewayCtrlManifestRules(const ajn::MsgArg*manifRulesAJ)
+QStatus GatewayCtrlManifestRules::init(const ajn::MsgArg*manifRulesAJ)
 {
     QStatus status;
 
@@ -32,15 +32,17 @@ GatewayCtrlManifestRules::GatewayCtrlManifestRules(const ajn::MsgArg*manifRulesA
 
     if (status != ER_OK) {
         QCC_LogError(status, ("Filling m_ExposedServices failed"));
-        return;
+        return status;
     }
 
     status = PayloadAdapter::FillManifestObjectDescriptionVector(&manifRulesAJ[1], m_RemotedServices);
 
     if (status != ER_OK) {
         QCC_LogError(status, ("Filling m_RemotedServices failed"));
-        return;
+        return status;
     }
+
+    return ER_OK;
 }
 
 GatewayCtrlManifestRules::~GatewayCtrlManifestRules()

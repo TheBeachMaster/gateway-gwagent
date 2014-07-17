@@ -24,13 +24,42 @@
 namespace ajn {
 namespace services {
 using namespace gwcConsts;
-//            GatewayCtrlConnectorApplication::GatewayCtrlConnectorApplication(qcc::String gwBusName, qcc::String appObjPath){ }
 
 ChangedSignalTask GatewayCtrlConnectorApplication::m_ChangedSignalTask;
 AsyncTaskQueue GatewayCtrlConnectorApplication::m_ApplicationSignalQueue(&GatewayCtrlConnectorApplication::m_ChangedSignalTask);
 
-GatewayCtrlConnectorApplication::GatewayCtrlConnectorApplication(qcc::String gwBusName, ajn::MsgArg*appInfo) : m_ManifestRules(NULL), m_ConfigurableRules(NULL), m_ConnectorApplicationStatus(NULL), m_AclWriteResponse(NULL), m_SignalMethod(NULL)
+ChangedSignalData::ChangedSignalData(const ajn::MsgArg* returnArgs, const qcc::String& AppId) : m_ConnectorApplicationStatus()
 {
+    m_Status = m_ConnectorApplicationStatus.init(returnArgs);
+    if (m_Status != ER_OK) {
+        QCC_LogError(m_Status, ("m_ConnectorApplicationStatus.init failed"));
+    }
+    m_AppId = AppId;
+}
+
+
+void ChangedSignalTask::OnTask(TaskData const* taskdata)
+{
+    const ChangedSignalData* d = static_cast<const ChangedSignalData*>(taskdata);
+    if (m_Handler) {
+        if (d->getStatus() == ER_OK) {
+            m_Handler->onStatusChanged(d->getAppId(), d->getConnectorApplicationStatus());
+        } else {
+            m_Handler->onError(d->getAppId(), d->getStatus());
+        }
+    } else {
+        QCC_DbgHLPrintf(("Got signal, no handler"));
+    }
+}
+
+QStatus GatewayCtrlConnectorApplication::init(const qcc::String& gwBusName, ajn::MsgArg*appInfo)
+{
+    m_ManifestRules = NULL;
+    m_ConfigurableRules = NULL;
+    m_ConnectorApplicationStatus = NULL;
+    m_AclWriteResponse = NULL;
+    m_SignalMethod = NULL;
+
     GatewayCtrlConnectorApplication::m_ApplicationSignalQueue.Start();
 
     m_GwBusName = gwBusName;
@@ -53,7 +82,7 @@ GatewayCtrlConnectorApplication::GatewayCtrlConnectorApplication(qcc::String gwB
         m_ObjectPath = ObjectPath;
 
         m_AppVersion = AppVersion;
-    } else { QCC_LogError(status, ("MsgArg get failed")); return; }
+    } else { QCC_LogError(status, ("MsgArg get failed")); return status; }
 
     QCC_DbgTrace(("In GatewayCtrlConnectorApplication Constructor"));
 
@@ -68,45 +97,45 @@ GatewayCtrlConnectorApplication::GatewayCtrlConnectorApplication(qcc::String gwB
             status = busAttachment->CreateInterface(interfaceName.c_str(), interfaceDescription);
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not create interface"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_GETMANIFESTFILE.c_str(), NULL, "s", "ManifestFile");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_GETMANIFESTINTERFACES.c_str(), NULL, "a((obs)a(ssb))a((obs)a(ssb))", "exposedServices,remotedServices");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
 
             status = interfaceDescription->AddMethod(AJ_METHOD_GETAPPSTATUS.c_str(), NULL, "qsqq", "installStatus,installDescription,connectionStatus,operationalStatus");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_RESTARTAPP.c_str(), NULL, "q", "restartResponseCode");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddSignal(AJ_SIGNAL_APPSTATUSCHANGED.c_str(), "qsqq", "installStatus,installDescription,connectionStatus,operationalStatus");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
 
             status = interfaceDescription->AddProperty(AJ_PROPERTY_VERSION.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ);
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddProperty"));
-                return;
+                return status;
             }
 
             interfaceDescription->Activate();
@@ -123,41 +152,41 @@ GatewayCtrlConnectorApplication::GatewayCtrlConnectorApplication(qcc::String gwB
             status = busAttachment->CreateInterface(interfaceName.c_str(), interfaceDescription);
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not create interface"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_CREATEACL.c_str(), "sa(obas)a(saya(obas))a{ss}a{ss}", "qso", "aclName,exposedServices,remotedApps,metaData,aclResponseCode,aclId,objectPath");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_DELETEACL.c_str(), "s", "q", "aclId,aclResponseCode");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
 
             status = interfaceDescription->AddMethod(AJ_METHOD_LISTACLS.c_str(), NULL, "a(ssqo)", "aclsList");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddProperty(AJ_PROPERTY_VERSION.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ);
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddProperty"));
-                return;
+                return status;
             }
 
             interfaceDescription->Activate();
         }
     }
 
-
     QCC_DbgTrace(("org.alljoyn.gwagent.ctrl.App created."));
 
+    return ER_OK;
 
 }
 
@@ -165,23 +194,23 @@ GatewayCtrlConnectorApplication::~GatewayCtrlConnectorApplication() {
     GatewayCtrlConnectorApplication::m_ApplicationSignalQueue.Stop();
 }
 
-qcc::String GatewayCtrlConnectorApplication::getGwBusName() {
+const qcc::String& GatewayCtrlConnectorApplication::getGwBusName() {
     return m_GwBusName;
 }
 
-qcc::String GatewayCtrlConnectorApplication::getAppId() {
+const qcc::String& GatewayCtrlConnectorApplication::getAppId() {
     return m_AppId;
 }
 
-qcc::String GatewayCtrlConnectorApplication::getFriendlyName() {
+const qcc::String& GatewayCtrlConnectorApplication::getFriendlyName() {
     return m_FriendlyName;
 }
 
-qcc::String GatewayCtrlConnectorApplication::getObjectPath() {
+const qcc::String& GatewayCtrlConnectorApplication::getObjectPath() {
     return m_ObjectPath;
 }
 
-qcc::String GatewayCtrlConnectorApplication::getAppVersion() {
+const qcc::String& GatewayCtrlConnectorApplication::getAppVersion() {
     return m_AppVersion;
 }
 
@@ -295,8 +324,15 @@ GatewayCtrlManifestRules*GatewayCtrlConnectorApplication::retrieveManifestRules(
             goto end;
         }
 
-        m_ManifestRules = new GatewayCtrlManifestRules(returnArgs);
+        m_ManifestRules = new GatewayCtrlManifestRules();
+        QStatus status = m_ManifestRules->init(returnArgs);
 
+        if (status != ER_OK) {
+            delete m_ManifestRules;
+            m_ManifestRules = NULL;
+            QCC_LogError(status, ("Call to GatewayCtrlManifestRules init failed"));
+            return NULL;
+        }
     }
 end:
 
@@ -322,7 +358,18 @@ GatewayCtrlAccessRules* GatewayCtrlConnectorApplication::retrieveConfigurableRul
 
     remotedApps = extractRemotedApps(m_ManifestRules->getRemotedServices(), announcements, status);
 
-    m_ConfigurableRules = new GatewayCtrlAccessRules(m_ManifestRules->getExposedServices(), remotedApps);
+    m_ConfigurableRules = new GatewayCtrlAccessRules();
+
+    status = m_ConfigurableRules->init(m_ManifestRules->getExposedServices(), remotedApps);
+    if (status != ER_OK) {
+        QCC_LogError(status, ("RetrieveManifestRules failed in RetrieveConfigurableRules"));
+
+        delete m_ConfigurableRules;
+        m_ConfigurableRules = NULL;
+
+        return NULL;
+    }
+
 
     return m_ConfigurableRules;
 }
@@ -370,7 +417,15 @@ GatewayCtrlConnectorApplicationStatus*GatewayCtrlConnectorApplication::retrieveS
             goto end;
         }
 
-        m_ConnectorApplicationStatus = new GatewayCtrlConnectorApplicationStatus(returnArgs);
+        m_ConnectorApplicationStatus = new GatewayCtrlConnectorApplicationStatus();
+        status = m_ConnectorApplicationStatus->init(returnArgs);
+        if (status != ER_OK) {
+            QCC_LogError(status, ("m_ConnectorApplicationStatus->init failed"));
+            delete m_ConnectorApplicationStatus;
+            m_ConnectorApplicationStatus = NULL;
+
+            goto end;
+        }
 
         return m_ConnectorApplicationStatus;
 
@@ -503,7 +558,7 @@ void GatewayCtrlConnectorApplication::unsetStatusChangedHandler() {
 
 
 
-GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionId sessionId, qcc::String name, GatewayCtrlAccessRules* accessRules, QStatus& status) {
+GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionId sessionId, const qcc::String& name, GatewayCtrlAccessRules* accessRules, QStatus& status) {
 
     if (m_AclWriteResponse) {
         delete m_AclWriteResponse;
@@ -561,7 +616,22 @@ GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionI
             std::vector<GatewayCtrlManifestObjectDescription*> invalidRemAppRules = GatewayCtrlAccessControlList::validateManifObjDescs((*itr)->getObjDescRules(), remotedAppsTarget, manifestRules->getRemotedServices());
 
             if (invalidRemAppRules.size() > 0) {
-                invalidRemotedApps.push_back(new GatewayCtrlRemotedApp((*itr), invalidRemAppRules));
+                GatewayCtrlRemotedApp*ctrlRemotedApp = new GatewayCtrlRemotedApp();
+                QStatus status = ctrlRemotedApp->init((*itr), invalidRemAppRules);
+
+                if (status != ER_OK) {
+                    QCC_LogError(status, ("GatewayCtrlRemotedApp init failed"));
+                    delete ctrlRemotedApp;
+                    ctrlRemotedApp = NULL;
+
+                    for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                        delete (*itr);
+                    }
+
+                    goto end;
+                }
+
+                invalidRemotedApps.push_back(ctrlRemotedApp);
             }
 
             //If there is no any marshaled rule, no valid rule was found -> continue
@@ -569,8 +639,29 @@ GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionI
                 continue;
             }
 
+            GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp();
+
             //Populate the RemotedApp
-            GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp((*itr), remotedAppsTarget);
+            status = remotedApp->init((*itr), remotedAppsTarget);
+
+            if (status != ER_OK) {
+                QCC_LogError(status, ("GatewayCtrlRemotedApp init failed"));
+                delete remotedApp;
+                remotedApp = NULL;
+
+                for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                    delete (*itr);
+                }
+
+
+                for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = remotedAppsOut.begin(); itr != remotedAppsOut.end(); itr++) {
+                    delete (*itr);
+                }
+
+
+                goto end;
+            }
+
 
             remotedAppsOut.push_back(remotedApp);
 
@@ -585,8 +676,26 @@ GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionI
             internalMetadata.insert(std::pair<qcc::String, qcc::String>(keyPrefix + AJSUFFIX_DEVICE_NAME, remotedApp->getDeviceName()));
         }
 
-        GatewayCtrlAccessRules*transmittedAcessRules = new GatewayCtrlAccessRules(expServicesTargetOut, remotedAppsOut);
+        GatewayCtrlAccessRules*transmittedAcessRules = new GatewayCtrlAccessRules();
+        QStatus status = transmittedAcessRules->init(expServicesTargetOut, remotedAppsOut);
 
+        if (status != ER_OK) {
+            QCC_LogError(status, ("GatewayCtrlAccessRules init failed"));
+            delete transmittedAcessRules;
+            transmittedAcessRules = NULL;
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                delete (*itr);
+            }
+
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = remotedAppsOut.begin(); itr != remotedAppsOut.end(); itr++) {
+                delete (*itr);
+            }
+
+
+            goto end;
+        }
 
         std::vector<MsgArg*> accessRulesVector;
 
@@ -670,9 +779,17 @@ GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionI
             goto end;
         }
 
+        GatewayCtrlAccessRules*invalidAcessRules = new GatewayCtrlAccessRules();
+        status = invalidAcessRules->init(invalidExpServices, invalidRemotedApps);
 
+        if (status != ER_OK) {
+            QCC_LogError(status, ("invalid access rules init failed"));
+            delete invalidAcessRules;
+            invalidAcessRules = NULL;
+            goto end;
+        }
 
-        m_AclWriteResponse = new GatewayCtrlAclWriteResponse(aclId, aclResponseCode, NULL, objectPath);
+        m_AclWriteResponse = new GatewayCtrlAclWriteResponse(aclId, aclResponseCode, invalidAcessRules, objectPath);
 
     }
 end:
@@ -733,7 +850,17 @@ const std::vector <GatewayCtrlAccessControlList*>& GatewayCtrlConnectorApplicati
 
         for (int i = 0; i < numACLs; i++) {
 
-            GatewayCtrlAccessControlList*accessControlList = new GatewayCtrlAccessControlList(m_GwBusName, &tempEntries[i]);
+            GatewayCtrlAccessControlList*accessControlList = new GatewayCtrlAccessControlList();
+
+            status = accessControlList->init(m_GwBusName, &tempEntries[i]);
+            if (status != ER_OK) {
+                QCC_LogError(status, ("GatewayCtrlAccessControlList init failed"));
+
+                delete accessControlList;
+                accessControlList = NULL;
+
+                goto end;
+            }
 
             m_Acls.push_back(accessControlList);
 
@@ -744,7 +871,7 @@ end:
     return m_Acls;
 }
 
-AclResponseCode GatewayCtrlConnectorApplication::deleteAcl(SessionId sessionId, qcc::String aclId, QStatus& status) {
+AclResponseCode GatewayCtrlConnectorApplication::deleteAcl(SessionId sessionId, const qcc::String& aclId, QStatus& status) {
 
     status = ER_OK;
 
@@ -994,7 +1121,23 @@ GatewayCtrlRemotedApp* GatewayCtrlConnectorApplication::extractRemotedApp(const 
 
     GatewayCtrlRemotedApp*remotedApp = NULL;
 
-    remotedApp = new GatewayCtrlRemotedApp(ann->GetAboutData(), rules);
+    remotedApp = new GatewayCtrlRemotedApp();
+
+    status = remotedApp->init(ann->GetAboutData(), rules);
+
+    if (status != ER_OK) {
+        delete remotedApp;
+        remotedApp = NULL;
+
+        for (std::vector<GatewayCtrlManifestObjectDescription*>::iterator itr = rules.begin(); itr != rules.end(); itr++) {
+            (*itr)->release();
+            delete (*itr);
+        }
+
+        return NULL;
+    }
+
+
 
     return remotedApp;
 }

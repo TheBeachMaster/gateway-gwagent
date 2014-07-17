@@ -27,16 +27,29 @@ namespace services {
 class GatewayCtrlConnectorApplicationStatus {
   public:
 
-    GatewayCtrlConnectorApplicationStatus(const ajn::MsgArg* returnArgs);
 
     /**
-     * Constructor
+     * Constructor - init must be called
+     */
+    GatewayCtrlConnectorApplicationStatus() {}
+
+    /**
+     * init
+     * @param returnArgs MsgArg containing the application info
+     * @return {@link QStatus}
+     */
+
+    QStatus init(const ajn::MsgArg* returnArgs);
+
+    /**
+     * init
      * @param installStatus status of the installed Third Party Application
      * @param installDescription string describing the install of the Third Party Application
      * @param connectionStatus status of connection to Third Party Application
      * @param operationalStatus operational status of the Third Party Application
+     * @return {@link QStatus}
      */
-    GatewayCtrlConnectorApplicationStatus(InstallStatus installStatus, qcc::String installDescription, ConnectionStatus connectionStatus, OperationalStatus operationalStatus);
+    QStatus init(InstallStatus installStatus, const qcc::String &installDescription, ConnectionStatus connectionStatus, OperationalStatus operationalStatus);
 
     /**
      * Destructor
@@ -51,7 +64,7 @@ class GatewayCtrlConnectorApplicationStatus {
     /**
      * @return The installation description of the Third Party Application
      */
-    qcc::String getInstallDescriptions();
+    const qcc::String &getInstallDescriptions();
 
     /**
      * @return Connection status of the Third Party Application to its cloud service

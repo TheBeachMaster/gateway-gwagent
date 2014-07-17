@@ -30,15 +30,16 @@ class GatewayCtrlManifestRules {
   public:
 
     /**
-     * Constructor
+     * Constructor - init must be called
      */
     GatewayCtrlManifestRules() { }
 
     /**
-     * Constructor
-     * @param manifRulesAJ
+     * init
+     * @param manifRulesAJ MsgArg with manifest rules
+     * @return {@link QStatus}
      */
-    GatewayCtrlManifestRules(const ajn::MsgArg*manifRulesAJ);
+    QStatus init(const ajn::MsgArg*manifRulesAJ);
 
     /**
      * Destructor
@@ -60,6 +61,7 @@ class GatewayCtrlManifestRules {
     const std::vector<GatewayCtrlManifestObjectDescription*>& getRemotedServices() const;
 
     /**
+     * release allocations and empty object. must be called before deletion of object.
      * @return Status of release
      */
     QStatus release();

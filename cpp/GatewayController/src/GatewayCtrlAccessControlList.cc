@@ -28,12 +28,19 @@ namespace services {
 
 using namespace gwcConsts;
 
-GatewayCtrlAccessControlList::GatewayCtrlAccessControlList(qcc::String gwBusName, const ajn::MsgArg*aclInfoAJ) : m_GwBusName(gwBusName), m_AclWriteResponse(NULL), m_AccessRules(NULL)
+GatewayCtrlAccessControlList::GatewayCtrlAccessControlList() : m_GwBusName(""), m_AclWriteResponse(NULL), m_AccessRules(NULL)
+{
+
+}
+
+QStatus GatewayCtrlAccessControlList::init(const qcc::String& gwBusName, const ajn::MsgArg*aclInfoAJ)
 {
     char* AclID;
     char* AclName;
     short RetAclStatus;
     char* ObjectPath;
+
+    m_GwBusName = gwBusName;
 
     m_AclStatus = GW_AS_INACTIVE;
 
@@ -59,88 +66,89 @@ GatewayCtrlAccessControlList::GatewayCtrlAccessControlList(qcc::String gwBusName
             status = busAttachment->CreateInterface(interfaceName.c_str(), interfaceDescription);
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not create interface"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_ACTIVATEACL.c_str(), NULL, "q", "AclResponseCode");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_DEACTIVATEACL.c_str(), NULL, "q", "AclResponseCode");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_GETACL.c_str(), NULL, "sa(obas)a(saya(obas))a{ss}a{ss}", "aclName,exposedServices,remotedApps,metaData");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_GETACLSTATUS.c_str(), NULL, "q", "aclStatus");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_UPDATEACL.c_str(), "sa(obas)a(saya(obas))a{ss}a{ss}", "q", "aclName,exposedServices,remotedApps,metaData,restartResponseCode");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
             status = interfaceDescription->AddMethod(AJ_METHOD_UPDATEACLMETADATA.c_str(), "a{ss}", "q", "metaData,aclResponseCode");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddMethod(AJ_METHOD_UPDATECUSTOMMETADATA.c_str(), "a{ss}", "q", "metaData,aclResponseCode");
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddMethod"));
-                return;
+                return status;
             }
 
             status = interfaceDescription->AddProperty(AJ_PROPERTY_VERSION.c_str(), AJPARAM_UINT16.c_str(), PROP_ACCESS_READ);
             if (status != ER_OK) {
                 QCC_LogError(status, ("Could not AddProperty"));
-                return;
+                return status;
             }
 
             interfaceDescription->Activate();
         }
     }
 
+    return ER_OK;
 }
 
 GatewayCtrlAccessControlList::~GatewayCtrlAccessControlList() {
 }
 
-qcc::String GatewayCtrlAccessControlList::getName()
+const qcc::String& GatewayCtrlAccessControlList::getName()
 {
     return m_AclName;
 }
 
-void GatewayCtrlAccessControlList::setName(qcc::String name)
+void GatewayCtrlAccessControlList::setName(const qcc::String& name)
 {
     m_AclName = name;
 }
 
 
-qcc::String GatewayCtrlAccessControlList::getId()
+const qcc::String& GatewayCtrlAccessControlList::getId()
 {
     return m_AclId;
 }
 
 
-qcc::String GatewayCtrlAccessControlList::getObjectPath()
+const qcc::String& GatewayCtrlAccessControlList::getObjectPath()
 {
     return m_ObjectPath;
 }
 
-qcc::String GatewayCtrlAccessControlList::getGwBusName()
+const qcc::String& GatewayCtrlAccessControlList::getGwBusName()
 {
     return m_GwBusName;
 }
@@ -321,7 +329,23 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
                                       manifestRules->getRemotedServices());
 
             if (invalidRemAppRules.size() > 0) {
-                invalidRemotedApps.push_back(new GatewayCtrlRemotedApp((*itr), invalidRemAppRules));
+                GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp();
+
+                status = remotedApp->init((*itr), invalidRemAppRules);
+
+                if (status != ER_OK) {
+                    QCC_LogError(status, ("PayloadAdapter::MarshalAccessRules failed"));
+                    delete remotedApp;
+                    remotedApp = NULL;
+
+                    for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                        delete (*itr);
+                    }
+
+                    goto end;
+                }
+
+                invalidRemotedApps.push_back(remotedApp);
             }
 
             //If there is no any marshaled rule, no valid rule was found -> continue
@@ -330,7 +354,28 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
             }
 
             //Populate the RemotedApp
-            GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp((*itr), remotedAppsTarget);
+            GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp();
+
+            status = remotedApp->init((*itr), remotedAppsTarget);
+
+            if (status != ER_OK) {
+                QCC_LogError(status, ("GatewayCtrlRemotedApp::init failed"));
+
+                delete remotedApp;
+                remotedApp = NULL;
+
+                for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                    delete (*itr);
+                }
+
+
+                for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = remotedAppsOut.begin(); itr != remotedAppsOut.end(); itr++) {
+                    delete (*itr);
+                }
+
+
+                goto end;
+            }
 
             remotedAppsOut.push_back(remotedApp);
 
@@ -345,7 +390,19 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
             m_InternalMetadata.insert(std::pair<qcc::String, qcc::String>(keyPrefix + AJSUFFIX_DEVICE_NAME, remotedApp->getDeviceName()));
         }
 
-        GatewayCtrlAccessRules*transmittedAcessRules = new GatewayCtrlAccessRules(expServicesTargetOut, remotedAppsOut);
+        GatewayCtrlAccessRules*transmittedAcessRules = new GatewayCtrlAccessRules();
+
+        status = transmittedAcessRules->init(expServicesTargetOut, remotedAppsOut);
+
+        if (status != ER_OK) {
+            QCC_LogError(status, ("GatewayCtrlAccessRules init failed"));
+
+            delete transmittedAcessRules;
+            transmittedAcessRules = NULL;
+
+            goto end;
+
+        }
 
         transmittedAcessRules->setMetadata(m_InternalMetadata);
 
@@ -382,6 +439,15 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
             delete transmittedAcessRules;
             transmittedAcessRules = NULL;
 
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                delete (*itr);
+            }
+
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = remotedAppsOut.begin(); itr != remotedAppsOut.end(); itr++) {
+                delete (*itr);
+            }
+
             goto end;
         }
 
@@ -401,6 +467,15 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Call to UpdateAcl failed"));
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                delete (*itr);
+            }
+
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = remotedAppsOut.begin(); itr != remotedAppsOut.end(); itr++) {
+                delete (*itr);
+            }
             goto end;
         }
 
@@ -410,6 +485,16 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
         if (numArgs != 1) {
             QCC_DbgHLPrintf(("Received unexpected amount of returnArgs"));
             status = ER_BUS_UNEXPECTED_SIGNATURE;
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                delete (*itr);
+            }
+
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = remotedAppsOut.begin(); itr != remotedAppsOut.end(); itr++) {
+                delete (*itr);
+            }
+
             goto end;
         }
 
@@ -419,10 +504,39 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Failed getting restartStatus"));
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                delete (*itr);
+            }
+
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = remotedAppsOut.begin(); itr != remotedAppsOut.end(); itr++) {
+                delete (*itr);
+            }
+
             goto end;
         }
 
-        GatewayCtrlAccessRules*invalidRules = new GatewayCtrlAccessRules(invalidExpServices, invalidRemotedApps);
+        GatewayCtrlAccessRules*invalidRules = new GatewayCtrlAccessRules();
+        status = invalidRules->init(invalidExpServices, invalidRemotedApps);
+
+        if (status != ER_OK) {
+            QCC_LogError(status, ("Failed GatewayCtrlAccessRules init"));
+            delete invalidRules;
+            invalidRules = NULL;
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = invalidRemotedApps.begin(); itr != invalidRemotedApps.end(); itr++) {
+                delete (*itr);
+            }
+
+
+            for (std::vector<GatewayCtrlRemotedApp*>::iterator itr = remotedAppsOut.begin(); itr != remotedAppsOut.end(); itr++) {
+                delete (*itr);
+            }
+
+            goto end;
+        }
+
 
         m_AclWriteResponse = new GatewayCtrlAclWriteResponse(m_AclId, (AclResponseCode)aclResponse, invalidRules, m_ObjectPath);
 
@@ -742,7 +856,17 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
         std::sort(expServices.begin(), expServices.end(), ManifestObjectDescriptionComparator);
         std::sort(remServices.begin(), remServices.end(), ManifestObjectDescriptionComparator);
 
-        GatewayCtrlAccessRules*tmpAccessRules = new GatewayCtrlAccessRules(&returnArgs[1], &returnArgs[2], manifestRules, m_InternalMetadata);
+        GatewayCtrlAccessRules*tmpAccessRules = new GatewayCtrlAccessRules();
+
+        status = tmpAccessRules->init(&returnArgs[1], &returnArgs[2], manifestRules, m_InternalMetadata);
+
+        if (status != ER_OK) {
+            QCC_LogError(status, ("Failed tmpAccessRules->init"));
+            delete tmpAccessRules;
+            tmpAccessRules = NULL;
+            goto end;
+
+        }
 
         // The information retreived from the gateway manager will always include configured rules and configured rules only.
         for (std::vector<GatewayCtrlRemotedApp*>::const_iterator remotedAppIter = tmpAccessRules->getRemotedApps().begin(); remotedAppIter != tmpAccessRules->getRemotedApps().end(); remotedAppIter++) {
@@ -792,7 +916,18 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
             }
         }
 
-        m_AccessRules = new GatewayCtrlAccessRules(exposedServices, remotedApps);
+        m_AccessRules = new GatewayCtrlAccessRules();
+
+        status = m_AccessRules->init(exposedServices, remotedApps);
+
+        if (status != ER_OK) {
+            QCC_LogError(status, ("Failed m_AccessRules->init"));
+            delete m_AccessRules;
+            m_AccessRules = NULL;
+
+            goto end;
+        }
+
         m_AccessRules->setMetadata(customMetadata);
 
         return m_AccessRules;
@@ -918,7 +1053,7 @@ bool GatewayCtrlAccessControlList::isValidRule(GatewayCtrlManifestObjectDescript
     return validRuleFound;
 }
 
-bool GatewayCtrlAccessControlList::isValidObjPath(const GatewayCtrlConnAppObjectPath*manifOp, qcc::String toValidOP, bool isPrefix)
+bool GatewayCtrlAccessControlList::isValidObjPath(const GatewayCtrlConnAppObjectPath*manifOp, const qcc::String& toValidOP, bool isPrefix)
 {
     if ((manifOp->isPrefix() && GatewayCtrlConnectorApplication::stringStartWith(manifOp->getPath(), toValidOP)) ||
         (!manifOp->isPrefix() && !isPrefix && (manifOp->getPath() == toValidOP))) {
@@ -1226,7 +1361,21 @@ bool GatewayCtrlAccessControlList::convertRemotedApps(const std::vector<GatewayC
 
                 QCC_SyncPrintf("retrieveRemotedApps - metadata has the required values, creating the remoted app");
                 //Create RemotedApp
-                outputRemotedApps.push_back(new GatewayCtrlRemotedApp(qcc::String(""), appNameMeta, (uint8_t*)binary_appid, deviceNameMeta, remApp->getDeviceId(), configuredRules));
+
+                GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp();
+
+                status = remotedApp->init(qcc::String(""), appNameMeta, (uint8_t*)binary_appid, deviceNameMeta, remApp->getDeviceId(), configuredRules);
+
+                if (status != ER_OK) {
+                    QCC_LogError(status, ("remotedApp->init failed"));
+
+                    delete remotedApp;
+                    remotedApp = NULL;
+
+                    return false;
+                }
+
+                outputRemotedApps.push_back(remotedApp);
             }
         } else {         //There is a configurableApp
 
@@ -1241,7 +1390,18 @@ bool GatewayCtrlAccessControlList::convertRemotedApps(const std::vector<GatewayC
             addUnconfiguredRemotedAppRules(configurableApp->getObjDescRules(), configuredRules);
 
             if (configuredRules.size() > 0) {
-                outputRemotedApps.push_back(new GatewayCtrlRemotedApp(configurableApp, configuredRules));
+                GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp();
+
+                status = remotedApp->init(configurableApp, configuredRules);
+
+                if (status != ER_OK) {
+                    QCC_LogError(status, ("Call to GetAcl failed"));
+                    delete remotedApp;
+                    remotedApp = NULL;
+                    return false;
+                }
+
+                outputRemotedApps.push_back(remotedApp);
             }
 
         }        //if :: annData != null
@@ -1317,7 +1477,7 @@ void GatewayCtrlAccessControlList::addUnconfiguredRemotedAppRules(const std::vec
     }        //for::unconfRule
 }
 
-bool GatewayCtrlAccessControlList::metadataUpdated(qcc::String deviceNameMeta, qcc::String appNameMeta, const GatewayCtrlRemotedApp& annApp, qcc::String keyPrefix) {
+bool GatewayCtrlAccessControlList::metadataUpdated(const qcc::String& deviceNameMeta, const qcc::String& appNameMeta, const GatewayCtrlRemotedApp& annApp, const qcc::String& keyPrefix) {
 
     bool updatedMeta      = false;
 

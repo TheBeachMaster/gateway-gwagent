@@ -16,7 +16,6 @@
 
 #import "AJGWCGatewayCtrlConnectorApplicationStatus.h"
 #import "alljoyn/about/AJNConvertUtil.h"
-//#import "AJNMessageArgument.h"
 #import "AJGWCGatewayCtrlEnums.h"
 
 @interface AJGWCGatewayCtrlConnectorApplicationStatus ()
@@ -49,7 +48,18 @@
 {
     self = [super init];
     if (self) {
-        self.handle = new ajn::services::GatewayCtrlConnectorApplicationStatus((ajn::services::InstallStatus)installStatus, [AJNConvertUtil convertNSStringToQCCString:installDescription], (ajn::services::ConnectionStatus)connectionStatus, (ajn::services::OperationalStatus)operationalStatus);
+        self.handle = new ajn::services::GatewayCtrlConnectorApplicationStatus();
+        QStatus status = self.handle->init((ajn::services::InstallStatus)installStatus, [AJNConvertUtil convertNSStringToQCCString:installDescription], (ajn::services::ConnectionStatus)connectionStatus, (ajn::services::OperationalStatus)operationalStatus);
+
+        if (status != ER_OK) {
+            delete self.handle;
+            self.handle = NULL;
+
+            NSLog(@"Failed initializing ajn::services::GatewayCtrlConnectorApplicationStatus");
+            return nil;
+        }
+
+
     }
     return self;
 }

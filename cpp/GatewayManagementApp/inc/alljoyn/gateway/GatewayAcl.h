@@ -68,7 +68,7 @@ class GatewayAcl {
     QStatus loadFromFile(qcc::String const& fileName);
 
     /**
-     *	Write the Acl to its file
+     * Write the Acl to its file
      * @return status - success/failure
      */
     QStatus writeToFile();

@@ -94,16 +94,6 @@
     return [[AJGWCGatewayCtrlGateway alloc] initWithHandle: ajn::services::GatewayCtrlGatewayController::getInstance()->getGateway([AJNConvertUtil convertNSStringToQCCString:gatewayBusName])];
 }
 
-- (QStatus)deleteGateway:(NSString *) gatewayBusName
-{
-    return ajn::services::GatewayCtrlGatewayController::getInstance()->deleteGateway([AJNConvertUtil convertNSStringToQCCString:gatewayBusName]);
-}
-
-- (QStatus)deleteAllGateways
-{
-    return ajn::services::GatewayCtrlGatewayController::getInstance()->deleteAllGateways();
-}
-
 - (NSDictionary*)gateways
 {
     NSMutableDictionary* gwsDict = [[NSMutableDictionary alloc] init];

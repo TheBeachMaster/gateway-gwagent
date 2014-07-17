@@ -32,9 +32,16 @@ class GatewayCtrlApplicationStatusSignalHandler {
      * The event is emitted when the status of the Third Party Application
      * changes. Avoid blocking the thread on which the method is called.
      * @param appId The application id
+     * @param ConnectorApplicationStatus {@link GatewayCtrlConnectorApplicationStatus}
+     */
+    virtual void onStatusChanged(const qcc::String& appId, const GatewayCtrlConnectorApplicationStatus*ConnectorApplicationStatus) = 0;
+
+    /**
+     * An event could not be emitted because of an error creating its data
+     * @param appId The application id
      * @param status {@link ConnectorApplicationStatus}
      */
-    virtual void onStatusChanged(qcc::String appId, const GatewayCtrlConnectorApplicationStatus*ConnectorApplicationStatus) = 0;
+    virtual void onError(const qcc::String& appId, const QStatus& status) = 0;
 };
 }
 }

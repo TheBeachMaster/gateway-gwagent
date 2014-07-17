@@ -25,8 +25,14 @@ namespace ajn {
 namespace services {
 class GatewayCtrlRemotedApp : public GatewayCtrlDiscoveredApp {
   public:
+
     /**
-     * Constructor
+     * Constructor - must call appropriate init
+     */
+    GatewayCtrlRemotedApp() { }
+
+    /**
+     * init
      * @param busUniqueName The name of the {@link BusAttachment} of the remoted application
      * @param appName The name of the application
      * @param appId The application id
@@ -34,21 +40,35 @@ class GatewayCtrlRemotedApp : public GatewayCtrlDiscoveredApp {
      * @param deviceId The device id
      * @param objDescRules Configuration of the object paths and interfaces that are
      * used by the Third Party Application to reach this remoted application
+     * @return {@link QStatus}
      */
-    GatewayCtrlRemotedApp(qcc::String busUniqueName, qcc::String appName, uint8_t*appId, qcc::String deviceName, qcc::String deviceId, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules);
+    QStatus init(const qcc::String& busUniqueName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules);
 
-    GatewayCtrlRemotedApp(const ajn::MsgArg*remotedAppInfo, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules, const std::map<qcc::String, qcc::String>& internalMetaData);
+    /**
+     * init
+     * @param remotedAppInfo MsgArg with the information for this remoted app
+     * @param objDescRules vector with object description rules for the remoted app
+     * @param internalMetaData map of the internal metadata
+     * @return {@link QStatus}
+     */
+    QStatus init(const ajn::MsgArg*remotedAppInfo, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules, const std::map<qcc::String, qcc::String>& internalMetaData);
 
-    GatewayCtrlRemotedApp(AboutClient::AboutData const& aboutData, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules);
+    /**
+     * init
+     * @param aboutData Announcement's about data object
+     * @param objDescRules vector with object description rules for the remoted app
+     * @return {@link QStatus}
+     */
+    QStatus init(AboutClient::AboutData const& aboutData, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules);
 
 
     /**
-     * Constructor
+     * init
      * @param discoveredApp The {@link DiscoveredApp} to be used to build this {@link RemotedApp}
      * @param objDescRules Configuration of the object paths and interfaces that are
      * used by the Third Party Application to reach this remoted application
      */
-    GatewayCtrlRemotedApp(GatewayCtrlDiscoveredApp* discoveredApp, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules);
+    QStatus init(GatewayCtrlDiscoveredApp* discoveredApp, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules);
 
     /**
      * Destructor
@@ -63,6 +83,7 @@ class GatewayCtrlRemotedApp : public GatewayCtrlDiscoveredApp {
     const std::vector<GatewayCtrlManifestObjectDescription*>& getObjDescRules();
 
     /**
+     * release allocations and empty object. must be called before deletion of object.
      * @return Status of release
      */
     QStatus release();

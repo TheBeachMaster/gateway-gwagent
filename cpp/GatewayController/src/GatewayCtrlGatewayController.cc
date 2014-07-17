@@ -61,7 +61,7 @@ BusAttachment* GatewayCtrlGatewayController::getBusAttachment()
 }
 
 
-GatewayCtrlGateway* GatewayCtrlGatewayController::createGateway(qcc::String const& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData)
+GatewayCtrlGateway* GatewayCtrlGatewayController::createGateway(const qcc::String& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData)
 {
     GatewayCtrlGateway* gateway = NULL;
 
@@ -85,7 +85,7 @@ GatewayCtrlGateway* GatewayCtrlGatewayController::createGateway(qcc::String cons
     return gateway;
 }
 
-GatewayCtrlGateway* GatewayCtrlGatewayController::getGateway(qcc::String const& gatewayBusName)
+GatewayCtrlGateway* GatewayCtrlGatewayController::getGateway(const qcc::String& gatewayBusName)
 {
     std::map<qcc::String, GatewayCtrlGateway*>::const_iterator gateway = m_Gateways.find(gatewayBusName);
 
@@ -93,35 +93,6 @@ GatewayCtrlGateway* GatewayCtrlGatewayController::getGateway(qcc::String const& 
         return gateway->second;
     }
     return NULL;
-}
-
-QStatus GatewayCtrlGatewayController::deleteGateway(qcc::String const& gatewayBusName)
-{
-    QStatus status = ER_OK;
-
-    std::map<qcc::String, GatewayCtrlGateway*>::iterator gateway = m_Gateways.find(gatewayBusName);
-    if (gateway != m_Gateways.end()) {
-        status = gateway->second->release();
-
-        if (status != ER_OK) {
-            QCC_LogError(status, ("While releasing a gateway"));
-            return status;
-        }
-
-        delete gateway->second;
-
-        m_Gateways.erase(gateway);  //code rev
-
-    }
-
-    return status;
-}
-
-QStatus GatewayCtrlGatewayController::deleteAllGateways()
-{
-    emptyMap();
-
-    return ER_OK;
 }
 
 const std::map<qcc::String, GatewayCtrlGateway*>& GatewayCtrlGatewayController::getGateways() const
@@ -138,7 +109,6 @@ void GatewayCtrlGatewayController::emptyMap()
         gateway->release();
         delete gateway;
     }
-
 }
 
 

@@ -158,6 +158,11 @@
     });
 }
 
+- (void)onError:(NSString *)appId errorCode:(QStatus)code
+{
+    [AppDelegate AlertAndLog:[NSString stringWithFormat:@"AppID %@ status event - an error occured in creation of the event data",appId] status:code];
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

@@ -18,6 +18,7 @@
 #import "alljoyn/about/AJNConvertUtil.h"
 #import "AJGWCGatewayCtrlManifestObjectDescription.h"
 #import "AJGWCGatewayCtrlRemotedApp.h"
+#import "AJNStatus.h"
 
 @interface AJGWCGatewayCtrlAccessRules ()
 
@@ -52,9 +53,19 @@
         for(AJGWCGatewayCtrlRemotedApp* remoteApp in remotedApps) {
             remotedAppsVect.insert(remotedAppsVect.end(), [remoteApp handle]);
         }
+
+        self.handle = new ajn::services::GatewayCtrlAccessRules();
+
+        QStatus status = self.handle->init(exposedServicesVect, remotedAppsVect);
+
+        if (status != ER_OK) {
+            delete self.handle;
+            self.handle = NULL;
+            NSLog(@"Error: Failed to init AJGWCGatewayCtrlAccessRules :%@", [AJNStatus descriptionForStatusCode:status]);
+            return nil;
+        }
     }
 
-    self.handle = new ajn::services::GatewayCtrlAccessRules(exposedServicesVect, remotedAppsVect);
     return self;
 }
 

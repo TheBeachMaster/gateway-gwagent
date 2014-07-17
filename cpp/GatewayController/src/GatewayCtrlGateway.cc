@@ -27,7 +27,7 @@ namespace ajn {
 namespace services {
 
 
-GatewayCtrlGateway::GatewayCtrlGateway(qcc::String gwBusName, AboutClient::AboutData const& aboutData) : GatewayCtrlDiscoveredApp(gwBusName, aboutData), m_SessionHandler(this), m_Listener(0)
+GatewayCtrlGateway::GatewayCtrlGateway(const qcc::String& gwBusName, AboutClient::AboutData const& aboutData) : GatewayCtrlDiscoveredApp(gwBusName, aboutData), m_SessionHandler(this), m_Listener(0)
 {
 
 }
@@ -127,7 +127,17 @@ const std::vector<GatewayCtrlConnectorApplication*>&  GatewayCtrlGateway::retrie
 
         for (int i = 0; i < numApplications; i++) {
 
-            GatewayCtrlConnectorApplication*connectorApp = new GatewayCtrlConnectorApplication(getBusName(), &tempEntries[i]);
+            GatewayCtrlConnectorApplication*connectorApp = new GatewayCtrlConnectorApplication();
+            status = connectorApp->init(getBusName(), &tempEntries[i]);
+
+            if (status != ER_OK) {
+                QCC_LogError(status, ("Call to connectorApp->init failed"));
+
+                delete connectorApp;
+                connectorApp = NULL;
+
+                goto end;
+            }
 
             m_InstalledApps.push_back(connectorApp);
 

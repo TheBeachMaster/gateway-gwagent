@@ -37,12 +37,19 @@ class GatewayCtrlAccessControlList {
   public:
 
     /**
-     * Constructor
+     * Constructor - must call init
+     */
+    GatewayCtrlAccessControlList();
+
+
+    /**
+     * init
      * @param gwBusName The name of the gateway {@link BusAttachment} hosting a Third Party Application
      * that is related to this ACL
      * @param aclInfoAJ The ACL information
      */
-    GatewayCtrlAccessControlList(qcc::String gwBusName, const ajn::MsgArg*aclInfoAJ);
+
+    QStatus init(const qcc::String& gwBusName, const ajn::MsgArg*aclInfoAJ);
 
     /**
      * Destructor
@@ -52,29 +59,29 @@ class GatewayCtrlAccessControlList {
     /**
      * @return The name of the Access Control List
      */
-    qcc::String getName();
+    const qcc::String& getName();
 
     /**
      * Set the name of the Access Control List
      * @param name The ACL name
      */
-    void setName(qcc::String name);
+    void setName(const qcc::String& name);
 
     /**
      * @return Id of the Access Control List
      */
-    qcc::String getId();
+    const qcc::String& getId();
 
     /**
      * @return Object path of the Access Control List
      */
-    qcc::String getObjectPath();
+    const qcc::String& getObjectPath();
 
     /**
      * @return The name of the gateway {@link BusAttachment} hosting a Third Party Application
      * that is related to this Access Control List
      */
-    qcc::String getGwBusName();
+    const qcc::String& getGwBusName();
 
 
     /**
@@ -152,6 +159,7 @@ class GatewayCtrlAccessControlList {
     GatewayCtrlAccessRules*retrieveAcl(SessionId sessionId, const GatewayCtrlManifestRules& manifestRules,
                                        std::vector<AnnouncementData*> const& announcements, QStatus& status);
     /**
+     * release allocations and empty object. must be called before deletion of object.
      * @return Status of release
      */
     QStatus release();
@@ -219,7 +227,7 @@ class GatewayCtrlAccessControlList {
      */
     static bool isValidRule(GatewayCtrlManifestObjectDescription*toValidate, std::set<GatewayCtrlConnAppInterface>& notValid, const std::vector<GatewayCtrlManifestObjectDescription*>& manifestRules);
 
-    static bool isValidObjPath(const GatewayCtrlConnAppObjectPath*manifOp, qcc::String toValidOP, bool isPrefix);
+    static bool isValidObjPath(const GatewayCtrlConnAppObjectPath*manifOp, const qcc::String& toValidOP, bool isPrefix);
 
     /**
      * Gets exposed services of the ACL, intersects it with the manifest exposed services in order to create
@@ -276,7 +284,7 @@ class GatewayCtrlAccessControlList {
      * @param appId
      * @return {@link RemotedApp} if found or NULL if NOT
      */
-    GatewayCtrlRemotedApp*getRemotedApp(std::vector<GatewayCtrlRemotedApp*>*remotedApps, qcc::String deviceId, const uint8_t*appId)
+    GatewayCtrlRemotedApp*getRemotedApp(std::vector<GatewayCtrlRemotedApp*>*remotedApps, const qcc::String& deviceId, const uint8_t*appId)
     {
         std::vector<GatewayCtrlRemotedApp*>::iterator iter;
 
@@ -306,7 +314,7 @@ class GatewayCtrlAccessControlList {
      * @param key metadata prefix key
      * @return TRUE if the metadata needs to be updated
      */
-    bool metadataUpdated(qcc::String deviceNameMeta, qcc::String appNameMeta, const GatewayCtrlRemotedApp& annApp, qcc::String keyPrefix);
+    bool metadataUpdated(const qcc::String& deviceNameMeta, const qcc::String& appNameMeta, const GatewayCtrlRemotedApp& annApp, const qcc::String& keyPrefix);
 };
 }
 }

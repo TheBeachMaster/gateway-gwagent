@@ -15,7 +15,6 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-//@class AJNMessageArgument;
 #import "AJGWCGatewayCtrlEnums.h"
 #import "alljoyn/gateway/GatewayCtrlConnectorApplicationStatus.h"
 

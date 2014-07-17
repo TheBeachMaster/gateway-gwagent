@@ -31,5 +31,12 @@
  */
 - (void)onStatusChanged:(NSString*) appId status:(AJGWCGatewayCtrlConnectorApplicationStatus*) status;
 
+/**
+ * An event could not be emitted because of an error creating its data
+ * @param appId The application id
+ * @param code {@link ConnectorApplicationStatus}
+ */
+- (void)onError:(NSString*) appId errorCode:(QStatus)code;
+
 @end
 

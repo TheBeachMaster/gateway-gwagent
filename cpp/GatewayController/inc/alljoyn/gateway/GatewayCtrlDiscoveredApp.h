@@ -39,14 +39,14 @@ class GatewayCtrlDiscoveredApp {
      * @param deviceName The name of the device
      * @param deviceId The device id
      */
-    GatewayCtrlDiscoveredApp(qcc::String busName, qcc::String appName, uint8_t*appId, qcc::String deviceName, qcc::String deviceId);
+    GatewayCtrlDiscoveredApp(const qcc::String& busName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId);
 
     /**
      * Constructor
      * @param busName The name of the {@link BusAttachment} of the device that sent the Announcement
      * @param aboutData The data sent with the Announcement
      */
-    GatewayCtrlDiscoveredApp(qcc::String busName, AboutClient::AboutData const& aboutData);
+    GatewayCtrlDiscoveredApp(const qcc::String& busName, AboutClient::AboutData const& aboutData);
 
     /**
      * Destructor
@@ -56,12 +56,12 @@ class GatewayCtrlDiscoveredApp {
     /**
      * @return The bus name
      */
-    qcc::String getBusName();
+    const qcc::String& getBusName();
 
     /**
      * @return The name of the application that sent the announcement
      */
-    qcc::String getAppName() const;
+    const qcc::String& getAppName() const;
 
     /**
      * @return Id of the application that sent the announcement
@@ -71,23 +71,23 @@ class GatewayCtrlDiscoveredApp {
     /**
      * @return The name of the device that the application belongs to
      */
-    qcc::String getDeviceName() const;
+    const qcc::String& getDeviceName() const;
 
     /**
      * @return The id of the device that the application belongs to
      */
-    qcc::String getDeviceId();
+    const qcc::String& getDeviceId();
 
     /**
      * set bus name
      */
 
-    void setBusName(qcc::String busName);
+    void setBusName(const qcc::String& busName);
 
     /**
      * set bus name
      */
-    void setAppName(qcc::String appName);
+    void setAppName(const qcc::String& appName);
 
     /**
      * set app Id
@@ -97,19 +97,19 @@ class GatewayCtrlDiscoveredApp {
     /**
      * set device name
      */
-    void setDeviceName(qcc::String deviceName);
+    void setDeviceName(const qcc::String& deviceName);
 
     /**
      * set device Id
      */
-    void setDeviceId(qcc::String deviceId);
+    void setDeviceId(const qcc::String& deviceId);
 
 
   private:
     /**
      * Create an entry. If information is missing from the aboutData map an empty string is entered instead
      */
-    qcc::String getAboutDataEntry(AboutClient::AboutData const& aboutData, qcc::String key);
+    qcc::String getAboutDataEntry(AboutClient::AboutData const& aboutData, const qcc::String& key);
 
     /**
      * The unique name of the {@link BusAttachment} that sent the Announcement signal

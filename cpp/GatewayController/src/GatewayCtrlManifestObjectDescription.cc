@@ -21,16 +21,16 @@
 namespace ajn {
 namespace services {
 
-GatewayCtrlConnAppInterface::GatewayCtrlConnAppInterface(qcc::String name, qcc::String friendlyName, bool isSecured) : m_Name(name), m_FriendlyName(friendlyName), m_IsSecured(isSecured)
+GatewayCtrlConnAppInterface::GatewayCtrlConnAppInterface(const qcc::String& name, const qcc::String& friendlyName, bool isSecured) : m_Name(name), m_FriendlyName(friendlyName), m_IsSecured(isSecured)
 {
 }
 
-qcc::String GatewayCtrlConnAppInterface::getName() const
+const qcc::String& GatewayCtrlConnAppInterface::getName() const
 {
     return m_Name;
 }
 
-qcc::String GatewayCtrlConnAppInterface::getFriendlyName() const
+const qcc::String& GatewayCtrlConnAppInterface::getFriendlyName() const
 {
     return m_FriendlyName;
 }
@@ -48,7 +48,7 @@ bool GatewayCtrlConnAppInterface::operator<(const GatewayCtrlConnAppInterface to
 }
 
 
-GatewayCtrlConnAppObjectPath::GatewayCtrlConnAppObjectPath(qcc::String objectPath, qcc::String friendlyName, bool isPrefix, bool isPrefixAllowed) : m_ObjectPath(objectPath), m_FriendlyName(friendlyName), m_IsPrefix(isPrefix), m_isPrefixAllowed(isPrefixAllowed)
+GatewayCtrlConnAppObjectPath::GatewayCtrlConnAppObjectPath(const qcc::String& objectPath, const qcc::String& friendlyName, bool isPrefix, bool isPrefixAllowed) : m_ObjectPath(objectPath), m_FriendlyName(friendlyName), m_IsPrefix(isPrefix), m_isPrefixAllowed(isPrefixAllowed)
 {
 }
 
@@ -56,12 +56,12 @@ GatewayCtrlConnAppObjectPath::~GatewayCtrlConnAppObjectPath()
 {
 }
 
-qcc::String GatewayCtrlConnAppObjectPath::getPath() const
+const qcc::String& GatewayCtrlConnAppObjectPath::getPath() const
 {
     return m_ObjectPath;
 }
 
-qcc::String GatewayCtrlConnAppObjectPath::getFriendlyName()
+const qcc::String& GatewayCtrlConnAppObjectPath::getFriendlyName()
 {
     return m_FriendlyName;
 }

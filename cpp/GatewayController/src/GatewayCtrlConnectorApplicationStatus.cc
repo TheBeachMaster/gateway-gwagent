@@ -20,12 +20,18 @@
 namespace ajn {
 namespace services {
 
-GatewayCtrlConnectorApplicationStatus::GatewayCtrlConnectorApplicationStatus(InstallStatus installStatus, qcc::String installDescription, ConnectionStatus connectionStatus, OperationalStatus operationalStatus)
-    : m_InstallStatus((InstallStatus)installStatus), m_InstallDescription(installDescription), m_ConnectionStatus((ConnectionStatus)connectionStatus), m_OperationalStatus((OperationalStatus)operationalStatus)
+QStatus GatewayCtrlConnectorApplicationStatus::init(InstallStatus installStatus, const qcc::String& installDescription, ConnectionStatus connectionStatus, OperationalStatus operationalStatus)
+
 {
+    m_InstallStatus = (InstallStatus)installStatus;
+    m_InstallDescription = installDescription;
+    m_ConnectionStatus = (ConnectionStatus)connectionStatus;
+    m_OperationalStatus = (OperationalStatus)operationalStatus;
+
+    return ER_OK;
 }
 
-GatewayCtrlConnectorApplicationStatus::GatewayCtrlConnectorApplicationStatus(const ajn::MsgArg* returnArgs)
+QStatus GatewayCtrlConnectorApplicationStatus::init(const ajn::MsgArg* returnArgs)
 {
 
     QStatus status = ER_OK;
@@ -39,32 +45,34 @@ GatewayCtrlConnectorApplicationStatus::GatewayCtrlConnectorApplicationStatus(con
 
     if (status != ER_OK) {
         QCC_LogError(status, ("Failed getting installStatus"));
-        return;
+        return status;
     }
 
     status = returnArgs[1].Get("s", &installDescription);
 
     if (status != ER_OK) {
         QCC_LogError(status, ("Failed getting installDescription"));
-        return;
+        return status;
     }
     status = returnArgs[2].Get("q", &connectionStatus);
 
     if (status != ER_OK) {
         QCC_LogError(status, ("Failed getting connectionStatus"));
-        return;
+        return status;
     }
     status = returnArgs[3].Get("q", &operationalStatus);
 
     if (status != ER_OK) {
         QCC_LogError(status, ("Failed getting operationalStatus"));
-        return;
+        return status;
     }
 
     m_InstallStatus = (InstallStatus)installStatus;
     m_InstallDescription = installDescription;
     m_ConnectionStatus = (ConnectionStatus)connectionStatus;
     m_OperationalStatus = (OperationalStatus)operationalStatus;
+
+    return ER_OK;
 }
 
 GatewayCtrlConnectorApplicationStatus::~GatewayCtrlConnectorApplicationStatus() {
@@ -75,7 +83,7 @@ InstallStatus GatewayCtrlConnectorApplicationStatus::getInstallStatus()
     return m_InstallStatus;
 }
 
-qcc::String GatewayCtrlConnectorApplicationStatus::getInstallDescriptions()
+const qcc::String& GatewayCtrlConnectorApplicationStatus::getInstallDescriptions()
 {
     return m_InstallDescription;
 }

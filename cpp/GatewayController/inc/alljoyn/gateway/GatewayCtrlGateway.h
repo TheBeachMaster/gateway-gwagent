@@ -52,7 +52,7 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
      * the Announcement
      * @param aboutData The data sent with the Announcement
      */
-    GatewayCtrlGateway(qcc::String gwBusName, AboutClient::AboutData const& aboutData);
+    GatewayCtrlGateway(const qcc::String& gwBusName, AboutClient::AboutData const& aboutData);
 
     /**
      * Destructor
@@ -112,6 +112,7 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
 
 
     /**
+     * release allocations and empty object. must be called before deletion of object.
      * @return Status of release
      */
     QStatus release();

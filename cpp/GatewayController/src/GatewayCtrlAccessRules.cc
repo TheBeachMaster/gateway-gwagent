@@ -21,13 +21,20 @@
 namespace ajn {
 namespace services {
 
-GatewayCtrlAccessRules::GatewayCtrlAccessRules(std::vector<GatewayCtrlManifestObjectDescription*> const& exposedServices, std::vector<GatewayCtrlRemotedApp*> const& remotedApps)
+GatewayCtrlAccessRules::GatewayCtrlAccessRules()
+{
+
+}
+
+QStatus GatewayCtrlAccessRules::init(std::vector<GatewayCtrlManifestObjectDescription*> const& exposedServices, std::vector<GatewayCtrlRemotedApp*> const& remotedApps)
 {
     m_ExposedServices = exposedServices;
     m_RemotedApps = remotedApps;
+
+    return ER_OK;
 }
 
-GatewayCtrlAccessRules::GatewayCtrlAccessRules(const MsgArg*exposedServicesArrayArg, const MsgArg*remotedAppsArrayArg, const GatewayCtrlManifestRules& manifestRules, const std::map<qcc::String, qcc::String>& internalMetaData)
+QStatus GatewayCtrlAccessRules::init(const MsgArg*exposedServicesArrayArg, const MsgArg*remotedAppsArrayArg, const GatewayCtrlManifestRules& manifestRules, const std::map<qcc::String, qcc::String>& internalMetaData)
 {
     const ajn::MsgArg* exposedServicesArray;
     size_t exposedServicesCount;
@@ -35,7 +42,7 @@ GatewayCtrlAccessRules::GatewayCtrlAccessRules(const MsgArg*exposedServicesArray
     QStatus status = exposedServicesArrayArg->Get("a(obas)", &exposedServicesCount, &exposedServicesArray);
     if (status != ER_OK) {
         QCC_LogError(status, ("Failed getting Manifest object"));
-        return;
+        return status;
     }
 
     for (int i = 0; i != exposedServicesCount; i++) {
@@ -44,8 +51,7 @@ GatewayCtrlAccessRules::GatewayCtrlAccessRules(const MsgArg*exposedServicesArray
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Failed unmarshalObjectDesciptionsWithoutNames"));
-            return;
-
+            return status;
         }
 
         m_ExposedServices.push_back(exposedService);
@@ -57,16 +63,23 @@ GatewayCtrlAccessRules::GatewayCtrlAccessRules(const MsgArg*exposedServicesArray
     status = remotedAppsArrayArg->Get("a(saya(obas))", &remotedAppsCount, &remotedAppsArray);
     if (status != ER_OK) {
         QCC_LogError(status, ("Failed getting remoted app object"));
-        return;
+        return status;
     }
 
     for (int i = 0; i != remotedAppsCount; i++) {
-        GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp(&remotedAppsArray[i], manifestRules.getRemotedServices(), internalMetaData);
+        GatewayCtrlRemotedApp*remotedApp = new GatewayCtrlRemotedApp();
+
+        QStatus status = remotedApp->init(&remotedAppsArray[i], manifestRules.getRemotedServices(), internalMetaData);
+
+        if (status != ER_OK) {
+            delete remotedApp;
+            return status;
+        }
 
         m_RemotedApps.push_back(remotedApp);
     }
 
-
+    return ER_OK;
 }
 
 GatewayCtrlAccessRules::~GatewayCtrlAccessRules()
@@ -89,7 +102,7 @@ void GatewayCtrlAccessRules::setMetadata(std::map<qcc::String, qcc::String> cons
     m_Metadata.insert(metadata.begin(), metadata.end());
 }
 
-qcc::String*GatewayCtrlAccessRules::getMetadata(qcc::String key)
+qcc::String*GatewayCtrlAccessRules::getMetadata(const qcc::String& key)
 {
     std::map<qcc::String, qcc::String>::iterator value = m_Metadata.find(key);
 

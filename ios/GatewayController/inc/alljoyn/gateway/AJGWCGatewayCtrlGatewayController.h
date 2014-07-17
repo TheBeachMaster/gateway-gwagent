@@ -63,19 +63,6 @@
 - (AJGWCGatewayCtrlGateway*)gateway:(NSString *) gatewayBusName;
 
 /**
- * deleteGateway - delete a GateWay from the map
- * @param gatewayBusName AJGWCGatewayCtrlGateway to delete
- * @return Returns the deleteAllGateways status {@link QStatus}
- */
-- (QStatus)deleteGateway:(NSString *) gatewayBusName;
-
-/**
- * deleteAllGateways - shutdown and delete all Gateways from the controller
- * @return Returns the deleteAllGateways status {@link QStatus}
- */
-- (QStatus)deleteAllGateways;
-
-/**
  * Get a dictionary of all Gateways
  * @return Gateways dictionary
  */

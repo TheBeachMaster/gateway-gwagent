@@ -32,7 +32,7 @@ class GatewayCtrlAclWriteResponse {
      * @param invalidRules {@link GatewayCtrlAccessRules}
      * @param objPath Object path
      */
-    GatewayCtrlAclWriteResponse(qcc::String id, AclResponseCode code, GatewayCtrlAccessRules*invalidRules, qcc::String objPath);
+    GatewayCtrlAclWriteResponse(const qcc::String& id, AclResponseCode code, GatewayCtrlAccessRules*invalidRules, const qcc::String& objPath);
 
 
     /**
@@ -43,7 +43,7 @@ class GatewayCtrlAclWriteResponse {
     /**
      * @return The id of the ACL that the write operation was referred to
      */
-    qcc::String getAclId();
+    const qcc::String& getAclId();
 
 
     /**
@@ -59,9 +59,10 @@ class GatewayCtrlAclWriteResponse {
     /**
      * @return {@link AccessControlList} object path
      */
-    qcc::String getObjectPath();
+    const qcc::String& getObjectPath();
 
     /**
+     * release allocations and empty object. must be called before deletion of object.
      * @return Status of release
      */
     QStatus release();

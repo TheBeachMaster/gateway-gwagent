@@ -37,7 +37,7 @@ class GatewayCtrlConnAppInterface {
      * @param friendlyName The interface friendly name
      * @param isSecured Whether the interface is secured
      */
-    GatewayCtrlConnAppInterface(qcc::String name, qcc::String friendlyName, bool isSecured);
+    GatewayCtrlConnAppInterface(const qcc::String& name, const qcc::String& friendlyName, bool isSecured);
 
     /**
      * Copy Constructor
@@ -54,14 +54,14 @@ class GatewayCtrlConnAppInterface {
      * Returns a name of the interface.
      * @return interface name
      */
-    qcc::String getName() const;
+    const qcc::String& getName() const;
 
     /**
      * Returns a friendly name of the interface.
      * The friendly name may be presented to the end user.
      * @return Interface friendly name
      */
-    qcc::String getFriendlyName() const;
+    const qcc::String& getFriendlyName() const;
 
     /**
      * @return TRUE if the interface is secured
@@ -105,7 +105,7 @@ class GatewayCtrlConnAppObjectPath {
      * @param isPrefixAllowed TRUE if the object path is allowed to be a prefix according
      * to the end user.
      */
-    GatewayCtrlConnAppObjectPath(qcc::String objectPath, qcc::String friendlyName, bool isPrefix, bool isPrefixAllowed);
+    GatewayCtrlConnAppObjectPath(const qcc::String& objectPath, const qcc::String& friendlyName, bool isPrefix, bool isPrefixAllowed);
 
     /**
      * Destructor
@@ -116,14 +116,14 @@ class GatewayCtrlConnAppObjectPath {
      * AllJoyn object identification
      * @return The value of the object path
      */
-    qcc::String getPath() const;
+    const qcc::String& getPath() const;
 
     /**
      * Returns the friendly name  of the object path.
      * This name may be presented to the end user.
      * @return Object path friendly name
      */
-    qcc::String getFriendlyName();
+    const qcc::String& getFriendlyName();
 
     /**
      * @return Returns whether this object path is a prefix
@@ -238,6 +238,7 @@ class GatewayCtrlManifestObjectDescription {
     void setConfigured(bool configured);
 
     /**
+     * release allocations and empty object. must be called before deletion of object.
      * @return Status of release
      */
     QStatus release();

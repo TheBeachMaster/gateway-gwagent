@@ -30,21 +30,29 @@ namespace services {
 class GatewayCtrlAccessRules {
   public:
     /**
-     * Constructor
+     * Constructor - must call appropriate init
+     */
+    GatewayCtrlAccessRules();
+
+
+    /**
+     * init
+     * @param exposedServicesArrayArg MsgArg containing the exposed services
+     * @param remotedAppsArrayArg MsgArg containing the remoted apps
+     * @param manifestRules map of manifest rules for this connector app
+     * @param internalMetaData internal metadata information from the server
+     * @return {@link QStatus}
+     */
+    QStatus init(const MsgArg*exposedServicesArrayArg, const MsgArg*remotedAppsArrayArg, const GatewayCtrlManifestRules& manifestRules, const std::map<qcc::String, qcc::String>& internalMetaData);
+
+
+    /**
+     * init
      * @param exposedServices The interfaces that Third Party Application exposes to its clients
      * @param remotedApps The applications that may be reached by the Third Party Application
      * via the configured interfaces and object paths
      */
-    GatewayCtrlAccessRules(std::vector<GatewayCtrlManifestObjectDescription*> const& exposedServices, std::vector<GatewayCtrlRemotedApp*> const& remotedApps);
-
-
-    /**
-     * Constructor
-     * @param exposedServicesArrayArg
-     * @param remotedAppsArrayArg
-     * @param manifestRules
-     */
-    GatewayCtrlAccessRules(const MsgArg*exposedServicesArrayArg, const MsgArg*remotedAppsArrayArg, const GatewayCtrlManifestRules& manifestRules, const std::map<qcc::String, qcc::String>& internalMetaData);
+    QStatus init(std::vector<GatewayCtrlManifestObjectDescription*> const& exposedServices, std::vector<GatewayCtrlRemotedApp*> const& remotedApps);
 
     /**
      * Destructor
@@ -76,7 +84,7 @@ class GatewayCtrlAccessRules {
      * @param key The metadata key
      * @return Metadata value or NULL if not found
      */
-    qcc::String*getMetadata(qcc::String key);
+    qcc::String*getMetadata(const qcc::String& key);
 
     /**
      * Returns current metadata object
@@ -86,6 +94,7 @@ class GatewayCtrlAccessRules {
 
 
     /**
+     * release allocations and empty object. must be called before deletion of object.
      * @return Status of release
      */
     QStatus release();
