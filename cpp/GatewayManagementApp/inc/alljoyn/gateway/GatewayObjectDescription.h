@@ -38,7 +38,7 @@ class GatewayObjectDescription {
     /**
      * Constructor for the GatewayObjectDescription class
      * @param objectPath - objectPath of the ObjectDescription
-     * @param objectPath - isPrefix of the ObjectDescription
+     * @param isPrefix - isPrefix of the ObjectDescription
      * @param interfaces - interfaces of the ObjectDescription
      */
     GatewayObjectDescription(qcc::String const& objectPath, bool isPrefix, std::vector<qcc::String> const& interfaces);
