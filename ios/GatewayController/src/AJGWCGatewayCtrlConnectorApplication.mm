@@ -90,19 +90,34 @@
     return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getAppVersion()];
 }
 
-- (NSString*)retrieveManifestFileUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
+- (QStatus) retrieveManifestFileUsingSessionId:(AJNSessionId) sessionId fileContent:(NSString **)xml
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->retrieveManifestFile(sessionId, status)];
+    qcc::String in_xml;
+
+    QStatus status = self.handle->retrieveManifestFile(sessionId, in_xml);
+
+    if (status == ER_OK) {
+        *xml = [AJNConvertUtil convertQCCStringtoNSString:in_xml];
+    }
+
+    return status;
 }
 
-- (AJGWCGatewayCtrlManifestRules*)retrieveManifestRulesUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
+- (QStatus)retrieveManifestRulesUsingSessionId:(AJNSessionId) sessionId manifestRules:(AJGWCGatewayCtrlManifestRules**)manifestRules
 {
-    ajn::services::GatewayCtrlManifestRules* mRules = self.handle->retrieveManifestRules(sessionId, status);
+    ajn::services::GatewayCtrlManifestRules* mRules;
 
-    return [[AJGWCGatewayCtrlManifestRules alloc] initWithHandle:mRules];
+    QStatus status = self.handle->retrieveManifestRules(sessionId, &mRules );
+
+
+    if (status == ER_OK) {
+        *manifestRules = [[AJGWCGatewayCtrlManifestRules alloc] initWithHandle:mRules];
+    }
+
+    return status;
 }
 
-- (AJGWCGatewayCtrlAccessRules*)retrieveConfigurableRulesUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status announcements:(NSArray*) announcements
+- (QStatus)retrieveConfigurableRulesUsingSessionId:(AJNSessionId) sessionId rules:(AJGWCGatewayCtrlAccessRules**)rules announcements:(NSArray*) announcements
 {
     std::vector<ajn::services::AnnouncementData *>  announcementsVect;
 
@@ -141,21 +156,38 @@
         announcementsVect.insert(announcementsVect.end(), annData);
     } //for
 
-    ajn::services::GatewayCtrlAccessRules* aRules = self.handle->retrieveConfigurableRules(sessionId, announcementsVect, status);
+    ajn::services::GatewayCtrlAccessRules* aRules;
+    QStatus status = self.handle->retrieveConfigurableRules(sessionId, announcementsVect, &aRules);
 
-    return [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:aRules];
+    if (status == ER_OK) {
+        *rules = [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:aRules];
+    }
+
+    return status;
 }
 
-- (AJGWCGatewayCtrlConnectorApplicationStatus*)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
+- (QStatus)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(AJGWCGatewayCtrlConnectorApplicationStatus**)connectorAppStatus
 {
-    ajn::services::GatewayCtrlConnectorApplicationStatus* connectorAppStatus = self.handle->retrieveStatus(sessionId, status);
+    ajn::services::GatewayCtrlConnectorApplicationStatus *localConnectorAppStatus;
 
-    return [[AJGWCGatewayCtrlConnectorApplicationStatus alloc] initWithHandle:connectorAppStatus];
+    QStatus status = self.handle->retrieveStatus(sessionId, &localConnectorAppStatus);
+
+    if (status==ER_OK) {
+        *connectorAppStatus = [[AJGWCGatewayCtrlConnectorApplicationStatus alloc] initWithHandle:localConnectorAppStatus];
+    }
+
+    return status;
 }
 
-- (AJGWCRestartStatus)restartUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
+- (QStatus)restartUsingSessionId:(AJNSessionId) sessionId status:(AJGWCRestartStatus&) restartStatus
 {
-    return (AJGWCRestartStatus)self.handle->restart(sessionId, status);
+    ajn::services::RestartStatus localRestartStatus;
+
+    QStatus status = self.handle->restart(sessionId, localRestartStatus);
+
+    restartStatus = (AJGWCRestartStatus)localRestartStatus;
+
+    return status;
 }
 
 - (QStatus)setStatusChangedHandler:(id<AJGWCGatewayCtrlApplicationStatusSignalHandler>) handler
@@ -170,26 +202,40 @@
     self.handle->unsetStatusChangedHandler();
 }
 
-- (AJGWCGatewayCtrlAclWriteResponse*)createAclUsingSessionId:(AJNSessionId) sessionId name:(NSString*) name accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules status:(QStatus&) status
+- (QStatus)createAclUsingSessionId:(AJNSessionId) sessionId name:(NSString*) name accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules aclStatus:(AJGWCGatewayCtrlAclWriteResponse**)aclStatus
 {
-    ajn::services::GatewayCtrlAclWriteResponse* aclWRespose = self.handle->createAcl(sessionId, [AJNConvertUtil convertNSStringToQCCString:name], [accessRules handle], status);
-    return [[AJGWCGatewayCtrlAclWriteResponse alloc] initWithHandle:aclWRespose];
-}
+    ajn::services::GatewayCtrlAclWriteResponse* aclWResponse;
+    QStatus status = self.handle->createAcl(sessionId, [AJNConvertUtil convertNSStringToQCCString:name], [accessRules handle], &aclWResponse);
 
-- (NSArray*)retrieveAclsUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
-{
-    NSMutableArray* aclListArray =  [[NSMutableArray alloc] init];
-    std::vector <ajn::services::GatewayCtrlAccessControlList*> aclListVect =  self.handle->retrieveAcls(sessionId, status);
-    // Populate NSArray with std::vector data
-    for (std::vector<ajn::services::GatewayCtrlAccessControlList*>::const_iterator vectIt = aclListVect.begin(); vectIt != aclListVect.end(); vectIt++) {
-        [aclListArray addObject:[[AJGWCGatewayCtrlAccessControlList alloc] initWithHandle:*vectIt]];
+    if (status==ER_OK) {
+        *aclStatus = [[AJGWCGatewayCtrlAclWriteResponse alloc] initWithHandle:aclWResponse];
     }
-
-    return aclListArray;
+    return status;
 }
 
-- (AJGWCAclResponseCode)deleteAclUsingSessionId:(AJNSessionId) sessionId aclId:(NSString*) aclId status:(QStatus&) status
+- (QStatus)retrieveAclsUsingSessionId:(AJNSessionId) sessionId acls:(NSMutableArray *)aclListArray
 {
-    return (AJGWCAclResponseCode)self.handle->deleteAcl(sessionId, [AJNConvertUtil convertNSStringToQCCString:aclId], status);
+    std::vector <ajn::services::GatewayCtrlAccessControlList*> aclListVect;
+    QStatus status =  self.handle->retrieveAcls(sessionId, aclListVect);
+
+    if (status==ER_OK) {
+        // Populate NSArray with std::vector data
+        for (std::vector<ajn::services::GatewayCtrlAccessControlList*>::const_iterator vectIt = aclListVect.begin(); vectIt != aclListVect.end(); vectIt++) {
+            [aclListArray addObject:[[AJGWCGatewayCtrlAccessControlList alloc] initWithHandle:*vectIt]];
+        }
+
+    }
+    return status;
+}
+
+- (QStatus)deleteAclUsingSessionId:(AJNSessionId) sessionId aclId:(NSString*) aclId status:(AJGWCAclResponseCode &)responseCode
+{
+    ajn::services::AclResponseCode localResponseCode;
+    QStatus status = self.handle->deleteAcl(sessionId, [AJNConvertUtil convertNSStringToQCCString:aclId], localResponseCode);
+
+
+    responseCode = (AJGWCAclResponseCode)localResponseCode;
+
+    return status;
 }
 @end

@@ -42,10 +42,10 @@
 /**
  * Retrieve the list of applications installed on the gateway identified by the given gwBusName
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
- * @return an array of The {@link AJGWCGatewayCtrlConnectorApplication} installed applications
+ * @param installedApps A reference to an array of The {@link AJGWCGatewayCtrlConnectorApplication} installed applications
+ * @return status of operation
  */
-- (NSArray*)retrieveInstalledApps:(AJNSessionId) sessionId status:(QStatus&) status;
+- (QStatus)retrieveInstalledApps:(AJNSessionId) sessionId installedApps:(NSMutableArray*) installedApps;
 
 /**
  * Join session synchronously with the given gateway identified by the gwBusName.
@@ -78,7 +78,7 @@
 
 /**
  * Get the Listener defined for this SessionHandler
- * @return
+ * @return listener
  */
 - (id<AJGWCGatewayCtrlControllerSessionListener>)listener;
 

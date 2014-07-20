@@ -51,7 +51,7 @@
  * @param gatewayBusName BusName of device received in announce
  * @param objectDescs ObjectDescriptions received in announce
  * @param aboutData The data sent with the Announcement
- * @return a {@link AJGWCGatewayCtrlGateway} object
+ * @return a {@link AJGWCGatewayCtrlGateway} object or nil in case of error
  */
 - (AJGWCGatewayCtrlGateway*)createGatewayWithBusName:(NSString*) gatewayBusName objectDescs:(NSDictionary *) objectDescs  aboutData:(NSDictionary *) aboutData;
 

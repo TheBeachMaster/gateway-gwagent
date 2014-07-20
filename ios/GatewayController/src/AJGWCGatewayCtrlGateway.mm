@@ -55,21 +55,26 @@
             ajn::MsgArg* aboutDataMapVal = (ajn::MsgArg*)[[aboutData objectForKey:key] handle]; //value
             aboutDataMap.insert(std::make_pair(aboutDataMapKey, *aboutDataMapVal));
         }
-        self.handle = new ajn::services::GatewayCtrlGateway([AJNConvertUtil convertNSStringToQCCString:busUniqueName], aboutDataMap);
+        self.handle = new ajn::services::GatewayCtrlGateway();
+        QStatus status = self.handle->init([AJNConvertUtil convertNSStringToQCCString:busUniqueName], aboutDataMap);
+        if (status != ER_OK) {
+            return nil;
+        }
     }
     return self;
 }
 
-- (NSArray*)retrieveInstalledApps:(AJNSessionId) sessionId status:(QStatus&) status
+- (QStatus)retrieveInstalledApps:(AJNSessionId) sessionId installedApps:(NSMutableArray*) installedApps
+
 {
-    NSMutableArray*  installedAppsArray = [[NSMutableArray alloc] init];
-    std::vector<ajn::services::GatewayCtrlConnectorApplication*> installedAppsVect = self.handle->retrieveInstalledApps(sessionId, status);
+    std::vector<ajn::services::GatewayCtrlConnectorApplication*> installedAppsVect;
+    QStatus status = self.handle->retrieveInstalledApps(sessionId, installedAppsVect);
 
     // Populate NSMutableArray with std::vector data
     for (std::vector<ajn::services::GatewayCtrlConnectorApplication*>::const_iterator vectIt = installedAppsVect.begin(); vectIt != installedAppsVect.end(); vectIt++) {
-        [installedAppsArray addObject:[[AJGWCGatewayCtrlConnectorApplication alloc] initWithHandle:*vectIt]];
+        [installedApps addObject:[[AJGWCGatewayCtrlConnectorApplication alloc] initWithHandle:*vectIt]];
     }
-    return installedAppsArray;
+    return status;
 }
 
 - (AJGWCGatewayCtrlSessionResult*)joinSession

@@ -61,9 +61,10 @@ class GatewayCtrlGatewayController {
      * create a Gateway by parsing announce descriptions.
      * @param gatewayBusName - BusName of device received in announce
      * @param objectDescs - ObjectDescriptions received in announce
-     * @return a GatewayCtrlGateway
+     * @param gateway a GatewayCtrlGateway
+     * @return {@link QStatus}
      */
-    GatewayCtrlGateway* createGateway(const qcc::String& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData);
+    QStatus createGateway(const qcc::String& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData, GatewayCtrlGateway** gateway);
 
     /**
      * getGateway - get a Gateway using the busName
@@ -80,7 +81,7 @@ class GatewayCtrlGatewayController {
 
     /**
      * release allocations and empty object. must be called before deletion of object.
-     * @return Status of release
+     * @return {@link QStatus}
      */
     QStatus release();
 

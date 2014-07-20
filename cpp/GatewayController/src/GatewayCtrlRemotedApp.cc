@@ -43,10 +43,7 @@ QStatus GatewayCtrlRemotedApp::init(AboutClient::AboutData const& aboutData, con
 {
     m_ObjDescRules = objDescRules;
 
-
-    GatewayCtrlDiscoveredApp("", aboutData);
-
-    return ER_OK;
+    return GatewayCtrlDiscoveredApp::init("", aboutData);
 }
 
 QStatus GatewayCtrlRemotedApp::init(const ajn::MsgArg*remotedAppInfo, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules, const std::map<qcc::String, qcc::String>& internalMetaData)
@@ -110,7 +107,7 @@ QStatus GatewayCtrlRemotedApp::init(GatewayCtrlDiscoveredApp* discoveredApp, con
 {
     m_ObjDescRules = objDescRules;
 
-    GatewayCtrlDiscoveredApp(discoveredApp->getBusName(),  discoveredApp->getAppName(),  discoveredApp->getAppId(),  discoveredApp->getDeviceName(),  discoveredApp->getDeviceId());
+    GatewayCtrlDiscoveredApp::init(discoveredApp->getBusName(),  discoveredApp->getAppName(),  discoveredApp->getAppId(),  discoveredApp->getDeviceName(),  discoveredApp->getDeviceId());
 
     return ER_OK;
 }

@@ -228,11 +228,11 @@ void GatewayCtrlConnectorApplication::emptyVector()
     m_Acls.clear();
 }
 
-qcc::String GatewayCtrlConnectorApplication::retrieveManifestFile(SessionId sessionId, QStatus& status) {
+QStatus GatewayCtrlConnectorApplication::retrieveManifestFile(SessionId sessionId, qcc::String& xml)
+{
+    QStatus status = ER_OK;
+
     {
-
-        status = ER_OK;
-
         BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
@@ -272,23 +272,26 @@ qcc::String GatewayCtrlConnectorApplication::retrieveManifestFile(SessionId sess
 
         status = returnArgs[0].Get("s", &manifestFile);
 
-        return qcc::String(manifestFile);
+        xml = qcc::String(manifestFile);
 
     }
 end:
 
-    return "";
+    return status;
 }
 
 //Important: sessionId is used only to connect to the gateway, the access rules retrieved will always erase the previous access rules.
-GatewayCtrlManifestRules*GatewayCtrlConnectorApplication::retrieveManifestRules(SessionId sessionId, QStatus& status) {
+QStatus GatewayCtrlConnectorApplication::retrieveManifestRules(SessionId sessionId, GatewayCtrlManifestRules** manifestRules)
+{
+    QStatus status = ER_OK;
+
     {
         if (m_ManifestRules) {
             delete m_ManifestRules;
             m_ManifestRules = NULL;
         }
 
-        status = ER_OK;
+
 
         BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
@@ -325,38 +328,50 @@ GatewayCtrlManifestRules*GatewayCtrlConnectorApplication::retrieveManifestRules(
         }
 
         m_ManifestRules = new GatewayCtrlManifestRules();
-        QStatus status = m_ManifestRules->init(returnArgs);
+        status = m_ManifestRules->init(returnArgs);
 
         if (status != ER_OK) {
             delete m_ManifestRules;
             m_ManifestRules = NULL;
             QCC_LogError(status, ("Call to GatewayCtrlManifestRules init failed"));
-            return NULL;
+            goto end;
         }
+
+        *manifestRules = m_ManifestRules;
+
     }
 end:
 
-    return m_ManifestRules;
+    return status;
 
 }
 
-GatewayCtrlAccessRules* GatewayCtrlConnectorApplication::retrieveConfigurableRules(SessionId sessionId, std::vector<AnnouncementData*> const& announcements, QStatus& status) {
+QStatus GatewayCtrlConnectorApplication::retrieveConfigurableRules(SessionId sessionId, std::vector<AnnouncementData*> const& announcements, GatewayCtrlAccessRules** configurableRules) {
 
+    QStatus status = ER_OK;
     if (m_ConfigurableRules) {
         delete m_ConfigurableRules;
         m_ConfigurableRules = NULL;
     }
 
-    retrieveManifestRules(sessionId, status);
+    GatewayCtrlManifestRules*tmp;
+
+    status = retrieveManifestRules(sessionId, &tmp);
 
     if (status != ER_OK) {
         QCC_LogError(status, ("RetrieveManifestRules failed in RetrieveConfigurableRules"));
-        return NULL;
+        return status;
     }
 
     std::vector<GatewayCtrlRemotedApp*> remotedApps;
 
-    remotedApps = extractRemotedApps(m_ManifestRules->getRemotedServices(), announcements, status);
+    status = extractRemotedApps(m_ManifestRules->getRemotedServices(), announcements, remotedApps);
+    if (status != ER_OK) {
+        QCC_LogError(status, ("extractRemotedApps failed in RetrieveConfigurableRules"));
+
+        return status;
+    }
+
 
     m_ConfigurableRules = new GatewayCtrlAccessRules();
 
@@ -367,21 +382,22 @@ GatewayCtrlAccessRules* GatewayCtrlConnectorApplication::retrieveConfigurableRul
         delete m_ConfigurableRules;
         m_ConfigurableRules = NULL;
 
-        return NULL;
+        return status;
     }
 
+    *configurableRules = m_ConfigurableRules;
 
-    return m_ConfigurableRules;
+    return status;
 }
 
-GatewayCtrlConnectorApplicationStatus*GatewayCtrlConnectorApplication::retrieveStatus(SessionId sessionId, QStatus& status) {
+QStatus GatewayCtrlConnectorApplication::retrieveStatus(SessionId sessionId, GatewayCtrlConnectorApplicationStatus** applicationStatus)
+{
+    QStatus status;
     {
         if (m_ConnectorApplicationStatus) {
             delete m_ConnectorApplicationStatus;
             m_ConnectorApplicationStatus = NULL;
         }
-
-        status = ER_OK;
 
         BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
@@ -427,18 +443,17 @@ GatewayCtrlConnectorApplicationStatus*GatewayCtrlConnectorApplication::retrieveS
             goto end;
         }
 
-        return m_ConnectorApplicationStatus;
-
+        *applicationStatus = m_ConnectorApplicationStatus;
     }
 end:
 
-    return NULL;
-
+    return status;
 }
 
-RestartStatus GatewayCtrlConnectorApplication::restart(SessionId sessionId, QStatus& status) {
+QStatus GatewayCtrlConnectorApplication::restart(SessionId sessionId,  RestartStatus& restartStatus)
+{
 
-    status = ER_OK;
+    QStatus status = ER_OK;
 
     {
 
@@ -476,7 +491,7 @@ RestartStatus GatewayCtrlConnectorApplication::restart(SessionId sessionId, QSta
             goto end;
         }
 
-        short restartStatus;
+
 
         status = returnArgs[0].Get("q", &restartStatus);
 
@@ -484,11 +499,11 @@ RestartStatus GatewayCtrlConnectorApplication::restart(SessionId sessionId, QSta
             QCC_LogError(status, ("Failed getting restartStatus"));
             goto end;
         }
-        return (RestartStatus)restartStatus;
+
     }
 end:
 
-    return GW_RESTART_APP_RC_INVALID;
+    return status;
 }
 
 
@@ -557,8 +572,10 @@ void GatewayCtrlConnectorApplication::unsetStatusChangedHandler() {
 }
 
 
+QStatus GatewayCtrlConnectorApplication::createAcl(SessionId sessionId, const qcc::String& name, GatewayCtrlAccessRules* accessRules, GatewayCtrlAclWriteResponse** aclWriteResponse)
+{
+    QStatus status = ER_OK;
 
-GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionId sessionId, const qcc::String& name, GatewayCtrlAccessRules* accessRules, QStatus& status) {
 
     if (m_AclWriteResponse) {
         delete m_AclWriteResponse;
@@ -566,8 +583,6 @@ GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionI
     }
 
     {
-        status = ER_OK;
-
         BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
@@ -590,7 +605,9 @@ GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionI
 
         // Validate the rules in the ACL
 
-        GatewayCtrlManifestRules*manifestRules = retrieveManifestRules(sessionId, status);
+        GatewayCtrlManifestRules*manifestRules;
+
+        status = retrieveManifestRules(sessionId, &manifestRules);
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Retreiving manifest rules failed"));
@@ -747,7 +764,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionI
         args = NULL;
 
         if (status != ER_OK) {
-            QCC_LogError(status, ("Call to GetACLs failed"));
+            QCC_LogError(status, ("Call to CreateAcl failed"));
             goto end;
         }
 
@@ -791,20 +808,22 @@ GatewayCtrlAclWriteResponse* GatewayCtrlConnectorApplication::createAcl(SessionI
 
         m_AclWriteResponse = new GatewayCtrlAclWriteResponse(aclId, aclResponseCode, invalidAcessRules, objectPath);
 
+        *aclWriteResponse = m_AclWriteResponse;
     }
 end:
 
-    return m_AclWriteResponse;
+    return status;
 }
 
 
-const std::vector <GatewayCtrlAccessControlList*>& GatewayCtrlConnectorApplication::retrieveAcls(SessionId sessionId, QStatus& status) {
+QStatus GatewayCtrlConnectorApplication::retrieveAcls(SessionId sessionId, std::vector <GatewayCtrlAccessControlList*>& acls)
+{
+
+    QStatus status = ER_OK;
 
     emptyVector();
 
     {
-        status = ER_OK;
-
         BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
         // create proxy bus object
@@ -863,17 +882,17 @@ const std::vector <GatewayCtrlAccessControlList*>& GatewayCtrlConnectorApplicati
             }
 
             m_Acls.push_back(accessControlList);
-
+            acls.push_back(accessControlList);
         }
     }
 end:
 
-    return m_Acls;
+    return status;
 }
 
-AclResponseCode GatewayCtrlConnectorApplication::deleteAcl(SessionId sessionId, const qcc::String& aclId, QStatus& status) {
+QStatus GatewayCtrlConnectorApplication::deleteAcl(SessionId sessionId, const qcc::String& aclId, AclResponseCode& responseCode) {
 
-    status = ER_OK;
+    QStatus status = ER_OK;
 
     {
 
@@ -917,19 +936,19 @@ AclResponseCode GatewayCtrlConnectorApplication::deleteAcl(SessionId sessionId, 
             goto end;
         }
 
-        short aclResponse;
 
-        status = returnArgs[0].Get("q", &aclResponse);
+
+        status = returnArgs[0].Get("q", &responseCode);
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Failed getting restartStatus"));
             goto end;
         }
-        return (AclResponseCode)aclResponse;
+
     }
 end:
 
-    return GW_ACL_RC_INVALID;
+    return status;
 }
 
 QStatus GatewayCtrlConnectorApplication::release() {
@@ -962,15 +981,13 @@ QStatus GatewayCtrlConnectorApplication::release() {
     return ER_OK;
 }
 
-std::vector<GatewayCtrlRemotedApp*>
+QStatus
 GatewayCtrlConnectorApplication::extractRemotedApps(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices,
                                                     std::vector<AnnouncementData*> const& announcements,
-                                                    QStatus& status)
-{
+                                                    std::vector<GatewayCtrlRemotedApp*>& remotedApps) {
 
     std::vector<AnnouncementData*>::const_iterator annIter;
-    std::vector<GatewayCtrlRemotedApp*> extractedRemotedApps;
-
+    QStatus status = ER_OK;
 
     for (annIter = announcements.begin(); annIter != announcements.end(); annIter++) {
 
@@ -981,11 +998,11 @@ GatewayCtrlConnectorApplication::extractRemotedApps(const std::vector<GatewayCtr
         }
 
         if (remotedApp != NULL) {
-            extractedRemotedApps.push_back(remotedApp);
+            remotedApps.push_back(remotedApp);
         }
     }
 
-    return extractedRemotedApps;
+    return status;
 }
 
 
@@ -1018,8 +1035,6 @@ GatewayCtrlRemotedApp* GatewayCtrlConnectorApplication::extractRemotedApp(const 
 
             //Check object path suitability: if manifest objPath is a prefix of BusObjDesc objPath
             //or both object paths are equal
-
-
 
             if ((manop->isPrefix() && stringStartWith(manop->getPath(), objPath)) ||
                 (manop->getPath().compare(objPath) == 0)) {
@@ -1136,8 +1151,6 @@ GatewayCtrlRemotedApp* GatewayCtrlConnectorApplication::extractRemotedApp(const 
 
         return NULL;
     }
-
-
 
     return remotedApp;
 }

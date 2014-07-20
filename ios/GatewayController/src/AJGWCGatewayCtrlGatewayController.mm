@@ -85,8 +85,15 @@
         aboutDataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], *cppValue));
     }
 
-    //Convert from NSDictionary * to ObjectDescriptions
-    return [[AJGWCGatewayCtrlGateway alloc] initWithHandle: ajn::services::GatewayCtrlGatewayController::getInstance()->createGateway([AJNConvertUtil convertNSStringToConstChar:gatewayBusName], objectDescsMap, aboutDataMap) ];
+    ajn::services::GatewayCtrlGateway* tmpGateway;
+    QStatus status = ajn::services::GatewayCtrlGatewayController::getInstance()->createGateway([AJNConvertUtil convertNSStringToConstChar:gatewayBusName], objectDescsMap, aboutDataMap, &tmpGateway);
+
+    if (status == ER_OK) {
+        //Convert from NSDictionary * to ObjectDescriptions
+        return [[AJGWCGatewayCtrlGateway alloc] initWithHandle: tmpGateway ];
+    }
+
+    return nil;
 }
 
 - (AJGWCGatewayCtrlGateway*)gateway:(NSString *) gatewayBusName

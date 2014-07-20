@@ -35,9 +35,9 @@
     if ([sender isOn])
     {
         //call Activate
-        resCode = [self.aclObject activateUsingSessionId:self.sessionId status:status];
+        status = [self.aclObject activateUsingSessionId:self.sessionId aclResponseCode:resCode];
     } else {
-        resCode = [self.aclObject deactivateUsingSessionId:self.sessionId status:status];
+        status = [self.aclObject deactivateUsingSessionId:self.sessionId aclResponseCode:resCode];
         //call deactivate
     }
 

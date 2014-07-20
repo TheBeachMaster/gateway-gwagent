@@ -32,21 +32,22 @@ class GatewayCtrlDiscoveredApp {
     GatewayCtrlDiscoveredApp() { }
 
     /**
-     * Constructor
+     * init
      * @param busName The name of the {@link BusAttachment} of the device that sent the Announcement
      * @param appName The name of the application
      * @param appId The application id
      * @param deviceName The name of the device
      * @param deviceId The device id
      */
-    GatewayCtrlDiscoveredApp(const qcc::String& busName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId);
+    void init(const qcc::String& busName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId);
 
     /**
-     * Constructor
+     * init
      * @param busName The name of the {@link BusAttachment} of the device that sent the Announcement
      * @param aboutData The data sent with the Announcement
+     * @return {@link QStatus}
      */
-    GatewayCtrlDiscoveredApp(const qcc::String& busName, AboutClient::AboutData const& aboutData);
+    QStatus init(const qcc::String& busName, AboutClient::AboutData const& aboutData);
 
     /**
      * Destructor

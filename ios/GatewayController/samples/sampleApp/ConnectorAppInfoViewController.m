@@ -77,7 +77,9 @@
 - (void)retrieveAcls
 {
     QStatus status = ER_FAIL;
-    self.acls = [[NSMutableArray alloc] initWithArray:[self.connectorApplication retrieveAclsUsingSessionId:self.sessionId status:status]];
+    self.acls = [[NSMutableArray alloc] init];
+    status = [self.connectorApplication retrieveAclsUsingSessionId:self.sessionId acls:self.acls];
+
 
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve Acl(s)" status:status];
@@ -123,7 +125,9 @@
 - (void)retrieveManifestFile
 {
     QStatus status = ER_FAIL;
-    self.manifestFileText = [self.connectorApplication retrieveManifestFileUsingSessionId:self.sessionId status:status];
+    NSString *xml;
+    status = [self.connectorApplication retrieveManifestFileUsingSessionId:self.sessionId fileContent:&xml];
+    self.manifestFileText = xml;
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve manifest file" status:status];
     } else {
@@ -150,8 +154,9 @@
                 {
                     NSLog(@"Calling restart");
 
-                    QStatus status = ER_FAIL;
-                    [self.connectorApplication restartUsingSessionId:self.sessionId status:status];
+                    AJGWCRestartStatus restartStatus;
+
+                    QStatus status = [self.connectorApplication restartUsingSessionId:self.sessionId status:restartStatus];
                     if (ER_OK != status) {
                         [AppDelegate AlertAndLog:@"Failed to restart application"  status:status];
                     }
@@ -203,7 +208,7 @@
     AJGWCAclResponseCode resCode;
 
     NSString* aclId = [[self.acls objectAtIndex:self.indexPathToDelete.row] aclId];
-    resCode = [self.connectorApplication deleteAclUsingSessionId:self.sessionId aclId:aclId status:status];
+    status = [self.connectorApplication deleteAclUsingSessionId:self.sessionId aclId:aclId status:resCode];
 
     if (ER_OK != status || resCode != GW_ACL_RC_SUCCESS) {
         NSLog(@"Failed to delete acl. status:%@ responseCode:%@", [AJNStatus descriptionForStatusCode:status], [AJGWCGatewayCtrlEnums AJGWCAclResponseCodeToString:resCode]);
@@ -269,7 +274,9 @@
     NSLog(@"Retrieving application status for %@", [self.connectorApplication appId]);
     QStatus status = ER_FAIL;
 
-    AJGWCGatewayCtrlConnectorApplicationStatus* connectorAppStatus = [self.connectorApplication retrieveStatusUsingSessionId:self.sessionId status:status];
+    AJGWCGatewayCtrlConnectorApplicationStatus* connectorAppStatus;
+
+    status = [self.connectorApplication retrieveStatusUsingSessionId:self.sessionId status:&connectorAppStatus];
 
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve application status" status:status];

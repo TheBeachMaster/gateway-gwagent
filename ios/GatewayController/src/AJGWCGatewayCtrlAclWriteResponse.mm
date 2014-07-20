@@ -63,4 +63,9 @@
     return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getObjectPath()];
 }
 
+
+- (ajn::services::GatewayCtrlAclWriteResponse*)handle
+{
+    return _handle;
+}
 @end

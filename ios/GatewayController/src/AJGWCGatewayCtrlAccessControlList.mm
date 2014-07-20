@@ -17,6 +17,7 @@
 #import "AJGWCGatewayCtrlAccessControlList.h"
 #import "alljoyn/about/AJNConvertUtil.h"
 #import "AJGWCAnnouncementData.h"
+#import "alljoyn/gateway/GatewayCtrlEnums.h"
 
 @interface AJGWCGatewayCtrlAccessControlList ()
 
@@ -69,34 +70,45 @@
     return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getGwBusName()];
 }
 
-- (AJGWCAclResponseCode)activateUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
+- (QStatus)activateUsingSessionId:(AJNSessionId) sessionId aclResponseCode:(AJGWCAclResponseCode&) aclResponseCode
 {
-    return (AJGWCAclResponseCode)self.handle->activate(sessionId, status);
+    return self.handle->activate(sessionId, (ajn::services::AclResponseCode&)aclResponseCode);
 }
 
-- (AJGWCAclResponseCode)deactivateUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status
+- (QStatus)deactivateUsingSessionId:(AJNSessionId) sessionId aclResponseCode:(AJGWCAclResponseCode&) aclResponseCode
 {
-    return (AJGWCAclResponseCode)self.handle->deactivate(sessionId, status);
+    return self.handle->deactivate(sessionId, (ajn::services::AclResponseCode&)aclResponseCode);
 }
 
-- (AJGWCGatewayCtrlAclWriteResponse*)updateAcl:(AJNSessionId) sessionId accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules status:(QStatus&) status
+- (QStatus)updateAcl:(AJNSessionId) sessionId accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules aclWriteResponse:(AJGWCGatewayCtrlAclWriteResponse**) aclWriteResponse
 {
-    return [[AJGWCGatewayCtrlAclWriteResponse alloc] initWithHandle:self.handle->updateAcl(sessionId,
-                                                                                           [accessRules handle],
-                                                                                           [manifestRules handle],
-                                                                                           status)];
+
+    ajn::services:: GatewayCtrlAclWriteResponse* aclWriteResponseHandle;
+
+    QStatus status = self.handle->updateAcl(sessionId,
+                           [accessRules handle],
+                           [manifestRules handle],
+                           &aclWriteResponseHandle);
+
+    if (ER_OK == status) {
+        *aclWriteResponse = [[AJGWCGatewayCtrlAclWriteResponse alloc] initWithHandle:aclWriteResponseHandle];
+    }
+
+    return status;
 }
 
-- (AJGWCAclResponseCode)updateCustomMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(QStatus&) status
+- (QStatus)updateCustomMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(AJGWCAclResponseCode&) aclResponseCode
 {
     std::map<qcc::String, qcc::String> metadataMap;
     // Populate std::map with NSDictionary data
     for (NSString* key in metadata.allKeys) {
         metadataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], [AJNConvertUtil convertNSStringToQCCString:[metadata objectForKey:key]]));
     }
-    return (AJGWCAclResponseCode)self.handle->updateCustomMetadata(sessionId, metadataMap, status);
+
+    return self.handle->updateCustomMetadata(sessionId, metadataMap, (ajn::services::AclResponseCode&)aclResponseCode);
 }
-- (AJGWCAclResponseCode)updateAclMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(QStatus&) status
+
+- (QStatus)updateAclMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(AJGWCAclResponseCode&) aclResponseCode
 {
     std::map<qcc::String, qcc::String> metadataMap;
     // Populate std::map with NSDictionary data
@@ -104,22 +116,20 @@
         metadataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], [AJNConvertUtil convertNSStringToQCCString:[metadata objectForKey:key]]));
     }
 
-    return (AJGWCAclResponseCode)self.handle->updateAclMetadata(sessionId, metadataMap, status);
+    return self.handle->updateAclMetadata(sessionId, metadataMap, (ajn::services::AclResponseCode&)aclResponseCode);
 }
-
 
 - (AJGWCAclStatus)status
 {
     return (AJGWCAclStatus)self.handle->getStatus();
 }
 
-
-- (AJGWCAclStatus)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
+- (QStatus)retrieveStatusUsingSessionId:(AJNSessionId) sessionId aclStatus:(AJGWCAclStatus&) aclStatus
 {
-    return (AJGWCAclStatus)self.handle->retrieveStatus(sessionId, status);
+    return self.handle->retrieveStatus(sessionId, (ajn::services::AclStatus&)aclStatus);
 }
 
-- (AJGWCGatewayCtrlAccessRules *)retrieveAclUsingSessionId:(AJNSessionId) sessionId manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules announcements:(NSArray*) announcements status:(QStatus&) status
+- (QStatus)retrieveAclUsingSessionId:(AJNSessionId) sessionId manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules announcements:(NSArray*) announcements accessRules:(AJGWCGatewayCtrlAccessRules**) accessRules
 {
     std::vector<ajn::services::AnnouncementData *>  announcementsVect;
 
@@ -160,10 +170,12 @@
 
     const ajn::services::GatewayCtrlManifestRules* gwManifestRules = const_cast<ajn::services::GatewayCtrlManifestRules*>([manifestRules handle]);
 
-    ajn::services::GatewayCtrlAccessRules* gwAccessRule = self.handle->retrieveAcl(sessionId, *gwManifestRules, announcementsVect, status);
+    ajn::services::GatewayCtrlAccessRules* gwAccessRule;
 
-    AJGWCGatewayCtrlAccessRules* gwAccessRules = [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:gwAccessRule];
+    QStatus status =  self.handle->retrieveAcl(sessionId, *gwManifestRules, announcementsVect, &gwAccessRule);
 
-    return gwAccessRules;
+    *accessRules = [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:gwAccessRule];
+
+    return status;
 }
 @end

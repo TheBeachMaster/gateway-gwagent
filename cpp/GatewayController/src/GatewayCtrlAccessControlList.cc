@@ -153,9 +153,9 @@ const qcc::String& GatewayCtrlAccessControlList::getGwBusName()
     return m_GwBusName;
 }
 
-AclResponseCode GatewayCtrlAccessControlList::activate(SessionId sessionId, QStatus& status)
+QStatus GatewayCtrlAccessControlList::activate(SessionId sessionId, AclResponseCode& aclResp)
 {
-    status = ER_OK;
+    QStatus status = ER_OK;
 
     {
 
@@ -206,16 +206,19 @@ AclResponseCode GatewayCtrlAccessControlList::activate(SessionId sessionId, QSta
             m_AclStatus = GW_AS_ACTIVE;
         }
 
-        return (AclResponseCode)aclResponse;
+        aclResp = (AclResponseCode)aclResponse;
+        return status;
     }
 end:
-
-    return GW_ACL_RC_INVALID;
+    {
+        aclResp = GW_ACL_RC_INVALID;
+        return status;
+    }
 }
 
-AclResponseCode GatewayCtrlAccessControlList::deactivate(SessionId sessionId, QStatus& status)
+QStatus GatewayCtrlAccessControlList::deactivate(SessionId sessionId, AclResponseCode& aclResp)
 {
-    status = ER_OK;
+    QStatus status = ER_OK;
 
     {
         BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
@@ -265,18 +268,18 @@ AclResponseCode GatewayCtrlAccessControlList::deactivate(SessionId sessionId, QS
             m_AclStatus = GW_AS_INACTIVE;
         }
 
-        return (AclResponseCode)aclResponse;
+        aclResp = (AclResponseCode)aclResponse;
+        return status;
     }
 end:
 
-    return GW_ACL_RC_INVALID;
-
+    {
+        aclResp = GW_ACL_RC_INVALID;
+        return status;
+    }
 }
 
-GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId sessionId,
-                                                                     GatewayCtrlAccessRules* accessRules,
-                                                                     GatewayCtrlManifestRules* manifestRules,
-                                                                     QStatus& status)
+QStatus GatewayCtrlAccessControlList::updateAcl(SessionId sessionId, GatewayCtrlAccessRules* accessRules, GatewayCtrlManifestRules* manifestRules, GatewayCtrlAclWriteResponse** aclWriteResponse)
 {
 
     if (m_AclWriteResponse) {
@@ -284,7 +287,7 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
         m_AclWriteResponse = NULL;
     }
 
-    status = ER_OK;
+    QStatus status = ER_OK;
 
     {
 
@@ -391,7 +394,6 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
         }
 
         GatewayCtrlAccessRules*transmittedAcessRules = new GatewayCtrlAccessRules();
-
         status = transmittedAcessRules->init(expServicesTargetOut, remotedAppsOut);
 
         if (status != ER_OK) {
@@ -540,16 +542,17 @@ GatewayCtrlAclWriteResponse* GatewayCtrlAccessControlList::updateAcl(SessionId s
 
         m_AclWriteResponse = new GatewayCtrlAclWriteResponse(m_AclId, (AclResponseCode)aclResponse, invalidRules, m_ObjectPath);
 
-        return m_AclWriteResponse;
+        *aclWriteResponse = m_AclWriteResponse;
+        return status;
     }
 end:
 
-    return NULL;
+    return ER_FAIL;
 }
 
-AclResponseCode GatewayCtrlAccessControlList::updateCustomMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, QStatus& status)
+QStatus GatewayCtrlAccessControlList::updateCustomMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, AclResponseCode& aclResponseCode)
 {
-    status = ER_OK;
+    QStatus status = ER_OK;
 
     {
 
@@ -606,16 +609,21 @@ AclResponseCode GatewayCtrlAccessControlList::updateCustomMetadata(SessionId ses
             QCC_LogError(status, ("Failed getting restartStatus"));
             goto end;
         }
-        return (AclResponseCode)aclResponse;
+
+        aclResponseCode = (AclResponseCode)aclResponse;
+        return status;
     }
 end:
+    {
+        aclResponseCode = GW_ACL_RC_INVALID;
+        return status;
 
-    return GW_ACL_RC_INVALID;
+    }
 }
 
-AclResponseCode GatewayCtrlAccessControlList::updateAclMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, QStatus& status)
+QStatus GatewayCtrlAccessControlList::updateAclMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, AclResponseCode& aclResponseCode)
 {
-    status = ER_OK;
+    QStatus status = ER_OK;
 
     {
 
@@ -670,11 +678,14 @@ AclResponseCode GatewayCtrlAccessControlList::updateAclMetadata(SessionId sessio
             QCC_LogError(status, ("Failed getting restartStatus"));
             goto end;
         }
-        return (AclResponseCode)aclResponse;
+        aclResponseCode = (AclResponseCode)aclResponse;
+        return status;
     }
 end:
-
-    return GW_ACL_RC_INVALID;
+    {
+        aclResponseCode = GW_ACL_RC_INVALID;
+        return status;
+    }
 }
 
 AclStatus GatewayCtrlAccessControlList::getStatus()
@@ -682,9 +693,9 @@ AclStatus GatewayCtrlAccessControlList::getStatus()
     return m_AclStatus;
 }
 
-AclStatus GatewayCtrlAccessControlList::retrieveStatus(SessionId sessionId, QStatus& status)
+QStatus GatewayCtrlAccessControlList::retrieveStatus(SessionId sessionId, AclStatus& aclStatus)
 {
-    status = ER_OK;
+    QStatus status = ER_OK;
 
     {
 
@@ -733,11 +744,13 @@ AclStatus GatewayCtrlAccessControlList::retrieveStatus(SessionId sessionId, QSta
 
         m_AclStatus = (AclStatus)aclResponse;
 
-        return (AclStatus)aclResponse;
+        aclStatus = (AclStatus)aclResponse;
+        return status;
     }
 end:
 
-    return GW_AS_INACTIVE;
+    aclStatus = GW_AS_INACTIVE;
+    return status;
 }
 
 /**
@@ -765,10 +778,10 @@ int ManifestObjectDescriptionComparator(const GatewayCtrlManifestObjectDescripti
     return compRes;
 }
 
-GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessionId,
-                                                                 const GatewayCtrlManifestRules& manifestRules,
-                                                                 std::vector<AnnouncementData*> const& announcements,
-                                                                 QStatus& status)
+QStatus GatewayCtrlAccessControlList::retrieveAcl(SessionId sessionId,
+                                                  const GatewayCtrlManifestRules& manifestRules,
+                                                  std::vector<AnnouncementData*> const& announcements,
+                                                  GatewayCtrlAccessRules** accessRules)
 {
     if (m_AccessRules) {
         m_AccessRules->release();
@@ -776,9 +789,8 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
         m_AccessRules = NULL;
     }
 
-    status = ER_OK;
-
-    retrieveStatus(sessionId, status);
+    AclStatus aclStatus;
+    QStatus status = retrieveStatus(sessionId, aclStatus);
 
     if (status != ER_OK) {
         QCC_LogError(status, ("RetrieveStatus failed"));
@@ -908,7 +920,8 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
 
         if (updateMetadata) {
             if (m_InternalMetadata.size() > 0) {
-                updateAclMetadata(sessionId, m_InternalMetadata, status);
+                AclResponseCode aclResponseCode;
+                status = updateAclMetadata(sessionId, m_InternalMetadata, aclResponseCode);
 
                 if (status != ER_OK) {
                     QCC_LogError(status, ("Failed UpdateAclMetadata"));
@@ -930,12 +943,12 @@ GatewayCtrlAccessRules*GatewayCtrlAccessControlList::retrieveAcl(SessionId sessi
 
         m_AccessRules->setMetadata(customMetadata);
 
-        return m_AccessRules;
+        *accessRules = m_AccessRules;
+        return status;
     }
 end:
 
-    return NULL;
-
+    return ER_FAIL;
 }
 
 
@@ -1276,7 +1289,8 @@ bool GatewayCtrlAccessControlList::convertRemotedApps(const std::vector<GatewayC
 {
     //Gets TRUE if the metadata needs to be updated
     bool updatedMeta               = false;
-    std::vector<GatewayCtrlRemotedApp*> configurableApps = GatewayCtrlConnectorApplication::extractRemotedApps(remotedServices, announcements, status);
+    std::vector<GatewayCtrlRemotedApp*> configurableApps;
+    status = GatewayCtrlConnectorApplication::extractRemotedApps(remotedServices, announcements, configurableApps);
 
     if (status != ER_OK) {
         QCC_LogError(status, ("ExtractRemotedApps failed"));

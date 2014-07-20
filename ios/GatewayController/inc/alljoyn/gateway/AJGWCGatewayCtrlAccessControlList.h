@@ -68,19 +68,18 @@
 /**
  * Activate the Access Control List
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
- * @return {@link AJGWCAclResponseCode}
+ * @param aclResponseCode A reference {@link AJGWCAclResponseCode}
+ * @return status return status of operation
  */
-- (AJGWCAclResponseCode)activateUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
-
+- (QStatus)activateUsingSessionId:(AJNSessionId) sessionId aclResponseCode:(AJGWCAclResponseCode&) aclResponseCode;
 
 /**
  * Deactivate the Access Control List
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
- * @return {@link AJGWCAclResponseCode}
+ * @param aclResponseCode A reference {@link AJGWCAclResponseCode}
+ * @return status return status of operation
  */
-- (AJGWCAclResponseCode)deactivateUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
+- (QStatus)deactivateUsingSessionId:(AJNSessionId) sessionId aclResponseCode:(AJGWCAclResponseCode&) aclResponseCode;
 
 /**
  * Sends request to update Access Control List with the received {@link AJGWCGatewayCtrlAccessRules}.
@@ -90,30 +89,30 @@
  * @param sessionId The id of the session established with the gateway
  * @param accessRules The ACL access rules
  * @param manifestRules {@link AJGWCGatewayCtrlManifestRules} that is used for the {@link AJGWCAccessRules} creation
- * @param status return status of operation
- * @return {@link AJGWCGatewayCtrlAclWriteResponse}
+ * @param aclWriteResponse {@link AJGWCGatewayCtrlAclWriteResponse}
+ * @return status return status of operation
  */
-- (AJGWCGatewayCtrlAclWriteResponse*)updateAcl:(AJNSessionId) sessionId accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules status:(QStatus&) status;
+- (QStatus)updateAcl:(AJNSessionId) sessionId accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules aclWriteResponse:(AJGWCGatewayCtrlAclWriteResponse**) aclWriteResponse;
 
 /**
  * Updates custom metadata of the Access Control List. The ACL metadata is rewritten following the
  * request.
  * @param sessionId The id of the session established with the gateway
  * @param metadata The metadata to update the ACL
- * @param status return status of operation
- * @return {@link AJGWCAclResponseCode}
+ * @param aclResponseCode A reference {@link AJGWCAclResponseCode}
+ * @return status return status of operation
  */
-- (AJGWCAclResponseCode)updateCustomMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(QStatus&) status;
+- (QStatus)updateCustomMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(AJGWCAclResponseCode&) aclResponseCode;
 
 /**
  * Updates metadata of the internal Access Control List. The ACL metadata is rewritten following the
  * request.
  * @param sessionId The id of the session established with the gateway
  * @param metadata The metadata to update the ACL
- * @param status return status of operation
- * @return {@link AJGWCAclResponseCode}
+ * @param aclResponseCode A reference {@link AJGWCAclResponseCode}
+ * @return status return status of operation
  */
-- (AJGWCAclResponseCode)updateAclMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(QStatus&) status;
+- (QStatus)updateAclMetadata:(AJNSessionId) sessionId metadata:(NSDictionary*) metadata status:(AJGWCAclResponseCode&) aclResponseCode;
 
 /**
  * Return the current state of the {@link AJGWCGatewayCtrlAccessControlList}
@@ -124,19 +123,19 @@
 /**
  * Retrieve from the gateway status of the Access Control List
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
- * @return {@link AJGWCAclStatus}
+ * @param aclStatus {@link AJGWCAclStatus}
+ * @return status return status of operation
  */
-- (AJGWCAclStatus)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
+- (QStatus)retrieveStatusUsingSessionId:(AJNSessionId) sessionId aclStatus:(AJGWCAclStatus&) aclStatus;
 
 /**
  * Refreshes the {@link AJGWCAccessControlList} object and returns its {@link AJGWCGatewayCtrlAccessRules}
  * @param sessionId The id of the session established with the gateway
  * @param manifestRules {@link AJGWCGatewayCtrlManifestRules} that is used for the {@link AJGWCGatewayCtrlAccessRules} creation
  * @param announcements An array of {@link AJGWCAnnouncementData} objects with the current set of announcements in the network
- * @param status return status of operation
- * @return {@link AJGWCGatewayCtrlAccessRules}
+ * @param accessRules {@link AJGWCGatewayCtrlAccessRules}
+ * @return status return status of operation
  */
-- (AJGWCGatewayCtrlAccessRules *)retrieveAclUsingSessionId:(AJNSessionId) sessionId manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules announcements:(NSArray*) announcements status:(QStatus&) status;
+- (QStatus)retrieveAclUsingSessionId:(AJNSessionId) sessionId manifestRules:(AJGWCGatewayCtrlManifestRules*) manifestRules announcements:(NSArray*) announcements accessRules:(AJGWCGatewayCtrlAccessRules**) accessRules;
 
 @end

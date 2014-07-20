@@ -27,9 +27,13 @@ namespace ajn {
 namespace services {
 
 
-GatewayCtrlGateway::GatewayCtrlGateway(const qcc::String& gwBusName, AboutClient::AboutData const& aboutData) : GatewayCtrlDiscoveredApp(gwBusName, aboutData), m_SessionHandler(this), m_Listener(0)
+QStatus GatewayCtrlGateway::init(const qcc::String& gwBusName, AboutClient::AboutData const& aboutData)
 {
+    m_SessionHandler  = this;
+    m_Listener = 0;
 
+
+    return GatewayCtrlDiscoveredApp::init(gwBusName, aboutData);
 }
 
 GatewayCtrlGateway::~GatewayCtrlGateway()
@@ -51,13 +55,12 @@ void GatewayCtrlGateway::emptyVector()
     m_InstalledApps.clear();
 }
 
-const std::vector<GatewayCtrlConnectorApplication*>&  GatewayCtrlGateway::retrieveInstalledApps(SessionId sessionId, QStatus& status)
+QStatus GatewayCtrlGateway::retrieveInstalledApps(SessionId sessionId, std::vector<GatewayCtrlConnectorApplication*>& installedApps)
 {
+    QStatus status;
     {
         //Release the current vector
         emptyVector();
-
-        status = ER_OK;
 
         BusAttachment* busAttachment = GatewayCtrlGatewayController::getInstance()->getBusAttachment();
 
@@ -145,7 +148,8 @@ const std::vector<GatewayCtrlConnectorApplication*>&  GatewayCtrlGateway::retrie
     }
 end:
 
-    return m_InstalledApps;
+    installedApps = m_InstalledApps;
+    return status;
 }
 
 

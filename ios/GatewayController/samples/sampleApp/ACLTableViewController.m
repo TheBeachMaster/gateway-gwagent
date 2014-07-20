@@ -71,7 +71,9 @@
     self.title = [self.acl aclName];
 
     QStatus status;
-    self.manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
+    AJGWCGatewayCtrlManifestRules* localManifestRules;
+    status = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId manifestRules:&localManifestRules];
+    self.manifestRules = localManifestRules;
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve manifest rules" status:status];
         return;
@@ -158,7 +160,8 @@
 - (QStatus)updateACL
 {
     QStatus status;
-    AJGWCGatewayCtrlManifestRules *manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
+    AJGWCGatewayCtrlManifestRules *manifestRules;
+    status = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId manifestRules:&manifestRules];
 
     if (status != ER_OK) {
         NSLog(@"retrieveManifestRulesUsingSessionId failed:%@",[AJNStatus descriptionForStatusCode:status]);
@@ -167,7 +170,8 @@
 
     AJGWCGatewayCtrlAccessRules *gwAccessRules = [self.accessRulesContainer createAJGWCGatewayCtrlAccessRules];
 
-    AJGWCGatewayCtrlAclWriteResponse *response = [self.acl updateAcl:self.sessionId accessRules:gwAccessRules manifestRules:manifestRules status:status];
+    AJGWCGatewayCtrlAclWriteResponse *response;
+    status = [self.acl updateAcl:self.sessionId accessRules:gwAccessRules manifestRules:manifestRules aclWriteResponse:&response];
 
     if (status != ER_OK) {
         NSLog(@"AJGWCGatewayCtrlAccessControlList updateAcl failed:%@",[AJNStatus descriptionForStatusCode:status]);

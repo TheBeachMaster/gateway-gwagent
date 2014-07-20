@@ -85,8 +85,9 @@
 
 - (void)retrieveInstalledApps
 {
-    QStatus status = ER_FAIL;
-    self.gwApps = [[NSArray alloc] initWithArray:[self.gateway retrieveInstalledApps:self.sessionId status:status]];
+    NSMutableArray* installedApps = [[NSMutableArray alloc] init];
+    QStatus status = [self.gateway retrieveInstalledApps:self.sessionId installedApps:installedApps];
+    self.gwApps = [[NSArray alloc] initWithArray:installedApps];
     NSLog(@"retrieveInstalledApps return [%lu] applications", (unsigned long)[self.gwApps count]);
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve installed apps" status:status];
@@ -180,7 +181,8 @@
 
     /* Retrieve Status */
     QStatus status = ER_FAIL;
-    AJGWCGatewayCtrlConnectorApplicationStatus* connectorAppStatus = [connectorApp retrieveStatusUsingSessionId:self.sessionId status:status];
+    AJGWCGatewayCtrlConnectorApplicationStatus* connectorAppStatus;
+    status = [connectorApp retrieveStatusUsingSessionId:self.sessionId status:&connectorAppStatus];
 
     if (status == ER_OK) {
 

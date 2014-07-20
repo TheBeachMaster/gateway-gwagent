@@ -87,19 +87,18 @@ class GatewayCtrlAccessControlList {
     /**
      * Activate the Access Control List
      * @param sessionId The id of the session established with the gateway
-     * @param status return status of operation
-     * @return {@link AclResponseCode}
+     * @param aclResp A reference to {@link AclResponseCode}
+     * @return return status of operation
      */
-    AclResponseCode activate(SessionId sessionId, QStatus& status);
-
+    QStatus activate(SessionId sessionId, AclResponseCode& aclResp);
 
     /**
      * Deactivate the Access Control List
      * @param sessionId The id of the session established with the gateway
-     * @param status return status of operation
-     * @return {@link AclResponseCode}
+     * @param aclResp A reference to {@link AclResponseCode}
+     * @return return status of operation
      */
-    AclResponseCode deactivate(SessionId sessionId, QStatus& status);
+    QStatus deactivate(SessionId sessionId, AclResponseCode& aclResp);
 
     /**
      * Sends request to update Access Control List with the received {@link GatewayCtrlAccessRules}.
@@ -108,30 +107,30 @@ class GatewayCtrlAccessControlList {
      * returned {@link GatewayCtrlAclWriteResponse} object.
      * @param sessionId The id of the session established with the gateway
      * @param accessRules The ACL access rules
-     * @param status return status of operation
-     * @return {@link GatewayCtrlAclWriteResponse}
+     * @param aclWriteResponse {@link GatewayCtrlAclWriteResponse}
+     * @return return status of operation
      */
-    GatewayCtrlAclWriteResponse* updateAcl(SessionId sessionId, GatewayCtrlAccessRules* accessRules, GatewayCtrlManifestRules* manifestRules, QStatus& status);
+    QStatus updateAcl(SessionId sessionId, GatewayCtrlAccessRules* accessRules, GatewayCtrlManifestRules* manifestRules, GatewayCtrlAclWriteResponse** aclWriteResponse);
 
     /**
      * Updates custom metadata of the Access Control List. The ACL metadata is rewritten following the
      * request.
      * @param sessionId The id of the session established with the gateway
      * @param metadata The metadata to update the ACL
-     * @param status return status of operation
-     * @return {@link AclResponseCode}
+     * @param aclResponseCode {@link AclResponseCode}
+     * @return return status of operation
      */
-    AclResponseCode updateCustomMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, QStatus& status);
+    QStatus updateCustomMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, AclResponseCode& aclResponseCode);
 
     /**
      * Updates metadata of the internal Access Control List. The ACL metadata is rewritten following the
      * request.
      * @param sessionId The id of the session established with the gateway
      * @param metadata The metadata to update the ACL
-     * @param status return status of operation
-     * @return {@link AclResponseCode}
+     * @param aclResponseCode {@link AclResponseCode}
+     * @return return status of operation
      */
-    AclResponseCode updateAclMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, QStatus& status);
+    QStatus updateAclMetadata(SessionId sessionId, const std::map<qcc::String, qcc::String>& metadata, AclResponseCode& aclResponseCode);
 
     /**
      * Return the current state of the {@link GatewayCtrlAccessControlList}
@@ -142,25 +141,25 @@ class GatewayCtrlAccessControlList {
     /**
      * Retrieve from the gateway status of the Access Control List
      * @param sessionId The id of the session established with the gateway
-     * @param status return status of operation
-     * @return {@link AclStatus}
+     * @param aclStatus {@link AclStatus}
+     * @return return status of operation
      */
-    AclStatus retrieveStatus(SessionId sessionId, QStatus& status);
-
+    QStatus retrieveStatus(SessionId sessionId, AclStatus& aclStatus);
 
     /**
      * Refreshes the {@link AccessControlList} object and returns its {@link AccessRules}
      * @param sessionId The id of the session established with the gateway
      * @param manifestRules {@link ManifestRules} that is used for the {@link AccessRules} creation
      * @param announcements A vector of AnnounementData objects with the current set of announcements in the network
-     * @param status return status of operation
-     * @return {@link AccessRules}
+     * @param accessRules {@link AccessRules}
+     * @return return status of operation
+
      */
-    GatewayCtrlAccessRules*retrieveAcl(SessionId sessionId, const GatewayCtrlManifestRules& manifestRules,
-                                       std::vector<AnnouncementData*> const& announcements, QStatus& status);
+    QStatus retrieveAcl(SessionId sessionId, const GatewayCtrlManifestRules& manifestRules,
+                        std::vector<AnnouncementData*> const& announcements, GatewayCtrlAccessRules** accessRules);
     /**
      * release allocations and empty object. must be called before deletion of object.
-     * @return Status of release
+     * @return {@link QStatus}
      */
     QStatus release();
 

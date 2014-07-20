@@ -49,7 +49,11 @@
     QStatus status;
     NSArray* ann =[[AnnouncementManager sharedInstance] getAnnouncements];
 
-    self.accessRules = [self.connectorApplication retrieveConfigurableRulesUsingSessionId:self.sessionId status:status announcements:ann];
+    AJGWCGatewayCtrlAccessRules* tmpAccessRules;
+
+    status = [self.connectorApplication retrieveConfigurableRulesUsingSessionId:self.sessionId rules:&tmpAccessRules announcements:ann];
+
+    self.accessRules = tmpAccessRules;
 
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve configurable rules" status:status];
@@ -61,7 +65,7 @@
 - (IBAction)didTouchCreateAclBtn:(id)sender {
     QStatus status;
     AJGWCGatewayCtrlAclWriteResponse* aclWResp;
-    aclWResp = [self.connectorApplication createAclUsingSessionId:self.sessionId name:self.aclNameTextField.text accessRules:self.accessRules status:status];
+    status = [self.connectorApplication createAclUsingSessionId:self.sessionId name:self.aclNameTextField.text accessRules:self.accessRules aclStatus:&aclWResp];
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to create acl" status:status];
     } else {
@@ -76,7 +80,8 @@
             }
         }
 
-        NSArray *acls = [[NSMutableArray alloc] initWithArray:[self.connectorApplication retrieveAclsUsingSessionId:self.sessionId status:status]];
+        NSMutableArray *acls = [[NSMutableArray alloc] init];
+        status = [self.connectorApplication retrieveAclsUsingSessionId:self.sessionId acls:acls];
 
         if (ER_OK != status) {
             [AppDelegate AlertAndLog:@"Failed to retrieve Acls" status:status];

@@ -56,4 +56,5 @@
  */
 - (NSString*)objectPath;
 
+- (ajn::services::GatewayCtrlAclWriteResponse*)handle;
 @end

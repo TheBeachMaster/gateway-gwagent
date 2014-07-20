@@ -32,8 +32,9 @@
     if (self) {
         self.accessRulesArray = [[NSMutableArray alloc]init];
 
-        self.ajgwcGatewayCtrlAccessRules = [acl retrieveAclUsingSessionId:sessionId manifestRules:manifestRules announcements:announcements status:status];
-
+        AJGWCGatewayCtrlAccessRules *tmpGatewayCtrlAccessRules;
+        status = [acl retrieveAclUsingSessionId:sessionId manifestRules:manifestRules announcements:announcements accessRules:&tmpGatewayCtrlAccessRules];
+        self.ajgwcGatewayCtrlAccessRules = tmpGatewayCtrlAccessRules;
         if (status != ER_OK) {
             return nil;
         }

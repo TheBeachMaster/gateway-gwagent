@@ -74,43 +74,43 @@
 /**
  * Retrieves the Manifest file of the application.
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
- * @return qcc::String representation of the Manifest file in XML format.
+ * @param xml representation of the Manifest file in XML format.
+ * @return {@link QStatus}
  */
-- (NSString*)retrieveManifestFileUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
+- (QStatus)retrieveManifestFileUsingSessionId:(AJNSessionId) sessionId fileContent:(NSString **)xml;
 
 /**
  * Retrieves the Manifest rules of the application
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
- * @return {@link AJGWCGatewayCtrlManifestRules}
+ * @param manifestRules {@link AJGWCGatewayCtrlManifestRules}
+ * @return {@link QStatus}
  */
-- (AJGWCGatewayCtrlManifestRules*)retrieveManifestRulesUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
+- (QStatus)retrieveManifestRulesUsingSessionId:(AJNSessionId) sessionId manifestRules:(AJGWCGatewayCtrlManifestRules**)manifestRules;
 
 /**
  * Retrieves the configurable rules of the application
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
+ * @param rules {@link AJGWCGatewayCtrlAccessRules}
  * @param announcements Array of {@link AJGWCAnnouncementData} objects
- * @return {@link AJGWCGatewayCtrlAccessRules}
+ * @return {@link QStatus}
  */
-- (AJGWCGatewayCtrlAccessRules*)retrieveConfigurableRulesUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status announcements:(NSArray*) announcements;
+- (QStatus)retrieveConfigurableRulesUsingSessionId:(AJNSessionId) sessionId rules:(AJGWCGatewayCtrlAccessRules**)rules announcements:(NSArray*) announcements;
 
 /**
  * Retrieves the state of the application
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
- * @return {@link GatewayCtrlConnectorApplicationStatus}
+ * @param connectorAppStatus {@link GatewayCtrlConnectorApplicationStatus}
+ * @return {@link QStatus}
  */
-- (AJGWCGatewayCtrlConnectorApplicationStatus*)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
+- (QStatus)retrieveStatusUsingSessionId:(AJNSessionId) sessionId status:(AJGWCGatewayCtrlConnectorApplicationStatus**)connectorAppStatus;
 
 /**
  * Restarts the application
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
- * @return {@link AJGWCRestartStatus}
+ * @param restartStatus {@link AJGWCRestartStatus}
+ * @return {@link QStatus}
  */
-- (AJGWCRestartStatus)restartUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
+- (QStatus)restartUsingSessionId:(AJNSessionId) sessionId status:(AJGWCRestartStatus&) restartStatus;
 
 /**
  * Set an {@link AJGWCGatewayCtrlApplicationStatusSignalHandler} to receive application
@@ -135,26 +135,26 @@
  * @param sessionId The id of the session established with the gateway
  * @param name The ACL name
  * @param accessRules The ACL access rules
- * @param status return status of operation
- * @return {@link AJGWCGatewayCtrlAclWriteResponse}
+ * @param aclStatus {@link AJGWCGatewayCtrlAclWriteResponse}
+ * @return {@link QStatus}
  */
-- (AJGWCGatewayCtrlAclWriteResponse*)createAclUsingSessionId:(AJNSessionId) sessionId name:(NSString*) name accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules status:(QStatus&) status;
+- (QStatus)createAclUsingSessionId:(AJNSessionId) sessionId name:(NSString*) name accessRules:(AJGWCGatewayCtrlAccessRules*) accessRules aclStatus:(AJGWCGatewayCtrlAclWriteResponse**)aclStatus;
 
 /**
  * Retrieves a list of the Access Control Lists installed on the application
  * @param sessionId The id of the session established with the gateway
- * @param status return status of operation
- * @return List of the {@link AJGWCGatewayCtrlAccessControlList}
+ * @param aclListArray Array of the {@link AJGWCGatewayCtrlAccessControlList}
+ * @return {@link QStatus}
  */
-- (NSArray*)retrieveAclsUsingSessionId:(AJNSessionId) sessionId status:(QStatus&) status;
+- (QStatus)retrieveAclsUsingSessionId:(AJNSessionId) sessionId acls:(NSMutableArray *)aclListArray;
 
 /**
  * Delete the Access Control List of this application
  * @param sessionId The id of the session established with the gateway
  * @param aclId The id of the ACL to be deleted
- * @param status return status of operation
- * @return {@link AJGWCAclResponseCode}
+ * @param responseCode {@link AJGWCAclResponseCode}
+ * @return {@link QStatus}
  */
-- (AJGWCAclResponseCode)deleteAclUsingSessionId:(AJNSessionId) sessionId aclId:(NSString*) aclId status:(QStatus&) status;
+- (QStatus)deleteAclUsingSessionId:(AJNSessionId) sessionId aclId:(NSString*) aclId status:(AJGWCAclResponseCode &)responseCode;
 
 @end

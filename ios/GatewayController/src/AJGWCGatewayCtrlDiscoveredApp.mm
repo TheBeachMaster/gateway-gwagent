@@ -29,11 +29,12 @@
 {
     self = [super init];
     if (self) {
-        self.handle = new ajn::services::GatewayCtrlDiscoveredApp([AJNConvertUtil convertNSStringToQCCString:busName],
-                                                                  [AJNConvertUtil convertNSStringToQCCString:appName],
-                                                                  appId,
-                                                                  [AJNConvertUtil convertNSStringToQCCString:deviceName],
-                                                                  [AJNConvertUtil convertNSStringToQCCString:deviceId]);
+        self.handle = new ajn::services::GatewayCtrlDiscoveredApp();
+        self.handle->init([AJNConvertUtil convertNSStringToQCCString:busName],
+                          [AJNConvertUtil convertNSStringToQCCString:appName],
+                          appId,
+                          [AJNConvertUtil convertNSStringToQCCString:deviceName],
+                          [AJNConvertUtil convertNSStringToQCCString:deviceId]);
     }
     return self;
 }
@@ -49,7 +50,13 @@
             ajn::MsgArg* aboutDataMapVal = (ajn::MsgArg*)[[aboutData objectForKey:key] handle]; //value
             aboutDataMap.insert(std::make_pair(aboutDataMapKey, *aboutDataMapVal));
         }
-        self.handle = new ajn::services::GatewayCtrlDiscoveredApp([AJNConvertUtil convertNSStringToQCCString:busName], aboutDataMap);
+        self.handle = new ajn::services::GatewayCtrlDiscoveredApp();
+        QStatus status = self.handle->init([AJNConvertUtil convertNSStringToQCCString:busName], aboutDataMap);
+        if (status != ER_OK) {
+            NSLog(@"Error initializing AJGWCGatewayCtrlDiscoveredApp");
+            delete self.handle;
+            return nil;
+        }
     }
     return self;
 }

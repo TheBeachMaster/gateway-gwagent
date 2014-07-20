@@ -67,6 +67,7 @@ class GatewayCtrlRemotedApp : public GatewayCtrlDiscoveredApp {
      * @param discoveredApp The {@link DiscoveredApp} to be used to build this {@link RemotedApp}
      * @param objDescRules Configuration of the object paths and interfaces that are
      * used by the Third Party Application to reach this remoted application
+     * @return {@link QStatus}
      */
     QStatus init(GatewayCtrlDiscoveredApp* discoveredApp, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules);
 
@@ -84,7 +85,7 @@ class GatewayCtrlRemotedApp : public GatewayCtrlDiscoveredApp {
 
     /**
      * release allocations and empty object. must be called before deletion of object.
-     * @return Status of release
+     * @return {@link QStatus}
      */
     QStatus release();
 

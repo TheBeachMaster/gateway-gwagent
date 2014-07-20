@@ -95,7 +95,7 @@ class GatewayCtrlAccessRules {
 
     /**
      * release allocations and empty object. must be called before deletion of object.
-     * @return Status of release
+     * @return {@link QStatus}
      */
     QStatus release();
 

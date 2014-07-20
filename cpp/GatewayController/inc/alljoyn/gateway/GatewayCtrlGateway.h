@@ -48,11 +48,17 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
 
     /**
      * Constructor
+     */
+    GatewayCtrlGateway() : GatewayCtrlDiscoveredApp(), m_SessionHandler(NULL) { }
+
+    /**
+     * init
      * @param busName The name of the {@link BusAttachment} of the gateway that sent
      * the Announcement
      * @param aboutData The data sent with the Announcement
+     * @return {@link QStatus}
      */
-    GatewayCtrlGateway(const qcc::String& gwBusName, AboutClient::AboutData const& aboutData);
+    QStatus init(const qcc::String& gwBusName, AboutClient::AboutData const& aboutData);
 
     /**
      * Destructor
@@ -62,11 +68,10 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
     /**
      * Retrieve the list of applications installed on the gateway identified by the given gwBusName
      * @param sessionId The id of the session established with the gateway
-     * @param installedApps The {@link ConnectorApplication}
-     * @param status return status of operation
-     * @return {@link Status}
+     * @param installedApps A reference to a vector of {@link GatewayCtrlConnectorApplication} objects
+     * @return {@link QStatus}
      */
-    const std::vector<GatewayCtrlConnectorApplication*>&  retrieveInstalledApps(SessionId sessionId, QStatus& status);
+    QStatus retrieveInstalledApps(SessionId sessionId, std::vector<GatewayCtrlConnectorApplication*>& installedApps);
 
 
     /**
@@ -74,7 +79,7 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
      * This method doesn't require {@link GatewayCtrlControllerSessionListener}. Use this method
      * when there is no need to receive any session related event.
      * @param gwBusName The bus name of the gateway to connect to.
-     * @return {@link SessionResult}
+     * @return {@link GatewayCtrlSessionResult}
      */
     GatewayCtrlSessionResult joinSession();
 
@@ -83,28 +88,27 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
      * The session related events will be sent to the given listener.
      * @param gwBusName The bus name of the gateway to connect to.
      * @param listener The listener is used to be notified about the session related events
-     * @return {@link SessionResult}
+     * @return {@link GatewayCtrlSessionResult}
      */
     GatewayCtrlSessionResult joinSession(GatewayCtrlControllerSessionListener*listener);
 
     /**
      * Join session asynchronously with the given gwBusName.
-     * @param gwBusName The bus name of the gateway to connect to.
      * @param listener The listener is used to be notified about the session related events
+     * @return {@link QStatus}
      */
     QStatus joinSessionAsync(GatewayCtrlControllerSessionListener*listener);
 
     /**
      * Disconnect the given session
-     * @param sessionId The session id to disconnect
-     * @return Returns the leave session {@link Status}
+     * @return Returns the leave session {@link QStatus}
      */
     QStatus leaveSession();
 
 
     /**
      * Get the Listener defined for this SessionHandler
-     * @return
+     * @return {@link GatewayCtrlControllerSessionListener}
      */
     GatewayCtrlControllerSessionListener* getListener() const;
 
@@ -113,7 +117,7 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
 
     /**
      * release allocations and empty object. must be called before deletion of object.
-     * @return Status of release
+     * @return {@link QStatus}
      */
     QStatus release();
 

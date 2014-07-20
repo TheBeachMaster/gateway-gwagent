@@ -44,7 +44,8 @@
     QStatus status;
 
     if([self.selectedViewController isKindOfClass:[ManifestFileViewController class]]) {
-        NSString* manifestFile = [self.connectorApplication retrieveManifestFileUsingSessionId:self.sessionId status:status];
+        NSString* manifestFile;
+        status = [self.connectorApplication retrieveManifestFileUsingSessionId:self.sessionId fileContent:&manifestFile];
         if (ER_OK != status) {
             NSLog(@"Failed to read manifest file. status:%@", [AJNStatus descriptionForStatusCode:status]);
             [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to read manifest file." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
@@ -53,7 +54,9 @@
         }
 
     } else {
-        AJGWCGatewayCtrlManifestRules* manifestRules = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId status:status];
+        AJGWCGatewayCtrlManifestRules* manifestRules;
+
+        status = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId manifestRules:&manifestRules];
         if (ER_OK != status) {
             NSLog(@"Failed to read manifest rules. status:%@", [AJNStatus descriptionForStatusCode:status]);
             [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to read manifest rules." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];

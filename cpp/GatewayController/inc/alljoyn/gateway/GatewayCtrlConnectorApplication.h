@@ -134,44 +134,44 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
     /**
      * Retrieves the Manifest file of the application.
      * @param sid The id of the session established with the gateway
-     * @param status return status of operation
-     * @return qcc::String representation of the Manifest file in XML format.
+     * @param xml representation of the Manifest file in XML format.
+     * @return {@link QStatus}
      */
-    qcc::String retrieveManifestFile(SessionId sessionId, QStatus& status);
+    QStatus retrieveManifestFile(SessionId sessionId, qcc::String& xml);
 
     /**
      * Retrieves the Manifest rules of the application
      * @param sessionId The id of the session established with the gateway
-     * @param status return status of operation
-     * @return {@link GatewayCtrlAccessRules}
+     * @param manifestRules {@link GatewayCtrlAccessRules}
+     * @return {@QStatus}
      */
-    GatewayCtrlManifestRules*retrieveManifestRules(SessionId sessionId, QStatus& status);
+    QStatus retrieveManifestRules(SessionId sessionId, GatewayCtrlManifestRules** manifestRules);
 
     /**
      * @param sessionId The id of the session established with the gateway
      * @param manifests About clients in the controllers vicinity
      * @param announcements a vector of all of the announcements in the controller's area
-     * @param status return status of operation
-     * @return {@link GatewayCtrlAccessRules}
+     * @param configurableRules {@link GatewayCtrlAccessRules}
+     * @return {@QStatus}
      */
-    GatewayCtrlAccessRules* retrieveConfigurableRules(SessionId sessionId, std::vector<AnnouncementData*> const& announcements, QStatus& status);
+    QStatus retrieveConfigurableRules(SessionId sessionId, std::vector<AnnouncementData*> const& announcements, GatewayCtrlAccessRules** configurableRules);
 
 
     /**
      * Retrieves the state of the application
      * @param sessionId The id of the session established with the gateway
-     * @param status return status of operation
-     * @return {@link GatewayCtrlConnectorApplicationStatus}
+     * @param applicationStatus {@link GatewayCtrlConnectorApplicationStatus}
+     * @return {@QStatus}
      */
-    GatewayCtrlConnectorApplicationStatus*retrieveStatus(SessionId sessionId, QStatus& status);
+    QStatus retrieveStatus(SessionId sessionId, GatewayCtrlConnectorApplicationStatus** applicationStatus);
 
     /**
      * Restarts the application
      * @param sessionId The id of the session established with the gateway
-     * @param status return status of operation
-     * @return {@link RestartStatus}
+     * @param restartStatus {@link RestartStatus}
+     * @return {@QStatus}
      */
-    RestartStatus restart(SessionId sessionId, QStatus& status);
+    QStatus restart(SessionId sessionId,  RestartStatus& restartStatus);
 
     /**
      * Set an {@link ApplicationStatusSignalHandler} to receive application
@@ -179,6 +179,7 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * a session should be successfully established with the gateway hosting the application.
      * Use {@link ConnectorApplication#unsetStatusChangedHandler()} to stop receiving the events.
      * @param handler Signal handler
+     * @return {@QStatus}
      */
     QStatus setStatusChangedHandler(const GatewayCtrlApplicationStatusSignalHandler*handler);
 
@@ -195,43 +196,44 @@ class GatewayCtrlConnectorApplication : public MessageReceiver {
      * @param sessionId The id of the session established with the gateway
      * @param name The ACL name
      * @param accessRules The ACL access rules
-     * @param status return status of operation
-     * @return {@link AclWriteResponse}
+     * @param aclWriteResponse {@link AclWriteResponse}
+     * @return {@QStatus}
      */
 
-    GatewayCtrlAclWriteResponse* createAcl(SessionId sessionId, const qcc::String& name, GatewayCtrlAccessRules* accessRules, QStatus& status);
+    QStatus createAcl(SessionId sessionId, const qcc::String& name, GatewayCtrlAccessRules* accessRules, GatewayCtrlAclWriteResponse** aclWriteResponse);
 
     /**
      * Retrieves a list of the Access Control Lists installed on the application
      * @param sessionId The id of the session established with the gateway
-     * @param status return status of operation
-     * @return List of the {@link AccessControlList}
+     * @param acls vector of the {@link AccessControlList}
+     * @return {@QStatus}
      */
-    const std::vector <GatewayCtrlAccessControlList*>& retrieveAcls(SessionId sessionId, QStatus& status);
+    QStatus retrieveAcls(SessionId sessionId, std::vector <GatewayCtrlAccessControlList*>& acls);
 
     /**
      * Delete the Access Control List of this application
      * @param sessionId The id of the session established with the gateway
      * @param aclId The id of the ACL to be deleted
-     * @param status return status of operation
-     * @return {@link AclResponseCode}
+     * @param responseCode {@link AclResponseCode}
+     * @return {@QStatus}
      */
-    AclResponseCode deleteAcl(SessionId sessionId, const qcc::String& aclId, QStatus& status);
+    QStatus deleteAcl(SessionId sessionId, const qcc::String& aclId, AclResponseCode& responseCode);
 
     /**
      * Intersects {@link AnnouncementData} with the received remotedServices, creates
      * a list of {@link RemotedApp}
      * @param remotedServices The remotedServices from the application manifest
      * @param announcements up to date vector of AnnouncementData
-     * @return List of {@link RemotedApp}
+     * @param remotedApps vector of {@link RemotedApp}
+     * @return {@QStatus}
      */
-    static std::vector<GatewayCtrlRemotedApp*> extractRemotedApps(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices,
-                                                                  std::vector<AnnouncementData*> const& announcements,
-                                                                  QStatus& status);
+    static QStatus  extractRemotedApps(const std::vector<GatewayCtrlManifestObjectDescription*>& remotedServices,
+                                       std::vector<AnnouncementData*> const& announcements,
+                                       std::vector<GatewayCtrlRemotedApp*>& remotedApps);
 
     /**
      * release allocations and empty object. must be called before deletion of object.
-     * @return Status of release
+     * @return {@link QStatus}
      */
     QStatus release();
 

@@ -24,16 +24,23 @@ namespace services {
 
 using namespace gwcConsts;
 
-GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(const qcc::String& busName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId) : m_BusName(busName), m_AppName(appName), m_DeviceName(deviceName), m_DeviceId(deviceId)
+void GatewayCtrlDiscoveredApp::init(const qcc::String& busName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId)
 {
+
+    m_BusName = busName;
+    m_AppName  = appName;
+    m_DeviceName = deviceName;
+    m_DeviceId = deviceId;
     setAppId(appId, UUID_LENGTH);
 }
 
-GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(const qcc::String& busName, AboutClient::AboutData const& aboutData) : m_BusName(busName)
+QStatus GatewayCtrlDiscoveredApp::init(const qcc::String& busName, AboutClient::AboutData const& aboutData)
 {
+    setBusName(busName);
+
     if (aboutData.find("AppId") == aboutData.end()) {
         QCC_LogError(ER_FAIL, ("AppId missing in about structure, bus name is '%s'", busName.c_str()));
-        return;
+        return ER_FAIL;
     }
 
     const MsgArg*value = &aboutData.find("AppId")->second;
@@ -44,7 +51,7 @@ GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(const qcc::String& busName, A
     QStatus status = value->Get("ay", &len, &appIdBin);
     if (status != ER_OK) {
         QCC_LogError(status, ("Get appID failed"));
-        return;
+        return status;
     }
 
     setAppId(appIdBin, len);
@@ -54,6 +61,8 @@ GatewayCtrlDiscoveredApp::GatewayCtrlDiscoveredApp(const qcc::String& busName, A
     m_AppName = getAboutDataEntry(aboutData, "AppName");
     m_DeviceName  = getAboutDataEntry(aboutData, "DeviceName");
     m_DeviceId = getAboutDataEntry(aboutData, "DeviceId");
+
+    return ER_OK;
 }
 
 

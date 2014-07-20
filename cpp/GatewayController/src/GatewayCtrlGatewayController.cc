@@ -61,9 +61,8 @@ BusAttachment* GatewayCtrlGatewayController::getBusAttachment()
 }
 
 
-GatewayCtrlGateway* GatewayCtrlGatewayController::createGateway(const qcc::String& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData)
+QStatus GatewayCtrlGatewayController::createGateway(const qcc::String& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData, GatewayCtrlGateway** gateway)
 {
-    GatewayCtrlGateway* gateway = NULL;
 
     for (AboutClient::ObjectDescriptions::const_iterator it = objectDescs.begin(); it != objectDescs.end(); ++it) {
         qcc::String key = it->first;
@@ -71,7 +70,13 @@ GatewayCtrlGateway* GatewayCtrlGatewayController::createGateway(const qcc::Strin
         for (std::vector<qcc::String>::const_iterator itv = vector.begin(); itv != vector.end(); ++itv) {
             if (itv->compare(AJ_GATEWAYCONTROLLER_APPMGMT_INTERFACE) == 0) {
                 if (key.compare(AJ_OBJECTPATH_PREFIX) == 0) {
-                    gateway = new GatewayCtrlGateway(gatewayBusName, aboutData);
+                    *gateway = new GatewayCtrlGateway();
+                    QStatus status = (*gateway)->init(gatewayBusName, aboutData);
+
+                    if (status != ER_OK) {
+                        QCC_LogError(status, ("GatewayCtrlGateway init failed"));
+                        return status;
+                    }
                     break;
                 }
             }
@@ -79,10 +84,10 @@ GatewayCtrlGateway* GatewayCtrlGatewayController::createGateway(const qcc::Strin
     }
 
     if (gateway) {
-        m_Gateways[gatewayBusName] = gateway;
+        m_Gateways[gatewayBusName] = *gateway;
     }
 
-    return gateway;
+    return ER_OK;
 }
 
 GatewayCtrlGateway* GatewayCtrlGatewayController::getGateway(const qcc::String& gatewayBusName)
