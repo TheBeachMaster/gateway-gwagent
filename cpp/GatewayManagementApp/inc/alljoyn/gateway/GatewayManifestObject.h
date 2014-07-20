@@ -34,9 +34,9 @@ class GatewayManifestObject {
      * typedef to define a Name and FriendlyName pair
      */
     typedef struct {
-        qcc::String interfaceName;
-        qcc::String interfaceFriendlyName;
-        bool isSecured;
+        qcc::String interfaceName;           ///< The name of the interface
+        qcc::String interfaceFriendlyName;   ///< The friendly name of the interface
+        bool isSecured;                      ///< The secured flag of the interface
     } InterfaceDesc;
 
     /**
@@ -47,6 +47,8 @@ class GatewayManifestObject {
     /**
      * Constructor for the GatewayManifestObject class
      * @param objectPath - objectPath of the ObjectDescription
+     * @param objectPathFriendly - friendly name of the objectPath of the ObjectDescription
+     * @param isPrefix - is the objectPath a Prefix
      * @param interfaces - interfaces of the ObjectDescription
      */
     GatewayManifestObject(qcc::String const& objectPath, qcc::String const& objectPathFriendly, bool isPrefix,
@@ -71,13 +73,13 @@ class GatewayManifestObject {
 
     /**
      * Get the IsObjectPathPrefix flag of the ObjectDescription
-     * @return
+     * @return true/false
      */
     bool getIsObjectPathPrefix() const;
 
     /**
      * Set the IsObjectPathPrefix flag of the ObjectDescription
-     * @param objectPath
+     * @param isObjectPathPrefix - set whether the objectPath is a prefix
      */
     void setIsObjectPathPrefix(bool isObjectPathPrefix);
 
@@ -101,7 +103,7 @@ class GatewayManifestObject {
 
     /**
      * Set the ObjectPath Friendly Name of the ObjectDescription
-     * @param objectPath
+     * @param objectPathFriendlyName - set the objectPathFriendlyName
      */
     void setObjectPathFriendlyName(const qcc::String& objectPathFriendlyName);
 

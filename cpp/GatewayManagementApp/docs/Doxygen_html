@@ -546,7 +546,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = ../inc/alljoyn/services_common
+INPUT                  = ../inc/alljoyn/gateway
                         
                          
 # This tag can be used to specify the character encoding of the source files
