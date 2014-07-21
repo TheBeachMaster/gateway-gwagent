@@ -44,7 +44,7 @@
 		19D27979191BBB3300BEF943 /* GatewayCtrlAccessRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlAccessRules.h; sourceTree = "<group>"; };
 		19D2797A191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlAclWriteResponse.h; sourceTree = "<group>"; };
 		19D2797B191BBB3300BEF943 /* GatewayCtrlApplicationStatusSignalHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlApplicationStatusSignalHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D2797C191BBB3300BEF943 /* GatewayCtrlControllerSessionListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlControllerSessionListener.h; sourceTree = "<group>"; };
+		19D2797C191BBB3300BEF943 /* GatewayCtrlSessionListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlSessionListener.h; sourceTree = "<group>"; };
 		19D2797D191BBB3300BEF943 /* GatewayCtrlDiscoveredApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlDiscoveredApp.h; sourceTree = "<group>"; };
 		19D2797E191BBB3300BEF943 /* GatewayCtrlEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlEnums.h; sourceTree = "<group>"; };
 		19D2797F191BBB3300BEF943 /* GatewayCtrlGateway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlGateway.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -120,7 +120,7 @@
 				19D27979191BBB3300BEF943 /* GatewayCtrlAccessRules.h */,
 				19D2797A191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.h */,
 				19D2797B191BBB3300BEF943 /* GatewayCtrlApplicationStatusSignalHandler.h */,
-				19D2797C191BBB3300BEF943 /* GatewayCtrlControllerSessionListener.h */,
+				19D2797C191BBB3300BEF943 /* GatewayCtrlSessionListener.h */,
 				19D2797D191BBB3300BEF943 /* GatewayCtrlDiscoveredApp.h */,
 				19D2797E191BBB3300BEF943 /* GatewayCtrlEnums.h */,
 				19D2797F191BBB3300BEF943 /* GatewayCtrlGateway.h */,

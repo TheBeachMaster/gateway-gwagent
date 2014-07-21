@@ -158,7 +158,7 @@ GatewayCtrlSessionResult GatewayCtrlGateway::joinSession() {
 }
 
 
-GatewayCtrlSessionResult GatewayCtrlGateway::joinSession(GatewayCtrlControllerSessionListener*listener) {
+GatewayCtrlSessionResult GatewayCtrlGateway::joinSession(GatewayCtrlSessionListener*listener) {
 
     m_Listener = listener;
 
@@ -192,7 +192,7 @@ GatewayCtrlSessionResult GatewayCtrlGateway::joinSession(GatewayCtrlControllerSe
     return { status, static_cast<int>(sessionId) };
 }
 
-QStatus GatewayCtrlGateway::joinSessionAsync(GatewayCtrlControllerSessionListener*listener)
+QStatus GatewayCtrlGateway::joinSessionAsync(GatewayCtrlSessionListener*listener)
 {
     m_Listener = listener;
 
@@ -249,7 +249,7 @@ QStatus GatewayCtrlGateway::leaveSession()
     return status;
 }
 
-GatewayCtrlControllerSessionListener* GatewayCtrlGateway::getListener() const
+GatewayCtrlSessionListener* GatewayCtrlGateway::getListener() const
 {
     return m_Listener;
 }

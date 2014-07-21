@@ -14,30 +14,51 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#import <Foundation/Foundation.h>
-@class AJGWCGatewayCtrlGateway;
+#ifndef GatewayCtrlSessionListener_H
+#define GatewayCtrlSessionListener_H
+
+#include <alljoyn/SessionListener.h>
+#include <alljoyn/SessionPortListener.h>
+
+namespace ajn {
+namespace services {
+
+class GatewayCtrlGateway;
 
 /**
  *  This class is responsible for handling session related events from the AllJoyn system.
- *  Extend this class to receive the events of: <br>
- *      - sessionEstablished <br>
- *      - sessionLost    <br>
+ *  Extend this class to receive the events of:
+ *      - sessionEstablished
+ *      - sessionLost
  *
  *  The events are called on the AllJoyn thread, so avoid blocking them with
  *  long running tasks.
  */
-@protocol AJGWCGatewayCtrlControllerSessionListener <NSObject>
+class GatewayCtrlSessionListener {
+  public:
 
-/**
- * sessionEstablished - callback when a session is established with a gateway
- * @param gateway The gateway that the session will established with
- */
-- (void)sessionEstablished:(AJGWCGatewayCtrlGateway*) gateway;
+    /**
+     * Constructor for GatewayCtrlSessionListener
+     */
+    GatewayCtrlSessionListener() { };
 
-/**
- * sessionLost - callback when a session is lost with a gateway
- * @param gateway The gateway that the session was lost with
- */
-- (void)sessionLost:(AJGWCGatewayCtrlGateway*) gateway;
+    /**
+     * Destructor for GatewayCtrlSessionListener
+     */
+    virtual ~GatewayCtrlSessionListener() { };
 
-@end
+    /**
+     * sessionEstablished - callback when a session is established with a device
+     * @param device - the device that the session was established with
+     */
+    virtual void sessionEstablished(GatewayCtrlGateway* gateway) = 0;
+
+    /**
+     * sessionLost - callback when a session is lost with a device
+     * @param device - device that the session was lost with
+     */
+    virtual void sessionLost(GatewayCtrlGateway* gateway) = 0;
+};
+}
+}
+#endif /* defined(GatewayCtrlSessionListener_H) */

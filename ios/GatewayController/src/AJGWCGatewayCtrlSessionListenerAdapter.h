@@ -14,27 +14,27 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#ifndef AJGWCGatewayCtrlControllerSessionListenerAdapter_H
-#define AJGWCGatewayCtrlControllerSessionListenerAdapter_H
+#ifndef AJGWCGatewayCtrlSessionListenerAdapter_H
+#define AJGWCGatewayCtrlSessionListenerAdapter_H
 
-#import "alljoyn/gateway/GatewayCtrlControllerSessionListener.h"
+#import "alljoyn/gateway/GatewayCtrlSessionListener.h"
 #import "AJGWCGatewayCtrlGateway.h"
-#import "AJGWCGatewayCtrlControllerSessionListener.h"
+#import "AJGWCGatewayCtrlSessionListener.h"
 
-class AJGWCGatewayCtrlControllerSessionListenerAdapter : public ajn::services::GatewayCtrlControllerSessionListener {
+class AJGWCGatewayCtrlSessionListenerAdapter : public ajn::services::GatewayCtrlSessionListener {
 
 public:
-    AJGWCGatewayCtrlControllerSessionListenerAdapter() {};
+    AJGWCGatewayCtrlSessionListenerAdapter() {};
 
     /**
-     * Constructor for AJGWCGatewayCtrlControllerSessionListenerAdapter
+     * Constructor for AJGWCGatewayCtrlSessionListenerAdapter
      */
-    AJGWCGatewayCtrlControllerSessionListenerAdapter(id <AJGWCGatewayCtrlControllerSessionListener> handle);
+    AJGWCGatewayCtrlSessionListenerAdapter(id <AJGWCGatewayCtrlSessionListener> handle);
 
     /**
-     * Destructor for AJGWCGatewayCtrlControllerSessionListenerAdapter
+     * Destructor for AJGWCGatewayCtrlSessionListenerAdapter
      */
-    virtual ~AJGWCGatewayCtrlControllerSessionListenerAdapter() {};
+    virtual ~AJGWCGatewayCtrlSessionListenerAdapter() {};
 
     /**
      * sessionEstablished - callback when a session is established with a device
@@ -52,14 +52,14 @@ public:
      * Get the Listener defined for this Adapter
      * @return
      */
-    id <AJGWCGatewayCtrlControllerSessionListener> getListener() const;
+    id <AJGWCGatewayCtrlSessionListener> getListener() const;
 
 
 private:
     /**
-     {@link AJGWCGatewayCtrlControllerSessionListener} handle
+     {@link AJGWCGatewayCtrlSessionListener} handle
      */
-    id <AJGWCGatewayCtrlControllerSessionListener> sessionListenerHandler;
+    id <AJGWCGatewayCtrlSessionListener> sessionListenerHandler;
 
 };
 #endif

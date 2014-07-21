@@ -24,7 +24,7 @@
 #import "ConnectorAppInfoViewController.h"
 #import "AppDelegate.h"
 
-@interface ConnectorAppTableViewController () <AJGWCGatewayCtrlApplicationStatusSignalHandler, UIActionSheetDelegate, AJGWCGatewayCtrlControllerSessionListener>
+@interface ConnectorAppTableViewController () <AJGWCGatewayCtrlApplicationStatusSignalHandler, UIActionSheetDelegate, AJGWCGatewayCtrlSessionListener>
 
 @property (strong, nonatomic) AJGWCGatewayCtrlGateway* gateway;
 @property (nonatomic) AJNSessionId sessionId;

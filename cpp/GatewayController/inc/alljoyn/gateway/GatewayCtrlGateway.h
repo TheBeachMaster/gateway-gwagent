@@ -23,7 +23,7 @@
 #include <alljoyn/about/AboutClient.h>
 #include <alljoyn/gateway/GatewayCtrlDiscoveredApp.h>
 #include <alljoyn/gateway/GatewayCtrlConnectorApplication.h>
-#include <alljoyn/gateway/GatewayCtrlControllerSessionListener.h>
+#include <alljoyn/gateway/GatewayCtrlSessionListener.h>
 #include <alljoyn/gateway/GatewayCtrlSessionHandler.h>
 #include <alljoyn/about/AboutClient.h>
 
@@ -76,7 +76,7 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
 
     /**
      * Join session synchronously with the given gateway identified by the gwBusName.
-     * This method doesn't require {@link GatewayCtrlControllerSessionListener}. Use this method
+     * This method doesn't require {@link GatewayCtrlSessionListener}. Use this method
      * when there is no need to receive any session related event.
      * @param gwBusName The bus name of the gateway to connect to.
      * @return {@link GatewayCtrlSessionResult}
@@ -90,14 +90,14 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
      * @param listener The listener is used to be notified about the session related events
      * @return {@link GatewayCtrlSessionResult}
      */
-    GatewayCtrlSessionResult joinSession(GatewayCtrlControllerSessionListener*listener);
+    GatewayCtrlSessionResult joinSession(GatewayCtrlSessionListener*listener);
 
     /**
      * Join session asynchronously with the given gwBusName.
      * @param listener The listener is used to be notified about the session related events
      * @return {@link QStatus}
      */
-    QStatus joinSessionAsync(GatewayCtrlControllerSessionListener*listener);
+    QStatus joinSessionAsync(GatewayCtrlSessionListener*listener);
 
     /**
      * Disconnect the given session
@@ -108,9 +108,9 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
 
     /**
      * Get the Listener defined for this SessionHandler
-     * @return {@link GatewayCtrlControllerSessionListener}
+     * @return {@link GatewayCtrlSessionListener}
      */
-    GatewayCtrlControllerSessionListener* getListener() const;
+    GatewayCtrlSessionListener* getListener() const;
 
 
 
@@ -129,7 +129,7 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
 
     GatewayCtrlSessionHandler m_SessionHandler;
 
-    GatewayCtrlControllerSessionListener*m_Listener;
+    GatewayCtrlSessionListener*m_Listener;
 };
 }
 }

@@ -14,24 +14,30 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#include "AJGWCGatewayCtrlControllerSessionListenerAdapter.h"
+#import <Foundation/Foundation.h>
+@class AJGWCGatewayCtrlGateway;
 
-AJGWCGatewayCtrlControllerSessionListenerAdapter::AJGWCGatewayCtrlControllerSessionListenerAdapter(id <AJGWCGatewayCtrlControllerSessionListener> handle)
-{
-    sessionListenerHandler = handle;
-}
+/**
+ *  This class is responsible for handling session related events from the AllJoyn system.
+ *  Extend this class to receive the events of: <br>
+ *      - sessionEstablished <br>
+ *      - sessionLost    <br>
+ *
+ *  The events are called on the AllJoyn thread, so avoid blocking them with
+ *  long running tasks.
+ */
+@protocol AJGWCGatewayCtrlSessionListener <NSObject>
 
-void AJGWCGatewayCtrlControllerSessionListenerAdapter::sessionEstablished(ajn::services::GatewayCtrlGateway* gateway)
-{
-    [sessionListenerHandler sessionEstablished:[[AJGWCGatewayCtrlGateway alloc] initWithHandle:gateway]];
-}
+/**
+ * sessionEstablished - callback when a session is established with a gateway
+ * @param gateway The gateway that the session will established with
+ */
+- (void)sessionEstablished:(AJGWCGatewayCtrlGateway*) gateway;
 
-void AJGWCGatewayCtrlControllerSessionListenerAdapter::sessionLost(ajn::services::GatewayCtrlGateway* gateway)
-{
-    [sessionListenerHandler sessionLost:[[AJGWCGatewayCtrlGateway alloc] initWithHandle:gateway]];
-}
+/**
+ * sessionLost - callback when a session is lost with a gateway
+ * @param gateway The gateway that the session was lost with
+ */
+- (void)sessionLost:(AJGWCGatewayCtrlGateway*) gateway;
 
-id<AJGWCGatewayCtrlControllerSessionListener> AJGWCGatewayCtrlControllerSessionListenerAdapter::getListener() const
-{
-    return sessionListenerHandler;
-}
+@end

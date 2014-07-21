@@ -33,7 +33,7 @@ public:
     AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter(id <AJGWCGatewayCtrlApplicationStatusSignalHandler> handle);
 
     /**
-     * Destructor for AJGWCGatewayCtrlControllerSessionListenerAdapter
+     * Destructor for AJGWCGatewayCtrlSessionListenerAdapter
      */
     ~AJGWCGatewayCtrlApplicationStatusSignalHandlerAdapter();
 

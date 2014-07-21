@@ -21,7 +21,7 @@
 #import "AJGWCGatewayCtrlDiscoveredApp.h"
 #import "AJGWCGatewayCtrlGateway.h"
 #import "AJGWCGatewayCtrlSessionResult.h"
-#import "AJGWCGatewayCtrlControllerSessionListener.h"
+#import "AJGWCGatewayCtrlSessionListener.h"
 
 @interface AJGWCGatewayCtrlGateway : AJGWCGatewayCtrlDiscoveredApp
 
@@ -49,7 +49,7 @@
 
 /**
  * Join session synchronously with the given gateway identified by the gwBusName.
- * This method doesn't require {@link AJGWCGatewayCtrlControllerSessionListener}. Use this method
+ * This method doesn't require {@link AJGWCGatewayCtrlSessionListener}. Use this method
  * when there is no need to receive any session related event.
  * @return {@link AJGWCGatewayCtrlSessionResult}
  */
@@ -61,14 +61,14 @@
  * @param listener The listener is used to be notified about the session related events
  * @return {@link AJGWCGatewayCtrlSessionResult}
  */
-- (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlControllerSessionListener>) listener;
+- (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlSessionListener>) listener;
 
 /**
  * Join session asynchronously with the given gwBusName.
  * @param listener The listener is used to be notified about the session related events
  * @return Returns the joinSessionAsync status {@link QStatus}
  */
-- (QStatus)joinSessionAsync:(id<AJGWCGatewayCtrlControllerSessionListener>) listener;
+- (QStatus)joinSessionAsync:(id<AJGWCGatewayCtrlSessionListener>) listener;
 
 /**
  * Disconnect the given session
@@ -80,6 +80,6 @@
  * Get the Listener defined for this SessionHandler
  * @return listener
  */
-- (id<AJGWCGatewayCtrlControllerSessionListener>)listener;
+- (id<AJGWCGatewayCtrlSessionListener>)listener;
 
 @end

@@ -17,13 +17,13 @@
 #import "AJGWCGatewayCtrlGateway.h"
 #import "alljoyn/about/AJNConvertUtil.h"
 #import "AJGWCGatewayCtrlConnectorApplication.h"
-#import "AJGWCGatewayCtrlControllerSessionListenerAdapter.h"
+#import "AJGWCGatewayCtrlSessionListenerAdapter.h"
 #import "AJNStatus.h"
 
 @interface AJGWCGatewayCtrlGateway ()
 
 @property (nonatomic) ajn::services::GatewayCtrlGateway* handle;
-@property (nonatomic) AJGWCGatewayCtrlControllerSessionListenerAdapter* adapter;
+@property (nonatomic) AJGWCGatewayCtrlSessionListenerAdapter* adapter;
 
 @end
 
@@ -83,16 +83,16 @@
     return [[AJGWCGatewayCtrlSessionResult alloc]initWithStatus:ret.m_status sid:ret.m_sid];
 }
 
-- (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlControllerSessionListener>) listener
+- (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlSessionListener>) listener
 {
-    self.adapter = new AJGWCGatewayCtrlControllerSessionListenerAdapter(listener);
+    self.adapter = new AJGWCGatewayCtrlSessionListenerAdapter(listener);
     ajn::services::GatewayCtrlSessionResult ret = self.handle->joinSession(self.adapter);
     return [[AJGWCGatewayCtrlSessionResult alloc]initWithStatus:ret.m_status sid:ret.m_sid];
 }
 
-- (QStatus)joinSessionAsync:(id<AJGWCGatewayCtrlControllerSessionListener>) listener
+- (QStatus)joinSessionAsync:(id<AJGWCGatewayCtrlSessionListener>) listener
 {
-    self.adapter = new AJGWCGatewayCtrlControllerSessionListenerAdapter(listener);
+    self.adapter = new AJGWCGatewayCtrlSessionListenerAdapter(listener);
     return self.handle->joinSessionAsync(self.adapter);
 }
 
@@ -101,7 +101,7 @@
     return self.handle->leaveSession();
 }
 
-- (id<AJGWCGatewayCtrlControllerSessionListener>)listener
+- (id<AJGWCGatewayCtrlSessionListener>)listener
 {
     return self.adapter->getListener();
 }
