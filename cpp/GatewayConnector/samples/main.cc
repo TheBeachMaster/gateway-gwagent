@@ -16,7 +16,6 @@
 
 #include <SrpKeyXListener.h>
 #include <CommonSampleUtil.h>
-#include <GuidUtil.h>
 #include <alljoyn/BusAttachment.h>
 #include <alljoyn/notification/Notification.h>
 #include <alljoyn/notification/NotificationReceiver.h>
@@ -27,6 +26,7 @@
 #include <alljoyn/about/AnnounceHandler.h>
 #include <alljoyn/about/AnnouncementRegistrar.h>
 #include <alljoyn/config/ConfigClient.h>
+#include <alljoyn/services_common/GuidUtil.h>
 
 #include <iostream>
 #include <signal.h>
