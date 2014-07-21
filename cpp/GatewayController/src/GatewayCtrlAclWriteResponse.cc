@@ -28,29 +28,29 @@ GatewayCtrlAclWriteResponse::~GatewayCtrlAclWriteResponse()
 {
 
 }
-qcc::String GatewayCtrlAclWriteResponse::GetAclId() {
+qcc::String GatewayCtrlAclWriteResponse::getAclId() {
     return m_AclId;
 }
 
 
 
-AclResponseCode GatewayCtrlAclWriteResponse::GetResponseCode() {
+AclResponseCode GatewayCtrlAclWriteResponse::getResponseCode() {
     return m_AclCode;
 }
 
 
-GatewayCtrlAccessRules* GatewayCtrlAclWriteResponse::GetInvalidRules() {
+GatewayCtrlAccessRules* GatewayCtrlAclWriteResponse::getInvalidRules() {
     return m_InvalidRules;
 }
 
-qcc::String GatewayCtrlAclWriteResponse::GetObjectPath()
+qcc::String GatewayCtrlAclWriteResponse::getObjectPath()
 {
     return m_ObjectPath;
 }
 
-QStatus GatewayCtrlAclWriteResponse::Release() {
+QStatus GatewayCtrlAclWriteResponse::release() {
     if (m_InvalidRules) {
-        m_InvalidRules->Release();
+        m_InvalidRules->release();
         delete m_InvalidRules;
         m_InvalidRules = NULL;
     }

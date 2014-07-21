@@ -45,23 +45,22 @@
 
 - (NSString*)path
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetPath()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getPath()];
 }
 
 - (NSString*)friendlyName
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetFriendlyName()];
-
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getFriendlyName()];
 }
 
 - (bool)isPrefix
 {
-    return self.handle->IsPrefix();
+    return self.handle->isPrefix();
 }
 
 - (void)setPrefix:(bool) isPrefix
 {
-    self.handle->SetPrefix(isPrefix);
+    self.handle->setPrefix(isPrefix);
 }
 
 - (bool)isPrefixAllowed

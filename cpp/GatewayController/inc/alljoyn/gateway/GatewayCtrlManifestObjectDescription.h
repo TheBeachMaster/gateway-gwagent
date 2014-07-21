@@ -54,19 +54,19 @@ class GatewayCtrlConnAppInterface {
      * Returns a name of the interface.
      * @return interface name
      */
-    qcc::String GetName() const;
+    qcc::String getName() const;
 
     /**
      * Returns a friendly name of the interface.
      * The friendly name may be presented to the end user.
      * @return Interface friendly name
      */
-    qcc::String GetFriendlyName() const;
+    qcc::String getFriendlyName() const;
 
     /**
      * @return TRUE if the interface is secured
      */
-    bool IsSecured() const;
+    bool isSecured() const;
 
     /**
      * operator less than
@@ -116,24 +116,24 @@ class GatewayCtrlConnAppObjectPath {
      * AllJoyn object identification
      * @return The value of the object path
      */
-    qcc::String GetPath() const;
+    qcc::String getPath() const;
 
     /**
      * Returns the friendly name  of the object path.
      * This name may be presented to the end user.
      * @return Object path friendly name
      */
-    qcc::String GetFriendlyName();
+    qcc::String getFriendlyName();
 
     /**
      * @return Returns whether this object path is a prefix
      */
-    bool IsPrefix() const;
+    bool isPrefix() const;
 
     /**
      * @param isPrefix set the prefix flag to isPrefix
      */
-    void SetPrefix(bool isPrefix);
+    void setPrefix(bool isPrefix);
 
     /**
      * @return TRUE if the object path is allowed to be a prefix according
@@ -215,32 +215,32 @@ class GatewayCtrlManifestObjectDescription {
      * The object path supported by the Service Provider Application manifest
      * @return Object path
      */
-    GatewayCtrlConnAppObjectPath* GetObjectPath() const;
+    GatewayCtrlConnAppObjectPath* getObjectPath() const;
 
     /**
      * The interfaces supported by the Service Provider Application manifest
      * @return Set of the {@link ConnAppInterface} objects
      */
-    const std::set<GatewayCtrlConnAppInterface>*GetInterfaces() const;
+    const std::set<GatewayCtrlConnAppInterface>*getInterfaces() const;
 
     /**
      * The flag has TRUE if this {@link ManifestObjectDescription} is configured
      * to permit the object path and interfaces to be remoted by the Third Party Application
      * @return configured state
      */
-    bool IsConfigured() const;
+    bool isConfigured() const;
 
     /**
      * Set TRUE to permit this {@link ManifestObjectDescription} object path and interfaces
      * to be remoted by the Third Party Application
      * @param configured
      */
-    void SetConfigured(bool configured);
+    void setConfigured(bool configured);
 
     /**
      * @return Status of release
      */
-    QStatus Release();
+    QStatus release();
 
   private:
 

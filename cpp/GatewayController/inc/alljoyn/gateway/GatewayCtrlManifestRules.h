@@ -50,19 +50,19 @@ class GatewayCtrlManifestRules {
      * exposes to its clients
      * @return List of exposed services
      */
-    const std::vector<GatewayCtrlManifestObjectDescription*>& GetExposedServices() const;
+    const std::vector<GatewayCtrlManifestObjectDescription*>& getExposedServices() const;
 
     /**
      * The {@link GatewayCtrlManifestObjectDescription} objects that the Third Party Application
      * supports for being remoted
      * @return List of remoted interfaces
      */
-    const std::vector<GatewayCtrlManifestObjectDescription*>& GetRemotedServices() const;
+    const std::vector<GatewayCtrlManifestObjectDescription*>& getRemotedServices() const;
 
     /**
      * @return Status of release
      */
-    QStatus Release();
+    QStatus release();
 
   private:
     /**
@@ -75,7 +75,7 @@ class GatewayCtrlManifestRules {
      */
     std::vector<GatewayCtrlManifestObjectDescription*> m_RemotedServices;
 
-    void EmptyVectors();
+    void emptyVectors();
 
 };
 }

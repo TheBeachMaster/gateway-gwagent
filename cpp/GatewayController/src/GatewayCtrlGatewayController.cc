@@ -26,30 +26,27 @@ using namespace gwcConsts;
 GatewayCtrlGatewayController* GatewayCtrlGatewayController::m_instance = NULL;
 BusAttachment* GatewayCtrlGatewayController::m_Bus = NULL;
 
-GatewayCtrlGatewayController::GatewayCtrlGatewayController(BusAttachment* bus)
+GatewayCtrlGatewayController::GatewayCtrlGatewayController()
 {
 
 }
 
 GatewayCtrlGatewayController*GatewayCtrlGatewayController::getInstance()
 {
-    if (!m_Bus) {
-        return NULL;
-    }
     if (!m_instance) {
-        m_instance = new GatewayCtrlGatewayController(m_Bus);
+        m_instance = new GatewayCtrlGatewayController();
     }
     return m_instance;
 }
 
-void GatewayCtrlGatewayController::Init(BusAttachment*bus)
+void GatewayCtrlGatewayController::init(BusAttachment*bus)
 {
     m_Bus = bus;
 }
 
-void GatewayCtrlGatewayController::Shutdown()
+void GatewayCtrlGatewayController::shutdown()
 {
-    Release();
+    release();
 
     if (m_instance) {
         delete m_instance;
@@ -58,13 +55,13 @@ void GatewayCtrlGatewayController::Shutdown()
 }
 
 
-BusAttachment* GatewayCtrlGatewayController::GetBusAttachment()
+BusAttachment* GatewayCtrlGatewayController::getBusAttachment()
 {
     return m_Bus;
 }
 
 
-GatewayCtrlGateway* GatewayCtrlGatewayController::CreateGateway(qcc::String const& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData)
+GatewayCtrlGateway* GatewayCtrlGatewayController::createGateway(qcc::String const& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData)
 {
     GatewayCtrlGateway* gateway = NULL;
 
@@ -104,7 +101,7 @@ QStatus GatewayCtrlGatewayController::deleteGateway(qcc::String const& gatewayBu
 
     std::map<qcc::String, GatewayCtrlGateway*>::iterator gateway = m_Gateways.find(gatewayBusName);
     if (gateway != m_Gateways.end()) {
-        status = gateway->second->Release();
+        status = gateway->second->release();
 
         if (status != ER_OK) {
             QCC_LogError(status, ("While releasing a gateway"));
@@ -112,18 +109,17 @@ QStatus GatewayCtrlGatewayController::deleteGateway(qcc::String const& gatewayBu
         }
 
         delete gateway->second;
+
+        m_Gateways.erase(gateway);  //code rev
+
     }
-
-
-
-    m_Gateways.erase(gateway);
 
     return status;
 }
 
 QStatus GatewayCtrlGatewayController::deleteAllGateways()
 {
-    EmptyMap();
+    emptyMap();
 
     return ER_OK;
 }
@@ -133,21 +129,22 @@ const std::map<qcc::String, GatewayCtrlGateway*>& GatewayCtrlGatewayController::
     return m_Gateways;
 }
 
-void GatewayCtrlGatewayController::EmptyMap()
+void GatewayCtrlGatewayController::emptyMap()
 {
-    for (std::map<qcc::String, GatewayCtrlGateway*>::iterator itr = m_Gateways.begin(); itr != m_Gateways.end(); itr++) {
+    while (!m_Gateways.empty()) {
+        std::map<qcc::String, GatewayCtrlGateway*>::iterator itr = m_Gateways.begin();
         GatewayCtrlGateway*gateway = (*itr).second;
-        gateway->Release();
+        m_Gateways.erase(itr);
+        gateway->release();
         delete gateway;
     }
 
-    m_Gateways.clear();
 }
 
 
-QStatus GatewayCtrlGatewayController::Release()
+QStatus GatewayCtrlGatewayController::release()
 {
-    EmptyMap();
+    emptyMap();
 
     // static member variables are being taken care of in ShutDown
 

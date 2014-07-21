@@ -35,7 +35,7 @@
 {
     self = [super init];
     if (self) {
-        self.handle = new ajn::services::GatewayCtrlConnAppInterface(handle.GetName(), handle.GetFriendlyName(), handle.IsSecured());
+        self.handle = new ajn::services::GatewayCtrlConnAppInterface(handle.getName(), handle.getFriendlyName(), handle.isSecured());
     }
     return self;
 }
@@ -52,19 +52,19 @@
 
 - (NSString*)interfaceName
 {
-    qcc::String name = self.handle->GetName();
+    qcc::String name = self.handle->getName();
 
     return [AJNConvertUtil convertQCCStringtoNSString:name];
 }
 
 - (NSString*)friendlyName
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetFriendlyName()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getFriendlyName()];
 }
 
 - (bool)isSecured
 {
-    return self.handle->IsSecured();
+    return self.handle->isSecured();
 }
 
 - (ajn::services::GatewayCtrlConnAppInterface*)handle

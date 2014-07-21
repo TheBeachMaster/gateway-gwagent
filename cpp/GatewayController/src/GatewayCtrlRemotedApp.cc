@@ -52,22 +52,22 @@ GatewayCtrlRemotedApp::GatewayCtrlRemotedApp(const ajn::MsgArg*remotedAppInfo, c
         return;
     }
 
-    SetDeviceId(DeviceId);
+    setDeviceId(DeviceId);
 
-    SetAppId(AppIdBuffer, len);
+    setAppId(AppIdBuffer, len);
 
     qcc::String AppId;
 
     AppId = qcc::BytesToHexString(AppIdBuffer, len);
 
-    qcc::String keyPrefix = GetDeviceId() + "_" + AppId;
+    qcc::String keyPrefix = getDeviceId() + "_" + AppId;
 
     qcc::String key =  keyPrefix + AJSUFFIX_APP_NAME;
 
     std::map<qcc::String, qcc::String>::const_iterator itr = internalMetaData.find(key);
 
     if (itr != internalMetaData.end()) {
-        SetAppName(itr->second);
+        setAppName(itr->second);
     }
 
 
@@ -76,7 +76,7 @@ GatewayCtrlRemotedApp::GatewayCtrlRemotedApp(const ajn::MsgArg*remotedAppInfo, c
     itr = internalMetaData.find(key);
 
     if (itr != internalMetaData.end()) {
-        SetDeviceName(itr->second);
+        setDeviceName(itr->second);
     }
 
     for (size_t i = 0; i != ObjDescRulesCount; i++) {
@@ -93,7 +93,7 @@ GatewayCtrlRemotedApp::GatewayCtrlRemotedApp(const ajn::MsgArg*remotedAppInfo, c
 
 
 GatewayCtrlRemotedApp::GatewayCtrlRemotedApp(GatewayCtrlDiscoveredApp* discoveredApp, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules)
-    : GatewayCtrlDiscoveredApp(discoveredApp->GetBusName(),  discoveredApp->GetAppName(),  discoveredApp->GetAppId(),  discoveredApp->GetDeviceName(),  discoveredApp->GetDeviceId())
+    : GatewayCtrlDiscoveredApp(discoveredApp->getBusName(),  discoveredApp->getAppName(),  discoveredApp->getAppId(),  discoveredApp->getDeviceName(),  discoveredApp->getDeviceId())
 {
     m_ObjDescRules = objDescRules;
 }
@@ -103,14 +103,14 @@ GatewayCtrlRemotedApp::~GatewayCtrlRemotedApp()
 
 }
 
-const std::vector<GatewayCtrlManifestObjectDescription*>& GatewayCtrlRemotedApp::GetObjDescRules()        {
+const std::vector<GatewayCtrlManifestObjectDescription*>& GatewayCtrlRemotedApp::getObjDescRules()        {
     return m_ObjDescRules;
 }
 
-void GatewayCtrlRemotedApp::EmptyVector()
+void GatewayCtrlRemotedApp::emptyVector()
 {
     for (size_t indx = 0; indx < m_ObjDescRules.size(); indx++) {
-        QStatus status = m_ObjDescRules[indx]->Release();
+        QStatus status = m_ObjDescRules[indx]->release();
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Could not release object"));
@@ -122,9 +122,9 @@ void GatewayCtrlRemotedApp::EmptyVector()
 }
 
 
-QStatus GatewayCtrlRemotedApp::Release()
+QStatus GatewayCtrlRemotedApp::release()
 {
-    EmptyVector();
+    emptyVector();
 
     return ER_OK;
 

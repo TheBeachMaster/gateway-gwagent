@@ -56,39 +56,39 @@ class GatewayCtrlAccessRules {
      * via the configured interfaces and object paths
      * @return List of the remoted applications
      */
-    const std::vector<GatewayCtrlRemotedApp*>& GetRemotedApps();
+    const std::vector<GatewayCtrlRemotedApp*>& getRemotedApps();
 
     /**
      * The interfaces that Third Party Application exposes to its clients
      * @return List of exposed services
      */
-    const std::vector<GatewayCtrlManifestObjectDescription*>& GetExposedServices();
+    const std::vector<GatewayCtrlManifestObjectDescription*>& getExposedServices();
 
 
     /**
      * Set the given metadata to the given one
      * @param metadata
      */
-    void SetMetadata(std::map<qcc::String, qcc::String> const& metadata);
+    void setMetadata(std::map<qcc::String, qcc::String> const& metadata);
 
     /**
      * Returns metadata value for the given key
      * @param key The metadata key
      * @return Metadata value or NULL if not found
      */
-    qcc::String*GetMetadata(qcc::String key);
+    qcc::String*getMetadata(qcc::String key);
 
     /**
      * Returns current metadata object
      * @return metadata
      */
-    const std::map<qcc::String, qcc::String>& GetMetadata();
+    const std::map<qcc::String, qcc::String>& getMetadata();
 
 
     /**
      * @return Status of release
      */
-    QStatus Release();
+    QStatus release();
 
   private:
     /**
@@ -108,7 +108,7 @@ class GatewayCtrlAccessRules {
      */
     std::vector<GatewayCtrlRemotedApp*> m_RemotedApps;
 
-    void EmptyVectors();
+    void emptyVectors();
 };
 }
 }

@@ -66,7 +66,7 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
      * @param status return status of operation
      * @return {@link Status}
      */
-    const std::vector<GatewayCtrlConnectorApplication*>&  RetrieveInstalledApps(SessionId sessionId, QStatus& status);
+    const std::vector<GatewayCtrlConnectorApplication*>&  retrieveInstalledApps(SessionId sessionId, QStatus& status);
 
 
     /**
@@ -76,7 +76,7 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
      * @param gwBusName The bus name of the gateway to connect to.
      * @return {@link SessionResult}
      */
-    GatewayCtrlSessionResult JoinSession();
+    GatewayCtrlSessionResult joinSession();
 
     /**
      * Join session synchronously with the given gateway identified by the gwBusName.
@@ -85,21 +85,21 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
      * @param listener The listener is used to be notified about the session related events
      * @return {@link SessionResult}
      */
-    GatewayCtrlSessionResult JoinSession(GatewayCtrlControllerSessionListener*listener);
+    GatewayCtrlSessionResult joinSession(GatewayCtrlControllerSessionListener*listener);
 
     /**
      * Join session asynchronously with the given gwBusName.
      * @param gwBusName The bus name of the gateway to connect to.
      * @param listener The listener is used to be notified about the session related events
      */
-    QStatus JoinSessionAsync(GatewayCtrlControllerSessionListener*listener);
+    QStatus joinSessionAsync(GatewayCtrlControllerSessionListener*listener);
 
     /**
      * Disconnect the given session
      * @param sessionId The session id to disconnect
      * @return Returns the leave session {@link Status}
      */
-    QStatus LeaveSession();
+    QStatus leaveSession();
 
 
     /**
@@ -114,11 +114,11 @@ class GatewayCtrlGateway : public GatewayCtrlDiscoveredApp {
     /**
      * @return Status of release
      */
-    QStatus Release();
+    QStatus release();
 
   private:
 
-    void EmptyVector();
+    void emptyVector();
 
     std::vector<GatewayCtrlConnectorApplication*> m_InstalledApps;
 

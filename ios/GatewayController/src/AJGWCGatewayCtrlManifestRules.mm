@@ -47,7 +47,7 @@
 
 - (NSArray*)exposedServices
 {
-    std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> exposedServicesVect = self.handle->GetExposedServices();
+    std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> exposedServicesVect = self.handle->getExposedServices();
     NSMutableArray* exposedServicesArray = [[NSMutableArray alloc] init];
 
     // Populate NSMutableArray with std::vector data;
@@ -60,7 +60,7 @@
 
 - (NSArray*)remotedServices
 {
-    std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> remotedServicesVect = self.handle->GetRemotedServices();
+    std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> remotedServicesVect = self.handle->getRemotedServices();
 
     NSMutableArray* remotedServicesArray = [[NSMutableArray alloc] init];;
     // Populate NSMutableArray with std::vector data

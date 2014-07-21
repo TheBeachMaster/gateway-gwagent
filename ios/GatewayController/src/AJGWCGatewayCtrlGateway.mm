@@ -63,7 +63,7 @@
 - (NSArray*)retrieveInstalledApps:(AJNSessionId) sessionId status:(QStatus&) status
 {
     NSMutableArray*  installedAppsArray = [[NSMutableArray alloc] init];
-    std::vector<ajn::services::GatewayCtrlConnectorApplication*> installedAppsVect = self.handle->RetrieveInstalledApps(sessionId, status);
+    std::vector<ajn::services::GatewayCtrlConnectorApplication*> installedAppsVect = self.handle->retrieveInstalledApps(sessionId, status);
 
     // Populate NSMutableArray with std::vector data
     for (std::vector<ajn::services::GatewayCtrlConnectorApplication*>::const_iterator vectIt = installedAppsVect.begin(); vectIt != installedAppsVect.end(); vectIt++) {
@@ -74,27 +74,26 @@
 
 - (AJGWCGatewayCtrlSessionResult*)joinSession
 {
-    ajn::services::GatewayCtrlSessionResult ret = self.handle->JoinSession();
+    ajn::services::GatewayCtrlSessionResult ret = self.handle->joinSession();
     return [[AJGWCGatewayCtrlSessionResult alloc]initWithStatus:ret.m_status sid:ret.m_sid];
 }
 
 - (AJGWCGatewayCtrlSessionResult*)joinSession:(id<AJGWCGatewayCtrlControllerSessionListener>) listener
 {
     self.adapter = new AJGWCGatewayCtrlControllerSessionListenerAdapter(listener);
-
-    ajn::services::GatewayCtrlSessionResult ret = self.handle->JoinSession(self.adapter);
+    ajn::services::GatewayCtrlSessionResult ret = self.handle->joinSession(self.adapter);
     return [[AJGWCGatewayCtrlSessionResult alloc]initWithStatus:ret.m_status sid:ret.m_sid];
 }
 
 - (QStatus)joinSessionAsync:(id<AJGWCGatewayCtrlControllerSessionListener>) listener
 {
     self.adapter = new AJGWCGatewayCtrlControllerSessionListenerAdapter(listener);
-    return self.handle->JoinSessionAsync(self.adapter);
+    return self.handle->joinSessionAsync(self.adapter);
 }
 
 - (QStatus)leaveSession
 {
-    return self.handle->LeaveSession();
+    return self.handle->leaveSession();
 }
 
 - (id<AJGWCGatewayCtrlControllerSessionListener>)listener

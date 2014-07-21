@@ -48,21 +48,21 @@ GatewayCtrlManifestRules::~GatewayCtrlManifestRules()
 
 }
 
-const std::vector<GatewayCtrlManifestObjectDescription*>& GatewayCtrlManifestRules::GetExposedServices() const
+const std::vector<GatewayCtrlManifestObjectDescription*>& GatewayCtrlManifestRules::getExposedServices() const
 {
     return m_ExposedServices;
 }
 
-const std::vector<GatewayCtrlManifestObjectDescription*>& GatewayCtrlManifestRules::GetRemotedServices() const
+const std::vector<GatewayCtrlManifestObjectDescription*>& GatewayCtrlManifestRules::getRemotedServices() const
 {
     return m_RemotedServices;
 }
 
 
-void GatewayCtrlManifestRules::EmptyVectors()
+void GatewayCtrlManifestRules::emptyVectors()
 {
     for (size_t indx = 0; indx < m_ExposedServices.size(); indx++) {
-        QStatus status = m_ExposedServices[indx]->Release();
+        QStatus status = m_ExposedServices[indx]->release();
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Could not release object"));
@@ -74,7 +74,7 @@ void GatewayCtrlManifestRules::EmptyVectors()
 
 
     for (size_t indx = 0; indx < m_RemotedServices.size(); indx++) {
-        QStatus status = m_RemotedServices[indx]->Release();
+        QStatus status = m_RemotedServices[indx]->release();
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Could not release object"));
@@ -88,9 +88,9 @@ void GatewayCtrlManifestRules::EmptyVectors()
 }
 
 
-QStatus GatewayCtrlManifestRules::Release()
+QStatus GatewayCtrlManifestRules::release()
 {
-    EmptyVectors();
+    emptyVectors();
 
     return ER_OK;
 }

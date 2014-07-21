@@ -44,17 +44,17 @@ class GatewayCtrlGatewayController {
      * Initialize the gateway controller
      * @param bus {@link BusAttachment} to use
      */
-    static void Init(BusAttachment*bus);
+    void init(BusAttachment*bus);
 
     /**
      * Shutdown the gateway controller
      */
-    void Shutdown();
+    void shutdown();
 
     /**
      * @return {@link BusAttachment} that is used by the {@link GatewayController}
      */
-    BusAttachment* GetBusAttachment();
+    BusAttachment* getBusAttachment();
 
 
     /**
@@ -63,7 +63,7 @@ class GatewayCtrlGatewayController {
      * @param objectDescs - ObjectDescriptions received in announce
      * @return a GatewayCtrlGateway
      */
-    GatewayCtrlGateway* CreateGateway(qcc::String const& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData);
+    GatewayCtrlGateway* createGateway(qcc::String const& gatewayBusName, const AnnounceHandler::ObjectDescriptions& objectDescs, const AnnounceHandler::AboutData& aboutData);
 
     /**
      * getGateway - get a Gateway using the busName
@@ -94,7 +94,7 @@ class GatewayCtrlGatewayController {
     /**
      * @return Status of release
      */
-    QStatus Release();
+    QStatus release();
 
   private:
 
@@ -103,7 +103,7 @@ class GatewayCtrlGatewayController {
      * @param bus
      * @param store
      */
-    GatewayCtrlGatewayController(BusAttachment* bus);
+    GatewayCtrlGatewayController();
     /**
      * Desctructor
      */
@@ -121,7 +121,7 @@ class GatewayCtrlGatewayController {
 
     std::map<qcc::String, GatewayCtrlGateway*> m_Gateways;
 
-    void EmptyMap();
+    void emptyMap();
 };
 }
 }

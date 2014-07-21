@@ -54,16 +54,16 @@ QStatus PayloadAdapter::marshalObjectDescriptions(const GatewayCtrlManifestObjec
 
     QStatus status = ER_OK;
 
-    const std::set<GatewayCtrlConnAppInterface>*interfaces = object.GetInterfaces();
+    const std::set<GatewayCtrlConnAppInterface>*interfaces = object.getInterfaces();
 
     std::vector<const char*> interfacesVector(interfaces->size());
     int index = 0;
     for (std::set<GatewayCtrlConnAppInterface>::const_iterator itr = interfaces->begin(); itr != interfaces->end(); itr++) {
-        interfacesVector[index++] = (GatewayCtrlConnAppInterface(*itr)).GetName().c_str();
+        interfacesVector[index++] = (GatewayCtrlConnAppInterface(*itr)).getName().c_str();
     }
 
-    objectsArrayEntry->Set("(obas)", object.GetObjectPath()->GetPath().c_str(),
-                           object.GetObjectPath()->IsPrefix(), interfaces->size(), interfacesVector.data());
+    objectsArrayEntry->Set("(obas)", object.getObjectPath()->getPath().c_str(),
+                           object.getObjectPath()->isPrefix(), interfaces->size(), interfacesVector.data());
 
     objectsArrayEntry->SetOwnershipFlags(MsgArg::OwnsArgs, true);
 
@@ -204,9 +204,9 @@ GatewayCtrlManifestObjectDescription*PayloadAdapter::unmarshalObjectDescriptions
     for (objDescRulesIter = objDescRules.begin(); objDescRulesIter != objDescRules.end(); objDescRulesIter++) {
         GatewayCtrlManifestObjectDescription* objDesc = *objDescRulesIter;
 
-        if (objDesc->GetObjectPath()->GetPath().compare(ObjectPathString) == 0) {
-            isPrefixAllowed = objDesc->GetObjectPath()->IsPrefix();
-            friendlyName = objDesc->GetObjectPath()->GetFriendlyName();
+        if (objDesc->getObjectPath()->getPath().compare(ObjectPathString) == 0) {
+            isPrefixAllowed = objDesc->getObjectPath()->isPrefix();
+            friendlyName = objDesc->getObjectPath()->getFriendlyName();
             break;
         }
     }
@@ -225,7 +225,7 @@ QStatus PayloadAdapter::MarshalAccessRules(const GatewayCtrlAccessRules& accessR
     QStatus status = ER_OK;
 
     {
-        const std::vector<GatewayCtrlManifestObjectDescription*> exposedServices = ((GatewayCtrlAccessRules)accessRules).GetExposedServices();
+        const std::vector<GatewayCtrlManifestObjectDescription*> exposedServices = ((GatewayCtrlAccessRules)accessRules).getExposedServices();
 
         MsgArg*exposedServicesArg = new MsgArg[exposedServices.size()];
 
@@ -255,17 +255,17 @@ QStatus PayloadAdapter::MarshalAccessRules(const GatewayCtrlAccessRules& accessR
 
         accessRulesVector.push_back(exposedServicesArrayArg);
 
-        const std::vector<GatewayCtrlRemotedApp*> remotedApps = ((GatewayCtrlAccessRules)accessRules).GetRemotedApps();
+        const std::vector<GatewayCtrlRemotedApp*> remotedApps = ((GatewayCtrlAccessRules)accessRules).getRemotedApps();
 
         MsgArg*remotedAppsArg = new MsgArg[remotedApps.size()];
 
         for (size_t i = 0; i != remotedApps.size(); i++) {
             GatewayCtrlRemotedApp*app = remotedApps[i];
 
-            MsgArg*objDescRulesArg = new MsgArg[app->GetObjDescRules().size()];
+            MsgArg*objDescRulesArg = new MsgArg[app->getObjDescRules().size()];
 
-            for (size_t x = 0; x != app->GetObjDescRules().size(); x++) {
-                status = PayloadAdapter::marshalObjectDescriptions(*app->GetObjDescRules()[x], &objDescRulesArg[x]);
+            for (size_t x = 0; x != app->getObjDescRules().size(); x++) {
+                status = PayloadAdapter::marshalObjectDescriptions(*app->getObjDescRules()[x], &objDescRulesArg[x]);
                 if (status != ER_OK) {
                     QCC_LogError(status, ("GatewayCtrlAccessRules failed"));
                     delete [] exposedServicesArg;
@@ -275,7 +275,7 @@ QStatus PayloadAdapter::MarshalAccessRules(const GatewayCtrlAccessRules& accessR
                 }
             }
 
-            status = remotedAppsArg[i].Set("(saya(obas))", app->GetDeviceId().c_str(), UUID_LENGTH, app->GetAppId(), app->GetObjDescRules().size(), objDescRulesArg);
+            status = remotedAppsArg[i].Set("(saya(obas))", app->getDeviceId().c_str(), UUID_LENGTH, app->getAppId(), app->getObjDescRules().size(), objDescRulesArg);
             if (status != ER_OK) {
                 QCC_LogError(status, ("Set failed"));
                 delete [] exposedServicesArg;
@@ -305,7 +305,7 @@ QStatus PayloadAdapter::MarshalAccessRules(const GatewayCtrlAccessRules& accessR
 
         accessRulesVector.push_back(remotedAppsArrayArg);
 
-        const std::map<qcc::String, qcc::String> metaData = ((GatewayCtrlAccessRules)accessRules).GetMetadata();
+        const std::map<qcc::String, qcc::String> metaData = ((GatewayCtrlAccessRules)accessRules).getMetadata();
 
         MsgArg*metaDataKeyValueArg = PayloadAdapter::MarshalMetaData(metaData, status);
 

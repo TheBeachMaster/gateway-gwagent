@@ -60,7 +60,7 @@
 
 -(NSArray*)remotedApps
 {
-    std::vector<ajn::services::GatewayCtrlRemotedApp*> remotedAppsVect = self.handle->GetRemotedApps();
+    std::vector<ajn::services::GatewayCtrlRemotedApp*> remotedAppsVect = self.handle->getRemotedApps();
     NSMutableArray* remotedAppsArray = [[NSMutableArray alloc] init];
 
     // Populate NSArray with std::vector data
@@ -73,7 +73,7 @@
 
 -(NSArray*)exposedServices
 {
-    std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> exposedServicesVect = self.handle->GetExposedServices();
+    std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> exposedServicesVect = self.handle->getExposedServices();
     NSMutableArray* exposedServicesArray = [[NSMutableArray alloc] init];
 
     // Populate NSArray with std::vector data
@@ -90,12 +90,12 @@
     for (NSString* key in metadata.allKeys) {
         metadataMap.insert(std::make_pair([AJNConvertUtil convertNSStringToQCCString:key], [AJNConvertUtil convertNSStringToQCCString:[metadata objectForKey:key]]));
     }
-    self.handle->SetMetadata(metadataMap);
+    self.handle->setMetadata(metadataMap);
 }
 
 - (NSString*)metadata:(NSString*) key
 {
-    qcc::String *value = self.handle->GetMetadata([AJNConvertUtil convertNSStringToQCCString:key]);
+    qcc::String *value = self.handle->getMetadata([AJNConvertUtil convertNSStringToQCCString:key]);
 
     if (value) {
         return [AJNConvertUtil convertQCCStringtoNSString:*value];
@@ -108,7 +108,7 @@
 - (NSDictionary*)metadata
 {
     NSMutableDictionary* metadataDict = [[NSMutableDictionary alloc] init];
-    std::map<qcc::String, qcc::String> metadataMap = self.handle->GetMetadata();
+    std::map<qcc::String, qcc::String> metadataMap = self.handle->getMetadata();
     // Populate NSMutableDictionary with std::map data
     for (std::map <qcc::String, qcc::String>::iterator it = metadataMap.begin(); it != metadataMap.end(); ++it) {
         [metadataDict setValue:[AJNConvertUtil convertQCCStringtoNSString:it->second] forKey:[AJNConvertUtil convertQCCStringtoNSString:it->first]];

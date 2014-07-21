@@ -66,13 +66,13 @@
 
 - (AJGWCGatewayCtrlConnAppObjectPath*)objectPath
 {
-    return [[AJGWCGatewayCtrlConnAppObjectPath alloc] initWithHandle:self.handle->GetObjectPath()];
+    return [[AJGWCGatewayCtrlConnAppObjectPath alloc] initWithHandle:self.handle->getObjectPath()];
 }
 
 - (NSSet*)interfaces
 {
     NSMutableSet* interfacesSet = [[NSMutableSet alloc] init];
-    const std::set<ajn::services::GatewayCtrlConnAppInterface>* interfacesVect = self.handle->GetInterfaces();
+    const std::set<ajn::services::GatewayCtrlConnAppInterface>* interfacesVect = self.handle->getInterfaces();
 
     // Populate NSArray with std::set data
     for (std::set<ajn::services::GatewayCtrlConnAppInterface>::const_iterator it = (*interfacesVect).begin(); it != (*interfacesVect).end(); it++) {
@@ -84,12 +84,12 @@
 
 - (bool)isConfigured
 {
-    return self.handle->IsConfigured();
+    return self.handle->isConfigured();
 }
 
 - (void)setConfigured:(bool) configured
 {
-    self.handle->SetConfigured(configured);
+    self.handle->setConfigured(configured);
 }
 
 - (ajn::services::GatewayCtrlManifestObjectDescription*)handle

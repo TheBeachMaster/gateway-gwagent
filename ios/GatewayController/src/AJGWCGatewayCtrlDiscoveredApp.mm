@@ -56,27 +56,27 @@
 
 - (NSString*)busName
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetBusName()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getBusName()];
 }
 
 - (NSString*)appName
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetAppName()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getAppName()];
 }
 
 - (uint8_t*)appId
 {
-    return self.handle->GetAppId();
+    return self.handle->getAppId();
 }
 
 - (NSString*)deviceName
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetDeviceName()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getDeviceName()];
 }
 
 - (NSString*)deviceId
 {
-    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->GetDeviceId()];
+    return [AJNConvertUtil convertQCCStringtoNSString:self.handle->getDeviceId()];
 }
 
 - (ajn::services::GatewayCtrlDiscoveredApp*)handle
