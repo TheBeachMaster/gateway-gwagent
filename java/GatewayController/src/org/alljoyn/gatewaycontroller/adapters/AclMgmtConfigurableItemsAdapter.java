@@ -1,18 +1,18 @@
- /******************************************************************************
-  * Copyright (c) 2014, AllSeen Alliance. All rights reserved.
-  *
-  *    Permission to use, copy, modify, and/or distribute this software for any
-  *    purpose with or without fee is hereby granted, provided that the above
-  *    copyright notice and this permission notice appear in all copies.
-  *
-  *    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-  *    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-  *    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-  *    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-  *    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-  *    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-  ******************************************************************************/
+/******************************************************************************
+ * Copyright (c) 2014, AllSeen Alliance. All rights reserved.
+ *
+ *    Permission to use, copy, modify, and/or distribute this software for any
+ *    purpose with or without fee is hereby granted, provided that the above
+ *    copyright notice and this permission notice appear in all copies.
+ *
+ *    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ *    WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ *    MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ *    ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ *    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ *    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ ******************************************************************************/
 
 package org.alljoyn.gatewaycontroller.adapters;
 
@@ -29,17 +29,19 @@ import android.widget.TextView;
  * Manages the list of {@link VisualAclConfigurableItem}
  */
 public class AclMgmtConfigurableItemsAdapter extends VisualArrayAdapter {
-	 
+
     /**
      * Constructor
+     * 
      * @param context
      */
-	AclMgmtConfigurableItemsAdapter(Context context) {
+    AclMgmtConfigurableItemsAdapter(Context context) {
         this(context, -1, null);
     }
-	
-	/**
+
+    /**
      * Constructor
+     * 
      * @param context
      * @param viewItemResId
      * @param itemsList
@@ -48,25 +50,25 @@ public class AclMgmtConfigurableItemsAdapter extends VisualArrayAdapter {
 
         super(context, viewItemResId, itemsList);
     }
-    
+
     /**
-     * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+     * @see android.widget.ArrayAdapter#getView(int, android.view.View,
+     *      android.view.ViewGroup)
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        
-        View row  = convertView;
+
+        View row = convertView;
         TextView configurableItemTv;
-        
-        if ( row == null ) {
 
-            row                  = inflater.inflate(viewItemResId, parent, false);
-            configurableItemTv   = (TextView) row.findViewById(R.id.aclDrawerItem);
+        if (row == null) {
+
+            row                = inflater.inflate(viewItemResId, parent, false);
+            configurableItemTv = (TextView) row.findViewById(R.id.aclDrawerItem);
             row.setTag(configurableItemTv);
-        }
-        else {
+        } else {
 
-        	configurableItemTv = (TextView) row.getTag();
+            configurableItemTv = (TextView) row.getTag();
         }
 
         final VisualAclConfigurableItem confItem = (VisualAclConfigurableItem) getItem(position);
