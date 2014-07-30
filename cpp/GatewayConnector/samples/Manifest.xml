@@ -17,7 +17,7 @@
 
   -->
 <manifest xmlns="http://www.alljoyn.org/gateway/manifest">
-    <appId>dummyapp1</appId>
+    <connectorId>dummyapp1</connectorId>
     <friendlyName>dummyAppOne</friendlyName>
 	<packageName>dummyAppOne_0.0.1-1_ar71xx.ipk</packageName>
 	<version>0.0.1</version>

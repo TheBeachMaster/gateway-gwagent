@@ -1,4 +1,6 @@
-# Copyright (c) 2013-2014, AllSeen Alliance. All rights reserved.
+#!/bin/sh /etc/rc.common
+
+# Copyright (c) 2014, AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
 #    purpose with or without fee is hereby granted, provided that the above
@@ -11,18 +13,21 @@
 #    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
 
-Import('gateway_env')
- 
-if not gateway_env.has_key('_ALLJOYNCORE_'):
-    gateway_env.Append(LIBS = ['alljoyn'])
-    if gateway_env['OS'] == 'openwrt':
-        gateway_env.AppendUnique(LIBS = [ 'stdc++', 'pthread' ])
+START=75
+SERVICE_DAEMONIZE=1
+SERVICE_WRITE_PID=1
+SERVICE_SIG_STOP="INT"
 
-gateway_dirs = [
-    'GatewayMgmtApp',
-    'GatewayConnector',
-    'GatewayController'
-]
+boot() {
+	start
+}
 
-result = [ gateway_env.SConscript('%s/SConscript' % gatewaydir, exports = ['gateway_env']) for gatewaydir in gateway_dirs ]
+start() {
+	service_start /opt/alljoyn/gw-management/GatewayMgmtApp 
+}
+
+stop() {
+	service_stop /opt/alljoyn/gw-management/GatewayMgmtApp
+}

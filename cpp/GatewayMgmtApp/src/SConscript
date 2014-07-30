@@ -1,3 +1,4 @@
+#******************************************************************************
 # Copyright (c) 2013-2014, AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
@@ -11,18 +12,20 @@
 #    WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#*****************************************************************************
 
 Import('gateway_env')
- 
-if not gateway_env.has_key('_ALLJOYNCORE_'):
-    gateway_env.Append(LIBS = ['alljoyn'])
-    if gateway_env['OS'] == 'openwrt':
-        gateway_env.AppendUnique(LIBS = [ 'stdc++', 'pthread' ])
+import os
 
-gateway_dirs = [
-    'GatewayMgmtApp',
-    'GatewayConnector',
-    'GatewayController'
-]
+gateway_env.Append(CPPPATH = ['$LIBXML2_BASE'])
+gateway_env.Append(LIBS = ['libxml2'])
+gateway_env.Prepend(LIBS = ['alljoyn_about', 'alljoyn_services_common'])
 
-result = [ gateway_env.SConscript('%s/SConscript' % gatewaydir, exports = ['gateway_env']) for gatewaydir in gateway_dirs ]
+srcs = gateway_env.Glob('*.cc')
+srcs.extend(gateway_env.Glob('busObjects/*.cc'))    
+srcs.extend(gateway_env.Glob('app/*.cc'))
+objs = gateway_env.Object(srcs)
+
+prog = gateway_env.Program('GatewayMgmtApp', objs)
+
+Return('prog')

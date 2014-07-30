@@ -33,6 +33,7 @@
 
 using namespace ajn;
 using namespace ajn::services;
+using namespace ajn::gw;
 using namespace std;
 
 BusAttachment* bus;
@@ -122,10 +123,10 @@ void signal_callback_handler(int32_t signum) {
     exit(signum);
 }
 
-void dumpObjectSpecs(std::list<GatewayMergedAcl::ObjectSpec>& specs, const char* indent) {
-    std::list<GatewayMergedAcl::ObjectSpec>::iterator it;
+void dumpObjectSpecs(std::list<GatewayMergedAcl::ObjectDescription>& specs, const char* indent) {
+    std::list<GatewayMergedAcl::ObjectDescription>::iterator it;
     for (it = specs.begin(); it != specs.end(); it++) {
-        GatewayMergedAcl::ObjectSpec& spec = *it;
+        GatewayMergedAcl::ObjectDescription& spec = *it;
         cout << indent << "objectPath: " << spec.objectPath.c_str() << endl;
         cout << indent << "isPrefix: " << (spec.isPrefix ? "true" : "false") << endl;
 
@@ -138,19 +139,19 @@ void dumpObjectSpecs(std::list<GatewayMergedAcl::ObjectSpec>& specs, const char*
 
 void dumpAcl(GatewayMergedAcl* p) {
     cout << "Exposed Services:" << endl;
-    dumpObjectSpecs(p->exposedServices, "");
+    dumpObjectSpecs(p->m_ExposedServices, "");
     cout << endl;
 
 
     cout << "Remoted Apps:" << endl;
-    std::list<GatewayMergedAcl::RemoteApp>::iterator it;
-    for (it = p->remotedApps.begin(); it != p->remotedApps.end(); it++) {
-        GatewayMergedAcl::RemoteApp& rapp = *it;
+    std::list<GatewayMergedAcl::RemotedApp>::iterator it;
+    for (it = p->m_RemotedApps.begin(); it != p->m_RemotedApps.end(); it++) {
+        GatewayMergedAcl::RemotedApp& rapp = *it;
         cout << rapp.deviceId.c_str() << " ";
         for (int i = 0; i < 16; i++) cout << std::hex << (unsigned int)rapp.appId[i];
         cout << endl;
         cout << "    Object Specs:" << endl;
-        dumpObjectSpecs(rapp.objectSpecs, "    ");
+        dumpObjectSpecs(rapp.objectDescs, "    ");
     }
 }
 
@@ -159,17 +160,17 @@ class MyApp : public GatewayConnector {
     MyApp(BusAttachment* bus, qcc::String wkn) : GatewayConnector(bus, wkn) { }
 
   protected:
-    virtual void MergedAclUpdated() {
+    virtual void mergedAclUpdated() {
         cout << "Merged Acl updated" << endl;
         GatewayMergedAcl* mergedAcl = new GatewayMergedAcl();
-        QStatus status = GetMergedAclAsync(mergedAcl);
+        QStatus status = getMergedAclAsync(mergedAcl);
         if (ER_OK != status) { delete mergedAcl; }
     }
-    virtual void ShutdownApp() {
+    virtual void shutdown() {
         cout << "shutdown" << endl;
         kill(getpid(), SIGINT);
     }
-    virtual void ReceiveGetMergedAclAsync(QStatus unmarshalStatus, GatewayMergedAcl* response) {
+    virtual void receiveGetMergedAclAsync(QStatus unmarshalStatus, GatewayMergedAcl* response) {
         if (ER_OK != unmarshalStatus) {
             cout << "Profile failed to unmarshal " << unmarshalStatus << endl;
         } else {
@@ -332,7 +333,7 @@ int main(int argc, char** argv) {
 
         if (0 == strcmp(cmd, "GetMergedAcl")) {
             GatewayMergedAcl macl;
-            QStatus status = myApp.GetMergedAcl(macl);
+            QStatus status = myApp.getMergedAcl(macl);
             cout << "GetMergedAcl returned " << status << endl;
             if (status == ER_OK) {
                 dumpAcl(&macl);
@@ -344,7 +345,7 @@ int main(int argc, char** argv) {
                 continue;
             }
             int i = atoi(s);
-            myApp.UpdateConnectionStatus((ConnectionStatus)i);
+            myApp.updateConnectionStatus((ConnectionStatus)i);
         } else if (0 == strcmp(cmd, "Notify")) {
             char* typeStr = strtok(NULL, " \r\t\n");
             if (NULL == typeStr) {

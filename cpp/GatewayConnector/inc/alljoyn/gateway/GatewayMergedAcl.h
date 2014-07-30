@@ -22,32 +22,86 @@
 #include <list>
 
 namespace ajn {
-namespace services {
+namespace gw {
 
-
+/**
+ * Class that contains the MergedAcl information
+ */
 class GatewayMergedAcl {
   public:
 
+    /**
+     * Function to unmarshal a message and retrieve MergedAcl data
+     * @param msg - msg to unmarshal
+     * @return status - success/failure
+     */
     QStatus unmarshal(Message& msg);
-    struct ObjectSpec {
+
+    /**
+     * ObjectDescription structure
+     */
+    struct ObjectDescription {
+
+        /**
+         * the objectPath of the object
+         */
         qcc::String objectPath;
+
+        /**
+         * Boolean that dictates whether the ObjectPath is a prefix
+         */
         bool isPrefix;
+
+        /**
+         * The interfaces of the Object
+         */
         std::list<qcc::String> interfaces;
     };
 
-    struct RemoteApp {
+    /**
+     * Struct representing a Remoted App
+     */
+    struct RemotedApp {
+
+        /**
+         * The deviceId of the App
+         */
         qcc::String deviceId;
+
+        /**
+         * The AppId of the App
+         */
         uint8_t appId[16];
-        std::list<ObjectSpec> objectSpecs;
+
+        /**
+         * The objectDescriptions of the App
+         */
+        std::list<ObjectDescription> objectDescs;
     };
 
-    std::list<ObjectSpec> exposedServices;
-    std::list<RemoteApp> remotedApps;
+    /**
+     * The exposed Services of the Acls
+     */
+    std::list<ObjectDescription> m_ExposedServices;
+
+    /**
+     * The remoted Apps of the Acls
+     */
+    std::list<RemotedApp> m_RemotedApps;
+
   private:
-    QStatus unmarshalObjectSpecs(MsgArg* objSpecArgs, size_t numObjSpecs, std::list<ObjectSpec>& dest);
+
+    /**
+     * private function used to unmarshal ObjectDescriptions
+     * @param objDescArgs - msgArg to unmarshal
+     * @param numObjDescs - number of objectDescriptions
+     * @param dest - destination to unmarshal them into
+     * @return status - sucess/failure
+     */
+    QStatus unmarshalObjectDescriptions(MsgArg* objDescArgs, size_t numObjDescs, std::list<ObjectDescription>& dest);
 };
 
-} //namespace services
+} //namespace gw
 } //namespace ajn
 
 #endif

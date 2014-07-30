@@ -17,11 +17,12 @@
 #include "alljoyn/gateway/GatewayMergedAcl.h"
 
 using namespace ajn;
-using namespace services;
+using namespace gw;
 using namespace std;
 
 
-QStatus GatewayMergedAcl::unmarshal(Message& msg) {
+QStatus GatewayMergedAcl::unmarshal(Message& msg)
+{
     QStatus status = ER_OK;
 
     //exposed services
@@ -31,7 +32,7 @@ QStatus GatewayMergedAcl::unmarshal(Message& msg) {
     if (ER_OK != status) {
         return status;
     }
-    status = unmarshalObjectSpecs(exposedServiceArgs, numExposedServiceArgs, exposedServices);
+    status = unmarshalObjectDescriptions(exposedServiceArgs, numExposedServiceArgs, m_ExposedServices);
     if (ER_OK != status) {
         return status;
     }
@@ -49,44 +50,45 @@ QStatus GatewayMergedAcl::unmarshal(Message& msg) {
         uint8_t* appIdArg;
         size_t appIdArgLen;
 
-        MsgArg* objSpecArgs;
-        size_t numObjSpecArgs;
+        MsgArg* objDescArgs;
+        size_t numObjDescArgs;
 
-        status = remotedAppArgs[i].Get("(saya(obas))", &deviceIdArg, &appIdArgLen, &appIdArg, &numObjSpecArgs, &objSpecArgs);
+        status = remotedAppArgs[i].Get("(saya(obas))", &deviceIdArg, &appIdArgLen, &appIdArg, &numObjDescArgs, &objDescArgs);
         if (status != ER_OK) {
             return status;
         }
 
-        RemoteApp remoteApp;
-        remoteApp.deviceId.assign(deviceIdArg);
-        memcpy(remoteApp.appId, appIdArg, 16);
-        status = unmarshalObjectSpecs(objSpecArgs, numObjSpecArgs, remoteApp.objectSpecs);
+        RemotedApp remotedApp;
+        remotedApp.deviceId.assign(deviceIdArg);
+        memcpy(remotedApp.appId, appIdArg, 16);
+        status = unmarshalObjectDescriptions(objDescArgs, numObjDescArgs, remotedApp.objectDescs);
         if (status != ER_OK) {
             return status;
         }
-        remotedApps.push_back(remoteApp);
+        m_RemotedApps.push_back(remotedApp);
     }
 
     return status;
 }
 
-QStatus GatewayMergedAcl::unmarshalObjectSpecs(MsgArg* objSpecArgs, size_t numObjSpecs, std::list<ObjectSpec>& dest) {
+QStatus GatewayMergedAcl::unmarshalObjectDescriptions(MsgArg* objDescArgs, size_t numObjDescs, std::list<ObjectDescription>& dest)
+{
     QStatus status = ER_OK;
 
-    for (size_t i = 0; i < numObjSpecs; i++) {
-        ObjectSpec objSpec;
+    for (size_t i = 0; i < numObjDescs; i++) {
+        ObjectDescription objDesc;
 
         char* objArg;
         bool isPrefix;
         MsgArg* ifcArgs;
         size_t numIfcArgs;
-        status = (objSpecArgs)[i].Get("(obas)", &objArg, &isPrefix, &numIfcArgs, &ifcArgs);
+        status = (objDescArgs)[i].Get("(obas)", &objArg, &isPrefix, &numIfcArgs, &ifcArgs);
         if (ER_OK != status) {
             return status;
         }
 
-        objSpec.objectPath.assign(objArg);
-        objSpec.isPrefix = isPrefix;
+        objDesc.objectPath.assign(objArg);
+        objDesc.isPrefix = isPrefix;
 
         for (size_t j = 0; j < numIfcArgs; j++) {
             char* ifcArg;
@@ -94,10 +96,10 @@ QStatus GatewayMergedAcl::unmarshalObjectSpecs(MsgArg* objSpecArgs, size_t numOb
             if (ER_OK != status) {
                 return status;
             }
-            objSpec.interfaces.push_back(qcc::String(ifcArg));
+            objDesc.interfaces.push_back(qcc::String(ifcArg));
         }
 
-        dest.push_back(objSpec);
+        dest.push_back(objDesc);
     }
 
     return status;
