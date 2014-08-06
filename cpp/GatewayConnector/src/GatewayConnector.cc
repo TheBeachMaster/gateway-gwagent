@@ -15,26 +15,29 @@
  ******************************************************************************/
 
 #include "alljoyn/gateway/GatewayConnector.h"
-#define GW_CONNECTOR_IFC_NAME "org.alljoyn.gwagent.App"
-#define GW_CONNECTOR_SIG_MATCH "type='signal',interface='org.alljoyn.gwagent.App'"
+#define GW_CONNECTOR_IFC_NAME "org.alljoyn.gwagent.connector.App"
+#define GW_CONNECTOR_SIG_MATCH "type='signal',interface='org.alljoyn.gwagent.connector.App'"
 #define GW_MGMNT_APP_WKN "org.alljoyn.GWAgent.GMApp"
 
-using namespace ajn::services;
+using namespace ajn::gw;
 using namespace ajn;
 
 GatewayConnector::GatewayConnector(BusAttachment* bus, qcc::String const& appName) :
-    bus(bus), objectPath("/gw/"),
-    wellKnownName("org.alljoyn.GWAgent.Connector."), //TODO: confirm name
-    remoteAppAccess(NULL) {
-    objectPath.append(appName);
-    wellKnownName.append(appName);
+    m_Bus(bus), m_ObjectPath("/gw/"),
+    m_WellKnownName("org.alljoyn.GWAgent.Connector."),
+    m_RemoteAppAccess(NULL)
+{
+    m_ObjectPath.append(appName);
+    m_WellKnownName.append(appName);
 }
 
-GatewayConnector::~GatewayConnector() {
+GatewayConnector::~GatewayConnector()
+{
 
 }
 
-QStatus GatewayConnector::init() {
+QStatus GatewayConnector::init()
+{
     QStatus status = ER_OK;
 
     const InterfaceDescription* ifc = initInterface(status);
@@ -42,44 +45,45 @@ QStatus GatewayConnector::init() {
         return status;
     }
 
-    status =  bus->RegisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(
-                                             &GatewayConnector::MergedAclUpdatedSignalHandler), ifc->GetMember("MergedAclUpdated"), NULL);
+    status =  m_Bus->RegisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(
+                                               &GatewayConnector::mergedAclUpdatedSignalHandler), ifc->GetMember("MergedAclUpdated"), NULL);
     if (ER_OK != status) {
         return status;
     }
 
-    status =  bus->RegisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(
-                                             &GatewayConnector::ShutdownAppSignalHandler), ifc->GetMember("ShutdownApp"), NULL);
+    status =  m_Bus->RegisterSignalHandler(this, static_cast<MessageReceiver::SignalHandler>(
+                                               &GatewayConnector::shutdownSignalHandler), ifc->GetMember("ShutdownApp"), NULL);
     if (ER_OK != status) {
         return status;
     }
 
-    status = bus->AddMatch(GW_CONNECTOR_SIG_MATCH);
+    status = m_Bus->AddMatch(GW_CONNECTOR_SIG_MATCH);
     if (ER_OK != status) {
         return status;
     }
 
-    remoteAppAccess = new ProxyBusObject(*bus, GW_MGMNT_APP_WKN, objectPath.c_str(), 0);
-    status = remoteAppAccess->AddInterface(*ifc);
+    m_RemoteAppAccess = new ProxyBusObject(*m_Bus, GW_MGMNT_APP_WKN, m_ObjectPath.c_str(), 0);
+    status = m_RemoteAppAccess->AddInterface(*ifc);
     if (ER_OK != status) {
         return status;
     }
 
-    status = bus->RequestName(wellKnownName.c_str(), DBUS_NAME_FLAG_DO_NOT_QUEUE);
+    status = m_Bus->RequestName(m_WellKnownName.c_str(), DBUS_NAME_FLAG_DO_NOT_QUEUE);
 
     return status;
 }
 
-const InterfaceDescription* GatewayConnector::initInterface(QStatus& status) {
+const InterfaceDescription* GatewayConnector::initInterface(QStatus& status)
+{
     status = ER_OK;
 
-    const InterfaceDescription* ret = bus->GetInterface(GW_CONNECTOR_IFC_NAME);
+    const InterfaceDescription* ret = m_Bus->GetInterface(GW_CONNECTOR_IFC_NAME);
     if (ret) {
         return ret;
     }
 
     InterfaceDescription* ifc;
-    status = bus->CreateInterface(GW_CONNECTOR_IFC_NAME, ifc);
+    status = m_Bus->CreateInterface(GW_CONNECTOR_IFC_NAME, ifc);
     if (ER_OK != status) {
         return NULL;
     }
@@ -106,14 +110,15 @@ const InterfaceDescription* GatewayConnector::initInterface(QStatus& status) {
 
     ifc->Activate();
 
-    return bus->GetInterface(GW_CONNECTOR_IFC_NAME);
+    return m_Bus->GetInterface(GW_CONNECTOR_IFC_NAME);
 }
 
-QStatus GatewayConnector::GetMergedAcl(GatewayMergedAcl& response) {
+QStatus GatewayConnector::getMergedAcl(GatewayMergedAcl& response)
+{
     QStatus status = ER_OK;
 
-    Message reply(*bus);
-    status = remoteAppAccess->MethodCall(GW_CONNECTOR_IFC_NAME, "GetMergedAcl", NULL, 0, reply);
+    Message reply(*m_Bus);
+    status = m_RemoteAppAccess->MethodCall(GW_CONNECTOR_IFC_NAME, "GetMergedAcl", NULL, 0, reply);
     if (ER_OK != status) {
         return status;
     }
@@ -123,29 +128,33 @@ QStatus GatewayConnector::GetMergedAcl(GatewayMergedAcl& response) {
     return status;
 }
 
-QStatus GatewayConnector::UpdateConnectionStatus(ConnectionStatus connStatus) {
-    MsgArg inputs[1];
-    inputs[0].Set("q", connStatus);
-    return remoteAppAccess->MethodCall(GW_CONNECTOR_IFC_NAME, "UpdateConnectionStatus", inputs, 1);
+QStatus GatewayConnector::updateConnectionStatus(ConnectionStatus connStatus)
+{
+    MsgArg input[1];
+    input[0].Set("q", connStatus);
+    return m_RemoteAppAccess->MethodCall(GW_CONNECTOR_IFC_NAME, "UpdateConnectionStatus", input, 1);
 }
 
-void GatewayConnector::MergedAclUpdatedSignalHandler(const InterfaceDescription::Member* member, const char* sourcePath, Message& msg) {
-    MergedAclUpdated();
+void GatewayConnector::mergedAclUpdatedSignalHandler(const InterfaceDescription::Member* member, const char* sourcePath, Message& msg)
+{
+    mergedAclUpdated();
 }
 
-void GatewayConnector::ShutdownAppSignalHandler(const InterfaceDescription::Member* member, const char* sourcePath, Message& msg) {
-    ShutdownApp();
+void GatewayConnector::shutdownSignalHandler(const InterfaceDescription::Member* member, const char* sourcePath, Message& msg)
+{
+    shutdown();
 }
 
-QStatus GatewayConnector::GetMergedAclAsync(GatewayMergedAcl* response) {
-    Message reply(*bus);
-    return remoteAppAccess->MethodCallAsync(GW_CONNECTOR_IFC_NAME, "GetMergedAcl", this,
-                                            static_cast<MessageReceiver::ReplyHandler>(&GatewayConnector::GetMergedAclReplyHandler), NULL, 0, response);
+QStatus GatewayConnector::getMergedAclAsync(GatewayMergedAcl* response)
+{
+    Message reply(*m_Bus);
+    return m_RemoteAppAccess->MethodCallAsync(GW_CONNECTOR_IFC_NAME, "GetMergedAcl", this,
+                                              static_cast<MessageReceiver::ReplyHandler>(&GatewayConnector::getMergedAclReplyHandler), NULL, 0, response);
 
 }
 
-void GatewayConnector::GetMergedAclReplyHandler(Message& msg, void* mergedAcl) {
+void GatewayConnector::getMergedAclReplyHandler(Message& msg, void* mergedAcl) {
     GatewayMergedAcl* response = static_cast<GatewayMergedAcl*>(mergedAcl);
     QStatus status = response->unmarshal(msg);
-    ReceiveGetMergedAclAsync(status, response);
+    receiveGetMergedAclAsync(status, response);
 }

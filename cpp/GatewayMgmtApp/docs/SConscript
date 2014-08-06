@@ -12,17 +12,20 @@
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+import os
 Import('gateway_env')
- 
-if not gateway_env.has_key('_ALLJOYNCORE_'):
-    gateway_env.Append(LIBS = ['alljoyn'])
-    if gateway_env['OS'] == 'openwrt':
-        gateway_env.AppendUnique(LIBS = [ 'stdc++', 'pthread' ])
 
-gateway_dirs = [
-    'GatewayMgmtApp',
-    'GatewayConnector',
-    'GatewayController'
-]
+returnValue = []
 
-result = [ gateway_env.SConscript('%s/SConscript' % gatewaydir, exports = ['gateway_env']) for gatewaydir in gateway_dirs ]
+docgateway_env = gateway_env.Clone()
+
+# Build docs
+if docgateway_env['DOCS'] == 'html':
+    # the target directory 'docs/tmp' is never built this will cause doxygen 
+    # to run every time DOCS == 'html'
+    generateDocs = docgateway_env.Doxygen(source='Doxygen_html', target=[Dir('tmp'), Dir('html')])
+    returnValue = docgateway_env.Install('$NS_DIST_DIR/docs', Dir('html'))
+    docgateway_env.Clean('Doxygen_html', Dir('html'))
+    docgateway_env.Depends(returnValue, generateDocs)
+
+Return('returnValue')

@@ -27,40 +27,127 @@
 #include "GatewayMergedAcl.h"
 
 namespace ajn {
-namespace services {
+namespace gw {
 
+/**
+ * GatewayConnector class - abstract class that needs to be implemented to receive signal callbacks
+ */
 class GatewayConnector : public MessageReceiver {
+
   public:
-    GatewayConnector(BusAttachment* bus, qcc::String const& appName);
+
+    /**
+     * Constructor of GatewayConnector class
+     * @param bus - bus used to initialize GatewayConnector
+     * @param appName - name of Connector Application
+     */
+    GatewayConnector(BusAttachment* bus, qcc::String const& connectorAppName);
+
+    /**
+     * Destructor of GatewayConnector class
+     */
     virtual ~GatewayConnector();
 
+    /**
+     * initialize the Connector class
+     * @return status - success/failure
+     */
     QStatus init();
 
-    QStatus UpdateConnectionStatus(ConnectionStatus connStatus);
+    /**
+     * update the ConnectionStatus of the ConnectorApp
+     * @param connStatus - connStatus to update to
+     * @return status - success/failure
+     */
+    QStatus updateConnectionStatus(ConnectionStatus connStatus);
 
-    QStatus GetMergedAcl(GatewayMergedAcl& response);
-    QStatus GetMergedAclAsync(GatewayMergedAcl* response);
+    /**
+     * Get the merged Acl from the GatewayMgmtApp
+     * @param response - MergedAcl response
+     * @return status - success/failure
+     */
+    QStatus getMergedAcl(GatewayMergedAcl& response);
+
+    /**
+     * Async method to get the merged Acl from the GatewayMgmtApp
+     * @param response - MergedAcl response
+     * @return status - success/failure
+     */
+    QStatus getMergedAclAsync(GatewayMergedAcl* response);
+
   protected:
-    virtual void ReceiveGetMergedAclAsync(QStatus unmarshalStatus, GatewayMergedAcl* response) { }
 
-    virtual void MergedAclUpdated() = 0;
-    virtual void ShutdownApp() = 0;
+    /**
+     * Receive the response of the AsyncGetMergedAcl call
+     * @param unmarshalStatus - status of unmarshalling ( success/failure)
+     * @param response - the response of the call
+     */
+    virtual void receiveGetMergedAclAsync(QStatus unmarshalStatus, GatewayMergedAcl* response) { }
+
+    /**
+     * Handler for the mergedAcl signal
+     */
+    virtual void mergedAclUpdated() = 0;
+
+    /**
+     * Handler for the shutdown signal
+     */
+    virtual void shutdown() = 0;
 
   private:
+
+    /**
+     * Private function to initialize the interface
+     * @param status - success/failure
+     * @return interfaceDescription
+     */
     const InterfaceDescription* initInterface(QStatus& status);
 
-    void GetMergedAclReplyHandler(Message& msg, void* mergedAcl);
+    /**
+     * ReplyHandler for getMergedAcl
+     * @param msg - message of reply
+     * @param mergedAcl - context
+     */
+    void getMergedAclReplyHandler(Message& msg, void* mergedAcl);
 
-    void MergedAclUpdatedSignalHandler(const InterfaceDescription::Member* member, const char* sourcePath, Message& msg);
-    void ShutdownAppSignalHandler(const InterfaceDescription::Member* member, const char* sourcePath, Message& msg);
+    /**
+     * SignalHandler for mergedAcl signal
+     * @param member - interface member
+     * @param sourcePath - objectPath of signal
+     * @param msg - content of signal
+     */
+    void mergedAclUpdatedSignalHandler(const InterfaceDescription::Member* member, const char* sourcePath, Message& msg);
 
-    BusAttachment* bus;
-    qcc::String objectPath;
-    qcc::String wellKnownName;
-    ProxyBusObject* remoteAppAccess;
+    /**
+     * SignalHandler for shutdown signal
+     * @param member - interface member
+     * @param sourcePath - objectPath of signal
+     * @param msg - content of signal
+     */
+    void shutdownSignalHandler(const InterfaceDescription::Member* member, const char* sourcePath, Message& msg);
+
+    /**
+     * The busAttachment to use
+     */
+    BusAttachment* m_Bus;
+
+    /**
+     * The objectPath of the busObject
+     */
+    qcc::String m_ObjectPath;
+
+    /**
+     * The wellknownName of the ConnectorApp
+     */
+    qcc::String m_WellKnownName;
+
+    /**
+     * The proxyBusObject used for Remote methods
+     */
+    ProxyBusObject* m_RemoteAppAccess;
 };
 
-} //namespace services
+} //namespace gw
 } //namespace ajn
 
 #endif
