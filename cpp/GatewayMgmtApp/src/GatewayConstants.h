@@ -165,7 +165,7 @@ static const qcc::String AJ_SIGNAL_SHUTDOWN_APP = "ShutdownApp";
 static const qcc::String& AJ_SHUTDOWN_APP_PARAMS = AJPARAM_EMPTY;
 static const qcc::String& AJ_SHUTDOWN_APP_PARAM_NAMES = AJPARAM_EMPTY;
 
-static const qcc::String GATEWAY_XML_XSD = "/opt/alljoyn/gw-management/manifest.xsd";
+static const qcc::String GATEWAY_XML_XSD = "/opt/alljoyn/gw-mgmt/manifest.xsd";
 static const qcc::String GATEWAY_XML_SCHEMA = "http://www.alljoyn.org/gateway/acl/sample";
 static const qcc::String GATEWAY_XML_COMMENT = qcc::String("Copyright (c) 2014, AllSeen Alliance. All rights reserved.\n") +
                                                "\n" +

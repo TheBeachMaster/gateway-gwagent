@@ -125,9 +125,9 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/opt/alljoyn/alljoyn-daemon.d/apps
 	$(INSTALL_DIR) $(1)/opt/alljoyn/app-manager
 	$(INSTALL_DIR) $(1)/opt/alljoyn/apps
-	$(INSTALL_DIR) $(1)/opt/alljoyn/gw-management
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/GatewayMgmtApp $(1)/opt/alljoyn/gw-management
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/manifest.xsd $(1)/opt/alljoyn/gw-management
+	$(INSTALL_DIR) $(1)/opt/alljoyn/gw-mgmt
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/GatewayMgmtApp $(1)/opt/alljoyn/gw-mgmt
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/manifest.xsd $(1)/opt/alljoyn/gw-mgmt
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/installPackage.sh $(1)/opt/alljoyn/app-manager
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/bin/defaultConfig.xml $(1)/opt/alljoyn/alljoyn-daemon.d
 	$(INSTALL_DIR) $(1)/etc

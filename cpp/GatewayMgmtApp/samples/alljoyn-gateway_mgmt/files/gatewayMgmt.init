@@ -25,9 +25,9 @@ boot() {
 }
 
 start() {
-	service_start /opt/alljoyn/gw-management/GatewayMgmtApp 
+	service_start /opt/alljoyn/gw-mgmt/GatewayMgmtApp 
 }
 
 stop() {
-	service_stop /opt/alljoyn/gw-management/GatewayMgmtApp
+	service_stop /opt/alljoyn/gw-mgmt/GatewayMgmtApp
 }
