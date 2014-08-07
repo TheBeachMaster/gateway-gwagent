@@ -16,43 +16,43 @@
 
 #import "AJGWCGatewayCtrlRemotedApp.h"
 #import "alljoyn/about/AJNConvertUtil.h"
-#import "AJGWCGatewayCtrlManifestObjectDescription.h"
+#import "AJGWCGatewayCtrlRuleObjectDescription.h"
 
 
 @interface AJGWCGatewayCtrlRemotedApp ()
 
-@property (nonatomic) ajn::services::GatewayCtrlRemotedApp* handle;
+@property (nonatomic) ajn::gwcontroller::GatewayCtrlRemotedApp* handle;
 
 @end
 
 @implementation AJGWCGatewayCtrlRemotedApp
 
-- (id)initWithHandle:(ajn::services::GatewayCtrlRemotedApp *) handle
+- (id)initWithHandle:(ajn::gwcontroller::GatewayCtrlRemotedApp *) handle
 {
     self = [super init];
     if (self) {
-        self.handle = (ajn::services::GatewayCtrlRemotedApp *)handle;
+        self.handle = (ajn::gwcontroller::GatewayCtrlRemotedApp *)handle;
     }
     return self;
 }
 
-- (id)initWithBusUniqueName:(NSString*) busUniqueName appName:(NSString*) appName appId:(uint8_t*) appId deviceName:(NSString*) deviceName deviceId:(NSString*) deviceId objDescRules:(NSArray**) objDescRules
+- (id)initWithBusUniqueName:(NSString*) busUniqueName appName:(NSString*) appName appId:(uint8_t*) appId deviceName:(NSString*) deviceName deviceId:(NSString*) deviceId ruleObjDescriptions:(NSArray**) ruleObjDescriptions
 {
     self = [super init];
-    std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> objDescRulesVect;
+    std::vector<ajn::gwcontroller::GatewayCtrlRuleObjectDescription*> ruleObjDescriptionsVect;
     if (self) {
         // Populate std::vector with NSArray data
-        for(AJGWCGatewayCtrlManifestObjectDescription* manifestObjDesc in *objDescRules) {
-            objDescRulesVect.insert(objDescRulesVect.end(), [manifestObjDesc handle]);
+        for(AJGWCGatewayCtrlRuleObjectDescription* manifestObjDesc in *ruleObjDescriptions) {
+            ruleObjDescriptionsVect.insert(ruleObjDescriptionsVect.end(), [manifestObjDesc handle]);
         }
-        self.handle = new ajn::services::GatewayCtrlRemotedApp();
+        self.handle = new ajn::gwcontroller::GatewayCtrlRemotedApp();
 
         QStatus status = self.handle->init([AJNConvertUtil convertNSStringToQCCString:busUniqueName],
                                            [AJNConvertUtil convertNSStringToQCCString:appName],
                                            appId,
                                            [AJNConvertUtil convertNSStringToQCCString:deviceName],
                                            [AJNConvertUtil convertNSStringToQCCString:deviceId],
-                                           objDescRulesVect);
+                                           ruleObjDescriptionsVect);
 
         if (status!=ER_OK) {
             delete self.handle;
@@ -66,7 +66,7 @@
     return self;
 }
 
-- (id)initWithAboutData:(NSDictionary*) aboutData objDescRules:(NSArray*) objDescRules
+- (id)initWithAboutData:(NSDictionary*) aboutData ruleObjDescriptions:(NSArray*) ruleObjDescriptions
 {
     self = [super init];
     if (self) {
@@ -77,52 +77,52 @@
             ajn::MsgArg* aboutDataMapVal = (ajn::MsgArg*)[[aboutData objectForKey:key] handle]; //value
             aboutDataMap.insert(std::make_pair(aboutDataMapKey, *aboutDataMapVal));
         }
-        std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> objDescRulesVect;
+        std::vector<ajn::gwcontroller::GatewayCtrlRuleObjectDescription*> ruleObjDescriptionsVect;
         // Populate std::vector with the NSArray data
-        for(AJGWCGatewayCtrlManifestObjectDescription* manifestObjDesc in objDescRules) {
-            objDescRulesVect.insert(objDescRulesVect.end(), [manifestObjDesc handle]);
+        for(AJGWCGatewayCtrlRuleObjectDescription* manifestObjDesc in ruleObjDescriptions) {
+            ruleObjDescriptionsVect.insert(ruleObjDescriptionsVect.end(), [manifestObjDesc handle]);
         }
     }
     return self;
 }
 
-- (id)initWithDiscoveredApp:(AJGWCGatewayCtrlDiscoveredApp*) discoveredApp objDescRules:(NSArray**) objDescRules
+- (id)initWithAnnouncedApp:(AJGWCGatewayCtrlAnnouncedApp*) announcedApp ruleObjDescriptions:(NSArray**) ruleObjDescriptions
 {
     self = [super init];
-    std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> objDescRulesVect;
+    std::vector<ajn::gwcontroller::GatewayCtrlRuleObjectDescription*> ruleObjDescriptionsVect;
 
     if (self) {
         // Populate std::vector with NSArray data
-        for(AJGWCGatewayCtrlManifestObjectDescription* manifestObjDesc in *objDescRules) {
-            objDescRulesVect.insert(objDescRulesVect.end(), [manifestObjDesc handle]);
+        for(AJGWCGatewayCtrlRuleObjectDescription* manifestObjDesc in *ruleObjDescriptions) {
+            ruleObjDescriptionsVect.insert(ruleObjDescriptionsVect.end(), [manifestObjDesc handle]);
         }
-        self.handle = new ajn::services::GatewayCtrlRemotedApp();
+        self.handle = new ajn::gwcontroller::GatewayCtrlRemotedApp();
 
-        QStatus status = self.handle->init([discoveredApp handle], objDescRulesVect);
+        QStatus status = self.handle->init([announcedApp handle], ruleObjDescriptionsVect);
 
         if (status!=ER_OK) {
             delete self.handle;
             self.handle = NULL;
 
-            NSLog(@"failed init of GatewayCtrlRemotedApp in initWithDiscoveredApp");
+            NSLog(@"failed init of GatewayCtrlRemotedApp in initWithAnnouncedApp");
             return nil;
         }
     }
     return self;
 }
 
-- (NSArray*)objDescRules
+- (NSArray*)ruleObjDescriptions
 {
-    NSMutableArray* objDescRulesArray = [[NSMutableArray alloc] init];
-    //std::vector<ajn::services::GatewayCtrlManifestObjectDescription*> objDescRulesVect = self.handle->GetObjDescRules();
+    NSMutableArray* ruleObjDescriptionsArray = [[NSMutableArray alloc] init];
+    //std::vector<ajn::gwcontroller::GatewayCtrlRuleObjectDescription*> ruleObjDescriptionsVect = self.handle->getRuleObjDesciptions();
     // Populate NSMutableArray with std::vector data
-    for (std::vector<ajn::services::GatewayCtrlManifestObjectDescription*>::const_iterator vectIt = self.handle->getObjDescRules().begin(); vectIt != self.handle->getObjDescRules().end(); vectIt++) {
-        [objDescRulesArray addObject:[[AJGWCGatewayCtrlManifestObjectDescription alloc] initWithHandle:*vectIt]];
+    for (std::vector<ajn::gwcontroller::GatewayCtrlRuleObjectDescription*>::const_iterator vectIt = self.handle->getRuleObjDesciptions().begin(); vectIt != self.handle->getRuleObjDesciptions().end(); vectIt++) {
+        [ruleObjDescriptionsArray addObject:[[AJGWCGatewayCtrlRuleObjectDescription alloc] initWithHandle:*vectIt]];
     }
-    return objDescRulesArray;
+    return ruleObjDescriptionsArray;
 }
 
-- (ajn::services::GatewayCtrlRemotedApp*)handle
+- (ajn::gwcontroller::GatewayCtrlRemotedApp*)handle
 {
     return _handle;
 }

@@ -16,9 +16,9 @@
 
 #import "ManifestTabBarController.h"
 #import "AJNStatus.h"
-#import "ManifestRulesViewController.h"
+#import "ConnectorCapabilitiesViewController.h"
 #import "ManifestFileViewController.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlManifestObjectDescription.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlRuleObjectDescription.h"
 
 @interface ManifestTabBarController () <UITabBarControllerDelegate>
 
@@ -45,7 +45,7 @@
 
     if([self.selectedViewController isKindOfClass:[ManifestFileViewController class]]) {
         NSString* manifestFile;
-        status = [self.connectorApplication retrieveManifestFileUsingSessionId:self.sessionId fileContent:&manifestFile];
+        status = [self.connectorApp retrieveManifestFileUsingSessionId:self.sessionId fileContent:&manifestFile];
         if (ER_OK != status) {
             NSLog(@"Failed to read manifest file. status:%@", [AJNStatus descriptionForStatusCode:status]);
             [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to read manifest file." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
@@ -54,15 +54,15 @@
         }
 
     } else {
-        AJGWCGatewayCtrlManifestRules* manifestRules;
+        AJGWCGatewayCtrlConnectorCapabilities* connectorCapabilities;
 
-        status = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId manifestRules:&manifestRules];
+        status = [self.connectorApp retrieveConnectorCapabilitiesUsingSessionId:self.sessionId connectorCapabilities:&connectorCapabilities];
         if (ER_OK != status) {
             NSLog(@"Failed to read manifest rules. status:%@", [AJNStatus descriptionForStatusCode:status]);
             [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to read manifest rules." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
         } else {
-            ((ManifestRulesViewController*)self.selectedViewController).exposedServicesTextView.attributedText = [self manifestObjectDescriptionArrayToString:[manifestRules exposedServices]];
-            ((ManifestRulesViewController*)self.selectedViewController).remotedServicesTextView.attributedText = [self manifestObjectDescriptionArrayToString:[manifestRules remotedServices]];
+            ((ConnectorCapabilitiesViewController*)self.selectedViewController).exposedServicesTextView.attributedText = [self manifestObjectDescriptionArrayToString:[connectorCapabilities exposedServices]];
+            ((ConnectorCapabilitiesViewController*)self.selectedViewController).remotedServicesTextView.attributedText = [self manifestObjectDescriptionArrayToString:[connectorCapabilities remotedServices]];
         }
     }
 }
@@ -72,25 +72,25 @@
 {
     NSMutableAttributedString* objDescArrayStr = [[NSMutableAttributedString alloc] init];
 
-    for (AJGWCGatewayCtrlManifestObjectDescription* mObjDesc in objDescArray)
+    for (AJGWCGatewayCtrlRuleObjectDescription* mObjDesc in objDescArray)
     {
         //objectPath
-        AJGWCGatewayCtrlConnAppObjectPath* ConnAppObjPath = [mObjDesc objectPath];
-        NSString* ConnAppObjPathStr = [NSString stringWithFormat:@"%@\n%@\n%@\n", [ConnAppObjPath friendlyName], [ConnAppObjPath path], [ConnAppObjPath isPrefix] ? @"Prefix" : @"Not Prefix"];
-        NSLog(@"Final string(ConnAppObjPathStr):\n%@", ConnAppObjPathStr); // final str
+        AJGWCGatewayCtrlRuleObjectPath* RuleObjPath = [mObjDesc objectPath];
+        NSString* RuleObjPathStr = [NSString stringWithFormat:@"%@\n%@\n%@\n", [RuleObjPath friendlyName], [RuleObjPath path], [RuleObjPath isPrefix] ? @"Prefix" : @"Not Prefix"];
+        NSLog(@"Final string(RuleObjPathPathStr):\n%@", RuleObjPathStr); // final str
 
         //interfaces
         NSMutableString* connAppInterfaceStr = [[NSMutableString alloc] init];
         NSSet* interfaces = [mObjDesc interfaces];
-        for (AJGWCGatewayCtrlConnAppInterface* connAppInterface in interfaces) {
+        for (AJGWCGatewayCtrlRuleInterface* connAppInterface in interfaces) {
             connAppInterfaceStr = [NSMutableString stringWithFormat:@"%@%@", connAppInterfaceStr, [NSString stringWithFormat:@"    %@\n    %@\n    %@\n\n", [connAppInterface friendlyName], [connAppInterface interfaceName], [connAppInterface isSecured] ? @"Secured" : @"Not Secured"]];
         }
         NSLog(@"Final string(connAppInterfaceStr):\n%@", connAppInterfaceStr); // final str
 
-        // add ConnAppObjPathStr and set color
-        [objDescArrayStr appendAttributedString:[[NSAttributedString alloc] initWithString:ConnAppObjPathStr]];
-        NSRange ConnAppObjPathStrRange = NSMakeRange([objDescArrayStr length] ? [objDescArrayStr length] - [ConnAppObjPathStr length] : [objDescArrayStr length], [ConnAppObjPathStr length]);
-        [objDescArrayStr addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:ConnAppObjPathStrRange];
+        // add RuleObjPathPathStr and set color
+        [objDescArrayStr appendAttributedString:[[NSAttributedString alloc] initWithString:RuleObjPathStr]];
+        NSRange RuleObjPathStrRange = NSMakeRange([objDescArrayStr length] ? [objDescArrayStr length] - [RuleObjPathStr length] : [objDescArrayStr length], [RuleObjPathStr length]);
+        [objDescArrayStr addAttribute:NSForegroundColorAttributeName value:[UIColor orangeColor] range:RuleObjPathStrRange];
 
         // add connAppInterfaceStr and set color
         [objDescArrayStr appendAttributedString:[[NSAttributedString alloc] initWithString:connAppInterfaceStr]];

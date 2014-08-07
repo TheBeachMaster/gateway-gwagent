@@ -18,9 +18,9 @@
 
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 
-GatewayCtrlAclWriteResponse::GatewayCtrlAclWriteResponse(const qcc::String& id, AclResponseCode code, GatewayCtrlAccessRules*invalidRules, const qcc::String& objPath) : m_AclId(id), m_AclCode(code), m_ObjectPath(objPath), m_InvalidRules(invalidRules)
+GatewayCtrlAclWriteResponse::GatewayCtrlAclWriteResponse(const qcc::String& id, AclResponseCode code, GatewayCtrlAclRules*invalidRules, const qcc::String& objPath) : m_AclId(id), m_AclCode(code), m_ObjectPath(objPath), m_InvalidRules(invalidRules)
 {
 }
 
@@ -39,7 +39,7 @@ AclResponseCode GatewayCtrlAclWriteResponse::getResponseCode() {
 }
 
 
-GatewayCtrlAccessRules* GatewayCtrlAclWriteResponse::getInvalidRules() {
+GatewayCtrlAclRules* GatewayCtrlAclWriteResponse::getInvalidRules() {
     return m_InvalidRules;
 }
 

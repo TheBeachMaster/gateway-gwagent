@@ -15,10 +15,10 @@
  ******************************************************************************/
 
 #import "ObjectPathLevelRulesTableViewController.h"
-#import "ObjectPathRuleCellTableViewCell.h"
+#import "ObjectPathRuleTableViewCell.h"
 
 @interface ObjectPathLevelRulesTableViewController ()
-@property (weak,nonatomic) NSArray *objectPaths; // entry to accessRules with the specific key
+@property (weak,nonatomic) NSArray *objectPaths; // entry to aclRules with the specific key
 @end
 
 @implementation ObjectPathLevelRulesTableViewController
@@ -36,7 +36,7 @@
 {
     [super viewDidLoad];
 
-    self.objectPaths = [self.accessRules objectPathsForInterface:_key];
+    self.objectPaths = [self.aclRules objectPathsForInterface:_key];
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,13 +56,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    ObjectPathRuleCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ObjectPathRuleCell" forIndexPath:indexPath];
+    ObjectPathRuleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ObjectPathRuleCell" forIndexPath:indexPath];
 
     VisualObjPathInfo *objectPathInfo = self.objectPaths[[indexPath row]];
 
     cell.objPathInfo = objectPathInfo;
 
-    cell.rules = self.accessRules;
+    cell.rules = self.aclRules;
 
 
     return cell;

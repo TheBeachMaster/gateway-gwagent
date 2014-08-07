@@ -17,9 +17,9 @@
 #include <alljoyn/gateway/AnnouncementData.h>
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 
-AnnouncementData::AnnouncementData(uint16_t portNumber, const AboutClient::AboutData& aboutData, const AboutClient::ObjectDescriptions& objectDescriptions) :
+AnnouncementData::AnnouncementData(uint16_t portNumber, const ajn::services::AboutClient::AboutData& aboutData, const ajn::services::AboutClient::ObjectDescriptions& objectDescriptions) :
     m_AboutData(aboutData), m_ObjectDescriptions(objectDescriptions), m_PortNumber(portNumber)
 {
 

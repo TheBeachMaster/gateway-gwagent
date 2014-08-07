@@ -8,18 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		19D2799A191BBB3300BEF943 /* AnnouncementData.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27989191BBB3300BEF943 /* AnnouncementData.cc */; };
-		19D2799B191BBB3300BEF943 /* GatewayCtrlAccessControlList.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D2798A191BBB3300BEF943 /* GatewayCtrlAccessControlList.cc */; };
-		19D2799C191BBB3300BEF943 /* GatewayCtrlAccessRules.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D2798B191BBB3300BEF943 /* GatewayCtrlAccessRules.cc */; };
+		19D2799B191BBB3300BEF943 /* GatewayCtrlAcl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D2798A191BBB3300BEF943 /* GatewayCtrlAcl.cc */; };
+		19D2799C191BBB3300BEF943 /* GatewayCtrlAclRules.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D2798B191BBB3300BEF943 /* GatewayCtrlAclRules.cc */; };
 		19D2799D191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D2798C191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.cc */; };
-		19D2799E191BBB3300BEF943 /* GatewayCtrlDiscoveredApp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D2798E191BBB3300BEF943 /* GatewayCtrlDiscoveredApp.cc */; };
-		19D2799F191BBB3300BEF943 /* GatewayCtrlGateway.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D2798F191BBB3300BEF943 /* GatewayCtrlGateway.cc */; };
-		19D279A0191BBB3300BEF943 /* GatewayCtrlGatewayController.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27990191BBB3300BEF943 /* GatewayCtrlGatewayController.cc */; };
-		19D279A1191BBB3300BEF943 /* GatewayCtrlManifestObjectDescription.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27991191BBB3300BEF943 /* GatewayCtrlManifestObjectDescription.cc */; };
-		19D279A2191BBB3300BEF943 /* GatewayCtrlManifestRules.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27992191BBB3300BEF943 /* GatewayCtrlManifestRules.cc */; };
+		19D2799E191BBB3300BEF943 /* GatewayCtrlAnnouncedApp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D2798E191BBB3300BEF943 /* GatewayCtrlAnnouncedApp.cc */; };
+		19D2799F191BBB3300BEF943 /* GatewayCtrlGatewayMgmtApp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D2798F191BBB3300BEF943 /* GatewayCtrlGatewayMgmtApp.cc */; };
+		19D279A0191BBB3300BEF943 /* GatewayCtrlGatewayMgmtAppController.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27990191BBB3300BEF943 /* GatewayCtrlGatewayMgmtAppController.cc */; };
+		19D279A1191BBB3300BEF943 /* GatewayCtrlRuleObjectDescription.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27991191BBB3300BEF943 /* GatewayCtrlRuleObjectDescription.cc */; };
+		19D279A2191BBB3300BEF943 /* GatewayCtrlConnectorCapabilities.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27992191BBB3300BEF943 /* GatewayCtrlConnectorCapabilities.cc */; };
 		19D279A3191BBB3300BEF943 /* GatewayCtrlRemotedApp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27993191BBB3300BEF943 /* GatewayCtrlRemotedApp.cc */; };
 		19D279A4191BBB3300BEF943 /* GatewayCtrlSessionHandler.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27994191BBB3300BEF943 /* GatewayCtrlSessionHandler.cc */; };
-		19D279A5191BBB3300BEF943 /* GatewayCtrlConnectorApplication.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27995191BBB3300BEF943 /* GatewayCtrlConnectorApplication.cc */; };
-		19D279A6191BBB3300BEF943 /* GatewayCtrlConnectorApplicationStatus.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27996191BBB3300BEF943 /* GatewayCtrlConnectorApplicationStatus.cc */; };
+		19D279A5191BBB3300BEF943 /* GatewayCtrlConnectorApp.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27995191BBB3300BEF943 /* GatewayCtrlConnectorApp.cc */; };
+		19D279A6191BBB3300BEF943 /* GatewayCtrlConnectorAppStatus.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27996191BBB3300BEF943 /* GatewayCtrlConnectorAppStatus.cc */; };
 		19D279A7191BBB3300BEF943 /* PayloadAdapter.cc in Sources */ = {isa = PBXBuildFile; fileRef = 19D27997191BBB3300BEF943 /* PayloadAdapter.cc */; };
 		9A58A4AE196AAD0F00A3E4B9 /* AsyncTaskQueue.cc in Sources */ = {isa = PBXBuildFile; fileRef = 9A58A4AD196AAD0F00A3E4B9 /* AsyncTaskQueue.cc */; };
 		9AB9CDD618547B37004660C5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AB9CDD518547B37004660C5 /* Foundation.framework */; };
@@ -40,38 +40,38 @@
 
 /* Begin PBXFileReference section */
 		19D27977191BBB3300BEF943 /* AnnouncementData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnnouncementData.h; sourceTree = "<group>"; };
-		19D27978191BBB3300BEF943 /* GatewayCtrlAccessControlList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlAccessControlList.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D27979191BBB3300BEF943 /* GatewayCtrlAccessRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlAccessRules.h; sourceTree = "<group>"; };
-		19D2797A191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlAclWriteResponse.h; sourceTree = "<group>"; };
-		19D2797B191BBB3300BEF943 /* GatewayCtrlApplicationStatusSignalHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlApplicationStatusSignalHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D27978191BBB3300BEF943 /* GatewayCtrlAcl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlAcl.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D27979191BBB3300BEF943 /* GatewayCtrlAclRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlAclRules.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D2797A191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlAclWriteResponse.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D2797B191BBB3300BEF943 /* GatewayCtrlConnectorAppStatusSignalHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlConnectorAppStatusSignalHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		19D2797C191BBB3300BEF943 /* GatewayCtrlSessionListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlSessionListener.h; sourceTree = "<group>"; };
-		19D2797D191BBB3300BEF943 /* GatewayCtrlDiscoveredApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlDiscoveredApp.h; sourceTree = "<group>"; };
+		19D2797D191BBB3300BEF943 /* GatewayCtrlAnnouncedApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlAnnouncedApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		19D2797E191BBB3300BEF943 /* GatewayCtrlEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlEnums.h; sourceTree = "<group>"; };
-		19D2797F191BBB3300BEF943 /* GatewayCtrlGateway.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlGateway.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D27980191BBB3300BEF943 /* GatewayCtrlGatewayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlGatewayController.h; sourceTree = "<group>"; };
-		19D27981191BBB3300BEF943 /* GatewayCtrlManifestObjectDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlManifestObjectDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D27982191BBB3300BEF943 /* GatewayCtrlManifestRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlManifestRules.h; sourceTree = "<group>"; };
-		19D27983191BBB3300BEF943 /* GatewayCtrlRemotedApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlRemotedApp.h; sourceTree = "<group>"; };
+		19D2797F191BBB3300BEF943 /* GatewayCtrlGatewayMgmtApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlGatewayMgmtApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D27980191BBB3300BEF943 /* GatewayCtrlGatewayMgmtAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlGatewayMgmtAppController.h; sourceTree = "<group>"; };
+		19D27981191BBB3300BEF943 /* GatewayCtrlRuleObjectDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlRuleObjectDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D27982191BBB3300BEF943 /* GatewayCtrlConnectorCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlConnectorCapabilities.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D27983191BBB3300BEF943 /* GatewayCtrlRemotedApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlRemotedApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		19D27984191BBB3300BEF943 /* GatewayCtrlSessionHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlSessionHandler.h; sourceTree = "<group>"; };
-		19D27985191BBB3300BEF943 /* GatewayCtrlConnectorApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlConnectorApplication.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D27986191BBB3300BEF943 /* GatewayCtrlConnectorApplicationStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlConnectorApplicationStatus.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D27985191BBB3300BEF943 /* GatewayCtrlConnectorApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlConnectorApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D27986191BBB3300BEF943 /* GatewayCtrlConnectorAppStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlConnectorAppStatus.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		19D27987191BBB3300BEF943 /* LogModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogModule.h; sourceTree = "<group>"; };
 		19D27989191BBB3300BEF943 /* AnnouncementData.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnnouncementData.cc; sourceTree = "<group>"; };
-		19D2798A191BBB3300BEF943 /* GatewayCtrlAccessControlList.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlAccessControlList.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		19D2798B191BBB3300BEF943 /* GatewayCtrlAccessRules.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlAccessRules.cc; sourceTree = "<group>"; };
-		19D2798C191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlAclWriteResponse.cc; sourceTree = "<group>"; };
-		19D2798D191BBB3300BEF943 /* GatewayCtrlConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GatewayCtrlConstants.h; sourceTree = "<group>"; };
-		19D2798E191BBB3300BEF943 /* GatewayCtrlDiscoveredApp.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlDiscoveredApp.cc; sourceTree = "<group>"; };
-		19D2798F191BBB3300BEF943 /* GatewayCtrlGateway.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlGateway.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		19D27990191BBB3300BEF943 /* GatewayCtrlGatewayController.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlGatewayController.cc; sourceTree = "<group>"; };
-		19D27991191BBB3300BEF943 /* GatewayCtrlManifestObjectDescription.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlManifestObjectDescription.cc; sourceTree = "<group>"; };
-		19D27992191BBB3300BEF943 /* GatewayCtrlManifestRules.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlManifestRules.cc; sourceTree = "<group>"; };
-		19D27993191BBB3300BEF943 /* GatewayCtrlRemotedApp.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlRemotedApp.cc; sourceTree = "<group>"; };
+		19D2798A191BBB3300BEF943 /* GatewayCtrlAcl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlAcl.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		19D2798B191BBB3300BEF943 /* GatewayCtrlAclRules.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlAclRules.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		19D2798C191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlAclWriteResponse.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		19D2798D191BBB3300BEF943 /* GatewayCtrlConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GatewayCtrlConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D2798E191BBB3300BEF943 /* GatewayCtrlAnnouncedApp.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlAnnouncedApp.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		19D2798F191BBB3300BEF943 /* GatewayCtrlGatewayMgmtApp.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlGatewayMgmtApp.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		19D27990191BBB3300BEF943 /* GatewayCtrlGatewayMgmtAppController.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlGatewayMgmtAppController.cc; sourceTree = "<group>"; };
+		19D27991191BBB3300BEF943 /* GatewayCtrlRuleObjectDescription.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlRuleObjectDescription.cc; sourceTree = "<group>"; };
+		19D27992191BBB3300BEF943 /* GatewayCtrlConnectorCapabilities.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlConnectorCapabilities.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		19D27993191BBB3300BEF943 /* GatewayCtrlRemotedApp.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlRemotedApp.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		19D27994191BBB3300BEF943 /* GatewayCtrlSessionHandler.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GatewayCtrlSessionHandler.cc; sourceTree = "<group>"; };
-		19D27995191BBB3300BEF943 /* GatewayCtrlConnectorApplication.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlConnectorApplication.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		19D27996191BBB3300BEF943 /* GatewayCtrlConnectorApplicationStatus.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlConnectorApplicationStatus.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
-		19D27997191BBB3300BEF943 /* PayloadAdapter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PayloadAdapter.cc; sourceTree = "<group>"; };
-		19D27998191BBB3300BEF943 /* PayloadAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PayloadAdapter.h; sourceTree = "<group>"; };
+		19D27995191BBB3300BEF943 /* GatewayCtrlConnectorApp.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlConnectorApp.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		19D27996191BBB3300BEF943 /* GatewayCtrlConnectorAppStatus.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GatewayCtrlConnectorAppStatus.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		19D27997191BBB3300BEF943 /* PayloadAdapter.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = PayloadAdapter.cc; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
+		19D27998191BBB3300BEF943 /* PayloadAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PayloadAdapter.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		19D27999191BBB3300BEF943 /* SConscript */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SConscript; sourceTree = "<group>"; };
 		9A00C5D3196AAFF400D574CC /* AsyncTaskQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncTaskQueue.h; sourceTree = "<group>"; };
 		9A58A4AD196AAD0F00A3E4B9 /* AsyncTaskQueue.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsyncTaskQueue.cc; sourceTree = "<group>"; };
@@ -116,21 +116,21 @@
 			children = (
 				9A00C5D3196AAFF400D574CC /* AsyncTaskQueue.h */,
 				19D27977191BBB3300BEF943 /* AnnouncementData.h */,
-				19D27978191BBB3300BEF943 /* GatewayCtrlAccessControlList.h */,
-				19D27979191BBB3300BEF943 /* GatewayCtrlAccessRules.h */,
+				19D27978191BBB3300BEF943 /* GatewayCtrlAcl.h */,
+				19D27979191BBB3300BEF943 /* GatewayCtrlAclRules.h */,
 				19D2797A191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.h */,
-				19D2797B191BBB3300BEF943 /* GatewayCtrlApplicationStatusSignalHandler.h */,
+				19D2797B191BBB3300BEF943 /* GatewayCtrlConnectorAppStatusSignalHandler.h */,
 				19D2797C191BBB3300BEF943 /* GatewayCtrlSessionListener.h */,
-				19D2797D191BBB3300BEF943 /* GatewayCtrlDiscoveredApp.h */,
+				19D2797D191BBB3300BEF943 /* GatewayCtrlAnnouncedApp.h */,
 				19D2797E191BBB3300BEF943 /* GatewayCtrlEnums.h */,
-				19D2797F191BBB3300BEF943 /* GatewayCtrlGateway.h */,
-				19D27980191BBB3300BEF943 /* GatewayCtrlGatewayController.h */,
-				19D27981191BBB3300BEF943 /* GatewayCtrlManifestObjectDescription.h */,
-				19D27982191BBB3300BEF943 /* GatewayCtrlManifestRules.h */,
+				19D2797F191BBB3300BEF943 /* GatewayCtrlGatewayMgmtApp.h */,
+				19D27980191BBB3300BEF943 /* GatewayCtrlGatewayMgmtAppController.h */,
+				19D27981191BBB3300BEF943 /* GatewayCtrlRuleObjectDescription.h */,
+				19D27982191BBB3300BEF943 /* GatewayCtrlConnectorCapabilities.h */,
 				19D27983191BBB3300BEF943 /* GatewayCtrlRemotedApp.h */,
 				19D27984191BBB3300BEF943 /* GatewayCtrlSessionHandler.h */,
-				19D27985191BBB3300BEF943 /* GatewayCtrlConnectorApplication.h */,
-				19D27986191BBB3300BEF943 /* GatewayCtrlConnectorApplicationStatus.h */,
+				19D27985191BBB3300BEF943 /* GatewayCtrlConnectorApp.h */,
+				19D27986191BBB3300BEF943 /* GatewayCtrlConnectorAppStatus.h */,
 				19D27987191BBB3300BEF943 /* LogModule.h */,
 			);
 			path = gateway;
@@ -141,19 +141,19 @@
 			children = (
 				9A58A4AD196AAD0F00A3E4B9 /* AsyncTaskQueue.cc */,
 				19D27989191BBB3300BEF943 /* AnnouncementData.cc */,
-				19D2798A191BBB3300BEF943 /* GatewayCtrlAccessControlList.cc */,
-				19D2798B191BBB3300BEF943 /* GatewayCtrlAccessRules.cc */,
+				19D2798A191BBB3300BEF943 /* GatewayCtrlAcl.cc */,
+				19D2798B191BBB3300BEF943 /* GatewayCtrlAclRules.cc */,
 				19D2798C191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.cc */,
 				19D2798D191BBB3300BEF943 /* GatewayCtrlConstants.h */,
-				19D2798E191BBB3300BEF943 /* GatewayCtrlDiscoveredApp.cc */,
-				19D2798F191BBB3300BEF943 /* GatewayCtrlGateway.cc */,
-				19D27990191BBB3300BEF943 /* GatewayCtrlGatewayController.cc */,
-				19D27991191BBB3300BEF943 /* GatewayCtrlManifestObjectDescription.cc */,
-				19D27992191BBB3300BEF943 /* GatewayCtrlManifestRules.cc */,
+				19D2798E191BBB3300BEF943 /* GatewayCtrlAnnouncedApp.cc */,
+				19D2798F191BBB3300BEF943 /* GatewayCtrlGatewayMgmtApp.cc */,
+				19D27990191BBB3300BEF943 /* GatewayCtrlGatewayMgmtAppController.cc */,
+				19D27991191BBB3300BEF943 /* GatewayCtrlRuleObjectDescription.cc */,
+				19D27992191BBB3300BEF943 /* GatewayCtrlConnectorCapabilities.cc */,
 				19D27993191BBB3300BEF943 /* GatewayCtrlRemotedApp.cc */,
 				19D27994191BBB3300BEF943 /* GatewayCtrlSessionHandler.cc */,
-				19D27995191BBB3300BEF943 /* GatewayCtrlConnectorApplication.cc */,
-				19D27996191BBB3300BEF943 /* GatewayCtrlConnectorApplicationStatus.cc */,
+				19D27995191BBB3300BEF943 /* GatewayCtrlConnectorApp.cc */,
+				19D27996191BBB3300BEF943 /* GatewayCtrlConnectorAppStatus.cc */,
 				19D27997191BBB3300BEF943 /* PayloadAdapter.cc */,
 				19D27998191BBB3300BEF943 /* PayloadAdapter.h */,
 				19D27999191BBB3300BEF943 /* SConscript */,
@@ -267,20 +267,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19D2799F191BBB3300BEF943 /* GatewayCtrlGateway.cc in Sources */,
-				19D2799C191BBB3300BEF943 /* GatewayCtrlAccessRules.cc in Sources */,
-				19D279A2191BBB3300BEF943 /* GatewayCtrlManifestRules.cc in Sources */,
+				19D2799F191BBB3300BEF943 /* GatewayCtrlGatewayMgmtApp.cc in Sources */,
+				19D2799C191BBB3300BEF943 /* GatewayCtrlAclRules.cc in Sources */,
+				19D279A2191BBB3300BEF943 /* GatewayCtrlConnectorCapabilities.cc in Sources */,
 				19D2799A191BBB3300BEF943 /* AnnouncementData.cc in Sources */,
-				19D2799E191BBB3300BEF943 /* GatewayCtrlDiscoveredApp.cc in Sources */,
-				19D279A1191BBB3300BEF943 /* GatewayCtrlManifestObjectDescription.cc in Sources */,
+				19D2799E191BBB3300BEF943 /* GatewayCtrlAnnouncedApp.cc in Sources */,
+				19D279A1191BBB3300BEF943 /* GatewayCtrlRuleObjectDescription.cc in Sources */,
 				19D279A7191BBB3300BEF943 /* PayloadAdapter.cc in Sources */,
-				19D2799B191BBB3300BEF943 /* GatewayCtrlAccessControlList.cc in Sources */,
+				19D2799B191BBB3300BEF943 /* GatewayCtrlAcl.cc in Sources */,
 				19D279A4191BBB3300BEF943 /* GatewayCtrlSessionHandler.cc in Sources */,
 				9A58A4AE196AAD0F00A3E4B9 /* AsyncTaskQueue.cc in Sources */,
-				19D279A0191BBB3300BEF943 /* GatewayCtrlGatewayController.cc in Sources */,
+				19D279A0191BBB3300BEF943 /* GatewayCtrlGatewayMgmtAppController.cc in Sources */,
 				19D279A3191BBB3300BEF943 /* GatewayCtrlRemotedApp.cc in Sources */,
-				19D279A5191BBB3300BEF943 /* GatewayCtrlConnectorApplication.cc in Sources */,
-				19D279A6191BBB3300BEF943 /* GatewayCtrlConnectorApplicationStatus.cc in Sources */,
+				19D279A5191BBB3300BEF943 /* GatewayCtrlConnectorApp.cc in Sources */,
+				19D279A6191BBB3300BEF943 /* GatewayCtrlConnectorAppStatus.cc in Sources */,
 				19D2799D191BBB3300BEF943 /* GatewayCtrlAclWriteResponse.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

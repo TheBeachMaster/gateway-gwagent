@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		19373DF71920B5E3001617EB /* ManifestTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19373DF61920B5E3001617EB /* ManifestTabBarController.m */; };
 		19373DFA1920D9F0001617EB /* AnnouncementManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 19373DF91920D9F0001617EB /* AnnouncementManager.m */; };
-		19373E001923A794001617EB /* ManifestRulesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19373DFF1923A794001617EB /* ManifestRulesViewController.m */; };
+		19373E001923A794001617EB /* ConnectorCapabilitiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19373DFF1923A794001617EB /* ConnectorCapabilitiesViewController.m */; };
 		19373E031923A80D001617EB /* ManifestFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19373E021923A80D001617EB /* ManifestFileViewController.m */; };
 		1945A64818ED8A9600F1E9F9 /* alljoynicon.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 1945A64118ED8A9600F1E9F9 /* alljoynicon.jpeg */; };
 		1945A64918ED8A9600F1E9F9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1945A64218ED8A9600F1E9F9 /* Default-568h@2x.png */; };
@@ -18,7 +18,7 @@
 		1945A64D18ED8A9600F1E9F9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1945A64718ED8A9600F1E9F9 /* main.m */; };
 		1945A65E18ED92EC00F1E9F9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1945A65D18ED92EC00F1E9F9 /* AppDelegate.m */; };
 		19DE6B631928D8C200F636DD /* CreateAclViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19DE6B621928D8C200F636DD /* CreateAclViewController.m */; };
-		19E2263A19111F0400BD3927 /* ConnectorApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 19E2263919111F0400BD3927 /* ConnectorApp.m */; };
+		19E2263A19111F0400BD3927 /* ConnectorAppTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19E2263919111F0400BD3927 /* ConnectorAppTableViewCell.m */; };
 		19E226401911273600BD3927 /* ConnectorAppTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19E2263F1911273600BD3927 /* ConnectorAppTableViewController.m */; };
 		19E2264619161EBD00BD3927 /* ConnectorAppInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 19E2264519161EBD00BD3927 /* ConnectorAppInfoViewController.m */; };
 		19E2264F1916563400BD3927 /* ConnectorAppInfoAclsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 19E2264E1916563400BD3927 /* ConnectorAppInfoAclsTableViewCell.m */; };
@@ -31,10 +31,10 @@
 		19E2F06F17E88B030005851F /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19E2F06C17E88B030005851F /* libstdc++.dylib */; };
 		19E2F07417E88B120005851F /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19E2F07117E88B120005851F /* libc++.dylib */; };
 		19E2F07517E88B120005851F /* libc++abi.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 19E2F07217E88B120005851F /* libc++abi.dylib */; };
-		9A06D5B219161F6D003FCFA7 /* AccessRulesContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A06D5B119161F6D003FCFA7 /* AccessRulesContainer.m */; };
+		9A06D5B219161F6D003FCFA7 /* AclRulesContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A06D5B119161F6D003FCFA7 /* AclRulesContainer.m */; };
 		9A3DB0C4183A0D2A0063D6BE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A3DB00C183A0D290063D6BE /* ViewController.m */; };
 		9A3DB315183A19CB0063D6BE /* libc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A3DB314183A19CB0063D6BE /* libc.dylib */; };
-		9A53BE65191F598D00B50DF9 /* InterfaceRuleCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A53BE64191F598D00B50DF9 /* InterfaceRuleCellTableViewCell.m */; };
+		9A53BE65191F598D00B50DF9 /* InterfaceRuleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A53BE64191F598D00B50DF9 /* InterfaceRuleTableViewCell.m */; };
 		9A5CC10F183D073E002327C0 /* GetAboutCallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A5CC10E183D073E002327C0 /* GetAboutCallViewController.m */; };
 		9A5EFF7D187044BC002833C1 /* ClientInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A5EFF7C187044BC002833C1 /* ClientInformation.m */; };
 		9A65BCFC1900116000784D9E /* liballjoyn_about_cpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A65BCF51900116000784D9E /* liballjoyn_about_cpp.a */; };
@@ -45,8 +45,8 @@
 		9A822B22191BC5FF00EB156E /* ObjectPathLevelRulesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A822B21191BC5FF00EB156E /* ObjectPathLevelRulesTableViewController.m */; };
 		9AAACF4119126804001D575E /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AAACF4019126804001D575E /* MainStoryboard_iPhone.storyboard */; };
 		9AAACF4419126869001D575E /* ACLTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AAACF4219126869001D575E /* ACLTableViewController.m */; };
-		9AAACF4819126C3F001D575E /* VisualAccessRules.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AAACF4719126C3F001D575E /* VisualAccessRules.m */; };
-		9AC0B4D51920C4A9000C68AA /* ObjectPathRuleCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AC0B4D41920C4A9000C68AA /* ObjectPathRuleCellTableViewCell.m */; };
+		9AAACF4819126C3F001D575E /* VisualAclRules.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AAACF4719126C3F001D575E /* VisualAclRules.m */; };
+		9AC0B4D51920C4A9000C68AA /* ObjectPathRuleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AC0B4D41920C4A9000C68AA /* ObjectPathRuleTableViewCell.m */; };
 		9AD3D2DE187191AC00D15544 /* AnnounceTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9AD3D2DD187191AC00D15544 /* AnnounceTextViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -55,8 +55,8 @@
 		19373DF61920B5E3001617EB /* ManifestTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ManifestTabBarController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		19373DF81920D9F0001617EB /* AnnouncementManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnnouncementManager.h; sourceTree = "<group>"; };
 		19373DF91920D9F0001617EB /* AnnouncementManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnnouncementManager.m; sourceTree = "<group>"; };
-		19373DFE1923A794001617EB /* ManifestRulesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManifestRulesViewController.h; sourceTree = "<group>"; };
-		19373DFF1923A794001617EB /* ManifestRulesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManifestRulesViewController.m; sourceTree = "<group>"; };
+		19373DFE1923A794001617EB /* ConnectorCapabilitiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ConnectorCapabilitiesViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19373DFF1923A794001617EB /* ConnectorCapabilitiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ConnectorCapabilitiesViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		19373E011923A80D001617EB /* ManifestFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManifestFileViewController.h; sourceTree = "<group>"; };
 		19373E021923A80D001617EB /* ManifestFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManifestFileViewController.m; sourceTree = "<group>"; };
 		1945A64118ED8A9600F1E9F9 /* alljoynicon.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = alljoynicon.jpeg; path = GatewayControllerService/alljoynicon.jpeg; sourceTree = SOURCE_ROOT; };
@@ -79,7 +79,7 @@
 		19DE6B611928D8C200F636DD /* CreateAclViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CreateAclViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		19DE6B621928D8C200F636DD /* CreateAclViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CreateAclViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		19E2263819111F0400BD3927 /* ConnectorAppTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ConnectorAppTableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19E2263919111F0400BD3927 /* ConnectorApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ConnectorApp.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		19E2263919111F0400BD3927 /* ConnectorAppTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ConnectorAppTableViewCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		19E2263E1911273600BD3927 /* ConnectorAppTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ConnectorAppTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		19E2263F1911273600BD3927 /* ConnectorAppTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ConnectorAppTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		19E2264419161EBD00BD3927 /* ConnectorAppInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ConnectorAppInfoViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -97,13 +97,13 @@
 		19E2F07017E88B120005851F /* libc++.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.1.dylib"; path = "usr/lib/libc++.1.dylib"; sourceTree = SDKROOT; };
 		19E2F07117E88B120005851F /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		19E2F07217E88B120005851F /* libc++abi.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++abi.dylib"; path = "usr/lib/libc++abi.dylib"; sourceTree = SDKROOT; };
-		9A06D5B019161F6D003FCFA7 /* AccessRulesContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccessRulesContainer.h; sourceTree = "<group>"; };
-		9A06D5B119161F6D003FCFA7 /* AccessRulesContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccessRulesContainer.m; sourceTree = "<group>"; };
+		9A06D5B019161F6D003FCFA7 /* AclRulesContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AclRulesContainer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		9A06D5B119161F6D003FCFA7 /* AclRulesContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AclRulesContainer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9A3DB00B183A0D290063D6BE /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		9A3DB00C183A0D290063D6BE /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9A3DB314183A19CB0063D6BE /* libc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libc.dylib; path = usr/lib/libc.dylib; sourceTree = SDKROOT; };
-		9A53BE63191F598D00B50DF9 /* InterfaceRuleCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterfaceRuleCellTableViewCell.h; sourceTree = "<group>"; };
-		9A53BE64191F598D00B50DF9 /* InterfaceRuleCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InterfaceRuleCellTableViewCell.m; sourceTree = "<group>"; };
+		9A53BE63191F598D00B50DF9 /* InterfaceRuleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = InterfaceRuleTableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		9A53BE64191F598D00B50DF9 /* InterfaceRuleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = InterfaceRuleTableViewCell.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9A5CC10D183D073E002327C0 /* GetAboutCallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = GetAboutCallViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		9A5CC10E183D073E002327C0 /* GetAboutCallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAboutCallViewController.m; sourceTree = "<group>"; };
 		9A5EFF7B187044BC002833C1 /* ClientInformation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ClientInformation.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -115,15 +115,15 @@
 		9A65BCF91900116000784D9E /* liballjoyn_services_common_cpp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liballjoyn_services_common_cpp.a; path = "../../../../../../services_common/ios/samples/alljoyn_services_cpp/build/Debug-iphoneos/liballjoyn_services_common_cpp.a"; sourceTree = "<group>"; };
 		9A65BCFA1900116000784D9E /* liballjoyn_services_common_objc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liballjoyn_services_common_objc.a; path = "../../../../../../services_common/ios/samples/alljoyn_services_objc/build/Debug-iphoneos/liballjoyn_services_common_objc.a"; sourceTree = "<group>"; };
 		9A65BCFB1900116000784D9E /* libAllJoynFramework_iOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAllJoynFramework_iOS.a; path = "../../../../../../../core/alljoyn/alljoyn_objc/AllJoynFramework_iOS/build/Debug-iphoneos/libAllJoynFramework_iOS.a"; sourceTree = "<group>"; };
-		9A822B20191BC5FF00EB156E /* ObjectPathLevelRulesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectPathLevelRulesTableViewController.h; sourceTree = "<group>"; };
-		9A822B21191BC5FF00EB156E /* ObjectPathLevelRulesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectPathLevelRulesTableViewController.m; sourceTree = "<group>"; };
+		9A822B20191BC5FF00EB156E /* ObjectPathLevelRulesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ObjectPathLevelRulesTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		9A822B21191BC5FF00EB156E /* ObjectPathLevelRulesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ObjectPathLevelRulesTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9AAACF4019126804001D575E /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		9AAACF4219126869001D575E /* ACLTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ACLTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		9AAACF4319126869001D575E /* ACLTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ACLTableViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		9AAACF4619126C3F001D575E /* VisualAccessRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisualAccessRules.h; sourceTree = "<group>"; };
-		9AAACF4719126C3F001D575E /* VisualAccessRules.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualAccessRules.m; sourceTree = "<group>"; };
-		9AC0B4D31920C4A9000C68AA /* ObjectPathRuleCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectPathRuleCellTableViewCell.h; sourceTree = "<group>"; };
-		9AC0B4D41920C4A9000C68AA /* ObjectPathRuleCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectPathRuleCellTableViewCell.m; sourceTree = "<group>"; };
+		9AAACF4619126C3F001D575E /* VisualAclRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = VisualAclRules.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		9AAACF4719126C3F001D575E /* VisualAclRules.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = VisualAclRules.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		9AC0B4D31920C4A9000C68AA /* ObjectPathRuleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ObjectPathRuleTableViewCell.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		9AC0B4D41920C4A9000C68AA /* ObjectPathRuleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjectPathRuleTableViewCell.m; sourceTree = "<group>"; };
 		9AD3D2DC187191AC00D15544 /* AnnounceTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AnnounceTextViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		9AD3D2DD187191AC00D15544 /* AnnounceTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AnnounceTextViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 /* End PBXFileReference section */
@@ -211,7 +211,7 @@
 				9AAACF4219126869001D575E /* ACLTableViewController.m */,
 				9AAACF4319126869001D575E /* ACLTableViewController.h */,
 				19E2263819111F0400BD3927 /* ConnectorAppTableViewCell.h */,
-				19E2263919111F0400BD3927 /* ConnectorApp.m */,
+				19E2263919111F0400BD3927 /* ConnectorAppTableViewCell.m */,
 				9A5CC10D183D073E002327C0 /* GetAboutCallViewController.h */,
 				9A5CC10E183D073E002327C0 /* GetAboutCallViewController.m */,
 				9A3DB00B183A0D290063D6BE /* ViewController.h */,
@@ -224,14 +224,14 @@
 				19E2264519161EBD00BD3927 /* ConnectorAppInfoViewController.m */,
 				19E2264D1916563400BD3927 /* ConnectorAppInfoAclsTableViewCell.h */,
 				19E2264E1916563400BD3927 /* ConnectorAppInfoAclsTableViewCell.m */,
-				9A53BE63191F598D00B50DF9 /* InterfaceRuleCellTableViewCell.h */,
-				9A53BE64191F598D00B50DF9 /* InterfaceRuleCellTableViewCell.m */,
+				9A53BE63191F598D00B50DF9 /* InterfaceRuleTableViewCell.h */,
+				9A53BE64191F598D00B50DF9 /* InterfaceRuleTableViewCell.m */,
 				19373DF51920B5E3001617EB /* ManifestTabBarController.h */,
 				19373DF61920B5E3001617EB /* ManifestTabBarController.m */,
-				9AC0B4D31920C4A9000C68AA /* ObjectPathRuleCellTableViewCell.h */,
-				9AC0B4D41920C4A9000C68AA /* ObjectPathRuleCellTableViewCell.m */,
-				19373DFE1923A794001617EB /* ManifestRulesViewController.h */,
-				19373DFF1923A794001617EB /* ManifestRulesViewController.m */,
+				9AC0B4D31920C4A9000C68AA /* ObjectPathRuleTableViewCell.h */,
+				9AC0B4D41920C4A9000C68AA /* ObjectPathRuleTableViewCell.m */,
+				19373DFE1923A794001617EB /* ConnectorCapabilitiesViewController.h */,
+				19373DFF1923A794001617EB /* ConnectorCapabilitiesViewController.m */,
 				19373E011923A80D001617EB /* ManifestFileViewController.h */,
 				19373E021923A80D001617EB /* ManifestFileViewController.m */,
 				19DE6B611928D8C200F636DD /* CreateAclViewController.h */,
@@ -298,10 +298,10 @@
 		9AAACF4519126B72001D575E /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				9AAACF4619126C3F001D575E /* VisualAccessRules.h */,
-				9AAACF4719126C3F001D575E /* VisualAccessRules.m */,
-				9A06D5B019161F6D003FCFA7 /* AccessRulesContainer.h */,
-				9A06D5B119161F6D003FCFA7 /* AccessRulesContainer.m */,
+				9AAACF4619126C3F001D575E /* VisualAclRules.h */,
+				9AAACF4719126C3F001D575E /* VisualAclRules.m */,
+				9A06D5B019161F6D003FCFA7 /* AclRulesContainer.h */,
+				9A06D5B119161F6D003FCFA7 /* AclRulesContainer.m */,
 				19373DF81920D9F0001617EB /* AnnouncementManager.h */,
 				19373DF91920D9F0001617EB /* AnnouncementManager.m */,
 			);
@@ -388,23 +388,23 @@
 				9AD3D2DE187191AC00D15544 /* AnnounceTextViewController.m in Sources */,
 				1945A65E18ED92EC00F1E9F9 /* AppDelegate.m in Sources */,
 				9A5EFF7D187044BC002833C1 /* ClientInformation.m in Sources */,
-				9AAACF4819126C3F001D575E /* VisualAccessRules.m in Sources */,
-				19373E001923A794001617EB /* ManifestRulesViewController.m in Sources */,
+				9AAACF4819126C3F001D575E /* VisualAclRules.m in Sources */,
+				19373E001923A794001617EB /* ConnectorCapabilitiesViewController.m in Sources */,
 				19E2264619161EBD00BD3927 /* ConnectorAppInfoViewController.m in Sources */,
 				19E226401911273600BD3927 /* ConnectorAppTableViewController.m in Sources */,
 				19373DF71920B5E3001617EB /* ManifestTabBarController.m in Sources */,
 				1945A64D18ED8A9600F1E9F9 /* main.m in Sources */,
 				9A5CC10F183D073E002327C0 /* GetAboutCallViewController.m in Sources */,
-				9AC0B4D51920C4A9000C68AA /* ObjectPathRuleCellTableViewCell.m in Sources */,
+				9AC0B4D51920C4A9000C68AA /* ObjectPathRuleTableViewCell.m in Sources */,
 				9A822B22191BC5FF00EB156E /* ObjectPathLevelRulesTableViewController.m in Sources */,
 				19373DFA1920D9F0001617EB /* AnnouncementManager.m in Sources */,
-				9A53BE65191F598D00B50DF9 /* InterfaceRuleCellTableViewCell.m in Sources */,
+				9A53BE65191F598D00B50DF9 /* InterfaceRuleTableViewCell.m in Sources */,
 				9AAACF4419126869001D575E /* ACLTableViewController.m in Sources */,
 				19373E031923A80D001617EB /* ManifestFileViewController.m in Sources */,
-				9A06D5B219161F6D003FCFA7 /* AccessRulesContainer.m in Sources */,
+				9A06D5B219161F6D003FCFA7 /* AclRulesContainer.m in Sources */,
 				19DE6B631928D8C200F636DD /* CreateAclViewController.m in Sources */,
 				19E2264F1916563400BD3927 /* ConnectorAppInfoAclsTableViewCell.m in Sources */,
-				19E2263A19111F0400BD3927 /* ConnectorApp.m in Sources */,
+				19E2263A19111F0400BD3927 /* ConnectorAppTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

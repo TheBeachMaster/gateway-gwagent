@@ -18,10 +18,10 @@
 #define GatewayCtrlAclWriteResponse_H
 #include <qcc/String.h>
 #include <alljoyn/gateway/GatewayCtrlEnums.h>
-#include <alljoyn/gateway/GatewayCtrlAccessRules.h>
+#include <alljoyn/gateway/GatewayCtrlAclRules.h>
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 class GatewayCtrlAclWriteResponse {
 
   public:
@@ -29,10 +29,10 @@ class GatewayCtrlAclWriteResponse {
      * Constructor
      * @param id ACL id
      * @param code {@link GatewayCtrlAclResponseCode}
-     * @param invalidRules {@link GatewayCtrlAccessRules}
+     * @param invalidRules {@link GatewayCtrlAclRules}
      * @param objPath Object path
      */
-    GatewayCtrlAclWriteResponse(const qcc::String& id, AclResponseCode code, GatewayCtrlAccessRules*invalidRules, const qcc::String& objPath);
+    GatewayCtrlAclWriteResponse(const qcc::String& id, AclResponseCode code, GatewayCtrlAclRules*invalidRules, const qcc::String& objPath);
 
 
     /**
@@ -52,12 +52,12 @@ class GatewayCtrlAclWriteResponse {
     AclResponseCode getResponseCode();
 
     /**
-     * @return {@link GatewayCtrlAccessRules} with the rules that don't comply with the {@link GatewayCtrlManifestRules}
+     * @return {@link GatewayCtrlAclRules} with the rules that don't comply with the {@link GatewayCtrlConnectorCapabilities}
      */
-    GatewayCtrlAccessRules* getInvalidRules();
+    GatewayCtrlAclRules* getInvalidRules();
 
     /**
-     * @return {@link AccessControlList} object path
+     * @return {@link Acl} object path
      */
     const qcc::String& getObjectPath();
 
@@ -83,9 +83,9 @@ class GatewayCtrlAclWriteResponse {
     qcc::String m_ObjectPath;
 
     /**
-     * The rules that don't comply with the {@link GatewayCtrlManifestRules}
+     * The rules that don't comply with the {@link GatewayCtrlConnectorCapabilities}
      */
-    GatewayCtrlAccessRules*m_InvalidRules;
+    GatewayCtrlAclRules*m_InvalidRules;
 
 };
 }

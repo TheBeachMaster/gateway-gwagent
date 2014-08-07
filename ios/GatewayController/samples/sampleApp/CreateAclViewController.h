@@ -16,12 +16,12 @@
 
 #import <UIKit/UIKit.h>
 #import "AJNSessionOptions.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplication.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApp.h"
 
 @interface CreateAclViewController : UIViewController
 
 @property (nonatomic) AJNSessionId sessionId;
-@property (weak, nonatomic) AJGWCGatewayCtrlConnectorApplication* connectorApplication;
+@property (weak, nonatomic) AJGWCGatewayCtrlConnectorApp* connectorApp;
 
 @property (weak, nonatomic) IBOutlet UILabel *appNameLbl;
 @property (weak, nonatomic) IBOutlet UITextField *aclNameTextField;

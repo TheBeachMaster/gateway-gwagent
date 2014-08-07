@@ -22,13 +22,13 @@
 #include "GatewayCtrlConstants.h"
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 
 using namespace gwcConsts;
 
-QStatus GatewayCtrlRemotedApp::init(const qcc::String& busUniqueName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules)
+QStatus GatewayCtrlRemotedApp::init(const qcc::String& busUniqueName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId, const std::vector<GatewayCtrlRuleObjectDescription*>& ruleObjDescriptions)
 {
-    m_ObjDescRules = objDescRules;
+    m_RuleObjDescriptions = ruleObjDescriptions;
 
     setAppId(appId, UUID_LENGTH);
     setBusName(busUniqueName);
@@ -39,14 +39,14 @@ QStatus GatewayCtrlRemotedApp::init(const qcc::String& busUniqueName, const qcc:
     return ER_OK;
 }
 
-QStatus GatewayCtrlRemotedApp::init(AboutClient::AboutData const& aboutData, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules)
+QStatus GatewayCtrlRemotedApp::init(ajn::services::AboutClient::AboutData const& aboutData, const std::vector<GatewayCtrlRuleObjectDescription*>& ruleObjDescriptions)
 {
-    m_ObjDescRules = objDescRules;
+    m_RuleObjDescriptions = ruleObjDescriptions;
 
-    return GatewayCtrlDiscoveredApp::init("", aboutData);
+    return GatewayCtrlAnnouncedApp::init("", aboutData);
 }
 
-QStatus GatewayCtrlRemotedApp::init(const ajn::MsgArg*remotedAppInfo, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules, const std::map<qcc::String, qcc::String>& internalMetaData)
+QStatus GatewayCtrlRemotedApp::init(const ajn::MsgArg*remotedAppInfo, const std::vector<GatewayCtrlRuleObjectDescription*>& ruleObjDescriptions, const std::map<qcc::String, qcc::String>& internalMetadata)
 {
     char*DeviceId;
     const ajn::MsgArg* ObjDescRulesArray;
@@ -73,41 +73,41 @@ QStatus GatewayCtrlRemotedApp::init(const ajn::MsgArg*remotedAppInfo, const std:
 
     qcc::String key =  keyPrefix + AJSUFFIX_APP_NAME;
 
-    std::map<qcc::String, qcc::String>::const_iterator itr = internalMetaData.find(key);
+    std::map<qcc::String, qcc::String>::const_iterator itr = internalMetadata.find(key);
 
-    if (itr != internalMetaData.end()) {
+    if (itr != internalMetadata.end()) {
         setAppName(itr->second);
     }
 
 
     key = keyPrefix + AJSUFFIX_DEVICE_NAME;
 
-    itr = internalMetaData.find(key);
+    itr = internalMetadata.find(key);
 
-    if (itr != internalMetaData.end()) {
+    if (itr != internalMetadata.end()) {
         setDeviceName(itr->second);
     }
 
     for (size_t i = 0; i != ObjDescRulesCount; i++) {
 
-        GatewayCtrlManifestObjectDescription* objDescRule = PayloadAdapter::unmarshalObjectDescriptionsWithoutNames(&ObjDescRulesArray[i], objDescRules, status);
+        GatewayCtrlRuleObjectDescription* objDescRule = PayloadAdapter::unmarshalObjectDescriptionsWithoutNames(&ObjDescRulesArray[i], ruleObjDescriptions, status);
         if (status != ER_OK) {
             QCC_LogError(status, ("unmarshalObjectDesciptionsWithoutNames failed"));
             return status;
         }
 
-        m_ObjDescRules.push_back(objDescRule);
+        m_RuleObjDescriptions.push_back(objDescRule);
     }
 
     return ER_OK;
 }
 
 
-QStatus GatewayCtrlRemotedApp::init(GatewayCtrlDiscoveredApp* discoveredApp, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules)
+QStatus GatewayCtrlRemotedApp::init(GatewayCtrlAnnouncedApp* announcedApp, const std::vector<GatewayCtrlRuleObjectDescription*>& ruleObjDescriptions)
 {
-    m_ObjDescRules = objDescRules;
+    m_RuleObjDescriptions = ruleObjDescriptions;
 
-    GatewayCtrlDiscoveredApp::init(discoveredApp->getBusName(),  discoveredApp->getAppName(),  discoveredApp->getAppId(),  discoveredApp->getDeviceName(),  discoveredApp->getDeviceId());
+    GatewayCtrlAnnouncedApp::init(announcedApp->getBusName(),  announcedApp->getAppName(),  announcedApp->getAppId(),  announcedApp->getDeviceName(),  announcedApp->getDeviceId());
 
     return ER_OK;
 }
@@ -117,22 +117,22 @@ GatewayCtrlRemotedApp::~GatewayCtrlRemotedApp()
 
 }
 
-const std::vector<GatewayCtrlManifestObjectDescription*>& GatewayCtrlRemotedApp::getObjDescRules()        {
-    return m_ObjDescRules;
+const std::vector<GatewayCtrlRuleObjectDescription*>& GatewayCtrlRemotedApp::getRuleObjDesciptions()        {
+    return m_RuleObjDescriptions;
 }
 
 void GatewayCtrlRemotedApp::emptyVector()
 {
-    for (size_t indx = 0; indx < m_ObjDescRules.size(); indx++) {
-        QStatus status = m_ObjDescRules[indx]->release();
+    for (size_t indx = 0; indx < m_RuleObjDescriptions.size(); indx++) {
+        QStatus status = m_RuleObjDescriptions[indx]->release();
 
         if (status != ER_OK) {
             QCC_LogError(status, ("Could not release object"));
         }
-        delete m_ObjDescRules[indx];
+        delete m_RuleObjDescriptions[indx];
     }
 
-    m_ObjDescRules.clear();
+    m_RuleObjDescriptions.clear();
 }
 
 

@@ -16,16 +16,16 @@
 
 #import <Foundation/Foundation.h>
 #import "alljoyn/gateway/GatewayCtrlRemotedApp.h"
-#import "AJGWCGatewayCtrlDiscoveredApp.h"
-#import "AJGWCGatewayCtrlManifestRules.h"
+#import "AJGWCGatewayCtrlAnnouncedApp.h"
+#import "AJGWCGatewayCtrlConnectorCapabilities.h"
 
-@interface AJGWCGatewayCtrlRemotedApp : AJGWCGatewayCtrlDiscoveredApp
+@interface AJGWCGatewayCtrlRemotedApp : AJGWCGatewayCtrlAnnouncedApp
 
 /**
  * Constructor
  * @param handle A handle to a cpp GatewayCtrlRemotedApp object
  */
-- (id)initWithHandle:(ajn::services::GatewayCtrlRemotedApp *) handle;
+- (id)initWithHandle:(ajn::gwcontroller::GatewayCtrlRemotedApp *) handle;
 
 /**
  * Constructor
@@ -34,37 +34,37 @@
  * @param appId The application id
  * @param deviceName The name of the device
  * @param deviceId The device id
- * @param objDescRules Configuration of the object paths and interfaces that are
- * used by the Third Party Application to reach this remoted application
+ * @param ruleObjDescriptions Configuration of the object paths and interfaces that are
+ * used by the Connector App to reach this remoted application
  */
-- (id)initWithBusUniqueName:(NSString*) busUniqueName appName:(NSString*) appName appId:(uint8_t*) appId deviceName:(NSString*) deviceName deviceId:(NSString*) deviceId objDescRules:(NSArray**) objDescRules;
+- (id)initWithBusUniqueName:(NSString*) busUniqueName appName:(NSString*) appName appId:(uint8_t*) appId deviceName:(NSString*) deviceName deviceId:(NSString*) deviceId ruleObjDescriptions:(NSArray**) ruleObjDescriptions;
 
 /**
  * Constructor
  * @param aboutData The data sent with the Anno uncement
- * @param objDescRules Configuration of the object paths and interfaces that are
- * used by the Third Party Application to reach this remoted application
+ * @param ruleObjDescriptions Configuration of the object paths and interfaces that are
+ * used by the Connector App to reach this remoted application
  */
-- (id)initWithAboutData:(NSDictionary*) aboutData objDescRules:(NSArray*) objDescRules;
+- (id)initWithAboutData:(NSDictionary*) aboutData ruleObjDescriptions:(NSArray*) ruleObjDescriptions;
 
 /**
  * Constructor
- * @param discoveredApp The {@link AJGWCGatewayCtrlDiscoveredApp} to be used to build this {@link AJGWCGatewayCtrlRemotedApp}
- * @param objDescRules Configuration of the object paths and interfaces that are
- * used by the Third Party Application to reach this remoted application
+ * @param announcedApp The {@link AJGWCGatewayCtrlAnnouncedApp} to be used to build this {@link AJGWCGatewayCtrlRemotedApp}
+ * @param ruleObjDescriptions Configuration of the object paths and interfaces that are
+ * used by the Connector App to reach this remoted application
  */
-- (id)initWithDiscoveredApp:(AJGWCGatewayCtrlDiscoveredApp*) discoveredApp objDescRules:(NSArray**) objDescRules;
+- (id)initWithAnnouncedApp:(AJGWCGatewayCtrlAnnouncedApp*) announcedApp ruleObjDescriptions:(NSArray**) ruleObjDescriptions;
 
 /**
  * Configuration of the object paths and interfaces that are
- * used by the Third Party Application to reach this remoted application
- * @return List of {@link AJGWCGatewayCtrlManifestObjectDescription} objects
+ * used by the Connector App to reach this remoted application
+ * @return List of {@link AJGWCGatewayCtrlRuleObjectDescription} objects
  */
-- (NSArray*)objDescRules;
+- (NSArray*)ruleObjDescriptions;
 
 /**
  * Returns the cpp handle of this class
  * @return GatewayCtrlRemotedApp
  */
-- (ajn::services::GatewayCtrlRemotedApp*)handle;
+- (ajn::gwcontroller::GatewayCtrlRemotedApp*)handle;
 @end

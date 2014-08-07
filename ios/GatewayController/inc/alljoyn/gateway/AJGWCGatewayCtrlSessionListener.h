@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 #import <Foundation/Foundation.h>
-@class AJGWCGatewayCtrlGateway;
+@class AJGWCGatewayCtrlGatewayMgmtApp;
 
 /**
  *  This class is responsible for handling session related events from the AllJoyn system.
@@ -30,14 +30,14 @@
 
 /**
  * sessionEstablished - callback when a session is established with a gateway
- * @param gateway The gateway that the session will established with
+ * @param gatewayMgmtApp The gateway that the session will established with
  */
-- (void)sessionEstablished:(AJGWCGatewayCtrlGateway*) gateway;
+- (void)sessionEstablished:(AJGWCGatewayCtrlGatewayMgmtApp*) gatewayMgmtApp;
 
 /**
  * sessionLost - callback when a session is lost with a gateway
- * @param gateway The gateway that the session was lost with
+ * @param gatewayMgmtApp The gateway that the session was lost with
  */
-- (void)sessionLost:(AJGWCGatewayCtrlGateway*) gateway;
+- (void)sessionLost:(AJGWCGatewayCtrlGatewayMgmtApp*) gatewayMgmtApp;
 
 @end

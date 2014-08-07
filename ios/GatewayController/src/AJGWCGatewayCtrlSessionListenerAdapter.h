@@ -18,10 +18,10 @@
 #define AJGWCGatewayCtrlSessionListenerAdapter_H
 
 #import "alljoyn/gateway/GatewayCtrlSessionListener.h"
-#import "AJGWCGatewayCtrlGateway.h"
+#import "AJGWCGatewayCtrlGatewayMgmtApp.h"
 #import "AJGWCGatewayCtrlSessionListener.h"
 
-class AJGWCGatewayCtrlSessionListenerAdapter : public ajn::services::GatewayCtrlSessionListener {
+class AJGWCGatewayCtrlSessionListenerAdapter : public ajn::gwcontroller::GatewayCtrlSessionListener {
 
 public:
     AJGWCGatewayCtrlSessionListenerAdapter() {};
@@ -38,15 +38,15 @@ public:
 
     /**
      * sessionEstablished - callback when a session is established with a device
-     * @param device - the device that the session was established with
+     * @param gatewayMgmtApp - the gateway that the session was established with
      */
-    void sessionEstablished(ajn::services::GatewayCtrlGateway* gateway);
+    void sessionEstablished(ajn::gwcontroller::GatewayCtrlGatewayMgmtApp* gatewayMgmtApp);
 
     /**
      * sessionLost - callback when a session is lost with a device
-     * @param device - device that the session was lost with
+     * @param gatewayMgmtApp - the gateway that the session was lost with
      */
-    void sessionLost(ajn::services::GatewayCtrlGateway* gateway);
+    void sessionLost(ajn::gwcontroller::GatewayCtrlGatewayMgmtApp* gatewayMgmtApp);
 
     /**
      * Get the Listener defined for this Adapter

@@ -22,7 +22,7 @@
 #include <queue>
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 
 /**
  * class TaskData
@@ -129,7 +129,7 @@ class AsyncTaskQueue {
     bool m_ownersheap;
 };
 
-} //namespace services
+} //namespace gwcontroller
 } //namespace ajn
 
 

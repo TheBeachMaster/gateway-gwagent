@@ -21,9 +21,9 @@
 #include <alljoyn/SessionPortListener.h>
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 
-class GatewayCtrlGateway;
+class GatewayCtrlGatewayMgmtApp;
 
 /**
  *  This class is responsible for handling session related events from the AllJoyn system.
@@ -49,15 +49,15 @@ class GatewayCtrlSessionListener {
 
     /**
      * sessionEstablished - callback when a session is established with a device
-     * @param device - the device that the session was established with
+     * @param gatewayMgmtApp - the gateway that the session was established with
      */
-    virtual void sessionEstablished(GatewayCtrlGateway* gateway) = 0;
+    virtual void sessionEstablished(GatewayCtrlGatewayMgmtApp* gatewayMgmtApp) = 0;
 
     /**
      * sessionLost - callback when a session is lost with a device
-     * @param device - device that the session was lost with
+     * @param gatewayMgmtApp - the gateway that the session was lost with
      */
-    virtual void sessionLost(GatewayCtrlGateway* gateway) = 0;
+    virtual void sessionLost(GatewayCtrlGatewayMgmtApp* gatewayMgmtApp) = 0;
 };
 }
 }

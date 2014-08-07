@@ -22,7 +22,7 @@
 #include <alljoyn/about/AboutClient.h>
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 /**
  * Announcement data - information coming from the announcement
  * The application should create and maintain a vector of AnnouncementData objects based on the current set of announcement in the network. See sample application for more.
@@ -36,27 +36,27 @@ class AnnouncementData {
      * @param objectDescriptions As was received from the announcement handler
      */
 
-    AnnouncementData(uint16_t portNumber, const AboutClient::AboutData& aboutData, const AboutClient::ObjectDescriptions& objectDescriptions);
+    AnnouncementData(uint16_t portNumber, const ajn::services::AboutClient::AboutData& aboutData, const ajn::services::AboutClient::ObjectDescriptions& objectDescriptions);
 
     /**
      * GetObjectDescriptions
      * @return objectDescriptions As was received from the announcement handler
      */
 
-    const AboutClient::ObjectDescriptions& GetObjectDescriptions() const { return m_ObjectDescriptions; }
+    const ajn::services::AboutClient::ObjectDescriptions& GetObjectDescriptions() const { return m_ObjectDescriptions; }
 
     /**
      * GetAboutData
      * @return aboutData As was received from the announcement handler
      */
 
-    const AboutClient::AboutData& GetAboutData() const { return m_AboutData; }
+    const ajn::services::AboutClient::AboutData& GetAboutData() const { return m_AboutData; }
 
     const short getPortNumber() const { return m_PortNumber; }
 
   private:
-    AboutClient::AboutData m_AboutData;
-    AboutClient::ObjectDescriptions m_ObjectDescriptions;
+    ajn::services::AboutClient::AboutData m_AboutData;
+    ajn::services::AboutClient::ObjectDescriptions m_ObjectDescriptions;
     short m_PortNumber;
 
 

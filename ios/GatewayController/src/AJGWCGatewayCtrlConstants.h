@@ -37,7 +37,7 @@ static NSString* const AJ_GATEWAYCONTROLLERAPP_INTERFACE = "org.alljoyn.gwagent.
 
 static NSString* const AJ_PROPERTY_VERSION = "Version";
 
-static NSString* const AJ_SIGNAL_APPSTATUSCHANGED = "AppStatusChanged";
+static NSString* const AJ_SIGNAL_APPSTATUSCHANGED = "AppStatusSignal";
 
 static NSString* const AJ_METHOD_GETINSTALLEDAPPS = "GetInstalledApps";
 static NSString* const AJ_METHOD_GETMANIFESTFILE = "GetManifestFile";
@@ -56,7 +56,7 @@ static NSString* const AJ_METHOD_DEACTIVATEACL = "DeactivateAcl";
 static NSString* const AJ_METHOD_GETACL = "GetAcl";
 static NSString* const AJ_METHOD_GETACLSTATUS = "GetAclStatus";
 static NSString* const AJ_METHOD_UPDATEACL = "UpdateAcl";
-static NSString* const AJ_METHOD_UPDATEACLMETADATA = "UpdateAclMetaData";
+static NSString* const AJ_METHOD_UPDATEACLMETADATA = "UpdateAclMetadata";
 
 static NSString* const AJPARAM_EMPTY = "";
 static NSString* const AJPARAM_VAR = "v";

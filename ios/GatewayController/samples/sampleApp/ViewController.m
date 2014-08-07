@@ -19,9 +19,9 @@
 #import "alljoyn/about/AJNAnnouncement.h"
 #import "alljoyn/about/AJNAboutDataConverter.h"
 #import "alljoyn/about/AJNAnnouncementReceiver.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplication.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplicationStatus.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlGatewayController.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApp.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorAppStatus.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlGatewayMgmtAppController.h"
 #import "alljoyn/gateway/AJGWCAnnouncementData.h"
 #import "AnnounceTextViewController.h"
 #import "GetAboutCallViewController.h"
@@ -347,7 +347,7 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
 - (void)prepareAlerts
 {
     // announcementOptionsAlert.tag = 4
-    self.announcementOptionsAlertWithGW = [[UIAlertView alloc] initWithTitle:@"Choose option:" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Show Announce", @"About",@"Gateway", nil];
+    self.announcementOptionsAlertWithGW = [[UIAlertView alloc] initWithTitle:@"Choose option:" message:@"" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Show Announce", @"About",@"Gateway Mgmt", nil];
     self.announcementOptionsAlertWithGW.alertViewStyle = UIAlertViewStyleDefault;
     self.announcementOptionsAlertWithGW.tag = 4;
 

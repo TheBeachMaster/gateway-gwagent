@@ -18,14 +18,14 @@
 #define __GATEWAYCONTROLLERCPP__PAYLOADADAPTER__
 
 #include <alljoyn/about/AnnounceHandler.h>
-#include <alljoyn/gateway/GatewayCtrlAccessControlList.h>
-#include <alljoyn/gateway/GatewayCtrlManifestObjectDescription.h>
+#include <alljoyn/gateway/GatewayCtrlAcl.h>
+#include <alljoyn/gateway/GatewayCtrlRuleObjectDescription.h>
 
 #include <alljoyn/Status.h>
 #include <qcc/String.h>
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 
 /**
  * AclAdapter class. Used to marshal and unmarshal Acls
@@ -50,24 +50,24 @@ class PayloadAdapter {
      * @param objectDescriptions - the objectDescriptions to fill
      * @return
      */
-    static GatewayCtrlManifestObjectDescription*unmarshalObjectDescriptionsWithFriendlyNames(const MsgArg* objSpecArgs, QStatus& status);
+    static GatewayCtrlRuleObjectDescription*unmarshalObjectDescriptionsWithFriendlyNames(const MsgArg* objSpecArgs, QStatus& status);
 
     /**
      * Unmarshal MsgArg without friendly names and find them in the manifest, if possible
      * @param manifestObjectDescriptionInfo AllJoyn object
-     * @param manifestRules the rules to use to find the friendly names
+     * @param connectorCapabilities the rules to use to find the friendly names
      * @return pointer to manifest object desc
      */
 
-    static GatewayCtrlManifestObjectDescription*unmarshalObjectDescriptionsWithoutNames(const ajn::MsgArg*manifestObjectDescriptionInfo, const std::vector<GatewayCtrlManifestObjectDescription*>& objDescRules, QStatus& status);
+    static GatewayCtrlRuleObjectDescription*unmarshalObjectDescriptionsWithoutNames(const ajn::MsgArg*manifestObjectDescriptionInfo, const std::vector<GatewayCtrlRuleObjectDescription*>& ruleObjDescriptions, QStatus& status);
 
     /**
-     * Unmarshal the metaData from the message
-     * @param metaDataArg - the arg containing the metaData
-     * @param metaData - the metaData map to fill
+     * Unmarshal the metadata from the message
+     * @param metadataArg - the arg containing the metadata
+     * @param metadata - the metadata map to fill
      * @return status
      */
-    static QStatus unmarshalMetaData(const MsgArg* metaDataArg, std::map<qcc::String, qcc::String>* metaData);
+    static QStatus unmarshalMetadata(const MsgArg* metadataArg, std::map<qcc::String, qcc::String>* metadata);
 
     /**
      * MarshalAcl - static function to marshal an acl
@@ -75,7 +75,7 @@ class PayloadAdapter {
      * @param status - success/failure
      * @return msgArg - the messageArg to put it into
      */
-    static MsgArg* marshalAcl(const GatewayCtrlAccessControlList& acl, QStatus& status);
+    static MsgArg* marshalAcl(const GatewayCtrlAcl& acl, QStatus& status);
 
 
     /**
@@ -84,25 +84,25 @@ class PayloadAdapter {
      * @param objectsArray - the array to marshal it into
      * @return status - success/failure
      */
-    static QStatus marshalObjectDescriptions(const GatewayCtrlManifestObjectDescription& object, MsgArg* objectsArrayEntry);
+    static QStatus marshalObjectDescriptions(const GatewayCtrlRuleObjectDescription& object, MsgArg* objectsArrayEntry);
 
     /**
-     * marshalMetaData - static function to Marshal the MetaData Array
-     * @param metaData - the metaData to marshal
+     * marshalMetadata - static function to Marshal the Metadata Array
+     * @param metadata - the metadata to marshal
      * @param status - success/failure
      * @return Marshaled metadata
      */
-    static MsgArg*MarshalMetaData(const std::map<qcc::String, qcc::String>& metadata, QStatus& status);
+    static MsgArg*MarshalMetadata(const std::map<qcc::String, qcc::String>& metadata, QStatus& status);
 
-    static QStatus FillManifestObjectDescriptionVector(const ajn::MsgArg*inputArray, std::vector<GatewayCtrlManifestObjectDescription*>& vector);
+    static QStatus FillRuleObjectDescriptionVector(const ajn::MsgArg*inputArray, std::vector<GatewayCtrlRuleObjectDescription*>& vector);
 
     /**
-     * MarshalAccessRules - a static function to marshal objectDescriptions
-     * @param accessRules - the objects to marshal
-     * @param accessRulesVector - the vector to marshal it into
+     * MarshalAclRules - a static function to marshal objectDescriptions
+     * @param aclRules - the objects to marshal
+     * @param aclRulesVector - the vector to marshal it into
      * @return status - success/failure
      */
-    static QStatus MarshalAccessRules(const GatewayCtrlAccessRules& accessRules, std::vector<MsgArg*>& accessRulesVector);
+    static QStatus MarshalAclRules(const GatewayCtrlAclRules& aclRules, std::vector<MsgArg*>& aclRulesVector);
 
 
 
@@ -111,7 +111,7 @@ class PayloadAdapter {
 
 };
 
-}     /* namespace services */
+}     /* namespace gwcontroller */
 } /* namespace ajn */
 
 #endif /* defined(__GATEWAYCONTROLLERCPP__PAYLOADADAPTER__) */

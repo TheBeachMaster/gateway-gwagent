@@ -16,14 +16,14 @@
 
 #import <UIKit/UIKit.h>
 #import "AJNSessionOptions.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlAccessControlList.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlAcl.h"
 
 
 @interface ConnectorAppInfoAclsTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *aclNameLbl;
 @property (weak, nonatomic) IBOutlet UISwitch *aclActiveSwitch;
 
-@property (weak, nonatomic) AJGWCGatewayCtrlAccessControlList* aclObject;
+@property (weak, nonatomic) AJGWCGatewayCtrlAcl* aclObject;
 @property (nonatomic) AJNSessionId sessionId;
 
 - (IBAction)aclActiveSwitchValueChanged:(id)sender;
