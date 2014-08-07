@@ -52,7 +52,7 @@
             android:label="@string/title_activity_gw_connector_apps" >
         </activity>
         <activity
-            android:name="org.alljoyn.gatewaycontroller.activity.ConnectorApplicationActivity"
+            android:name="org.alljoyn.gatewaycontroller.activity.ConnectorAppActivity"
             android:label="@string/title_activity_gw_connector_application" >
         </activity>
         <activity
@@ -60,7 +60,7 @@
             android:label="@string/title_activity_acl_management" >
         </activity>
         <activity
-            android:name="org.alljoyn.gatewaycontroller.activity.ConnectorApplicationManifestActivity"
+            android:name="org.alljoyn.gatewaycontroller.activity.ConnectorAppCapabilitiesActivity"
             android:parentActivityName="org.alljoyn.gatewaycontroller.activity.BaseActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

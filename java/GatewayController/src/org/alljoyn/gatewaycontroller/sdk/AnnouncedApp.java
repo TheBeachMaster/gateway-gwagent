@@ -31,8 +31,8 @@ import android.util.Log;
  * The application that is discovered by receiving Announcement from devices on
  * the network
  */
-public class DiscoveredApp {
-    private static final String TAG = "gwc" + DiscoveredApp.class.getSimpleName();
+public class AnnouncedApp {
+    private static final String TAG = "gwc" + AnnouncedApp.class.getSimpleName();
 
     /**
      * The unique name of the {@link BusAttachment} that sent the Announcement
@@ -75,7 +75,7 @@ public class DiscoveredApp {
      * @param deviceId
      *            The device id
      */
-    public DiscoveredApp(String busName, String appName, UUID appId, String deviceName, String deviceId) {
+    public AnnouncedApp(String busName, String appName, UUID appId, String deviceName, String deviceId) {
 
         this.busName    = busName;
         this.appName    = appName;
@@ -93,7 +93,7 @@ public class DiscoveredApp {
      * @param aboutData
      *            The data sent with the Announcement
      */
-    public DiscoveredApp(String busName, Map<String, Variant> aboutData) {
+    public AnnouncedApp(String busName, Map<String, Variant> aboutData) {
 
         if (aboutData == null) {
             throw new IllegalArgumentException("Received undefined aboutData");

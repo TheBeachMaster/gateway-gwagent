@@ -24,36 +24,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.Acl;
 import org.alljoyn.gatewaycontroller.sdk.RemotedApp;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleInterface;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleObjectPath;
 
 import android.app.Activity;
 import android.content.Context;
 import android.widget.BaseExpandableListAdapter;
 
 /**
- * {@link AccessControlList} configurable item. Either "Exposed Services" or
- * {@link RemotedApp}
+ * {@link Acl} configurable item. Either "Exposed Services" or {@link RemotedApp}
  */
 public class VisualAclConfigurableItem implements VisualItem {
 
     /**
      * The configurable item
      */
-    private Object confItem;
+    private final Object confItem;
 
     /**
      * The item friendly name
      */
-    private String label;
+    private final String label;
 
     /**
      * Adapter for the expandable list of interfaces and object paths
      */
-    private AclMgmtConfigurableRulesAdapter adapter;
+    private final AclMgmtConfigurableRulesAdapter adapter;
 
     /**
      * Gets TRUE if all the configurable rules are allowed
@@ -62,12 +61,12 @@ public class VisualAclConfigurableItem implements VisualItem {
 
     /**
      * Constructor
-     * 
+     *
      * @param activityContext
      *            The activity {@link Context}
      * @param confItem
      *            The configuration item. {@link RemotedApp} or {@link List} of
-     *            {@link ManifestObjectDescription} of the "Exposed Services"
+     *            {@link RuleObjectDescription} of the "Exposed Services"
      * @param label
      *            The item label
      */
@@ -90,7 +89,7 @@ public class VisualAclConfigurableItem implements VisualItem {
 
     /**
      * @return The configuration item. {@link RemotedApp} or {@link List} of
-     *         {@link ManifestObjectDescription} of the "Exposed Services"
+     *         {@link RuleObjectDescription} of the "Exposed Services"
      */
     public Object getConfItem() {
         return confItem;
@@ -119,7 +118,7 @@ public class VisualAclConfigurableItem implements VisualItem {
 
     /**
      * Set the state of allowedAll
-     * 
+     *
      * @param allowAllSelected
      */
     public void setAllowAllSelected(boolean allowAllSelected) {
@@ -128,7 +127,7 @@ public class VisualAclConfigurableItem implements VisualItem {
 
     /**
      * Initialize the adapter
-     * 
+     *
      * @param context
      *            {@link Activity} context
      */
@@ -139,29 +138,29 @@ public class VisualAclConfigurableItem implements VisualItem {
 
     /**
      * Returns the rules that are selected
-     * 
+     *
      * @param allowAllChecked
      *            if checked than we relate to all the rules as checked
      * @return Selected rules
      */
-    public List<ManifestObjectDescription> getSelectedRules() {
+    public List<RuleObjectDescription> getSelectedRules() {
 
-        return convertToManifObjDesc(adapter.getConfData());
+        return convertToRuleObjDesc(adapter.getConfData());
     }
 
     /**
      * Creates Map of the configured rules from the received list of
-     * {@link ManifestObjectDescription}
-     * 
+     * {@link RuleObjectDescription}
+     *
      * @param rules
-     *            List of {@link ManifestObjectDescription}
+     *            List of {@link RuleObjectDescription}
      * @param interfaceNames
      *            The list of interfaces to be filled by this method with the
      *            names of the interfaces
      * @return Map from {@link VisualInterface} to a {@link List} of
      *         {@link VisualObjectPath}
      */
-    private Map<VisualInterface, List<VisualObjectPath>> convertToVisualRules(List<ManifestObjectDescription> rules) {
+    private Map<VisualInterface, List<VisualObjectPath>> convertToVisualRules(List<RuleObjectDescription> rules) {
 
         Map<VisualInterface, Set<VisualObjectPath>> resRules = new HashMap<VisualInterface, Set<VisualObjectPath>>();
 
@@ -172,9 +171,9 @@ public class VisualAclConfigurableItem implements VisualItem {
         // interface may be marked as configured.
         Map<VisualInterface, Integer> ifaceConfStateInd = new HashMap<VisualInterface, Integer>();
 
-        for (ManifestObjectDescription rule : rules) {
+        for (RuleObjectDescription rule : rules) {
 
-            for (ConnAppInterface iface : rule.getInterfaces()) {
+            for (RuleInterface iface : rule.getInterfaces()) {
 
                 VisualInterface vIface = new VisualInterface(iface);
                 Set<VisualObjectPath> visObjPaths = resRules.get(vIface);
@@ -218,20 +217,19 @@ public class VisualAclConfigurableItem implements VisualItem {
     }
 
     /**
-     * Create list of {@link ManifestObjectDescription} from the given
-     * {@link Map} of rules.
-     * 
+     * Create list of {@link RuleObjectDescription} from the given {@link Map} of rules.
+     *
      * @param visualRules
      *            Map from {@link VisualInterface} to a {@link List} of
      *            {@link VisualObjectPath}
      * @param allowAllChecked
      *            if TRUE, then all the rules will be considered as configured
      *            (checked)
-     * @return List of {@link ManifestObjectDescription}
+     * @return List of {@link RuleObjectDescription}
      */
-    private List<ManifestObjectDescription> convertToManifObjDesc(Map<VisualInterface, List<VisualObjectPath>> visualRules) {
+    private List<RuleObjectDescription> convertToRuleObjDesc(Map<VisualInterface, List<VisualObjectPath>> visualRules) {
 
-        Map<ConnAppObjectPath, Set<ConnAppInterface>> resRules = new HashMap<ConnAppObjectPath, Set<ConnAppInterface>>();
+        Map<RuleObjectPath, Set<RuleInterface>> resRules = new HashMap<RuleObjectPath, Set<RuleInterface>>();
 
         for (VisualInterface vIface : visualRules.keySet()) {
 
@@ -239,7 +237,7 @@ public class VisualAclConfigurableItem implements VisualItem {
 
             for (VisualObjectPath vop : vObjPaths) {
 
-                ConnAppObjectPath objPath = vop.getObjPath();
+                RuleObjectPath objPath = vop.getObjPath();
 
                 // If allowAllChecked is TRUE, then all the rules are considered
                 // as configured.
@@ -248,10 +246,10 @@ public class VisualAclConfigurableItem implements VisualItem {
                 // If the vIface is not configured VisualObjectPath is checked.
                 if (allowAllSelected || vIface.isConfigured() || vop.isConfigured()) {
 
-                    Set<ConnAppInterface> ifaces = resRules.get(objPath);
+                    Set<RuleInterface> ifaces = resRules.get(objPath);
                     if (ifaces == null) {
 
-                        ifaces = new HashSet<ConnAppInterface>();
+                        ifaces = new HashSet<RuleInterface>();
                         resRules.put(objPath, ifaces);
                     }
 
@@ -260,10 +258,10 @@ public class VisualAclConfigurableItem implements VisualItem {
             }// for :: VisualObjectPath
         }// for :: VisualReverseObjDesc
 
-        List<ManifestObjectDescription> resModList = new ArrayList<ManifestObjectDescription>(resRules.size());
-        for (ConnAppObjectPath objPath : resRules.keySet()) {
+        List<RuleObjectDescription> resModList = new ArrayList<RuleObjectDescription>(resRules.size());
+        for (RuleObjectPath objPath : resRules.keySet()) {
 
-            resModList.add(new ManifestObjectDescription(objPath, resRules.get(objPath), true));
+            resModList.add(new RuleObjectDescription(objPath, resRules.get(objPath), true));
         }
 
         return resModList;
@@ -274,18 +272,18 @@ public class VisualAclConfigurableItem implements VisualItem {
      *         {@link VisualAclConfigurableItem#isRemotedApp()}
      */
     @SuppressWarnings("unchecked")
-    private List<ManifestObjectDescription> extractConfigRules() {
+    private List<RuleObjectDescription> extractConfigRules() {
 
-        List<ManifestObjectDescription> configuredRules;
+        List<RuleObjectDescription> configuredRules;
 
         if (isRemotedApp()) {
 
-            configuredRules = ((RemotedApp) confItem).getObjDescRules();
+            configuredRules = ((RemotedApp) confItem).getRuleObjectDescriptions();
         }
         // Exposed services
         else {
 
-            configuredRules = (List<ManifestObjectDescription>) confItem;
+            configuredRules = (List<RuleObjectDescription>) confItem;
         }
 
         return configuredRules;

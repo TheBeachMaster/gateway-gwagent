@@ -17,14 +17,19 @@
 package org.alljoyn.gatewaycontroller.sdk;
 
 /**
- * Implement this interface to be notified about the changes in the list of
- * received gateways. Avoid blocking the thread on which the methods of this
- * interface are invoked
+ * Implement this interface to be notified about changes in the status of the
+ * Gateway Connector Application
  */
-public interface GatewayListChangedHandler {
+public interface ConnectorAppStatusSignalHandler {
 
     /**
-     * The gateway collection has been changed.
+     * The event is emitted when the status of the Gateway Connector Application
+     * changes. Avoid blocking the thread on which the method is called.
+     *
+     * @param connectorAppId
+     *            The {@link ConnectorApp} id
+     * @param status
+     *            {@link ConnectorAppStatus}
      */
-    void gatewayChanged();
+    public void onStatusChanged(String connectorAppId, ConnectorAppStatus status);
 }

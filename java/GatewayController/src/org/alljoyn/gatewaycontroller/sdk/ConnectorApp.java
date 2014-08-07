@@ -32,10 +32,10 @@ import org.alljoyn.bus.BusException;
 import org.alljoyn.bus.BusObject;
 import org.alljoyn.bus.ProxyBusObject;
 import org.alljoyn.bus.Status;
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList.AclResponseCode;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.RestartStatus;
+import org.alljoyn.gatewaycontroller.sdk.Acl.AclResponseCode;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus.RestartStatus;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleInterface;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleObjectPath;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
 import org.alljoyn.gatewaycontroller.sdk.announcement.AnnouncementData;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.AclInfoAJ;
@@ -52,13 +52,13 @@ import org.alljoyn.services.common.BusObjectDescription;
 import android.util.Log;
 
 /**
- * The Gateway Connector Application installed on the {@link Gateway}
+ * The Connector Application managed by the {@link GatewayMgmtApp}
  */
-public class ConnectorApplication {
-    private static final String TAG = "gwc" + ConnectorApplication.class.getSimpleName();
+public class ConnectorApp {
+    private static final String TAG = "gwc" + ConnectorApp.class.getSimpleName();
 
     /**
-     * This class receives application related signals
+     * This class receives Connector Application related signals
      */
     private class SignalHandler implements BusObject, Application {
 
@@ -68,9 +68,9 @@ public class ConnectorApplication {
         private Method signalMethod;
 
         /**
-         * Receives AllJoyn signal when the state of the application has been
+         * Receives AllJoyn signal when the state of the Connector Application has been
          * changed
-         * 
+         *
          * @param appStatusAJ
          *            AllJoyn structure of the application state
          */
@@ -81,25 +81,25 @@ public class ConnectorApplication {
             BusAttachment bus = GatewayController.getInstance().getBusAttachment();
             bus.enableConcurrentCallbacks();
 
-            ConnectorApplicationStatus appStatus;
+            ConnectorAppStatus appStatus;
 
             try {
-                appStatus = new ConnectorApplicationStatus(installStatus, installDescription, connectionStatus, operationalStatus);
+                appStatus = new ConnectorAppStatus(installStatus, installDescription, connectionStatus, operationalStatus);
             } catch (GatewayControllerException gce) {
 
-                Log.e(TAG, "Failed to read data of the application status changed signal, objPath: '" + objectPath + "'", gce);
+                Log.e(TAG, "Failed to read data of the connector application status changed signal, objPath: '" + objectPath + "'", gce);
                 return;
             }
 
             // Lock to prevent race with the unsetStatusChangedHandler method
-            synchronized (ConnectorApplication.this) {
+            synchronized (ConnectorApp.this) {
 
                 if (appSignalHandler == null) {
                     Log.w(TAG, "appSignalHandler is NULL can't deliver StatusChanged signal, objPath: '" + objectPath + "'");
                     return;
                 }
 
-                Log.d(TAG, "Received StatusChanged signal for the application id: '" + appId + "', Status: '" + appStatus + "'");
+                Log.d(TAG, "Received StatusChanged signal for the connector application id: '" + appId + "', Status: '" + appStatus + "'");
                 appSignalHandler.onStatusChanged(appId, appStatus);
             }
         }
@@ -111,7 +111,7 @@ public class ConnectorApplication {
 
             if (signalMethod == null) {
                 try {
-                    signalMethod = getClass().getDeclaredMethod("applicationStatusChanged", short.class, String.class, 
+                    signalMethod = getClass().getDeclaredMethod("applicationStatusChanged", short.class, String.class,
                                                                     short.class, short.class);
 
                 } catch (NoSuchMethodException nsme) {
@@ -151,7 +151,8 @@ public class ConnectorApplication {
     // ===================================================//
 
     /**
-     * The name of the gateway {@link BusAttachment} the application is installed on
+     * The name of the gateway management app {@link BusAttachment} that manages
+     * this {@link ConnectorApp}
      */
     private final String gwBusName;
 
@@ -161,17 +162,17 @@ public class ConnectorApplication {
     private final String appId;
 
     /**
-     * The application friendly name or description
+     * The connector connector application friendly name or description
      */
     private final String friendlyName;
 
     /**
-     * The identification of the application object
+     * The identification of the connector application object
      */
     private final String objectPath;
 
     /**
-     * The application version
+     * The connector application version
      */
     private final String appVersion;
 
@@ -188,21 +189,20 @@ public class ConnectorApplication {
     /**
      * Client's object to be notified about the status changed signal
      */
-    private volatile ApplicationStatusSignalHandler appSignalHandler;
+    private volatile ConnectorAppStatusSignalHandler appSignalHandler;
 
     /**
      * Constructor
-     * 
+     *
      * @param gwBusName
-     *            The name of the gateway {@link BusAttachment} the application
-     *            is installed on
+     *            The name of the gateway {@link BusAttachment} managing this {@link ConnectorApp}
      * @param appObjPath
      *            The object path to reach the Gateway Connector Application on
      *            the gateway
      * @throws IllegalArgumentException
      *             is thrown if bad arguments have been received
      */
-    public ConnectorApplication(String gwBusName, String appObjPath) {
+    public ConnectorApp(String gwBusName, String appObjPath) {
 
         if (gwBusName == null || gwBusName.length() == 0) {
             throw new IllegalArgumentException("gwBusName is undefined");
@@ -221,10 +221,10 @@ public class ConnectorApplication {
 
     /**
      * Constructor
-     * 
+     *
      * @param appInfo
      */
-    ConnectorApplication(String gwBusName, InstalledAppInfoAJ appInfo) {
+    ConnectorApp(String gwBusName, InstalledAppInfoAJ appInfo) {
 
         this.gwBusName = gwBusName;
         objectPath     = appInfo.objectPath;
@@ -234,35 +234,35 @@ public class ConnectorApplication {
     }
 
     /**
-     * @return gwBusName the {@link ConnectorApplication} is installed on
+     * @return gwBusName the {@link ConnectorApp} is installed on
      */
     public String getGwBusName() {
         return gwBusName;
     }
 
     /**
-     * @return The id of the {@link ConnectorApplication}
+     * @return The id of the {@link ConnectorApp}
      */
     public String getAppId() {
         return appId;
     }
 
     /**
-     * @return The name of the {@link ConnectorApplication}.
+     * @return The name of the {@link ConnectorApp}.
      */
     public String getFriendlyName() {
         return friendlyName;
     }
 
     /**
-     * @return The object path to reach the application on the gateway
+     * @return The object path to reach the {@link ConnectorApp} on the gateway
      */
     public String getObjectPath() {
         return objectPath;
     }
 
     /**
-     * @return The application version
+     * @return The connector application version
      */
     public String getAppVersion() {
         return appVersion;
@@ -296,14 +296,14 @@ public class ConnectorApplication {
      */
     public void clear() {
 
-        unsetStatusChangedHandler();
+        unsetStatusSignalHandler();
     }
 
     /**
-     * Returns string representation of the Manifest file of the application.
-     * 
+     * Returns string representation of the Manifest file of the Connector Application.
+     *
      * @param sessionId
-     *            The id of the session established with the gateway
+     *            The id of the session established with the Gateway Management App
      * @return String representation of the Manifest file in XML format.
      * @throws GatewayControllerException
      *             If failed to retrieve the Manifest file
@@ -325,93 +325,92 @@ public class ConnectorApplication {
     }
 
     /**
-     * Returns the Manifest rules of the application
-     * 
+     * Returns the {@link ConnectorCapabilities} of the {@link ConnectorApp}
+     *
      * @param sessionId
-     *            The id of the session established with the gateway
-     * @return {@link ManifestRules}
+     *            The id of the session established with the Gateway Management App
+     * @return {@link ConnectorCapabilities}
      * @throws GatewayControllerException
-     *             If failed to retrieve the Manifest rules
+     *             If failed to retrieve the {@link ConnectorCapabilities}
      */
-    public ManifestRules retrieveManifestRules(int sessionId) throws GatewayControllerException {
+    public ConnectorCapabilities retrieveConnectorCapabilities(int sessionId) throws GatewayControllerException {
 
         Application app = getApplicationProxy(sessionId);
 
-        Log.d(TAG, "Retrieving application manifest rules, objPath: '" + objectPath + "'");
+        Log.d(TAG, "Retrieving Connector Capabilities, objPath: '" + objectPath + "'");
 
         try {
 
             ManifestRulesAJ manifestRulesAJ = app.getManifestInterfaces();
-            return new ManifestRules(manifestRulesAJ);
+            return new ConnectorCapabilities(manifestRulesAJ);
         } catch (BusException be) {
 
-            Log.e(TAG, "Failed to retrieve the manifest rules, objPath: '" + objectPath + "'");
-            throw new GatewayControllerException("Failed to retrieve the manifest rules", be);
+            Log.e(TAG, "Failed to retrieve the ConnectorCapabilities, objPath: '" + objectPath + "'");
+            throw new GatewayControllerException("Failed to retrieve the Connector Capabilities", be);
         }
     }
 
     /**
-     * Use data of the returned {@link AccessRules} object for creation the
-     * Access Control List
-     * 
+     * Use data of the returned {@link AclRules} object for creation the Acl
+     *
      * @param sessionId
-     *            The id of the session established with the gateway
-     * @return {@link AccessRules} to be used for ACL creation
+     *            The id of the session established with the Gateway Management App
+     * @return {@link AclRules} to be used for Acl creation
      * @throws GatewayControllerException
-     *             failed to create the {@link AccessRules}
+     *             failed to create the {@link AclRules}
      */
-    public AccessRules retrieveConfigurableRules(int sessionId) throws GatewayControllerException {
+    public AclRules retrieveApplicableConnectorCapabilities(int sessionId) throws GatewayControllerException {
 
-        Log.d(TAG, "Creating configurable rules, objPath: '" + objectPath + "'");
+        Log.d(TAG, "Retrieving applicable connector capabilities, objPath: '" + objectPath + "'");
 
-        ManifestRules manifest = retrieveManifestRules(sessionId);
+        ConnectorCapabilities manifest = retrieveConnectorCapabilities(sessionId);
 
-        List<ManifestObjectDescription> remotedServices = manifest.getRemotedServices();
-        Collections.sort(remotedServices, new ManifObjDescComparator());
+        List<RuleObjectDescription> remotedServices = manifest.getRemotedServices();
+        Collections.sort(remotedServices, new RuleObjectDescriptionComparator());
 
-        return new AccessRules(manifest.getExposedServices(), extractRemotedApps(remotedServices));
+        return new AclRules(manifest.getExposedServices(), extractRemotedApps(remotedServices));
     }
 
     /**
-     * Returns the state of the application
-     * 
+     * Returns the state of the Connector Application
+     *
      * @param sessionId
-     *            The id of the session established with the gateway
-     * @return {@link ConnectorApplicationStatus}
+     *            The id of the session established with the Gateway Management App
+     * @return {@link ConnectorAppStatus}
      * @throws GatewayControllerException
-     *             If failed to retrieve the application status
+     *             If failed to retrieve the connector application status
      */
-    public ConnectorApplicationStatus retrieveStatus(int sessionId) throws GatewayControllerException {
+    public ConnectorAppStatus retrieveStatus(int sessionId) throws GatewayControllerException {
 
         Application app = getApplicationProxy(sessionId);
 
-        Log.d(TAG, "Retrieving application state, objPath: '" + objectPath + "'");
+        Log.d(TAG, "Retrieving connector application state, objPath: '" + objectPath + "'");
 
         try {
 
             ApplicationStatusAJ appStatusAJ = app.getApplicationStatus();
-            return new ConnectorApplicationStatus(appStatusAJ);
+            return new ConnectorAppStatus(appStatusAJ);
         } catch (BusException be) {
 
-            Log.e(TAG, "Failed to retrieve the application status, objPath: '" + objectPath + "'");
-            throw new GatewayControllerException("Failed to retrieve the application status", be);
+            Log.e(TAG, "Failed to retrieve the connector application status, objPath: '" + objectPath + "'");
+            throw new GatewayControllerException("Failed to retrieve the connector application status", be);
         }
     }
 
     /**
-     * Restarts the application
-     * 
+     * Restarts the connector application
+     *
      * @param sessionId
-     *            The id of the session established with the gateway
+     *            The id of the session established with the Gateway Management App
      * @return {@link RestartStatus}
      * @throws GatewayControllerException
-     *             If failed to restart the application
+     *             If failed to restart the connector application
      */
     public RestartStatus restart(int sessionId) throws GatewayControllerException {
 
         Application app = getApplicationProxy(sessionId);
 
-        Log.d(TAG, "Restarting the application, objPath: '" + objectPath + "'");
+        Log.d(TAG, "Restarting the connector application, objPath: '" + objectPath + "'");
 
         try {
 
@@ -425,20 +424,20 @@ public class ConnectorApplication {
             return status;
         } catch (BusException be) {
 
-            Log.e(TAG, "Failed to restart the application, objPath: '" + objectPath + "'");
-            throw new GatewayControllerException("Failed to restart the application", be);
+            Log.e(TAG, "Failed to restart the connector application, objPath: '" + objectPath + "'");
+            throw new GatewayControllerException("Failed to restart the connector application", be);
         }
 
     }
 
     /**
-     * Set an {@link ApplicationStatusSignalHandler} to receive application
+     * Set an {@link ConnectorAppStatusSignalHandler} to receive connector application
      * related events. In order to receive the events, in addition to calling
      * this method, a session should be successfully established with the
-     * gateway hosting the application. Use
-     * {@link ConnectorApplication#unsetStatusChangedHandler()} to stop
+     * Gateway Management App hosting the Connector Application. Use
+     * {@link ConnectorApp#unsetStatusSignalHandler()} to stop
      * receiving the events.
-     * 
+     *
      * @param handler
      *            Signal handler
      * @throws GatewayControllerException
@@ -446,13 +445,13 @@ public class ConnectorApplication {
      * @throws IllegalArgumentException
      *             If the received handler is NULL
      */
-    public void setStatusChangedHandler(ApplicationStatusSignalHandler handler) throws GatewayControllerException {
+    public void setStatusSignalHandler(ConnectorAppStatusSignalHandler handler) throws GatewayControllerException {
 
         if (handler == null) {
             throw new IllegalArgumentException("The received signal handler is NULL");
         }
 
-        Log.d(TAG, "Registering application status signal handler, objPath: '" + objectPath + "'");
+        Log.d(TAG, "Registering connector application status signal handler, objPath: '" + objectPath + "'");
         appSignalHandler = handler;
 
         if (sigHandler != null) {
@@ -480,7 +479,7 @@ public class ConnectorApplication {
 
         if (status != Status.OK) {
 
-            unsetStatusChangedHandler();
+            unsetStatusSignalHandler();
             throw new GatewayControllerException("Failed to register signal handler, Status: '" + status + "'");
         }
 
@@ -491,7 +490,7 @@ public class ConnectorApplication {
             Log.e(TAG, "Failed to add the rule: '" + matchRule + "' for receiving status change signals, Status: '" + status +
                            "', objPath: '" + objectPath + "'");
 
-            unsetStatusChangedHandler();
+            unsetStatusSignalHandler();
             return;
         }
 
@@ -499,11 +498,11 @@ public class ConnectorApplication {
     }
 
     /**
-     * Stop receiving Service Provider Application related signals
+     * Stop receiving Connector Application related signals
      */
-    public void unsetStatusChangedHandler() {
+    public void unsetStatusSignalHandler() {
 
-        Log.d(TAG, "Unsetting status changed handler, objPath: '" + objectPath + "'");
+        Log.d(TAG, "Unsetting status signal handler, objPath: '" + objectPath + "'");
 
         synchronized (this) {
             appSignalHandler = null;
@@ -522,7 +521,7 @@ public class ConnectorApplication {
             bus.unregisterBusObject(sigHandler);
 
             Status status = bus.removeMatch("interface='" + Application.IFNAME + "',type='signal'");
-            Log.d(TAG, "Unregistered signal handler; Removed match rule status: '" + status + "', App objPath: '" +
+            Log.d(TAG, "Unregistered signal handler; Removed match rule status: '" + status + "', ConnectorApp objPath: '" +
                             objectPath + "'");
 
             sigHandler = null;
@@ -530,43 +529,43 @@ public class ConnectorApplication {
     }
 
     /**
-     * Sends request to create {@link AccessControlList} object with the
-     * received name and the {@link AccessRules}. The {@link AccessRules} are
-     * validated against the {@link ManifestRules}. Only valid rules will be
+     * Sends request to create {@link Acl} object with the
+     * received name and the {@link AclRules}. The {@link AclRules} are
+     * validated against the {@link ConnectorCapabilities}. Only valid rules will be
      * sent for the ACL creation. The invalid rules could be received from the
      * returned {@link AclWriteResponse} object.
-     * 
+     *
      * @param sessionId
-     *            The id of the session established with the gateway
+     *            The id of the session established with the Gateway Management App
      * @param name
-     *            The ACL name
-     * @param accessRules
-     *            The ACL access rules
+     *            The Acl name
+     * @param aclRules
+     *            The Acl rules
      * @return {@link AclWriteResponse}
      * @throws GatewayControllerException
      *             if failed to send request to create the ACL
      * @throws IllegalArgumentException
      *             is thrown if bad arguments have been received
      */
-    public AclWriteResponse createAcl(int sessionId, String name, AccessRules accessRules) throws GatewayControllerException {
+    public AclWriteResponse createAcl(int sessionId, String name, AclRules aclRules) throws GatewayControllerException {
 
         if (name == null || name.length() == 0) {
             throw new IllegalArgumentException("ACL name is undefined");
         }
 
-        if (accessRules == null) {
-            throw new IllegalArgumentException("accessRules is undefined");
+        if (aclRules == null) {
+            throw new IllegalArgumentException("aclRules is undefined");
         }
 
         Log.d(TAG, "Creating ACL with the name: '" + name + "', objPath: '" + objectPath + "'");
 
-        ManifestRules manifestRules                       = retrieveManifestRules(sessionId);
+        ConnectorCapabilities connectorCapabilities       = retrieveConnectorCapabilities(sessionId);
         List<ManifestObjectDescriptionAJ> exposedServices = new ArrayList<ManifestObjectDescriptionAJ>();
         List<RemotedAppAJ> remotedApps                    = new ArrayList<RemotedAppAJ>();
         Map<String, String> internalMetadata              = new HashMap<String, String>();
 
-        AccessRules invalidRules = AccessControlList.marshalAccessRules(accessRules, manifestRules, exposedServices, remotedApps,
-                                       internalMetadata);
+        AclRules invalidRules = Acl.marshalAclRules(aclRules, connectorCapabilities, exposedServices, remotedApps,
+                                                        internalMetadata);
 
         ManifestObjectDescriptionAJ[] exposedServicesArr = new ManifestObjectDescriptionAJ[exposedServices.size()];
         RemotedAppAJ[] remotedAppsArr                    = new RemotedAppAJ[remotedApps.size()];
@@ -578,7 +577,7 @@ public class ConnectorApplication {
 
         AclManagement aclMngr = getAclProxy(sessionId);
 
-        Map<String, String> customMetadata = accessRules.getMetadata();
+        Map<String, String> customMetadata = aclRules.getMetadata();
         if (customMetadata == null) {
             customMetadata = new HashMap<String, String>();
         }
@@ -592,7 +591,7 @@ public class ConnectorApplication {
 
         AclResponseCode aclRespCode = CommunicationUtil.shortToEnum(AclResponseCode.class, createStatus.aclResponseCode);
         if (aclRespCode == null) {
-            throw new GatewayControllerException("Unknown AclResponseCode has been received, code: '" + aclRespCode + 
+            throw new GatewayControllerException("Unknown AclResponseCode has been received, code: '" + aclRespCode +
                                                      "', objPath: '" + objectPath + "'");
         }
 
@@ -600,15 +599,15 @@ public class ConnectorApplication {
     }
 
     /**
-     * Return a list of the Access Control Lists installed on the application
-     * 
+     * Return a list of the ACLs installed on the Connector Application
+     *
      * @param sessionId
-     *            The id of the session established with the gateway
-     * @return List of the {@link AccessControlList}
+     *            The id of the session established with the Gateway Management App
+     * @return List of the {@link Acl}
      * @throws GatewayControllerException
      *             If failed to retrieve the ACL list
      */
-    public List<AccessControlList> retrieveAcls(int sessionId) throws GatewayControllerException {
+    public List<Acl> retrieveAcls(int sessionId) throws GatewayControllerException {
 
         AclManagement aclMngr = getAclProxy(sessionId);
 
@@ -624,12 +623,12 @@ public class ConnectorApplication {
             throw new GatewayControllerException("Failed to retrieve the list of installed ACLs", be);
         }
 
-        List<AccessControlList> aclList = new ArrayList<AccessControlList>(aclInfoArr.length);
+        List<Acl> aclList = new ArrayList<Acl>(aclInfoArr.length);
 
         for (AclInfoAJ aclInfoAJ : aclInfoArr) {
 
             try {
-                aclList.add(new AccessControlList(gwBusName, aclInfoAJ));
+                aclList.add(new Acl(gwBusName, aclInfoAJ));
             } catch (GatewayControllerException gce) {
                 Log.d(TAG, "Failed to initialize received ACL, Error: '" + gce.getMessage() + "'");
             }
@@ -639,10 +638,10 @@ public class ConnectorApplication {
     }
 
     /**
-     * Delete the Access Control List of this application
-     * 
+     * Delete the Access Control List of this Connector Application
+     *
      * @param sessionId
-     *            The id of the session established with the gateway
+     *            The id of the session established with the Gateway Management App
      * @param aclId
      *            The id of the ACL to be deleted
      * @return {@link AclResponseCode}
@@ -659,7 +658,7 @@ public class ConnectorApplication {
 
         AclManagement aclMngr = getAclProxy(sessionId);
 
-        Log.d(TAG, "Delete the Access Control List, objPath: '" + objectPath + "', alcId: '" + aclId + "'");
+        Log.d(TAG, "Delete the ACL, objPath: '" + objectPath + "', alcId: '" + aclId + "'");
 
         short aclRespRes;
 
@@ -686,12 +685,12 @@ public class ConnectorApplication {
     /**
      * Intersects {@link AnnouncementData} with the received remotedServices,
      * creates a list of {@link RemotedApp}
-     * 
+     *
      * @param remotedServices
      *            The remotedServices from the application manifest
      * @return List of {@link RemotedApp}
      */
-    static List<RemotedApp> extractRemotedApps(List<ManifestObjectDescription> remotedServices) {
+    static List<RemotedApp> extractRemotedApps(List<RuleObjectDescription> remotedServices) {
 
         List<AnnouncementData> announcements = GatewayController.getInstance().getAnnouncementManager().getAnnouncementData();
 
@@ -712,91 +711,91 @@ public class ConnectorApplication {
      * Intersects received {@link AnnouncementData} with the received
      * remotedServices, creates a {@link RemotedApp}. <br>
      * Important, for the correct work of this algorithm the list of the remoted
-     * services must be sorted with the {@link ManifObjDescComparator}.
-     * 
+     * services must be sorted with the {@link RuleObjectDescriptionComparator}.
+     *
      * @param remotedServices
-     *            The remotedServices from the application manifest
+     *            The remotedServices from the Connector App capabilities
      * @param ann
-     *            {@link AnnouncementData} to be intersected with the
-     *            remotedServices
+     *            {@link AnnouncementData} to be intersected with the remotedServices
      * @return {@link RemotedApp} or NULL if the {@link BusObjectDescription}s
      *         of the received {@link AnnouncementData} do not have any object
      *         path or interfaces that match the remotedServices. Additionally
      *         NULL is returned if the {@link AnnouncementData} doesn't have
      *         mandatory values for {@link RemotedApp} creation.
      */
-    static RemotedApp extractRemotedApp(List<ManifestObjectDescription> remotedServices, AnnouncementData ann) {
+    static RemotedApp extractRemotedApp(List<RuleObjectDescription> remotedServices, AnnouncementData ann) {
 
-        Map<ConnAppObjectPath, Set<ConnAppInterface>> remotedRules = new HashMap<ConnAppObjectPath, Set<ConnAppInterface>>();
+        Map<RuleObjectPath, Set<RuleInterface>> remotedRules = new HashMap<RuleObjectPath, Set<RuleInterface>>();
 
         for (BusObjectDescription bod : ann.getObjDescArr()) {
 
             List<String> ifacesToMatch = new ArrayList<String>(Arrays.asList(bod.getInterfaces()));
 
-            for (ManifestObjectDescription moj : remotedServices) {
+            for (RuleObjectDescription connectorRule : remotedServices) {
 
-                ConnAppObjectPath manop = moj.getObjectPath();
-                Set<ConnAppInterface> manifs = moj.getInterfaces();
-                int manifsSize = manifs.size();
+                RuleObjectPath connectorObjPath    = connectorRule.getObjectPath();
+                Set<RuleInterface> connectorIfaces = connectorRule.getInterfaces();
+                int connectorIfacesSize               = connectorIfaces.size();
 
-                // Check object path suitability: if manifest objPath is a  prefix of BusObjDesc objPath
+                // Check object path suitability: if connector app objPath is a  prefix of BusObjDesc objPath
                 // or both object paths are equal
-                if ((manop.isPrefix() && bod.getPath().startsWith(manop.getPath())) || manop.getPath().equals(bod.getPath())) {
+                if ((connectorObjPath.isPrefix() && bod.getPath().startsWith(connectorObjPath.getPath())) ||
+                        connectorObjPath.getPath().equals(bod.getPath())) {
 
-                    Set<ConnAppInterface> resIfaces = new HashSet<ConnAppInterface>();
+                    Set<RuleInterface> resIfaces    = new HashSet<RuleInterface>();
                     Iterator<String> ifacesToMatchIter = ifacesToMatch.iterator();
 
-                    // Search for the interfaces that comply with the manifest  interfaces
+                    // Search for the interfaces that comply with the connector app interfaces
                     while (ifacesToMatchIter.hasNext()) {
 
                         String iface = ifacesToMatchIter.next();
 
-                        // If there are not interfaces in the manifest, it means that all the interfaces are supported
-                        // add them without display names
-                        if (manifsSize == 0) {
-                            resIfaces.add(new ConnAppInterface(iface, ""));
+                        // If there are not interfaces in the connector app manifest,
+                        // it means that all the interfaces are supported add them without display names
+                        if (connectorIfacesSize == 0) {
+                            resIfaces.add(new RuleInterface(iface, ""));
                             ifacesToMatchIter.remove();
                             continue;
                         }
 
-                        for (ConnAppInterface manIface : manifs) {
+                        for (RuleInterface conAppIface : connectorIfaces) {
 
-                            if (manIface.getName().equals(iface)) {
+                            if (conAppIface.getName().equals(iface)) {
 
-                                resIfaces.add(manIface); // found interface -> add it to the results
+                                resIfaces.add(conAppIface); // found interface -> add it to the results
                                 ifacesToMatchIter.remove();
                                 break;
                             }
                         }
                     }// while :: ifacesToMatch
 
-                    // not found any matched interfaces, continue to the next manifest rule
+                    // not found any matched interfaces, continue to the next Capability rule
                     if (resIfaces.size() == 0) {
                         continue;
                     }
 
-                    // We add the manifest rule, if the manifest OP is the prefix of the BOD.objPath
+                    // We add the capability rule, if the connector app OP is the prefix of the BOD.objPath
                     // or both object paths are equal
-                    ConnAppObjectPath storeOp = new ConnAppObjectPath(manop.getPath(), manop.getFriendlyName(), false,
-                                                                          manop.isPrefixAllowed());
+                    RuleObjectPath storeOp = new RuleObjectPath(connectorObjPath.getPath(), connectorObjPath.getFriendlyName(),
+                                                                          false, connectorObjPath.isPrefixAllowed());
 
-                    Set<ConnAppInterface> remotedIfaces = remotedRules.get(storeOp);
+                    Set<RuleInterface> remotedIfaces = remotedRules.get(storeOp);
                     if (remotedIfaces == null) {
                         remotedRules.put(storeOp, resIfaces);
                     } else {
                         remotedIfaces.addAll(resIfaces);
                     }
 
-                    // We add the BOD.objPath if the manifest OP is not equal to
+                    // We add the BOD.objPath if the connector app OP is not equal to
                     // the BOD.objPath
-                    if (!manop.getPath().equals(bod.getPath())) {
+                    if (!connectorObjPath.getPath().equals(bod.getPath())) {
 
                         // bodOp starts with the manOp but itself it's not a  prefix
-                        ConnAppObjectPath bodOp = new ConnAppObjectPath(bod.getPath(), "", false, manop.isPrefixAllowed());
+                        RuleObjectPath bodOp = new RuleObjectPath(bod.getPath(), "", false, connectorObjPath.isPrefixAllowed());
                         remotedIfaces           = remotedRules.get(bodOp);
-                        
+
                         if (remotedIfaces == null) {
-                            remotedRules.put(bodOp, new HashSet<ConnAppInterface>(resIfaces));
+                            remotedRules.put(bodOp, new HashSet<RuleInterface>(resIfaces));
                         } else {
                             remotedIfaces.addAll(resIfaces);
                         }
@@ -805,26 +804,26 @@ public class ConnectorApplication {
                 }// if :: objPath
 
                 // If all the BusObjectDescription interfaces have been handled, no need to continue iterating
-                // over the manifest rules
+                // over the connector app rules
                 if (ifacesToMatch.size() == 0) {
                     break;
                 }
 
-            }// for :: manifest
+            }// for :: remotedServices
 
         }// for :: BusObjectDesc
 
         int rulesSize = remotedRules.size();
 
-        // Check if this announcement complies with the manifest rules
+        // Check if this announcement complies with the ConnectorApp capabilities
         if (rulesSize == 0) {
             return null;
         }
 
         // Create Remoted rules list
-        List<ManifestObjectDescription> rules = new ArrayList<ManifestObjectDescription>(rulesSize);
-        for (ConnAppObjectPath op : remotedRules.keySet()) {
-            rules.add(new ManifestObjectDescription(op, remotedRules.get(op)));
+        List<RuleObjectDescription> rules = new ArrayList<RuleObjectDescription>(rulesSize);
+        for (RuleObjectPath op : remotedRules.keySet()) {
+            rules.add(new RuleObjectDescription(op, remotedRules.get(op)));
         }
 
         RemotedApp remotedApp = null;
@@ -839,9 +838,9 @@ public class ConnectorApplication {
 
     /**
      * Returns {@link ProxyBusObject} of the {@link Application} interface
-     * 
+     *
      * @param sid
-     *            The id of the session established with the gateway
+     *            The id of the session established with the Gateway Management App
      * @return {@link Application}
      */
     private Application getApplicationProxy(int sid) {
@@ -852,9 +851,9 @@ public class ConnectorApplication {
 
     /**
      * Returns {@link ProxyBusObject} of the {@link AclManagement} interface
-     * 
+     *
      * @param sid
-     *            The id of the session established with the gateway
+     *            The id of the session established with the Gateway Management App
      * @return {@link AclManagement}
      */
     private AclManagement getAclProxy(int sid) {
@@ -865,7 +864,7 @@ public class ConnectorApplication {
 
     /**
      * Create {@link ProxyBusObject}
-     * 
+     *
      * @param sid
      *            Session id
      * @param ifaces

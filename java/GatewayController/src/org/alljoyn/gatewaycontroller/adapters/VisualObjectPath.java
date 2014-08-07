@@ -16,21 +16,21 @@
 
 package org.alljoyn.gatewaycontroller.adapters;
 
-import org.alljoyn.gatewaycontroller.sdk.AccessRules;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.AclRules;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleObjectPath;
 
 /**
- * Visualization {@link ConnAppObjectPath}
+ * Visualization {@link RuleObjectPath}
  */
 public final class VisualObjectPath {
 
     /**
-     * Reference to the {@link ConnAppObjectPath}
+     * Reference to the {@link RuleObjectPath}
      */
-    private ConnAppObjectPath objPath;
+    private RuleObjectPath objPath;
 
     /**
-     * Gets TRUE if the object is selected to be part of the {@link AccessRules}
+     * Gets TRUE if the object is selected to be part of the {@link AclRules}
      */
     private boolean isConfigured;
 
@@ -45,7 +45,7 @@ public final class VisualObjectPath {
      * @param objPath
      * @param isConfigured
      */
-    public VisualObjectPath(ConnAppObjectPath objPath, boolean isConfigured) {
+    public VisualObjectPath(RuleObjectPath objPath, boolean isConfigured) {
 
         this.objPath             = objPath;
         this.isConfigured        = isConfigured;
@@ -84,9 +84,9 @@ public final class VisualObjectPath {
     }
 
     /**
-     * @return Returns wrapped {@link ConnAppObjectPath}
+     * @return Returns wrapped {@link RuleObjectPath}
      */
-    public ConnAppObjectPath getObjPath() {
+    public RuleObjectPath getObjPath() {
         return objPath;
     }
 

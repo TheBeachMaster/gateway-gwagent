@@ -16,14 +16,14 @@
 
 package org.alljoyn.gatewaycontroller.adapters;
 
-import org.alljoyn.gatewaycontroller.sdk.Gateway;
+import org.alljoyn.gatewaycontroller.sdk.GatewayMgmtApp;
 
 /**
- * The {@link Gateway} to be visualized by the {@link DiscoveredGatewaysAdapter}
+ * The {@link GatewayMgmtApp} to be visualized by the {@link DiscoveredGatewaysAdapter}
  */
 public class VisualGateway implements VisualItem {
 
-    private Gateway gateway;
+    private GatewayMgmtApp gateway;
 
     /**
      * Constructor
@@ -31,23 +31,23 @@ public class VisualGateway implements VisualItem {
      * @param gateway
      *            to be visualized
      */
-    public VisualGateway(Gateway gateway) {
+    public VisualGateway(GatewayMgmtApp gateway) {
 
         this.gateway = gateway;
     }
 
     /**
-     * @return {@link Gateway}
+     * @return {@link GatewayMgmtApp}
      */
-    public Gateway getGateway() {
+    public GatewayMgmtApp getGateway() {
         return gateway;
     }
 
     /**
      * @param gateway
-     *            Set the {@link Gateway}
+     *            Set the {@link GatewayMgmtApp}
      */
-    public void setGateway(Gateway gateway) {
+    public void setGateway(GatewayMgmtApp gateway) {
         this.gateway = gateway;
     }
 }

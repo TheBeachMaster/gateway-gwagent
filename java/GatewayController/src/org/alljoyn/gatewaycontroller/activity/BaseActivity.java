@@ -21,8 +21,8 @@ import java.util.List;
 import org.alljoyn.gatewaycontroller.GWControllerActions;
 import org.alljoyn.gatewaycontroller.GWControllerSampleApplication;
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.sdk.Gateway;
 import org.alljoyn.gatewaycontroller.sdk.GatewayController;
+import org.alljoyn.gatewaycontroller.sdk.GatewayMgmtApp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -73,25 +73,25 @@ public abstract class BaseActivity extends Activity {
 
             switch (action) {
 
-            case GWC_PASSWORD_REQUIRED: {
-                showPasswordDialog();
-                break;
-            }
-            case GWC_SESSION_JOINED: {
-                onSessionJoined();
-                break;
-            }
-            case GWC_SESSION_JOIN_FAILED: {
-                onSessionJoinFailed();
-                break;
-            }
-            case GWC_GATEWAY_LIST_CHANGED: {
-                onGatewayListChanged();
-                break;
-            }
-            default: {
-                Log.w(TAG, "Received an Action: '" + action + "' unsupported by the BaseBroadcastReceiver");
-            }
+                case GWC_PASSWORD_REQUIRED: {
+                    showPasswordDialog();
+                    break;
+                }
+                case GWC_SESSION_JOINED: {
+                    onSessionJoined();
+                    break;
+                }
+                case GWC_SESSION_JOIN_FAILED: {
+                    onSessionJoinFailed();
+                    break;
+                }
+                case GWC_GATEWAY_ANNOUNCE_RECEIVED: {
+                    onGatewayMgmtAppAnnounced();
+                    break;
+                }
+                default: {
+                    Log.w(TAG, "Received an Action: '" + action + "' unsupported by the BaseBroadcastReceiver");
+                }
             }
 
         }// onReceive
@@ -143,7 +143,7 @@ public abstract class BaseActivity extends Activity {
     /**
      * Returns sessionId from the application. If sessionId is null calls join
      * session
-     * 
+     *
      * @return Currently established session or NULL session is not established.
      *         Join session is called, need to wait for receiving
      *         {@link BaseActivity#onSessionJoined()} or
@@ -188,23 +188,23 @@ public abstract class BaseActivity extends Activity {
      */
     protected void onSelectedGatewayLost() {
 
-        Log.d(TAG, "Selected gateway has been lost");
-        app.setSelectedGateway(null);
+        Log.d(TAG, "Selected Gateway Management App has been lost");
+        app.setSelectedGatewayApp(null);
     }
 
     /**
-     * Override this method to be notified about changes in the list of
-     * gateways. <br>
+     * Override this method to be notified when an Announcement from a {@link GatewayMgmtApp} is received. <br>
+     *
      * <br>
-     * By default this method retrieves the list of the found gateways If
-     * currently selected gateway is not in the list of the retrieved gateways
-     * the method {@link BaseActivity#onSelectedGatewayLost()} is called
+     * By default this method retrieves the list of the found {@link GatewayMgmtApp}s.
+     * If currently selected gateway app is not in the list of the retrieved gateways,
+     * the method {@link BaseActivity#onSelectedGatewayLost()} is called.
      */
-    protected void onGatewayListChanged() {
+    protected void onGatewayMgmtAppAnnounced() {
 
         Log.d(TAG, "GatewayListChanged was called");
 
-        Gateway selGw = app.getSelectedGateway();
+        GatewayMgmtApp selGw = app.getSelectedGatewayApp();
         if (selGw == null) {
             onSelectedGatewayLost();
             return;
@@ -212,8 +212,8 @@ public abstract class BaseActivity extends Activity {
 
         boolean gwFound = false;
 
-        List<Gateway> gateways = GatewayController.getInstance().getGateways();
-        for (Gateway gw : gateways) {
+        List<GatewayMgmtApp> gatewayApps = GatewayController.getInstance().getGatewayMgmtApps();
+        for (GatewayMgmtApp gw : gatewayApps) {
 
             if (gw.getBusName().equals(selGw.getBusName())) {
                 gwFound = true;
@@ -231,7 +231,7 @@ public abstract class BaseActivity extends Activity {
      * If the {@link ProgressDialog} is not initialized it's created and is
      * presented. If the {@link ProgressDialog} is already presented it's msg is
      * updated.
-     * 
+     *
      * @param msg
      *            The message to show with the {@link ProgressDialog}
      */
@@ -248,7 +248,7 @@ public abstract class BaseActivity extends Activity {
 
     /**
      * Create {@link AlertDialog.Builder} with the given title and message
-     * 
+     *
      * @param title
      *            Dialog title
      * @param message
@@ -268,7 +268,7 @@ public abstract class BaseActivity extends Activity {
     /**
      * Show {@link AlertDialog} with the positive button and the given title and
      * message.
-     * 
+     *
      * @param title
      *            {@link AlertDialog} title
      * @param message
@@ -295,7 +295,7 @@ public abstract class BaseActivity extends Activity {
     }
 
     /**
-     * Handle loose of the selected {@link Gateway}
+     * Handle loose of the selected {@link GatewayMgmtApp}
      */
     protected void handleLostOfGateway() {
 
@@ -331,12 +331,12 @@ public abstract class BaseActivity extends Activity {
         switch (currentRotation) {
 
             case Configuration.ORIENTATION_PORTRAIT: {
-    
+
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                 break;
             }
             case Configuration.ORIENTATION_LANDSCAPE: {
-    
+
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 break;
             }

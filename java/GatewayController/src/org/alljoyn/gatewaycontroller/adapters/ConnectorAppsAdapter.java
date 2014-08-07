@@ -20,12 +20,12 @@ import java.util.List;
 
 import org.alljoyn.gatewaycontroller.GWControllerSampleApplication;
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.activity.ConnectorApplicationActivity;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.ConnectionStatus;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.InstallStatus;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.OperationalStatus;
+import org.alljoyn.gatewaycontroller.activity.ConnectorAppActivity;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApp;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus.ConnectionStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus.InstallStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus.OperationalStatus;
 
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +38,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 /**
- * Manages the list of {@link VisualConnectorApplication}s
+ * Manages the list of {@link VisualConnectorApp}s
  */
 public class ConnectorAppsAdapter extends VisualArrayAdapter {
     private static final String TAG = "gwcapp" + ConnectorAppsAdapter.class.getSimpleName();
@@ -55,7 +55,7 @@ public class ConnectorAppsAdapter extends VisualArrayAdapter {
 
     /**
      * Constructor
-     * 
+     *
      * @param context
      */
     ConnectorAppsAdapter(Context context) {
@@ -64,7 +64,7 @@ public class ConnectorAppsAdapter extends VisualArrayAdapter {
 
     /**
      * Constructor
-     * 
+     *
      * @param context
      * @param viewItemResId
      * @param itemsList
@@ -99,24 +99,24 @@ public class ConnectorAppsAdapter extends VisualArrayAdapter {
             connAppView = (ConnectorAppView) row.getTag();
         }
 
-        final VisualConnectorApplication visApp = (VisualConnectorApplication) getItem(position);
+        final VisualConnectorApp visConnectorApp = (VisualConnectorApp) getItem(position);
 
-        connAppView.appName.setText(visApp.getApp().getFriendlyName());
+        connAppView.appName.setText(visConnectorApp.getApp().getFriendlyName());
         connAppView.appName.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                ConnectorApplication selectedApp = visApp.getApp();
-                Log.d(TAG, "Selected Connector Application, id: '" + selectedApp.getAppId() + "'");
-                ((GWControllerSampleApplication) context.getApplicationContext()).setSelectedApp(selectedApp);
+                ConnectorApp selectedConnectorApp = visConnectorApp.getApp();
+                Log.d(TAG, "Selected Connector Application, id: '" + selectedConnectorApp.getAppId() + "'");
+                ((GWControllerSampleApplication) context.getApplicationContext()).setSelectedConnectorApp(selectedConnectorApp);
 
-                Intent intent = new Intent(context, ConnectorApplicationActivity.class);
+                Intent intent = new Intent(context, ConnectorAppActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });
 
-        ConnectorApplicationStatus connAppStatus = visApp.getAppStatus();
+        ConnectorAppStatus connAppStatus = visConnectorApp.getAppStatus();
         updateStatus(connAppView.connStatus, connAppView.operStatus, connAppView.installStatus, connAppStatus);
 
         return row;
@@ -124,14 +124,14 @@ public class ConnectorAppsAdapter extends VisualArrayAdapter {
 
     /**
      * Updates received {@link TextView} of the statuses with the data received
-     * in the {@link ConnectorApplicationStatus}
-     * 
+     * in the {@link ConnectorAppStatus}
+     *
      * @param connStatusTv
      * @param operStatusTv
      * @param installStatusTv
      * @param status
      */
-    public static void updateStatus(TextView connStatusTv, TextView operStatusTv, TextView installStatusTv, ConnectorApplicationStatus connAppStatus) {
+    public static void updateStatus(TextView connStatusTv, TextView operStatusTv, TextView installStatusTv, ConnectorAppStatus connAppStatus) {
 
         final String UNKNOWN_STATUS = "unknown";
 
@@ -145,17 +145,17 @@ public class ConnectorAppsAdapter extends VisualArrayAdapter {
         }
 
         ConnectionStatus connStatus = connAppStatus.getConnectionStatus();
-        int color                   = Color.parseColor(VisualConnectorApplication.getConnStatusColor(connStatus));
+        int color                   = Color.parseColor(VisualConnectorApp.getConnStatusColor(connStatus));
         connStatusTv.setText(connStatus.DESC);
         connStatusTv.setTextColor(color);
 
         InstallStatus instStatus = connAppStatus.getInstallStatus();
-        color                    = Color.parseColor(VisualConnectorApplication.getInstallStatusColor(instStatus));
+        color                    = Color.parseColor(VisualConnectorApp.getInstallStatusColor(instStatus));
         installStatusTv.setText(instStatus.DESC);
         installStatusTv.setTextColor(color);
 
         OperationalStatus operStatus = connAppStatus.getOperationalStatus();
-        color                        = Color.parseColor(VisualConnectorApplication.getOperationalStatusColor(operStatus));
+        color                        = Color.parseColor(VisualConnectorApp.getOperationalStatusColor(operStatus));
         operStatusTv.setText(operStatus.DESC);
         operStatusTv.setTextColor(color);
     }

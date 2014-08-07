@@ -17,7 +17,7 @@
 package org.alljoyn.gatewaycontroller.activity;
 
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
+import org.alljoyn.gatewaycontroller.sdk.Acl;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -29,7 +29,7 @@ import android.widget.Button;
 
 /**
  * This fragment includes the button to create or update the
- * {@link AccessControlList}
+ * {@link Acl}
  */
 public class AclManagementButtonFragment extends Fragment implements OnClickListener {
 
@@ -54,7 +54,7 @@ public class AclManagementButtonFragment extends Fragment implements OnClickList
     public static final String ACTION_BUTTON_ENABLE = "ACTION_BUTTON_ENABLE";
 
     /**
-     * The button to create or update the {@link AccessControlList}
+     * The button to create or update the {@link Acl}
      */
     private Button actionButton;
 

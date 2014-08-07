@@ -18,22 +18,22 @@ package org.alljoyn.gatewaycontroller.sdk;
 
 import java.util.Comparator;
 
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleObjectPath;
 
 /**
- * Allows to compare {@link ManifestObjectDescription} according to there
- * {@link ConnAppObjectPath}. The algorithm performs lexicographical comparison
+ * Allows to compare {@link RuleObjectDescription} according to there
+ * {@link RuleObjectPath}. The algorithm performs lexicographical comparison
  * of the object paths with the condition that for equal object paths the object
  * path that is not defined as prefix is less than the object path that is
  * prefix.
  */
-class ManifObjDescComparator implements Comparator<ManifestObjectDescription> {
+class RuleObjectDescriptionComparator implements Comparator<RuleObjectDescription> {
 
     /**
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     @Override
-    public int compare(ManifestObjectDescription lhs, ManifestObjectDescription rhs) {
+    public int compare(RuleObjectDescription lhs, RuleObjectDescription rhs) {
 
         String lhsOP = lhs.getObjectPath().getPath();
         String rhsOP = rhs.getObjectPath().getPath();

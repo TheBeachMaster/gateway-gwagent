@@ -20,9 +20,9 @@ import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ApplicationStatusAJ;
 
 /**
- * The information about the state of the Gateway Connector Application
+ * The information about the state of the Gateway {@link ConnectorApp}
  */
-public class ConnectorApplicationStatus {
+public class ConnectorAppStatus {
 
     /**
      * Connection status of the Gateway Connector Application to the cloud
@@ -30,7 +30,7 @@ public class ConnectorApplicationStatus {
      */
     public static enum ConnectionStatus {
 
-        GW_CS_NOT_INITIALIZED("Not initialized", (short) 0), 
+        GW_CS_NOT_INITIALIZED("Not initialized", (short) 0),
         GW_CS_IN_PROGRESS("In progress", (short) 1),
         GW_CS_CONNECTED("Connected", (short) 2),
         GW_CS_NOT_CONNECTED("Not connected", (short) 3),
@@ -49,7 +49,7 @@ public class ConnectorApplicationStatus {
 
         /**
          * Constructor
-         * 
+         *
          * @param desc
          *            Status description
          * @param code
@@ -70,7 +70,7 @@ public class ConnectorApplicationStatus {
     public static enum InstallStatus {
 
         GW_IS_INSTALLED("Installed", (short) 0),
-        GW_IS_INSTALL_IN_PROGRESS("Installing", (short) 1), 
+        GW_IS_INSTALL_IN_PROGRESS("Installing", (short) 1),
         GW_IS_UPGRADE_IN_PROGRESS("Upgrading", (short) 2),
         GW_IS_UNINSTALL_IN_PROGRESS("Uninstalling", (short) 3),
         GW_IS_INSTALL_FAILED("Failed", (short) 4);
@@ -87,7 +87,7 @@ public class ConnectorApplicationStatus {
 
         /**
          * Constructor
-         * 
+         *
          * @param desc
          *            Status description
          * @param code
@@ -124,7 +124,7 @@ public class ConnectorApplicationStatus {
 
         /**
          * Constructor
-         * 
+         *
          * @param desc
          *            The status description
          * @param code
@@ -161,7 +161,7 @@ public class ConnectorApplicationStatus {
 
         /**
          * Constructor
-         * 
+         *
          * @param desc
          *            The status description
          * @param code
@@ -200,11 +200,11 @@ public class ConnectorApplicationStatus {
 
     /**
      * Constructor
-     * 
+     *
      * @throws GatewayControllerException
      *             If failed to unmarshal the status
      */
-    ConnectorApplicationStatus(ApplicationStatusAJ appStatusAJ) throws GatewayControllerException {
+    ConnectorAppStatus(ApplicationStatusAJ appStatusAJ) throws GatewayControllerException {
 
         this(appStatusAJ.installStatus, appStatusAJ.installDesc, appStatusAJ.connectionStatus,
                 appStatusAJ.operationalStatus);
@@ -212,14 +212,14 @@ public class ConnectorApplicationStatus {
 
     /**
      * Constructor
-     * 
+     *
      * @param installStatus
      * @param installDescription
      * @param connectionStatus
      * @param operationalStatus
      * @throws GatewayControllerException
      */
-    ConnectorApplicationStatus(short installStatus, String installDescription, short connectionStatus, 
+    ConnectorAppStatus(short installStatus, String installDescription, short connectionStatus,
                                    short operationalStatus) throws GatewayControllerException {
 
         this.installDescription = installDescription;
@@ -278,7 +278,7 @@ public class ConnectorApplicationStatus {
     public String toString() {
 
         return "ConnectorApplicationStatus [installStatus='" + installStatus + "', " + "installDescription='" +
-                installDescription + "', " + "connectionStatus='" + connectionStatus + "', " + 
+                installDescription + "', " + "connectionStatus='" + connectionStatus + "', " +
                 "operationalStatus='" + operationalStatus + "']";
     }
 }

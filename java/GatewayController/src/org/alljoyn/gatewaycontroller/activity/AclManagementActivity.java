@@ -25,15 +25,15 @@ import org.alljoyn.gatewaycontroller.R;
 import org.alljoyn.gatewaycontroller.adapters.AclMgmtConfigurableItemsAdapter;
 import org.alljoyn.gatewaycontroller.adapters.VisualAclConfigurableItem;
 import org.alljoyn.gatewaycontroller.adapters.VisualItem;
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList.AclResponseCode;
-import org.alljoyn.gatewaycontroller.sdk.AccessRules;
+import org.alljoyn.gatewaycontroller.sdk.Acl;
+import org.alljoyn.gatewaycontroller.sdk.Acl.AclResponseCode;
+import org.alljoyn.gatewaycontroller.sdk.AclRules;
 import org.alljoyn.gatewaycontroller.sdk.AclWriteResponse;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApp;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorCapabilities;
 import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription;
-import org.alljoyn.gatewaycontroller.sdk.ManifestRules;
 import org.alljoyn.gatewaycontroller.sdk.RemotedApp;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription;
 
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -56,8 +56,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 /**
- * The activity presents {@link AccessControlList} object and its
- * {@link AccessRules}
+ * The activity presents {@link Acl} object and its
+ * {@link AclRules}
  */
 public class AclManagementActivity extends BaseActivity implements ListView.OnItemClickListener, AclManagementHeaderFragment.AclNameListener, AclManagementButtonFragment.ActionButtonListener {
 
@@ -167,9 +167,9 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
             Class<AclManagementActivity> activClass = AclManagementActivity.class;
             retrieveDataMethod = activClass.getDeclaredMethod("retrieveData");
             deleteAclMethod    = activClass.getDeclaredMethod("deleteAcl");
-            createAclMethod    = activClass.getDeclaredMethod("createAcl", String.class, AccessRules.class);
+            createAclMethod    = activClass.getDeclaredMethod("createAcl", String.class, AclRules.class);
 
-            updateAclMethod    = activClass.getDeclaredMethod("updateAcl", String.class, AccessRules.class);
+            updateAclMethod    = activClass.getDeclaredMethod("updateAcl", String.class, AclRules.class);
 
         } catch (NoSuchMethodException nsme) {
             Log.wtf(TAG, "NoSuchMethodException", nsme);
@@ -223,7 +223,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
         super.onStart();
 
         // We don't want at this point to receive status change signals
-        app.getSelectedApp().unsetStatusChangedHandler();
+        app.getSelectedConnectorApp().unsetStatusSignalHandler();
         retrieveData();
     }
 
@@ -292,17 +292,19 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 
     /**
      * Creates {@link ActionBarDrawerToggle}
-     * 
+     *
      * @return {@link ActionBarDrawerToggle}
      */
     private void initDrawerListener() {
 
         drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer, R.string.acl_mgmt_drawer_open, R.string.acl_mgmt_drawer_close) {
 
+            @Override
             public void onDrawerClosed(View view) {
                 invalidateOptionsMenu();
             }
 
+            @Override
             public void onDrawerOpened(View drawerView) {
                 invalidateOptionsMenu();
             }
@@ -362,7 +364,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
     /**
      * The ACL name has been changed. If it's not an empty String enable the
      * actionButton on the {@link AclManagementButtonFragment}
-     * 
+     *
      * @see org.alljoyn.gatewaycontroller.activity.AclManagementHeaderFragment.AclNameListener#onTextChanged(java.lang.String)
      */
     @Override
@@ -385,23 +387,23 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
     /**
      * Action button was clicked, handle the event according to the activity
      * type
-     * 
+     *
      * @see org.alljoyn.gatewaycontroller.activity.AclManagementButtonFragment.ActionButtonListener#onActionButtonClicked()
      */
     @Override
     public void onActionButtonClicked() {
 
-        String aclName = headerFragment.getAclName();
-        AccessRules accessRules = constructAccessRules();
+        String aclName    = headerFragment.getAclName();
+        AclRules aclRules = constructAclRules();
 
         if (activityType == ACTIVE_TYPE_ACL_CREATE) {
 
             Log.d(TAG, "CREATE button has been clicked");
-            createAcl(aclName, accessRules);
+            createAcl(aclName, aclRules);
         } else {
 
             Log.d(TAG, "UPDATE button has been clicked");
-            updateAcl(aclName, accessRules);
+            updateAcl(aclName, aclRules);
         }
     }
 
@@ -441,14 +443,14 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
     }
 
     /**
-     * Retrieves {@link AccessControlList} data
+     * Retrieves {@link Acl} data
      */
     private void retrieveData() {
 
         final Integer sid = getSession();
         if (sid == null) {
 
-            Log.d(TAG, "Can't retrieve ACL rules, no session with the GW is established, waiting for" + 
+            Log.d(TAG, "Can't retrieve ACL rules, no session with the GW is established, waiting for" +
                            " the onSessionJoined event");
 
             invokeOnSessionReady = new CallbackMethod(retrieveDataMethod, new Object[] {});
@@ -486,7 +488,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
                 // Load the header and button fragments
                 loadHeaderButtonFragments();
 
-                // If there are items in the drawable layout and no item was 
+                // If there are items in the drawable layout and no item was
                 // previously selected, then select the first item
                 // otherwise select the selected item
                 if (confItemsAdapter.getCount() > 0) {
@@ -503,26 +505,26 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 
     /**
      * Retrieve ACL rules. If create ACL call
-     * {@link ConnectorApplication#retrieveConfigurableRules(int)} if update ACL
+     * {@link ConnectorApp#retrieveApplicableConnectorCapabilities(int)} if update ACL
      * call
-     * {@link AccessControlList#retrieveAcl(int, org.alljoyn.gatewaycontroller.sdk.ManifestRules)}
-     * 
+     * {@link Acl#retrieve(int, org.alljoyn.gatewaycontroller.sdk.ConnectorCapabilities)}
+     *
      * @param sid
      * @return
      */
     private String retrieveRulesAsyncTask(int sid) {
 
-        AccessRules rules;
+        AclRules rules;
 
         try {
 
             if (activityType == ACTIVE_TYPE_ACL_CREATE) { // Create ACL
 
-                rules = app.getSelectedApp().retrieveConfigurableRules(sid);
+                rules = app.getSelectedConnectorApp().retrieveApplicableConnectorCapabilities(sid);
             } else { // Update ACL
 
-                ManifestRules manifRules = app.getSelectedApp().retrieveManifestRules(sid);
-                rules = app.getSelectedAcl().retrieveAcl(sid, manifRules);
+                ConnectorCapabilities connectorCapabilities = app.getSelectedConnectorApp().retrieveConnectorCapabilities(sid);
+                rules = app.getSelectedAcl().retrieve(sid, connectorCapabilities);
             }
         } catch (GatewayControllerException gce) {
 
@@ -530,8 +532,8 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
             return "Failed to retrieve ACL rules";
         }
 
-        List<ManifestObjectDescription> expServices = rules.getExposedServices();
-        List<RemotedApp> remApps = rules.getRemotedApps();
+        List<RuleObjectDescription> expServices = rules.getExposedServices();
+        List<RemotedApp> remApps                = rules.getRemotedApps();
 
         // Add exposed services
         if (expServices.size() > 0) {
@@ -551,21 +553,21 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
     }
 
     /**
-     * Call {@link ConnectorApplication#createAcl(int, String, AccessRules)}
+     * Call {@link ConnectorApp#createAcl(int, String, AclRules)}
      */
-    private void createAcl(final String aclName, final AccessRules accessRules) {
+    private void createAcl(final String aclName, final AclRules aclRules) {
 
         final Integer sid = getSession();
         if (sid == null) {
 
             Log.d(TAG, "Can't create the ACL, no session with the GW is established, waiting for" + " the onSessionJoined event");
 
-            invokeOnSessionReady = new CallbackMethod(createAclMethod, new Object[] { aclName, accessRules });
+            invokeOnSessionReady = new CallbackMethod(createAclMethod, new Object[] { aclName, aclRules });
             return;
         }
 
         showProgressDialog("Creating ACL, name: '" + aclName + "'");
-        Log.d(TAG, "Creating ACL, name: '" + aclName + "' app: '" + app.getSelectedApp().getObjectPath() + "'");
+        Log.d(TAG, "Creating ACL, name: '" + aclName + "' Connapp: '" + app.getSelectedConnectorApp().getObjectPath() + "'");
 
         asyncTask = new AsyncTask<Void, Void, Void>() {
 
@@ -575,13 +577,13 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
             @Override
             protected Void doInBackground(Void... params) {
 
-                ConnectorApplication selApp = app.getSelectedApp();
+                ConnectorApp selConnApp = app.getSelectedConnectorApp();
                 try {
 
-                    aclWriteResponse = selApp.createAcl(sid, aclName, accessRules);
+                    aclWriteResponse = selConnApp.createAcl(sid, aclName, aclRules);
                 } catch (GatewayControllerException gce) {
 
-                    Log.d(TAG, "Failed to create ACL ConnectorApplication: '" + selApp.getObjectPath() + "'", gce);
+                    Log.d(TAG, "Failed to create ACL ConnectorApplication: '" + selConnApp.getObjectPath() + "'", gce);
                     errMsg = "ACL creation failed";
                 }
 
@@ -598,19 +600,19 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
     }
 
     /**
-     * Call {@link AccessControlList#updateAcl(int, AccessRules, ManifestRules)}
-     * 
+     * Call {@link Acl#update(int, AclRules, ConnectorCapabilities)}
+     *
      * @param aclName
-     * @param accessRules
+     * @param aclRules
      */
-    private void updateAcl(final String aclName, final AccessRules accessRules) {
+    private void updateAcl(final String aclName, final AclRules aclRules) {
 
         final Integer sid = getSession();
         if (sid == null) {
 
             Log.d(TAG, "Can't update the ACL, no session with the GW is established, waiting for" + " the onSessionJoined event");
 
-            invokeOnSessionReady = new CallbackMethod(updateAclMethod, new Object[] { aclName, accessRules });
+            invokeOnSessionReady = new CallbackMethod(updateAclMethod, new Object[] { aclName, aclRules });
             return;
         }
 
@@ -625,13 +627,13 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
             @Override
             protected Void doInBackground(Void... params) {
 
-                AccessControlList selAcl = app.getSelectedAcl();
+                Acl selAcl = app.getSelectedAcl();
                 try {
 
-                    ManifestRules manifest = app.getSelectedApp().retrieveManifestRules(sid);
+                    ConnectorCapabilities connectorCapabilities = app.getSelectedConnectorApp().retrieveConnectorCapabilities(sid);
 
                     selAcl.setName(aclName);
-                    aclWriteResponse = selAcl.updateAcl(sid, accessRules, manifest);
+                    aclWriteResponse = selAcl.update(sid, aclRules, connectorCapabilities);
                 } catch (GatewayControllerException gce) {
 
                     Log.d(TAG, "Failed to update ACL: '" + selAcl.getObjectPath() + "'", gce);
@@ -652,7 +654,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 
     /**
      * Create/Update ACL post execution process
-     * 
+     *
      * @param taskName
      *            Create or update ACL
      * @param errMsg
@@ -669,7 +671,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
         }
 
         AclResponseCode respCode = aclWriteResp.getResponseCode();
-        AccessRules invRules = aclWriteResp.getInvalidRules();
+        AclRules invRules = aclWriteResp.getInvalidRules();
 
         if (respCode != AclResponseCode.GW_ACL_RC_SUCCESS) {
 
@@ -684,31 +686,31 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
             showOkDialog("Info", msg, "Ok", null);
 
             Log.w(TAG, taskName + " invalid rules");
-            app.printAccessRules(invRules);
+            app.printAclRules(invRules);
         } else {
             app.showToast(taskName + " succeeded");
         }
 
         // Go to the ConnectorApplicationActivity
-        Intent intent = new Intent(this, ConnectorApplicationActivity.class);
+        Intent intent = new Intent(this, ConnectorAppActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
     /**
-     * Construct {@link AccessRules} for ACL creation or update
-     * 
-     * @return {@link AccessRules}
+     * Construct {@link AclRules} for ACL creation or update
+     *
+     * @return {@link AclRules}
      */
-    private AccessRules constructAccessRules() {
+    private AclRules constructAclRules() {
 
         List<RemotedApp> remotedApps = new ArrayList<RemotedApp>();
-        List<ManifestObjectDescription> exposedServices = new ArrayList<ManifestObjectDescription>();
+        List<RuleObjectDescription> exposedServices = new ArrayList<RuleObjectDescription>();
 
         for (VisualItem visItem : confItemsAdapter.getItemsList()) {
 
             VisualAclConfigurableItem confItem = (VisualAclConfigurableItem) visItem;
-            List<ManifestObjectDescription> rules = confItem.getSelectedRules();
+            List<RuleObjectDescription> rules = confItem.getSelectedRules();
 
             if (confItem.isRemotedApp()) {
 
@@ -719,7 +721,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
             }
         }
 
-        return new AccessRules(exposedServices, remotedApps);
+        return new AclRules(exposedServices, remotedApps);
     }
 
     /**
@@ -755,7 +757,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 
     /**
      * Load the configuration data fragment with the name of the selected item
-     * 
+     *
      * @param position
      *            Position of the selected item in the drawer
      */
@@ -771,7 +773,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
      */
     private void showAclId() {
 
-        AccessControlList acl = app.getSelectedAcl();
+        Acl acl = app.getSelectedAcl();
         if (acl == null) {
 
             Log.wtf(TAG, "This method can't be called when there is no selected ACL !!!");
@@ -811,7 +813,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
     }
 
     /**
-     * Call {@link ConnectorApplication#deleteAcl(int, String)}
+     * Call {@link ConnectorApp#deleteAcl(int, String)}
      */
     private void deleteAcl() {
 
@@ -837,7 +839,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 
                 try {
 
-                    respCode = app.getSelectedApp().deleteAcl(sid, app.getSelectedAcl().getId());
+                    respCode = app.getSelectedConnectorApp().deleteAcl(sid, app.getSelectedAcl().getId());
                 } catch (GatewayControllerException gce) {
                     this.gce = gce;
                 }
@@ -859,7 +861,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
                 }
 
                 app.showToast("The ACL has been deleted successfully");
-                Intent intent = new Intent(AclManagementActivity.this, ConnectorApplicationActivity.class);
+                Intent intent = new Intent(AclManagementActivity.this, ConnectorAppActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
@@ -869,7 +871,7 @@ public class AclManagementActivity extends BaseActivity implements ListView.OnIt
 
     /**
      * Load the given fragment to the activity
-     * 
+     *
      * @param replacedFragmentId
      * @param loagFragment
      */

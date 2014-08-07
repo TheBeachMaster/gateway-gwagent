@@ -17,8 +17,8 @@
 package org.alljoyn.gatewaycontroller.sdk.managerinterfaces;
 
 import org.alljoyn.bus.annotation.Position;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleInterface;
 
 /**
  * This class stores object description provided with the manifest of the
@@ -53,18 +53,18 @@ public class ManifestObjectDescriptionAJ {
     /**
      * Constructor
      * 
-     * @param mod
+     * @param capObjDesc
      */
-    public ManifestObjectDescriptionAJ(ManifestObjectDescription mod) {
+    public ManifestObjectDescriptionAJ(RuleObjectDescription capObjDesc) {
 
-        objectPath = mod.getObjectPath().getPath();
-        isPrefix   = mod.getObjectPath().isPrefix();
+        objectPath = capObjDesc.getObjectPath().getPath();
+        isPrefix   = capObjDesc.getObjectPath().isPrefix();
 
-        int size   = mod.getInterfaces().size();
+        int size   = capObjDesc.getInterfaces().size();
         interfaces = new String[size];
 
         int i = 0;
-        for (ConnAppInterface ifaceObj : mod.getInterfaces()) {
+        for (RuleInterface ifaceObj : capObjDesc.getInterfaces()) {
             interfaces[i++] = ifaceObj.getName();
         }
     }

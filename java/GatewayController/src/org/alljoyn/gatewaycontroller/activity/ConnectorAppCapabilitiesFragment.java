@@ -20,13 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.adapters.ManifestRulesAdapter;
+import org.alljoyn.gatewaycontroller.adapters.ConnectorCapabilitiesAdapter;
 import org.alljoyn.gatewaycontroller.adapters.VisualItem;
-import org.alljoyn.gatewaycontroller.adapters.VisualManifestItem;
-import org.alljoyn.gatewaycontroller.adapters.VisualManifestItem.ItemType;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestRules;
+import org.alljoyn.gatewaycontroller.adapters.VisualRuleItem;
+import org.alljoyn.gatewaycontroller.adapters.VisualRuleItem.ItemType;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApp;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorCapabilities;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleInterface;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -36,10 +37,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 /**
- * The class presents the manifest interfaces {@link Fragment} of the
- * {@link ConnectorApplicationManifestActivity}
+ * The class presents the {@link ConnectorApp} capabilities {@link Fragment} of the
+ * {@link ConnectorAppCapabilitiesActivity}
  */
-public class ConnectorApplicationManifestRulesFragment extends Fragment {
+public class ConnectorAppCapabilitiesFragment extends Fragment {
 
     /**
      * Exposed services to be presented
@@ -54,36 +55,36 @@ public class ConnectorApplicationManifestRulesFragment extends Fragment {
     /**
      * Exposed services adapter
      */
-    private ManifestRulesAdapter exposedServicesAdapter;
+    private ConnectorCapabilitiesAdapter exposedServicesAdapter;
 
     /**
      * Remoted services adapter
      */
-    private ManifestRulesAdapter remotedServicesAdapter;
+    private ConnectorCapabilitiesAdapter remotedServicesAdapter;
 
     /**
-     * {@link ManifestRules} to be presented
+     * {@link ConnectorCapabilities} to be presented
      */
-    private ManifestRules rules;
+    private ConnectorCapabilities connectorCapabilities;
 
     /**
      * Constructor
      */
-    public ConnectorApplicationManifestRulesFragment() {
+    public ConnectorAppCapabilitiesFragment() {
     }
 
     /**
      * !!! IMPORTANT !!! Use this method to create the {@link Fragment} object
      * of this class.
-     * 
-     * @param rules
-     *            {@link ManifestRules}
-     * @return {@link ConnectorApplicationManifestRulesFragment}
+     *
+     * @param connectorCapabilities
+     *            {@link ConnectorCapabilities}
+     * @return {@link ConnectorAppCapabilitiesFragment}
      */
-    public static ConnectorApplicationManifestRulesFragment createInstance(ManifestRules rules) {
+    public static ConnectorAppCapabilitiesFragment createInstance(ConnectorCapabilities connectorCapabilities) {
 
-        ConnectorApplicationManifestRulesFragment frg = new ConnectorApplicationManifestRulesFragment();
-        frg.rules = rules;
+        ConnectorAppCapabilitiesFragment frg = new ConnectorAppCapabilitiesFragment();
+        frg.connectorCapabilities            = connectorCapabilities;
 
         return frg;
     }
@@ -114,11 +115,11 @@ public class ConnectorApplicationManifestRulesFragment extends Fragment {
 
         remotedServicesListView.setEmptyView(frgView.findViewById(R.id.connectorAppManifestRulesRemServicesRulesNotFound));
 
-        exposedServicesAdapter = new ManifestRulesAdapter(getActivity(), R.layout.connector_manifest_rules_objectpath_item, new ArrayList<VisualItem>());
+        exposedServicesAdapter = new ConnectorCapabilitiesAdapter(getActivity(), R.layout.connector_manifest_rules_objectpath_item, new ArrayList<VisualItem>());
 
         exposedServicesListView.setAdapter(exposedServicesAdapter);
 
-        remotedServicesAdapter = new ManifestRulesAdapter(getActivity(), R.layout.connector_manifest_rules_objectpath_item, new ArrayList<VisualItem>());
+        remotedServicesAdapter = new ConnectorCapabilitiesAdapter(getActivity(), R.layout.connector_manifest_rules_objectpath_item, new ArrayList<VisualItem>());
 
         remotedServicesListView.setAdapter(remotedServicesAdapter);
 
@@ -132,28 +133,28 @@ public class ConnectorApplicationManifestRulesFragment extends Fragment {
      */
     private void populateVisualData() {
 
-        fillAdapter(exposedServicesAdapter, rules.getExposedServices());
+        fillAdapter(exposedServicesAdapter, connectorCapabilities.getExposedServices());
         exposedServicesAdapter.notifyDataSetChanged();
 
-        fillAdapter(remotedServicesAdapter, rules.getRemotedServices());
+        fillAdapter(remotedServicesAdapter, connectorCapabilities.getRemotedServices());
         remotedServicesAdapter.notifyDataSetChanged();
     }
 
     /**
      * Fills the given adapter with the given rules
-     * 
+     *
      * @param adapter
      * @param manRules
      */
-    private void fillAdapter(ManifestRulesAdapter adapter, List<ManifestObjectDescription> manRules) {
+    private void fillAdapter(ConnectorCapabilitiesAdapter adapter, List<RuleObjectDescription> manRules) {
 
-        for (ManifestObjectDescription rule : manRules) {
+        for (RuleObjectDescription rule : manRules) {
 
-            adapter.add(new VisualManifestItem(rule.getObjectPath(), ItemType.OBJECT_PATH));
+            adapter.add(new VisualRuleItem(rule.getObjectPath(), ItemType.OBJECT_PATH));
 
-            for (ConnAppInterface iface : rule.getInterfaces()) {
+            for (RuleInterface iface : rule.getInterfaces()) {
 
-                adapter.add(new VisualManifestItem(iface, ItemType.INTERFACE));
+                adapter.add(new VisualRuleItem(iface, ItemType.INTERFACE));
             }
         }
     }// fillAdapter

@@ -22,15 +22,15 @@ import java.util.List;
 
 import org.alljoyn.gatewaycontroller.CallbackMethod;
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.adapters.ConnectorApplicationAclsAdapter;
+import org.alljoyn.gatewaycontroller.adapters.ConnectorAppAclsAdapter;
 import org.alljoyn.gatewaycontroller.adapters.ConnectorAppsAdapter;
 import org.alljoyn.gatewaycontroller.adapters.VisualAcl;
 import org.alljoyn.gatewaycontroller.adapters.VisualItem;
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
-import org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.RestartStatus;
+import org.alljoyn.gatewaycontroller.sdk.Acl;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApp;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus.RestartStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatusSignalHandler;
 import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
 
 import android.content.DialogInterface;
@@ -48,12 +48,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 /**
- * The activity presents {@link ConnectorApplication}s and its
- * {@link AccessControlList} objects
+ * The activity presents {@link ConnectorApp}s and its
+ * {@link Acl} objects
  */
-public class ConnectorApplicationActivity extends BaseActivity implements ApplicationStatusSignalHandler, OnItemClickListener {
+public class ConnectorAppActivity extends BaseActivity implements ConnectorAppStatusSignalHandler, OnItemClickListener {
 
-    private static final String TAG = "gwcapp" + ConnectorApplicationActivity.class.getSimpleName();
+    private static final String TAG = "gwcapp" + ConnectorAppActivity.class.getSimpleName();
 
     /**
      * Gateway name
@@ -63,12 +63,12 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
     /**
      * Selected application name
      */
-    private TextView appName;
+    private TextView connAppName;
 
     /**
      * Selected application version
      */
-    private TextView appVer;
+    private TextView connAppVer;
 
     /**
      * Application connection status
@@ -93,7 +93,7 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
     /**
      * Adapter for the list of the ACLs
      */
-    private ConnectorApplicationAclsAdapter adapter;
+    private ConnectorAppAclsAdapter adapter;
 
     /**
      * Asynchronous task to be executed
@@ -124,7 +124,7 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
         try {
 
-            Class<ConnectorApplicationActivity> activClass = ConnectorApplicationActivity.class;
+            Class<ConnectorAppActivity> activClass = ConnectorAppActivity.class;
             retrieveDataMethod          = activClass.getDeclaredMethod("retrieveData");
             restartAppMethod            = activClass.getDeclaredMethod("restartApp");
             changeAclActiveStatusMethod = activClass.getDeclaredMethod("changeAclActiveStatus", VisualAcl.class, CompoundButton.class, boolean.class);
@@ -173,36 +173,36 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
         super.onStart();
 
-        // Check existence of the selected gateway
-        if (app.getSelectedGateway() == null) {
+        // Check existence of the selected gateway management app
+        if (app.getSelectedGatewayApp() == null) {
 
-            Log.w(TAG, "Selected gateway has been lost, handling");
+            Log.w(TAG, "Selected gateway app has been lost, handling");
             handleLostOfGateway();
             return;
         }
 
         try {
-            app.getSelectedApp().setStatusChangedHandler(this);
+            app.getSelectedConnectorApp().setStatusSignalHandler(this);
         } catch (GatewayControllerException gce) {
 
             Log.e(TAG, "Failed to setStatusChangedHandler", gce);
             showOkDialog("Error", "Failed to register Status Change Handler.", "Ok", null);
         }
 
-        gwNameTv = (TextView) findViewById(R.id.gwNameTv);
-        gwNameTv.setText(app.getSelectedGateway().getAppName());
+        gwNameTv      = (TextView) findViewById(R.id.gwNameTv);
+        gwNameTv.setText(app.getSelectedGatewayApp().getAppName());
 
-        appName = (TextView) findViewById(R.id.aclMgmtConnAppNameTv);
-        appName.setText(app.getSelectedApp().getFriendlyName());
+        connAppName   = (TextView) findViewById(R.id.aclMgmtConnAppNameTv);
+        connAppName.setText(app.getSelectedConnectorApp().getFriendlyName());
 
-        appVer = (TextView) findViewById(R.id.connectorAppVerTv);
-        appVer.setText(app.getSelectedApp().getAppVersion());
+        connAppVer    = (TextView) findViewById(R.id.connectorAppVerTv);
+        connAppVer.setText(app.getSelectedConnectorApp().getAppVersion());
 
         connStatus    = (TextView) findViewById(R.id.connectorAppConnStatus);
         operStatus    = (TextView) findViewById(R.id.connectorAppOperStatus);
         installStatus = (TextView) findViewById(R.id.connectorAppInstallStatus);
 
-        adapter = new ConnectorApplicationAclsAdapter(this, R.layout.connector_app_acl_item, new ArrayList<VisualItem>());
+        adapter = new ConnectorAppAclsAdapter(this, R.layout.connector_app_acl_item, new ArrayList<VisualItem>());
 
         aclsListView = (ListView) findViewById(R.id.connectorAppAclsLv);
         aclsListView.setAdapter(adapter);
@@ -255,7 +255,7 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
         super.onSessionJoinFailed();
 
-        // If the last invoked method was changeAclActiveStatusMethod 
+        // If the last invoked method was changeAclActiveStatusMethod
         // we need to rollback the Acl activity switch back, because the session
         // establishment has failed
         if (invokeOnSessionReady == null || invokeOnSessionReady.getMethod() != changeAclActiveStatusMethod) {
@@ -279,15 +279,15 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
     }
 
     /**
-     * @see org.alljoyn.gatewaycontroller.activity.BaseActivity#onGatewayListChanged()
+     * @see org.alljoyn.gatewaycontroller.activity.BaseActivity#onGatewayMgmtAnnounced()
      */
     @Override
-    protected void onGatewayListChanged() {
+    protected void onGatewayMgmtAppAnnounced() {
 
-        super.onGatewayListChanged();
+        super.onGatewayMgmtAppAnnounced();
 
-        // Check that my Gateway wasn't lost because of the GatewayListChanged
-        if (app.getSelectedGateway() == null) {
+        // Check that my Gateway App wasn't lost because of the GatewayMgmtAppAnnounced
+        if (app.getSelectedGatewayApp() == null) {
 
             return;
         }
@@ -307,17 +307,17 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
     }
 
     /**
-     * Since the application is selected the {@link ConnectorApplication} object
+     * Since the application is selected the {@link ConnectorApp} object
      * listens to the incoming status change events
-     * 
-     * @see org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler#onStatusChanged(java.lang.String,
-     *      org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus)
+     *
+     * @see org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatusSignalHandler#onStatusChanged(java.lang.String,
+     *      org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus)
      */
     @Override
-    public void onStatusChanged(String appId, final ConnectorApplicationStatus status) {
+    public void onStatusChanged(String appId, final ConnectorAppStatus status) {
 
         Log.d(TAG, "Received status changed signal for the app id: '" + appId + "', Status: '" + status + "'");
-        if ( !appId.equals(app.getSelectedApp().getAppId()) ) {
+        if ( !appId.equals(app.getSelectedConnectorApp().getAppId()) ) {
 
             Log.wtf(TAG, "Weird received status changed for a not selected Connector Application!");
             return;
@@ -339,8 +339,8 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
     @Override
     public void onItemClick(AdapterView<?> adapter, View clickedView, int position, long rowId) {
 
-        VisualAcl vAcl        = (VisualAcl) this.adapter.getItem(position);
-        AccessControlList acl = vAcl.getAcl();
+        VisualAcl vAcl = (VisualAcl) this.adapter.getItem(position);
+        Acl acl        = vAcl.getAcl();
         app.setSelectedAcl(acl);
 
         Log.d(TAG, "Selected ACL objPath is: '" + acl.getObjectPath() + "'");
@@ -356,39 +356,39 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
         switch (item.getItemId()) {
 
             case R.id.menuCreateAcl: {
-    
+
                 openAcl(AclManagementActivity.ACTIVE_TYPE_ACL_CREATE);
                 return true;
             }
             case R.id.menuConnectorAppRestartBtn: {
-    
+
                 restartApp();
                 return true;
             }
             case R.id.menuConnectorAppRefreshBtn: {
-    
+
                 retrieveData();
                 return true;
             }
             case R.id.menuShowManifest: {
-    
+
                 showManifest();
                 return true;
             }
             default: {
-    
+
                 return super.onMenuItemSelected(featureId, item);
             }
         }
     }
 
     /**
-     * Calls {@link AccessControlList#activate(int)} or
-     * {@link AccessControlList#deactivate(int)} in depends on the given
+     * Calls {@link Acl#activate(int)} or
+     * {@link Acl#deactivate(int)} in depends on the given
      * isActive flag
-     * 
+     *
      * @param acl
-     *            {@link AccessControlList} to activate or deactivate
+     *            {@link Acl} to activate or deactivate
      * @param aclSwitch
      *            to be affected on the state change
      * @param isActive
@@ -427,7 +427,7 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
                     Log.e(TAG, "Failed to set the ACL state to isActive: '" + isActive + "', objPath: '" +
                                     vAcl.getAcl().getObjectPath() + "'");
-                    
+
                     errMsg = "Failed to change the ACL status";
                 }
 
@@ -452,8 +452,8 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
     }// changeAclActiveStatus
 
     /**
-     * Retrieves {@link ConnectorApplication} status and its
-     * {@link AccessControlList} objects
+     * Retrieves {@link ConnectorApp} status and its
+     * {@link Acl} objects
      */
     private void retrieveData() {
 
@@ -475,7 +475,7 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
         asyncTask = new AsyncTask<Void, Void, Void>() {
 
-            private ConnectorApplicationStatus appStatus;
+            private ConnectorAppStatus appStatus;
             private String errMsg;
 
             @Override
@@ -506,24 +506,24 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
     /**
      * The method is executed on the {@link AsyncTask} thread and retrieves the
-     * {@link ConnectorApplicationStatus} of the selected
-     * {@link ConnectorApplication}
-     * 
-     * @return {@link ConnectorApplicationStatus}
+     * {@link ConnectorAppStatus} of the selected
+     * {@link ConnectorApp}
+     *
+     * @return {@link ConnectorAppStatus}
      */
-    private ConnectorApplicationStatus retrieveAppStatusAsyncTask(final int sid) {
+    private ConnectorAppStatus retrieveAppStatusAsyncTask(final int sid) {
 
         try {
 
-            ConnectorApplication connApp      = app.getSelectedApp();
-            ConnectorApplicationStatus status = connApp.retrieveStatus(sid);
-            Log.d(TAG, "Retrieved application status for the selectedApp, objPath: '" + connApp.getObjectPath() +
-                            "'" + " status: '" + status + "'");
+            ConnectorApp connApp              = app.getSelectedConnectorApp();
+            ConnectorAppStatus status = connApp.retrieveStatus(sid);
+            Log.d(TAG, "Retrieved application status for the selectedConnectorApp, objPath: '" +
+                        connApp.getObjectPath() + "'" + " status: '" + status + "'");
 
             return status;
         } catch (GatewayControllerException gce) {
-            Log.e(TAG, "Failed to retrieve status of the Selected App., objPath: '" + 
-                            app.getSelectedApp().getObjectPath() + "'");
+            Log.e(TAG, "Failed to retrieve status of the Selected ConnectorApp., objPath: '" +
+                            app.getSelectedConnectorApp().getObjectPath() + "'");
 
             return null;
         }
@@ -531,26 +531,26 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
     /**
      * The method is executed on the {@link AsyncTask} thread and retrieves the
-     * {@link AccessControlList} objects of the selected
-     * {@link ConnectorApplication}
-     * 
+     * {@link Acl} objects of the selected {@link ConnectorApp}
      * @return Error message if failed
      */
     private String retrieveAclsAsyncTask(int sid) {
 
-        List<AccessControlList> aclList;
-        ConnectorApplication selApp = app.getSelectedApp();
+        List<Acl> aclList;
+        ConnectorApp selConnectorApp = app.getSelectedConnectorApp();
 
         try {
 
-            aclList = selApp.retrieveAcls(sid);
+            aclList = selConnectorApp.retrieveAcls(sid);
         } catch (GatewayControllerException gce) {
 
-            Log.e(TAG, "Failed to retrieve ACL list for the selectedApp, objPath: '" + selApp.getObjectPath() + "'", gce);
+            Log.e(TAG, "Failed to retrieve ACL list for the selected ConnectorApp, objPath: '" +
+                        selConnectorApp.getObjectPath() + "'", gce);
+
             return "Failed to retrieve the ACL list.\n Please try later.";
         }
 
-        for (AccessControlList acl : aclList) {
+        for (Acl acl : aclList) {
 
             adapter.add(new VisualAcl(acl));
         }
@@ -559,7 +559,7 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
     }
 
     /**
-     * Restart the selected {@link ConnectorApplication}
+     * Restart the selected {@link ConnectorApp}
      */
     private void restartApp() {
 
@@ -574,7 +574,7 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
         }
 
         showProgressDialog("Restarting application");
-        Log.d(TAG, "Restarting application, app: '" + app.getSelectedApp().getObjectPath() + "'");
+        Log.d(TAG, "Restarting application, ConnectorApp: '" + app.getSelectedConnectorApp().getObjectPath() + "'");
 
         asyncTask = new AsyncTask<Void, Void, Void>() {
 
@@ -586,8 +586,8 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
                 try {
 
-                    ConnectorApplication connApp = app.getSelectedApp();
-                    restartStatus                = connApp.restart(sid);
+                    ConnectorApp connApp = app.getSelectedConnectorApp();
+                    restartStatus        = connApp.restart(sid);
                     Log.d(TAG, "The app: '" + connApp.getObjectPath() + "' has been restarted, status: '" +
                                     restartStatus + "'");
 
@@ -604,7 +604,8 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
                 if (gce != null || restartStatus == RestartStatus.GW_RESTART_APP_RC_INVALID) {
 
-                    Log.w(TAG, "Failed to restart the application: '" + app.getSelectedApp().getObjectPath() + "', restartStatus: '" + restartStatus + "'");
+                    Log.w(TAG, "Failed to restart the Connector App: '" + app.getSelectedConnectorApp().getObjectPath() +
+                               "', restartStatus: '" + restartStatus + "'");
 
                     showOkDialog("Error", "Failed to restart the application", "Ok", null);
                 }
@@ -615,7 +616,7 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
 
     /**
      * Triggers {@link Intent} to open the {@link AclManagementActivity}
-     * 
+     *
      * @param aclType
      *            {@link AclManagementActivity#ACTIVE_TYPE_ACL_CREATE} or
      *            {@link AclManagementActivity#ACTIVE_TYPE_ACL_UPDATE}
@@ -629,11 +630,11 @@ public class ConnectorApplicationActivity extends BaseActivity implements Applic
     }
 
     /**
-     * Show {@link ConnectorApplication} manifest
+     * Show {@link ConnectorApp} manifest
      */
     private void showManifest() {
 
-        Intent intent = new Intent(this, ConnectorApplicationManifestActivity.class);
+        Intent intent = new Intent(this, ConnectorAppCapabilitiesActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

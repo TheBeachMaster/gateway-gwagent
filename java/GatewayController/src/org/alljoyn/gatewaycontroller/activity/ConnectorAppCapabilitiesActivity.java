@@ -20,9 +20,9 @@ import java.lang.reflect.Method;
 
 import org.alljoyn.gatewaycontroller.CallbackMethod;
 import org.alljoyn.gatewaycontroller.R;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApp;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorCapabilities;
 import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
-import org.alljoyn.gatewaycontroller.sdk.ManifestRules;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -37,11 +37,11 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 /**
- * The activity presents the {@link ManifestRules} and the manifest file of a
- * {@link ConnectorApplication}.
+ * The activity presents the {@link ConnectorCapabilities} and the manifest file of a
+ * {@link ConnectorApp}.
  */
-public class ConnectorApplicationManifestActivity extends BaseActivity implements ActionBar.TabListener {
-    public static final String TAG = "gwcapp" + ConnectorApplicationManifestActivity.class.getSimpleName();
+public class ConnectorAppCapabilitiesActivity extends BaseActivity implements ActionBar.TabListener {
+    public static final String TAG = "gwcapp" + ConnectorAppCapabilitiesActivity.class.getSimpleName();
 
     /**
      * Loads the fragment of the selected tab
@@ -50,7 +50,7 @@ public class ConnectorApplicationManifestActivity extends BaseActivity implement
 
         /**
          * Constructor
-         * 
+         *
          * @param fragmentMgr
          */
         public SelectedPageAdapter(FragmentManager fragmentMgr) {
@@ -69,13 +69,13 @@ public class ConnectorApplicationManifestActivity extends BaseActivity implement
             switch (position) {
 
                 case RULES_TAB_INDEX: {
-    
-                    frg = ConnectorApplicationManifestRulesFragment.createInstance(manifestRules);
+
+                    frg = ConnectorAppCapabilitiesFragment.createInstance(connectorCapabilities);
                     break;
                 }
                 case FILE_TAB_INDEX: {
-    
-                    frg = ConnectorApplicationManifestFileFragment.createInstance(manifestFile);
+
+                    frg = ConnectorAppCapabilitiesFileFragment.createInstance(manifestFile);
                     break;
                 }
             }
@@ -141,15 +141,15 @@ public class ConnectorApplicationManifestActivity extends BaseActivity implement
     private String manifestFile;
 
     /**
-     * The {@link ManifestRules}
+     * The {@link ConnectorCapabilities}
      */
-    private ManifestRules manifestRules;
+    private ConnectorCapabilities connectorCapabilities;
 
     static {
 
         try {
 
-            Class<ConnectorApplicationManifestActivity> activClass = ConnectorApplicationManifestActivity.class;
+            Class<ConnectorAppCapabilitiesActivity> activClass = ConnectorAppCapabilitiesActivity.class;
             retrieveDataMethod = activClass.getDeclaredMethod("retrieveData");
         } catch (NoSuchMethodException nsme) {
             Log.wtf(TAG, "NoSuchMethodException", nsme);
@@ -182,22 +182,23 @@ public class ConnectorApplicationManifestActivity extends BaseActivity implement
      */
     @Override
     protected void onStart() {
-        
+
         super.onStart();
 
-        // Check existence of the selected gateway
-        if (app.getSelectedGateway() == null) {
+        // Check existence of the selected gateway app
+        if (app.getSelectedGatewayApp() == null) {
 
             Log.w(TAG, "Selected gateway has been lost, handling");
             handleLostOfGateway();
             return;
         }
 
-        setTitle(getString(R.string.title_activity_connector_manifest) + ": " + app.getSelectedApp().getFriendlyName());
+        setTitle(getString(R.string.title_activity_connector_manifest) + ": " +
+                 app.getSelectedConnectorApp().getFriendlyName());
 
         retrieveData();
     }
-    
+
     /**
      * @see org.alljoyn.gatewaycontroller.activity.BaseActivity#onStop()
      */
@@ -300,8 +301,8 @@ public class ConnectorApplicationManifestActivity extends BaseActivity implement
     }
 
     /**
-     * Retrieves the {@link ManifestRules} and the manifest file of the selected
-     * {@link ConnectorApplication}
+     * Retrieves the {@link ConnectorCapabilities} and the manifest file of the selected
+     * {@link ConnectorApp}
      */
     private void retrieveData() {
 
@@ -328,9 +329,9 @@ public class ConnectorApplicationManifestActivity extends BaseActivity implement
 
                 try {
 
-                    ConnectorApplication selApp = app.getSelectedApp();
-                    manifestFile                = selApp.retrieveManifestFile(sid);
-                    manifestRules               = selApp.retrieveManifestRules(sid);
+                    ConnectorApp selConnApp = app.getSelectedConnectorApp();
+                    manifestFile            = selConnApp.retrieveManifestFile(sid);
+                    connectorCapabilities   = selConnApp.retrieveConnectorCapabilities(sid);
                 } catch (GatewayControllerException gce) {
 
                     isOk = false;

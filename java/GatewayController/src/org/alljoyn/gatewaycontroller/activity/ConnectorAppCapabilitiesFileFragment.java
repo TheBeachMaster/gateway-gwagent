@@ -17,7 +17,6 @@
 package org.alljoyn.gatewaycontroller.activity;
 
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.sdk.ManifestRules;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -29,9 +28,9 @@ import android.widget.TextView;
 
 /**
  * The class presents the manifest file {@link Fragment} of the
- * {@link ConnectorApplicationManifestActivity}
+ * {@link ConnectorAppCapabilitiesActivity}
  */
-public class ConnectorApplicationManifestFileFragment extends Fragment {
+public class ConnectorAppCapabilitiesFileFragment extends Fragment {
 
     /**
      * Manifest text file {@link TextView}
@@ -41,26 +40,27 @@ public class ConnectorApplicationManifestFileFragment extends Fragment {
     /**
      * Manifest text file content
      */
-    private String text;
+    private String manifestTextContent;
 
     /**
      * Constructor
      */
-    public ConnectorApplicationManifestFileFragment() {
+    public ConnectorAppCapabilitiesFileFragment() {
     }
 
     /**
      * !!! IMPORTANT !!! Use this method to create the {@link Fragment} object
      * of this class.
-     * 
-     * @param rules
-     *            {@link ManifestRules}
-     * @return {@link ConnectorApplicationManifestRulesFragment}
+     *
+     * @param manifestTextContent
+     *            Manifest file content
+     *
+     * @return {@link ConnectorAppCapabilitiesFragment}
      */
-    public static ConnectorApplicationManifestFileFragment createInstance(String text) {
+    public static ConnectorAppCapabilitiesFileFragment createInstance(String manifestTextContent) {
 
-        ConnectorApplicationManifestFileFragment frg = new ConnectorApplicationManifestFileFragment();
-        frg.text = text;
+        ConnectorAppCapabilitiesFileFragment frg = new ConnectorAppCapabilitiesFileFragment();
+        frg.manifestTextContent = manifestTextContent;
 
         return frg;
     }
@@ -85,7 +85,7 @@ public class ConnectorApplicationManifestFileFragment extends Fragment {
         View frgView = inflater.inflate(R.layout.connector_manifest_file_fragment, container, false);
         manifestText = (TextView) frgView.findViewById(R.id.connectorAppManifestFile);
         manifestText.setMovementMethod(new ScrollingMovementMethod());
-        manifestText.setText(text);
+        manifestText.setText(manifestTextContent);
 
         return frgView;
     }

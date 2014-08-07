@@ -19,9 +19,9 @@ package org.alljoyn.gatewaycontroller.adapters;
 import java.util.List;
 
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.adapters.VisualManifestItem.ItemType;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
+import org.alljoyn.gatewaycontroller.adapters.VisualRuleItem.ItemType;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleInterface;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleObjectPath;
 
 import android.content.Context;
 import android.view.View;
@@ -29,9 +29,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Manages the list of {@link VisualManifestItem}
+ * Manages the list of {@link VisualRuleItem}
  */
-public class ManifestRulesAdapter extends VisualArrayAdapter {
+public class ConnectorCapabilitiesAdapter extends VisualArrayAdapter {
 
     static class ManifestItemView {
 
@@ -47,7 +47,7 @@ public class ManifestRulesAdapter extends VisualArrayAdapter {
      * 
      * @param context
      */
-    ManifestRulesAdapter(Context context) {
+    ConnectorCapabilitiesAdapter(Context context) {
 
         this(context, -1, null);
     }
@@ -59,7 +59,7 @@ public class ManifestRulesAdapter extends VisualArrayAdapter {
      * @param viewItemResId
      * @param itemsList
      */
-    public ManifestRulesAdapter(Context context, int viewItemResId, List<VisualItem> itemsList) {
+    public ConnectorCapabilitiesAdapter(Context context, int viewItemResId, List<VisualItem> itemsList) {
 
         super(context, viewItemResId, itemsList);
     }
@@ -74,7 +74,7 @@ public class ManifestRulesAdapter extends VisualArrayAdapter {
         View row = convertView;
         ManifestItemView manView;
 
-        final VisualManifestItem visItem = (VisualManifestItem) getItem(position);
+        final VisualRuleItem visItem = (VisualRuleItem) getItem(position);
 
         manView = new ManifestItemView();
 
@@ -104,11 +104,11 @@ public class ManifestRulesAdapter extends VisualArrayAdapter {
      * @param manView
      * @param visItem
      */
-    private void populateData(ManifestItemView manView, VisualManifestItem visItem) {
+    private void populateData(ManifestItemView manView, VisualRuleItem visItem) {
 
         if (visItem.getType() == ItemType.OBJECT_PATH) {
 
-            ConnAppObjectPath objPath = (ConnAppObjectPath) visItem.getVisualItem();
+            RuleObjectPath objPath = (RuleObjectPath) visItem.getVisualItem();
 
             manView.friendlyName.setText(objPath.getFriendlyName());
             manView.name.setText(objPath.getPath());
@@ -117,7 +117,7 @@ public class ManifestRulesAdapter extends VisualArrayAdapter {
             manView.boolState.setText(prefix);
         } else if (visItem.getType() == ItemType.INTERFACE) {
 
-            ConnAppInterface iface = (ConnAppInterface) visItem.getVisualItem();
+            RuleInterface iface = (RuleInterface) visItem.getVisualItem();
 
             manView.friendlyName.setText(iface.getFriendlyName());
             manView.name.setText(iface.getName());

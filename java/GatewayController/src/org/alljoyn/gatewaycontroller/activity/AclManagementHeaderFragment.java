@@ -18,8 +18,8 @@ package org.alljoyn.gatewaycontroller.activity;
 
 import org.alljoyn.gatewaycontroller.GWControllerSampleApplication;
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
+import org.alljoyn.gatewaycontroller.sdk.Acl;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApp;
 
 import android.app.Activity;
 import android.app.Application;
@@ -34,8 +34,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 /**
- * This fragment includes the {@link ConnectorApplication} name and the the name
- * of the selected {@link AccessControlList}
+ * This fragment includes the {@link ConnectorApp} name and the the name
+ * of the selected {@link Acl}
  */
 public class AclManagementHeaderFragment extends Fragment implements TextWatcher {
 
@@ -47,7 +47,7 @@ public class AclManagementHeaderFragment extends Fragment implements TextWatcher
 
         /**
          * The ACL name was changed.
-         * 
+         *
          * @param aclName
          *            The text content of the ACL name {@link EditText}
          */
@@ -62,17 +62,17 @@ public class AclManagementHeaderFragment extends Fragment implements TextWatcher
     private GWControllerSampleApplication app;
 
     /**
-     * The listener of the ACL name change eventss
+     * The listener of the ACL name change events
      */
     private AclNameListener listener;
 
     /**
-     * The name of the selected {@link ConnectorApplication}
+     * The name of the selected {@link ConnectorApp}
      */
-    private TextView appName;
+    private TextView connAppName;
 
     /**
-     * The name of the {@link AccessControlList} that is created or updated
+     * The name of the {@link Acl} that is created or updated
      */
     private EditText aclName;
 
@@ -95,12 +95,12 @@ public class AclManagementHeaderFragment extends Fragment implements TextWatcher
 
         View frgView = inflater.inflate(R.layout.acl_management_header_fragment, container, false);
 
-        appName = (TextView) frgView.findViewById(R.id.aclMgmtConnAppNameTv);
-        aclName = (EditText) frgView.findViewById(R.id.aclMgmtAclNameEt);
+        connAppName  = (TextView) frgView.findViewById(R.id.aclMgmtConnAppNameTv);
+        aclName      = (EditText) frgView.findViewById(R.id.aclMgmtAclNameEt);
 
-        appName.setText(app.getSelectedApp().getFriendlyName());
+        connAppName.setText(app.getSelectedConnectorApp().getFriendlyName());
 
-        AccessControlList acl = app.getSelectedAcl();
+        Acl acl = app.getSelectedAcl();
         if (acl != null) {
 
             aclName.setText(acl.getName());
@@ -137,7 +137,7 @@ public class AclManagementHeaderFragment extends Fragment implements TextWatcher
     }
 
     /**
-     * @return Return the {@link AccessControlList} name
+     * @return Return the {@link Acl} name
      */
     public String getAclName() {
 

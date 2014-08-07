@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.alljoyn.about.AboutService;
 import org.alljoyn.bus.Variant;
-import org.alljoyn.gatewaycontroller.sdk.DiscoveredApp;
+import org.alljoyn.gatewaycontroller.sdk.AnnouncedApp;
 import org.alljoyn.services.common.BusObjectDescription;
 
 /**
@@ -46,7 +46,7 @@ public class AnnouncementData {
     /**
      * The application data from this {@link AnnouncementData}
      */
-    private final DiscoveredApp app;
+    private final AnnouncedApp app;
 
     /**
      * Constructor
@@ -57,7 +57,7 @@ public class AnnouncementData {
      * @param app
      */
     AnnouncementData(short portNumber, BusObjectDescription[] objDescArr, Map<String, Variant> aboutData,
-                         DiscoveredApp app) {
+                         AnnouncedApp app) {
 
         this.portNumber = portNumber;
         this.objDescArr = objDescArr;
@@ -84,7 +84,7 @@ public class AnnouncementData {
      * @return The application data that is created based on the received with
      *         the Announcement AboutData
      */
-    public DiscoveredApp getApplicationData() {
+    public AnnouncedApp getApplicationData() {
         return app;
     }
 

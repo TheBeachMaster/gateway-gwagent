@@ -40,7 +40,7 @@ public interface AccessControlListIface {
 
     /**
      * Activate the ACL
-     * 
+     *
      * @return ACL Response Code
      * @throws BusException
      */
@@ -49,7 +49,7 @@ public interface AccessControlListIface {
 
     /**
      * Deactivate the ACL
-     * 
+     *
      * @return ACL Response Code
      * @throws BusException
      */
@@ -72,7 +72,7 @@ public interface AccessControlListIface {
 
     /**
      * Update the ACL
-     * 
+     *
      * @param aclName
      * @param exposedServices
      * @param remotedApps
@@ -86,24 +86,24 @@ public interface AccessControlListIface {
 
     /**
      * Update the ACL metadata
-     * 
+     *
      * @param metadata
      * @return ACL Response Code
      * @throws BusException
      */
-    @BusMethod(name = "UpdateAclMetaData", signature = "a{ss}", replySignature = "q")
-    public short updateAclMetaData(Map<String, String> metadata) throws BusException;
+    @BusMethod(name = "UpdateAclMetadata", signature = "a{ss}", replySignature = "q")
+    public short updateAclMetadata(Map<String, String> metadata) throws BusException;
 
     /**
      * Update ACL custom metadata
-     * 
+     *
      * @param metadata
      *            internal metadata
      * @return ACL Response Code
      * @throws BusException
      */
-    @BusMethod(name = "UpdateAclCustomMetaData", signature = "a{ss}", replySignature = "q")
-    public short updateAclCustomMetaData(Map<String, String> internalMetadata) throws BusException;
+    @BusMethod(name = "UpdateAclCustomMetadata", signature = "a{ss}", replySignature = "q")
+    public short updateAclCustomMetadata(Map<String, String> internalMetadata) throws BusException;
 
     /**
      * @return The version of this interface

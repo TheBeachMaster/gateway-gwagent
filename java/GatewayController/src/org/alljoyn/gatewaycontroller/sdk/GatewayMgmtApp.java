@@ -33,18 +33,18 @@ import android.util.Log;
 /**
  * The Gateway found on the network
  */
-public class Gateway extends DiscoveredApp {
-    private static final String TAG = "gwc" + Gateway.class.getSimpleName();
+public class GatewayMgmtApp extends AnnouncedApp {
+    private static final String TAG = "gwc" + GatewayMgmtApp.class.getSimpleName();
 
     /**
      * Constructor
-     * 
+     *
      * @param gwBusName
-     *            The name of the {@link BusAttachment} of the gateway
+     *            The name of the {@link BusAttachment} of the Gateway Management App
      * @throws IllegalArgumentException
      *             is thrown if bad arguments have been received
      */
-    public Gateway(String gwBusName) {
+    public GatewayMgmtApp(String gwBusName) {
 
         super(gwBusName, null, null, null, null);
 
@@ -55,16 +55,16 @@ public class Gateway extends DiscoveredApp {
 
     /**
      * Constructor
-     * 
+     *
      * @param gwBusName
-     *            The name of the {@link BusAttachment} of the gateway that sent
+     *            The name of the {@link BusAttachment} of the Gateway Management App that sent
      *            the Announcement
      * @param aboutData
      *            The data sent with the Announcement
      * @throws IllegalArgumentException
      *             is thrown if bad gwBusName has been received
      */
-    public Gateway(String gwBusName, Map<String, Variant> aboutData) {
+    public GatewayMgmtApp(String gwBusName, Map<String, Variant> aboutData) {
 
         super(gwBusName, aboutData);
 
@@ -85,23 +85,23 @@ public class Gateway extends DiscoveredApp {
     }
 
     /**
-     * Retrieve the list of applications installed on the gateway identified by
+     * Retrieve the list of Connector Applications managed by the Gateway Management App identified by
      * the given gwBusName
-     * 
+     *
      * @param sessionId
-     *            The id of the session established with the gateway
-     * @return The {@link ConnectorApplication}
+     *            The id of the session established with the Gateway Management App
+     * @return The {@link ConnectorApp}
      * @throws GatewayControllerException
      */
-    public List<ConnectorApplication> retrieveInstalledApps(int sessionId) throws GatewayControllerException {
+    public List<ConnectorApp> retrieveConnectorApps(int sessionId) throws GatewayControllerException {
 
         final String gwBusName = getBusName();
         BusAttachment bus      = GatewayController.getInstance().getBusAttachment();
 
-        ProxyBusObject proxy = bus.getProxyBusObject(getBusName(), "/gw", sessionId,
-                                                         new Class<?>[] { ApplicationManagement.class });
+        ProxyBusObject proxy   = bus.getProxyBusObject(getBusName(), "/gw", sessionId,
+                                                       new Class<?>[] { ApplicationManagement.class });
 
-        Log.d(TAG, "Retreiving list of the installed applications for the GW: '" + gwBusName + "'");
+        Log.d(TAG, "Retreiving list of the Connector Applications for the GW: '" + gwBusName + "'");
 
         ApplicationManagement appMng = proxy.getInterface(ApplicationManagement.class);
 
@@ -110,18 +110,18 @@ public class Gateway extends DiscoveredApp {
             appInfoArr = appMng.getInstalledApps();
         } catch (BusException be) {
 
-            Log.e(TAG, "Failed to retreive list of the installed applications for the GW: '" + gwBusName + "'");
+            Log.e(TAG, "Failed to retreive list of the Connector Applications for the GW: '" + gwBusName + "'");
 
-            throw new GatewayControllerException("Failed to retreive list of the installed applications, Error: '"
+            throw new GatewayControllerException("Failed to retreive list of the Connector Applications, Error: '"
                                                      + be.getMessage() + "'", be);
         }
 
-        List<ConnectorApplication> installedApps = new ArrayList<ConnectorApplication>(appInfoArr.length);
+        List<ConnectorApp> connectorApps = new ArrayList<ConnectorApp>(appInfoArr.length);
         for (InstalledAppInfoAJ appInfo : appInfoArr) {
 
-            installedApps.add(new ConnectorApplication(gwBusName, appInfo));
+            connectorApps.add(new ConnectorApp(gwBusName, appInfo));
         }
 
-        return installedApps;
+        return connectorApps;
     }
 }

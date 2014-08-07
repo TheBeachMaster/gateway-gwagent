@@ -27,14 +27,13 @@ import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ManifestObjectDescrip
  * This class stores object description provided with the manifest of the
  * Gateway Connector Application
  */
-public class ManifestObjectDescription {
+public class RuleObjectDescription {
 
     /**
      * This class represents an object path received with the
-     * {@link ManifestObjectDescription} supported by the Gateway Connector
-     * Application
+     * {@link RuleObjectDescription} supported by the Gateway Connector Application
      */
-    public static final class ConnAppObjectPath {
+    public static final class RuleObjectPath {
 
         /**
          * AllJoyn object identification
@@ -60,7 +59,7 @@ public class ManifestObjectDescription {
 
         /**
          * Constructor
-         * 
+         *
          * @param objectPath
          *            AllJoyn object identification
          * @param friendlyName
@@ -71,11 +70,11 @@ public class ManifestObjectDescription {
          *            path
          * @param isPrefixAllowed
          *            TRUE if the object path is allowed to be a prefix
-         *            according to the {@link ConnectorApplication} manifest
+         *            according to the {@link ConnectorApp} manifest
          * @throws IllegalArgumentException
          *             is thrown if bad arguments have been received
          */
-        public ConnAppObjectPath(String objectPath, String friendlyName, boolean isPrefix, boolean isPrefixAllowed) {
+        public RuleObjectPath(String objectPath, String friendlyName, boolean isPrefix, boolean isPrefixAllowed) {
 
             if (objectPath == null || objectPath.length() == 0) {
                 throw new IllegalArgumentException("objPath is undefined");
@@ -93,10 +92,10 @@ public class ManifestObjectDescription {
 
         /**
          * Constructor
-         * 
+         *
          * @param opInfo
          */
-        ConnAppObjectPath(ObjectPathInfoAJ opInfo) {
+        RuleObjectPath(ObjectPathInfoAJ opInfo) {
 
             objectPath   = opInfo.objectPath;
             friendlyName = opInfo.objectPathFriendlyName;
@@ -105,7 +104,7 @@ public class ManifestObjectDescription {
 
         /**
          * AllJoyn object identification
-         * 
+         *
          * @return The value of the object path
          */
         public String getPath() {
@@ -115,7 +114,7 @@ public class ManifestObjectDescription {
         /**
          * Returns the friendly name of the object path. This name may be
          * presented to the end user.
-         * 
+         *
          * @return Object path friendly name
          */
         public String getFriendlyName() {
@@ -131,7 +130,7 @@ public class ManifestObjectDescription {
 
         /**
          * Set whether this object path is a prefix
-         * 
+         *
          * @param isPrefix
          */
         public void setPrefix(boolean isPrefix) {
@@ -140,7 +139,7 @@ public class ManifestObjectDescription {
 
         /**
          * @return TRUE if the object path is allowed to be a prefix according
-         *         to the {@link ConnectorApplication} manifest
+         *         to the {@link ConnectorApp} manifest
          */
         public boolean isPrefixAllowed() {
             return isPrefixAllowed;
@@ -149,7 +148,7 @@ public class ManifestObjectDescription {
         /**
          * @param isPrefixAllowed
          *            Set whether the object path is allowed to be a prefix
-         *            according to the {@link ConnectorApplication} manifest
+         *            according to the {@link ConnectorApp} manifest
          */
         void setPrefixAllowed(boolean isPrefixAllowed) {
             this.isPrefixAllowed = isPrefixAllowed;
@@ -181,11 +180,11 @@ public class ManifestObjectDescription {
                 return true;
             }
 
-            if (!(obj instanceof ConnAppObjectPath)) {
+            if (!(obj instanceof RuleObjectPath)) {
                 return false;
             }
 
-            ConnAppObjectPath other = (ConnAppObjectPath) obj;
+            RuleObjectPath other = (RuleObjectPath) obj;
 
             if (isPrefix != other.isPrefix) {
                 return false;
@@ -207,7 +206,7 @@ public class ManifestObjectDescription {
          */
         @Override
         public String toString() {
-            return "OP [objectPath='" + objectPath + "', friendlyName='" + friendlyName + "', " + 
+            return "OP [objectPath='" + objectPath + "', friendlyName='" + friendlyName + "', " +
                        "isPrefix='" + isPrefix + "', isPrefixAllowed='" + isPrefixAllowed + "']";
         }
     }
@@ -216,10 +215,9 @@ public class ManifestObjectDescription {
 
     /**
      * This class represents an interface received with the
-     * {@link ManifestObjectDescription} supported by the Gateway Connector
-     * Application
+     * {@link RuleObjectDescription} supported by the Gateway Connector Application
      */
-    public static final class ConnAppInterface {
+    public static final class RuleInterface {
 
         /**
          * The interface name
@@ -243,7 +241,7 @@ public class ManifestObjectDescription {
 
         /**
          * Constructor
-         * 
+         *
          * @param name
          *            AllJoyn name of the interface
          * @param friendlyName
@@ -253,7 +251,7 @@ public class ManifestObjectDescription {
          * @throws IllegalArgumentException
          *             is thrown if bad arguments have been received
          */
-        public ConnAppInterface(String name, String friendlyName, boolean isSecured) {
+        public RuleInterface(String name, String friendlyName, boolean isSecured) {
 
             if (name == null || name.length() == 0) {
                 throw new IllegalArgumentException("name is undefined");
@@ -270,7 +268,7 @@ public class ManifestObjectDescription {
 
         /**
          * Constructor Initialize non secure interface
-         * 
+         *
          * @param name
          *            AllJoyn name of the interface
          * @param friendlyName
@@ -278,16 +276,16 @@ public class ManifestObjectDescription {
          * @throws IllegalArgumentException
          *             is thrown if bad arguments have been received
          */
-        public ConnAppInterface(String name, String friendlyName) {
+        public RuleInterface(String name, String friendlyName) {
             this(name, friendlyName, false);
         }
 
         /**
          * Constructor
-         * 
+         *
          * @param interfaceInfo
          */
-        ConnAppInterface(InterfaceInfoAJ interfaceInfo) {
+        RuleInterface(InterfaceInfoAJ interfaceInfo) {
 
             name         = interfaceInfo.interfaceName;
             friendlyName = interfaceInfo.friendlyName;
@@ -296,7 +294,7 @@ public class ManifestObjectDescription {
 
         /**
          * Returns a name of the interface.
-         * 
+         *
          * @return interface name
          */
         public String getName() {
@@ -306,7 +304,7 @@ public class ManifestObjectDescription {
         /**
          * Returns a friendly name of the interface. The friendly name may be
          * presented to the end user.
-         * 
+         *
          * @return Interface friendly name
          */
         public String getFriendlyName() {
@@ -336,9 +334,9 @@ public class ManifestObjectDescription {
         }
 
         /**
-         * Two {@link ConnAppInterface} objects are equal if they have the same
+         * Two {@link RuleInterface} objects are equal if they have the same
          * interface name
-         * 
+         *
          * @see java.lang.Object#equals(java.lang.Object)
          */
         @Override
@@ -348,12 +346,12 @@ public class ManifestObjectDescription {
                 return true;
             }
 
-            if (!(obj instanceof ConnAppInterface)) { // Check type correctness
+            if (!(obj instanceof RuleInterface)) { // Check type correctness
                                                       // and not null
                 return false;
             }
 
-            ConnAppInterface other = (ConnAppInterface) obj;
+            RuleInterface other = (RuleInterface) obj;
 
             if (name == null) {
 
@@ -372,7 +370,7 @@ public class ManifestObjectDescription {
          */
         @Override
         public String toString() {
-            return "Iface [name='" + name + "', friendlyName='" + friendlyName + "', isSecured='" 
+            return "Iface [name='" + name + "', friendlyName='" + friendlyName + "', isSecured='"
                         + isSecured + "']";
         }
     }
@@ -382,15 +380,15 @@ public class ManifestObjectDescription {
     /**
      * The object path supported by the Service Provider Application manifest
      */
-    private final ConnAppObjectPath objectPath;
+    private final RuleObjectPath objectPath;
 
     /**
      * The interfaces supported by the Service Provider Application manifest
      */
-    private final Set<ConnAppInterface> interfaces;
+    private final Set<RuleInterface> interfaces;
 
     /**
-     * The flag has TRUE if this {@link ManifestObjectDescription} is configured
+     * The flag has TRUE if this {@link RuleObjectDescription} is configured
      * to permit the object path and interfaces to be remoted by the Gateway
      * Connector Application
      */
@@ -398,7 +396,7 @@ public class ManifestObjectDescription {
 
     /**
      * Constructor
-     * 
+     *
      * @param objectPath
      *            AllJoyn object identification
      * @param interfaces
@@ -406,7 +404,7 @@ public class ManifestObjectDescription {
      * @throws IllegalArgumentException
      *             is thrown if bad arguments have been received
      */
-    public ManifestObjectDescription(ConnAppObjectPath objectPath, Set<ConnAppInterface> interfaces) {
+    public RuleObjectDescription(RuleObjectPath objectPath, Set<RuleInterface> interfaces) {
 
         if (objectPath == null) {
             throw new IllegalArgumentException("objectPath is undefined");
@@ -422,19 +420,19 @@ public class ManifestObjectDescription {
 
     /**
      * Constructor
-     * 
+     *
      * @param objectPath
      *            AllJoyn object identification
      * @param interfaces
      *            Set of the interfaces related to the given object path
      * @param configured
-     *            Set TRUE to permit this {@link ManifestObjectDescription}
+     *            Set TRUE to permit this {@link RuleObjectDescription}
      *            object path and interfaces to be remoted by the Gateway
      *            Connector Application
      * @throws IllegalArgumentException
      *             is thrown if bad arguments have been received
      */
-    public ManifestObjectDescription(ConnAppObjectPath objectPath, Set<ConnAppInterface> interfaces, boolean configured) {
+    public RuleObjectDescription(RuleObjectPath objectPath, Set<RuleInterface> interfaces, boolean configured) {
 
         this(objectPath, interfaces);
         this.isConfigured = configured;
@@ -442,42 +440,42 @@ public class ManifestObjectDescription {
 
     /**
      * Create the object from the {@link ManifestObjectDescriptionInfoAJ}
-     * 
+     *
      * @param objDescInfo
      */
-    ManifestObjectDescription(ManifestObjectDescriptionInfoAJ objDescInfo) {
+    RuleObjectDescription(ManifestObjectDescriptionInfoAJ objDescInfo) {
 
-        objectPath = new ConnAppObjectPath(objDescInfo.objPathInfo);
-        interfaces = new HashSet<ManifestObjectDescription.ConnAppInterface>(objDescInfo.interfaces.length);
+        objectPath = new RuleObjectPath(objDescInfo.objPathInfo);
+        interfaces = new HashSet<RuleObjectDescription.RuleInterface>(objDescInfo.interfaces.length);
 
         for (InterfaceInfoAJ ifaceInfoAJ : objDescInfo.interfaces) {
-            interfaces.add(new ConnAppInterface(ifaceInfoAJ));
+            interfaces.add(new RuleInterface(ifaceInfoAJ));
         }
     }
 
     /**
-     * The object path supported by the Service Provider Application manifest
-     * 
+     * The object path supported by the {@link ConnectorApp} capabilities
+     *
      * @return Object path
      */
-    public ConnAppObjectPath getObjectPath() {
+    public RuleObjectPath getObjectPath() {
         return objectPath;
     }
 
     /**
-     * The interfaces supported by the Service Provider Application manifest
-     * 
-     * @return Set of the {@link ConnAppInterface} objects
+     * The interfaces supported by the {@link ConnectorApp} capabilities
+     *
+     * @return Set of the {@link RuleInterface} objects
      */
-    public Set<ConnAppInterface> getInterfaces() {
+    public Set<RuleInterface> getInterfaces() {
         return interfaces;
     }
 
     /**
-     * The flag has TRUE if this {@link ManifestObjectDescription} is configured
+     * The flag has TRUE if this {@link RuleObjectDescription} is configured
      * to permit the object path and interfaces to be remoted by the Gateway
      * Connector Application
-     * 
+     *
      * @return configured state
      */
     public boolean isConfigured() {
@@ -485,9 +483,9 @@ public class ManifestObjectDescription {
     }
 
     /**
-     * Set TRUE to permit this {@link ManifestObjectDescription} object path and
+     * Set TRUE to permit this {@link RuleObjectDescription} object path and
      * interfaces to be remoted by the Gateway Connector Application
-     * 
+     *
      * @param configured
      */
     public void setConfigured(boolean configured) {

@@ -28,10 +28,10 @@ import java.util.concurrent.Executors;
 import org.alljoyn.about.AboutService;
 import org.alljoyn.about.AboutServiceImpl;
 import org.alljoyn.bus.Variant;
-import org.alljoyn.gatewaycontroller.sdk.DiscoveredApp;
-import org.alljoyn.gatewaycontroller.sdk.Gateway;
+import org.alljoyn.gatewaycontroller.sdk.AnnouncedApp;
 import org.alljoyn.gatewaycontroller.sdk.GatewayController;
-import org.alljoyn.gatewaycontroller.sdk.GatewayListChangedHandler;
+import org.alljoyn.gatewaycontroller.sdk.GatewayMgmtApp;
+import org.alljoyn.gatewaycontroller.sdk.GatewayMgmtAppListener;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
 import org.alljoyn.services.common.AnnouncementHandler;
 import org.alljoyn.services.common.BusObjectDescription;
@@ -52,28 +52,28 @@ public class AnnouncementManager implements AnnouncementHandler {
 
     /**
      * Received announcements of the devices in proximity The key is built by:
-     * {@link DiscoveredApp#getKey()}
+     * {@link AnnouncedApp#getKey()}
      */
     private Map<String, AnnouncementData> appAnnouncements;
 
     /**
-     * Received announcements of the gateways in proximity The key is built by:
-     * {@link DiscoveredApp#getKey()}
+     * Received announcements of the gateway management apps in proximity.
+     * The key is created by: {@link AnnouncedApp#getKey()}
      */
-    private Map<String, Gateway> gatewayApps;
+    private Map<String, GatewayMgmtApp> gatewayApps;
 
     /**
-     * Listener for the gateway list changes
+     * Listeners for the announcements from the Gateway Management apps
      */
-    private GatewayListChangedHandler gwChangedListener;
+    private GatewayMgmtAppListener gwMgtmAppListener;
 
     /**
      * Constructor
      */
     public AnnouncementManager() {
 
-        appAnnouncements = new HashMap<String, AnnouncementData>();
-        gatewayApps = new HashMap<String, Gateway>();
+        appAnnouncements    = new HashMap<String, AnnouncementData>();
+        gatewayApps         = new HashMap<String, GatewayMgmtApp>();
         announceTaskHandler = Executors.newSingleThreadExecutor();
 
         // Gateway Controller needs to receive Announcement signals with all
@@ -106,22 +106,22 @@ public class AnnouncementManager implements AnnouncementHandler {
     }
 
     /**
-     * Provide {@link GatewayListChangedHandler} to be notified about changes in
-     * the received announcements
-     * 
+     * Provide {@link GatewayMgmtAppListener} to be notified about Announcement signals
+     * received from a {@link GatewayMgmtApp}.
+     *
      * @param listener
-     *            {@link GatewayListChangedHandler}
+     *            {@link GatewayMgmtAppListener}
      */
-    public void setGatewayChangedListener(GatewayListChangedHandler listener) {
-        this.gwChangedListener = listener;
+    public void setGatewayMgmtAppListener(GatewayMgmtAppListener listener) {
+        this.gwMgtmAppListener = listener;
     }
 
     /**
-     * @return List of the gateways found on the network
+     * @return List of the Gateway Management Apps found on the network
      */
-    public List<Gateway> getGateways() {
+    public List<GatewayMgmtApp> getGateways() {
 
-        return new ArrayList<Gateway>(gatewayApps.values());
+        return new ArrayList<GatewayMgmtApp>(gatewayApps.values());
     }
 
     /**
@@ -135,7 +135,7 @@ public class AnnouncementManager implements AnnouncementHandler {
     /**
      * Returns {@link AnnouncementData} of the given device and the application
      * that has sent the Announcement
-     * 
+     *
      * @param deviceId
      *            The id of the device that sent the Announcement
      * @param appId
@@ -154,8 +154,8 @@ public class AnnouncementManager implements AnnouncementHandler {
      *      java.util.Map)
      */
     @Override
-    public void onAnnouncement(final String busName, final short port, 
-                                   final BusObjectDescription[] objectDescriptions, 
+    public void onAnnouncement(final String busName, final short port,
+                                   final BusObjectDescription[] objectDescriptions,
                                        final Map<String, Variant> aboutData) {
 
         Log.d(TAG, "Received Announcement from: '" + busName + "' enqueueing");
@@ -184,7 +184,7 @@ public class AnnouncementManager implements AnnouncementHandler {
 
     /**
      * Handles asynchronously the received Announcement
-     * 
+     *
      * @param busName
      * @param port
      * @param objectDescriptions
@@ -194,18 +194,18 @@ public class AnnouncementManager implements AnnouncementHandler {
 
         Log.d(TAG, "Received announcement from: '" + busName + "', handling");
 
-        // Received announcement from a gateway
+        // Received announcement from a Gateway Management App
         if (isFromGW(objectDescriptions)) {
 
-            Log.d(TAG, "Received Announcement from Gateway, bus: '" + busName + "', storing");
+            Log.d(TAG, "Received Announcement from Gateway Management App, bus: '" + busName + "', storing");
 
-            Gateway gw;
+            GatewayMgmtApp gw;
 
             try {
-                gw = new Gateway(busName, aboutData);
+                gw = new GatewayMgmtApp(busName, aboutData);
             } catch (IllegalArgumentException ilae) {
 
-                Log.e(TAG, "Received announcement from gateway, but failed to create the Gateway object", ilae);
+                Log.e(TAG, "Received announcement from Gateway Management App, but failed to create the GatewayMgmt object", ilae);
                 return;
             }
 
@@ -213,14 +213,14 @@ public class AnnouncementManager implements AnnouncementHandler {
 
             gatewayApps.put(key, gw);
 
-            if (gwChangedListener != null) {
-                gwChangedListener.gatewayChanged(); // Notify -> There was a change in the gateway list
+            if (gwMgtmAppListener != null) {
+                gwMgtmAppListener.gatewayMgmtAppAnnounced(); // Received Announcement from Gateway -> Notify
             }
 
             return;
         }
 
-        DiscoveredApp app = new DiscoveredApp(busName, aboutData);
+        AnnouncedApp app  = new AnnouncedApp(busName, aboutData);
 
         UUID appId        = app.getAppId();
         String deviceId   = app.getDeviceId();
@@ -244,7 +244,7 @@ public class AnnouncementManager implements AnnouncementHandler {
 
     /**
      * Handles asynchronously received lostAdvertisedName event
-     * 
+     *
      * @param busName
      */
     private void handleDeviceLost(String busName) {
@@ -252,15 +252,15 @@ public class AnnouncementManager implements AnnouncementHandler {
         handleDeviceLostApps(busName);
         boolean gwRemoved = handleDeviceLostGateway(busName);
 
-        if (gwChangedListener != null && gwRemoved) {
-            gwChangedListener.gatewayChanged();
+        if (gwMgtmAppListener != null && gwRemoved) {
+            gwMgtmAppListener.gatewayMgmtAppAnnounced();
         }
     }
 
     /**
      * Search the application by the given busName to be removed from the
      * appAnnouncements
-     * 
+     *
      * @param busName
      * @return TRUE if an application was removed
      */
@@ -280,20 +280,20 @@ public class AnnouncementManager implements AnnouncementHandler {
     }
 
     /**
-     * Search the Gateway by the given busName to be removed from the
+     * Search the Gateway App by the given busName to be removed from the
      * gatewayApps
-     * 
+     *
      * @param busName
      * @return TRUE if a gateway was removed
      */
     private boolean handleDeviceLostGateway(String busName) {
 
         boolean gwRemoved = false;
-        Iterator<Gateway> iterator = gatewayApps.values().iterator();
+        Iterator<GatewayMgmtApp> iterator = gatewayApps.values().iterator();
 
         while (iterator.hasNext()) {
 
-            Gateway gw = iterator.next();
+            GatewayMgmtApp gw = iterator.next();
             if (gw.getBusName().equals(busName)) {
 
                 Log.d(TAG, "lostAdvertisedName for GW, removed: '" + busName + "'");
@@ -311,7 +311,7 @@ public class AnnouncementManager implements AnnouncementHandler {
      */
     private boolean isFromGW(BusObjectDescription[] objectDescriptions) {
 
-        // Check whether the announcement was sent from a Gateway
+        // Check whether the announcement was sent from a Gateway Management App
         for (BusObjectDescription objDesc : objectDescriptions) {
 
             for (String iface : objDesc.getInterfaces()) {

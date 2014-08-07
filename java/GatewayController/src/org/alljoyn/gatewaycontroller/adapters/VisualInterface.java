@@ -16,22 +16,22 @@
 
 package org.alljoyn.gatewaycontroller.adapters;
 
-import org.alljoyn.gatewaycontroller.sdk.AccessRules;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
+import org.alljoyn.gatewaycontroller.sdk.AclRules;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleInterface;
 
 /**
- * Visualization of the {@link ConnAppInterface}
+ * Visualization of the {@link RuleInterface}
  */
 public final class VisualInterface {
 
     /**
-     * Reference to the {@link ConnAppInterface} object
+     * Reference to the {@link RuleInterface} object
      */
-    private ConnAppInterface iface;
+    private RuleInterface iface;
 
     /**
      * Gets TRUE if the interface is selected to be part of the
-     * {@link AccessRules}
+     * {@link AclRules}
      */
     private boolean isConfigured;
 
@@ -41,7 +41,7 @@ public final class VisualInterface {
      * @param iface
      * @param isConfigured
      */
-    public VisualInterface(ConnAppInterface iface) {
+    public VisualInterface(RuleInterface iface) {
 
         this.iface = iface;
     }
@@ -62,9 +62,9 @@ public final class VisualInterface {
     }
 
     /**
-     * @return Return the wrapped {@link ConnAppInterface} object
+     * @return Return the wrapped {@link RuleInterface} object
      */
-    public ConnAppInterface getIface() {
+    public RuleInterface getIface() {
         return iface;
     }
 

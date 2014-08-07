@@ -23,8 +23,8 @@ import org.alljoyn.gatewaycontroller.R;
 import org.alljoyn.gatewaycontroller.adapters.DiscoveredGatewaysAdapter;
 import org.alljoyn.gatewaycontroller.adapters.VisualGateway;
 import org.alljoyn.gatewaycontroller.adapters.VisualItem;
-import org.alljoyn.gatewaycontroller.sdk.Gateway;
 import org.alljoyn.gatewaycontroller.sdk.GatewayController;
+import org.alljoyn.gatewaycontroller.sdk.GatewayMgmtApp;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -81,10 +81,10 @@ public class DiscoveredGatewaysActivity extends BaseActivity implements OnItemCl
     }
 
     /**
-     * @see org.alljoyn.gatewaycontroller.activity.BaseActivity#onGatewayListChanged()
+     * @see org.alljoyn.gatewaycontroller.activity.BaseActivity#onGatewayMgmtAnnounced()
      */
     @Override
-    protected void onGatewayListChanged() {
+    protected void onGatewayMgmtAppAnnounced() {
         retrieveGateways();
     }
 
@@ -93,14 +93,14 @@ public class DiscoveredGatewaysActivity extends BaseActivity implements OnItemCl
      */
     private void retrieveGateways() {
 
-        List<Gateway> gateways = GatewayController.getInstance().getGateways();
+        List<GatewayMgmtApp> gatewayApps = GatewayController.getInstance().getGatewayMgmtApps();
 
         adapter.clear();
-        for (Gateway gw : gateways) {
+        for (GatewayMgmtApp gw : gatewayApps) {
             adapter.add(new VisualGateway(gw));
         }
 
-        Log.d(TAG, "Found gateways: '" + gateways + "'");
+        Log.d(TAG, "Found gateways: '" + gatewayApps + "'");
         adapter.notifyDataSetChanged();
     }
 
@@ -113,7 +113,7 @@ public class DiscoveredGatewaysActivity extends BaseActivity implements OnItemCl
 
         VisualGateway vg = (VisualGateway) this.adapter.getItem(position);
 
-        app.setSelectedGateway(vg.getGateway());
+        app.setSelectedGatewayApp(vg.getGateway());
 
         // If we have an old session, we need to close it when selecting a new gateway
         app.leaveSession();

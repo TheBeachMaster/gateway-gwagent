@@ -23,17 +23,17 @@ import java.util.UUID;
  * The application that may be reached by the Gateway Connector Application via
  * the configured interfaces and object paths
  */
-public class RemotedApp extends DiscoveredApp {
+public class RemotedApp extends AnnouncedApp {
 
     /**
      * Configuration of the object paths and interfaces that are used by the
      * Gateway Connector Application to reach this remoted application
      */
-    private final List<ManifestObjectDescription> objDescRules;
+    private final List<RuleObjectDescription> ruleObjDescriptions;
 
     /**
      * Constructor
-     * 
+     *
      * @param appName
      *            The name of the application
      * @param appId
@@ -42,14 +42,13 @@ public class RemotedApp extends DiscoveredApp {
      *            The name of the device
      * @param deviceId
      *            The device id
-     * @param objDescRules
-     *            object path and interfaces that are used for
-     *            {@link AccessRules} creation
+     * @param ruleObjDescriptions
+     *            object path and interfaces that are used for {@link AclRules} creation
      * @throws IllegalArgumentException
      *             If bad arguments have been received
      */
     public RemotedApp(String appName, UUID appId, String deviceName, String deviceId,
-                          List<ManifestObjectDescription> objDescRules) {
+                          List<RuleObjectDescription> ruleObjDescriptions) {
 
         super(null, appName, appId, deviceName, deviceId);
 
@@ -69,39 +68,38 @@ public class RemotedApp extends DiscoveredApp {
             throw new IllegalArgumentException("AppName is undefined");
         }
 
-        if (objDescRules == null) {
-            throw new IllegalArgumentException("objDescRules is undefined");
+        if (ruleObjDescriptions == null) {
+            throw new IllegalArgumentException("ruleObjDescriptions is undefined");
         }
 
-        this.objDescRules = objDescRules;
+        this.ruleObjDescriptions = ruleObjDescriptions;
     }
 
     /**
      * Constructor
-     * 
+     *
      * @param discoveredApp
-     *            The {@link DiscoveredApp} to be used to build this
+     *            The {@link AnnouncedApp} to be used to build this
      *            {@link RemotedApp}
-     * @param objDescRules
-     *            object path and interfaces that are used for
-     *            {@link AccessRules} creation
+     * @param ruleObjDescriptions
+     *            object path and interfaces that are used for {@link AclRules} creation
      * @throws IllegalArgumentException
      *             If bad arguments have been received
      */
-    public RemotedApp(DiscoveredApp discoveredApp, List<ManifestObjectDescription> objDescRules) {
+    public RemotedApp(AnnouncedApp discoveredApp, List<RuleObjectDescription> ruleObjDescriptions) {
 
-        this(discoveredApp.getAppName(), discoveredApp.getAppId(), discoveredApp.getDeviceName(), 
-                discoveredApp.getDeviceId(), objDescRules);
+        this(discoveredApp.getAppName(), discoveredApp.getAppId(), discoveredApp.getDeviceName(),
+                discoveredApp.getDeviceId(), ruleObjDescriptions);
     }
 
     /**
      * Configuration of the object paths and interfaces that are used by the
      * Gateway Connector Application to reach this remoted application
-     * 
-     * @return List of {@link ManifestObjectDescription} objects
+     *
+     * @return List of {@link RuleObjectDescription}
      */
-    public List<ManifestObjectDescription> getObjDescRules() {
-        return objDescRules;
+    public List<RuleObjectDescription> getRuleObjectDescriptions() {
+        return ruleObjDescriptions;
     }
 
     /**

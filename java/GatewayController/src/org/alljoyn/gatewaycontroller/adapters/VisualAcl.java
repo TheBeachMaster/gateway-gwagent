@@ -16,19 +16,19 @@
 
 package org.alljoyn.gatewaycontroller.adapters;
 
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList.AclStatus;
+import org.alljoyn.gatewaycontroller.sdk.Acl;
+import org.alljoyn.gatewaycontroller.sdk.Acl.AclStatus;
 
 /**
- * {@link AccessControlList} to be visualized by the
- * {@link ConnectorApplicationAclsAdapter}
+ * {@link Acl} to be visualized by the
+ * {@link ConnectorAppAclsAdapter}
  */
 public class VisualAcl implements VisualItem {
 
     /**
-     * {@link AccessControlList}
+     * {@link Acl}
      */
-    private AccessControlList acl;
+    private Acl acl;
 
     /**
      * The acl status
@@ -40,16 +40,16 @@ public class VisualAcl implements VisualItem {
      * 
      * @param acl
      */
-    public VisualAcl(AccessControlList acl) {
+    public VisualAcl(Acl acl) {
 
         this.acl = acl;
         updateActivityStatus();
     }
 
     /**
-     * @return {@link AccessControlList}
+     * @return {@link Acl}
      */
-    public AccessControlList getAcl() {
+    public Acl getAcl() {
         return acl;
     }
 

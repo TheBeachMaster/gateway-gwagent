@@ -21,12 +21,12 @@ import java.util.List;
 
 import org.alljoyn.gatewaycontroller.R;
 import org.alljoyn.gatewaycontroller.adapters.ConnectorAppsAdapter;
+import org.alljoyn.gatewaycontroller.adapters.VisualConnectorApp;
 import org.alljoyn.gatewaycontroller.adapters.VisualItem;
-import org.alljoyn.gatewaycontroller.adapters.VisualConnectorApplication;
-import org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatusSignalHandler;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApp;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus;
 import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -40,7 +40,7 @@ import android.widget.TextView;
 /**
  * Gateway Connector Application activity
  */
-public class ConnectorAppsActivity extends BaseActivity implements OnClickListener, ApplicationStatusSignalHandler {
+public class ConnectorAppsActivity extends BaseActivity implements OnClickListener, ConnectorAppStatusSignalHandler {
 
     private static final String TAG = "gwcapp" + ConnectorAppsActivity.class.getSimpleName();
 
@@ -86,16 +86,16 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
 
         super.onStart();
 
-        // Check existence of the selected gateway
-        if (app.getSelectedGateway() == null) {
+        // Check existence of the selected gateway app
+        if (app.getSelectedGatewayApp() == null) {
 
-            Log.w(TAG, "Selected gateway has been lost, handling");
+            Log.w(TAG, "Selected gateway app has been lost, handling");
             handleLostOfGateway();
             return;
         }
 
         gwNameTv     = (TextView) findViewById(R.id.gwNameTv);
-        gwNameTv.setText(app.getSelectedGateway().getAppName());
+        gwNameTv.setText(app.getSelectedGatewayApp().getAppName());
 
         adapter      = new ConnectorAppsAdapter(this, R.layout.connector_app_item, new ArrayList<VisualItem>());
         connListView = (ListView) findViewById(R.id.connectorAppsLv);
@@ -128,11 +128,11 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
         Log.d(TAG, "Cleaning applications");
         for (VisualItem vItem : adapter.getItemsList()) {
 
-            VisualConnectorApplication vApp = (VisualConnectorApplication) vItem;
+            VisualConnectorApp vConnectorApp = (VisualConnectorApp) vItem;
 
-            if (vApp.getApp() != app.getSelectedApp()) {
+            if (vConnectorApp.getApp() != app.getSelectedConnectorApp()) {
 
-                vApp.clear();
+                vConnectorApp.clear();
             }
 
         }
@@ -167,15 +167,15 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
     }
 
     /**
-     * @see org.alljoyn.gatewaycontroller.activity.BaseActivity#onGatewayListChanged()
+     * @see org.alljoyn.gatewaycontroller.activity.BaseActivity#onGatewayMgmtAnnounced()
      */
     @Override
-    protected void onGatewayListChanged() {
+    protected void onGatewayMgmtAppAnnounced() {
 
-        super.onGatewayListChanged();
+        super.onGatewayMgmtAppAnnounced();
 
-        // Check that my Gateway wasn't lost because of the GatewayListChanged
-        if (app.getSelectedGateway() == null) {
+        // Check that my Gateway Management App wasn't lost because of the GatewayMgmtAppAnnounced
+        if (app.getSelectedGatewayApp() == null) {
 
             return;
         }
@@ -194,14 +194,14 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
     }
 
     /**
-     * Search for the {@link ConnectorApplication} with the given appId and
+     * Search for the {@link ConnectorApp} with the given appId and
      * update its status
-     * 
-     * @see org.alljoyn.gatewaycontroller.sdk.ApplicationStatusSignalHandler#onStatusChanged(java.lang.String,
-     *      org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus)
+     *
+     * @see org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatusSignalHandler#onStatusChanged(java.lang.String,
+     *      org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus)
      */
     @Override
-    public void onStatusChanged(final String appId, final ConnectorApplicationStatus status) {
+    public void onStatusChanged(final String appId, final ConnectorAppStatus status) {
 
         asyncTask = new AsyncTask<Void, Void, String>() {
 
@@ -212,7 +212,7 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
 
                 for (VisualItem vItem : adapter.getItemsList()) {
 
-                    VisualConnectorApplication vApp = (VisualConnectorApplication) vItem;
+                    VisualConnectorApp vApp = (VisualConnectorApp) vItem;
 
                     if (!vApp.getApp().getAppId().equals(appId)) {
                         continue;
@@ -248,14 +248,14 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
         }
 
         // Check if there is previously selected app, then clean its resources
-        ConnectorApplication prevSelApp = app.getSelectedApp();
-        if (prevSelApp != null) {
+        ConnectorApp prevSelConnApp = app.getSelectedConnectorApp();
+        if (prevSelConnApp != null) {
 
-            prevSelApp.clear();
-            prevSelApp = null;
+            prevSelConnApp.clear();
+            prevSelConnApp = null;
         }
 
-        app.setSelectedApp(null);
+        app.setSelectedConnectorApp(null);
         adapter.clear();
         showProgressDialog("Retrieving applications");
 
@@ -285,15 +285,15 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
 
     /**
      * The method is executed on the {@link AsyncTask} thread
-     * 
+     *
      * @return Error string
      */
     private String retrieveAppsAsyncTask(Integer sid) {
 
-        List<ConnectorApplication> connApps;
+        List<ConnectorApp> connApps;
 
         try {
-            connApps = app.getSelectedGateway().retrieveInstalledApps(sid);
+            connApps = app.getSelectedGatewayApp().retrieveConnectorApps(sid);
         } catch (GatewayControllerException gce) {
 
             Log.e(TAG, "Failed to retrieve the installed apps", gce);
@@ -303,16 +303,16 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
         boolean sigHandlerErr = false;
         boolean retrStatErr = false;
 
-        for (ConnectorApplication app : connApps) {
+        for (ConnectorApp app : connApps) {
 
             try {
-                app.setStatusChangedHandler(ConnectorAppsActivity.this);
+                app.setStatusSignalHandler(ConnectorAppsActivity.this);
             } catch (GatewayControllerException gce) {
                 Log.e(TAG, "Failed to register Status Change Handler", gce);
                 sigHandlerErr = true;
             }
 
-            ConnectorApplicationStatus status = null;
+            ConnectorAppStatus status = null;
 
             try {
                 status = app.retrieveStatus(sid);
@@ -322,7 +322,7 @@ public class ConnectorAppsActivity extends BaseActivity implements OnClickListen
             }
 
             Log.d(TAG, "Connector App: '" + app.getObjectPath() + "', Status: '" + status + "'");
-            adapter.add(new VisualConnectorApplication(app, status));
+            adapter.add(new VisualConnectorApp(app, status));
         }
 
         String retStr = "";

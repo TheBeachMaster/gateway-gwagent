@@ -18,7 +18,7 @@ package org.alljoyn.gatewaycontroller.activity;
 
 import org.alljoyn.gatewaycontroller.R;
 import org.alljoyn.gatewaycontroller.adapters.VisualAclConfigurableItem;
-import org.alljoyn.gatewaycontroller.sdk.AccessRules;
+import org.alljoyn.gatewaycontroller.sdk.AclRules;
 import org.alljoyn.gatewaycontroller.sdk.RemotedApp;
 
 import android.app.Fragment;
@@ -55,7 +55,7 @@ public class AclManagementConfDataFragment extends Fragment implements OnChecked
     private CheckBox allowAllChkBx;
 
     /**
-     * The {@link AccessRules} to be configured
+     * The {@link AclRules} to be configured
      */
     private ExpandableListView configureAclListView;
 

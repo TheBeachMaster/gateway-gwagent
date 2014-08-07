@@ -21,14 +21,14 @@ import org.alljoyn.bus.BusAttachment;
 import org.alljoyn.bus.SessionOpts;
 import org.alljoyn.bus.Status;
 import org.alljoyn.bus.alljoyn.DaemonInit;
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
-import org.alljoyn.gatewaycontroller.sdk.AccessRules;
-import org.alljoyn.gatewaycontroller.sdk.Gateway;
+import org.alljoyn.gatewaycontroller.sdk.Acl;
+import org.alljoyn.gatewaycontroller.sdk.AclRules;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApp;
 import org.alljoyn.gatewaycontroller.sdk.GatewayController;
 import org.alljoyn.gatewaycontroller.sdk.GatewayControllerException;
-import org.alljoyn.gatewaycontroller.sdk.GatewayListChangedHandler;
+import org.alljoyn.gatewaycontroller.sdk.GatewayMgmtApp;
+import org.alljoyn.gatewaycontroller.sdk.GatewayMgmtAppListener;
 import org.alljoyn.gatewaycontroller.sdk.RemotedApp;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil.SessionResult;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.GatewayControllerSessionListener;
 
@@ -40,7 +40,7 @@ import android.widget.Toast;
 /**
  * The {@link Application} main class
  */
-public class GWControllerSampleApplication extends Application implements GatewayListChangedHandler {
+public class GWControllerSampleApplication extends Application implements GatewayMgmtAppListener {
     private static final String TAG = "gwcapp" + GWControllerSampleApplication.class.getSimpleName();
 
     static {
@@ -122,19 +122,19 @@ public class GWControllerSampleApplication extends Application implements Gatewa
     private volatile Integer sessionId;
 
     /**
-     * Currently selected gateway
+     * Currently selected Gateway Management App
      */
-    private volatile Gateway selectedGateway;
+    private volatile GatewayMgmtApp selectedGatewayApp;
 
     /**
-     * Currently selected application
+     * Currently selected connector application
      */
-    private volatile ConnectorApplication selectedApp;
+    private volatile ConnectorApp selectedConnectorApp;
 
     /**
      * Currently selected ACL
      */
-    private volatile AccessControlList selectedAcl;
+    private volatile Acl selectedAcl;
 
     /**
      * @see android.app.Application#onCreate()
@@ -161,7 +161,7 @@ public class GWControllerSampleApplication extends Application implements Gatewa
             gwController.init(bus);
 
             // Register to receive events about changes in the gateway list
-            gwController.setGatewayListChangedHandler(this);
+            gwController.setAnnounceListener(this);
 
         } catch (GatewayControllerException gce) {
             Log.e(TAG, "Failed to connect a BusAttachment to the daemon, Error: '" + gce.getMessage() + "'");
@@ -174,7 +174,7 @@ public class GWControllerSampleApplication extends Application implements Gatewa
 
     /**
      * Provide the {@link AuthManager} with gateway passcode
-     * 
+     *
      * @param passcode
      */
     public void setGatewayPasscode(String passcode) {
@@ -194,13 +194,13 @@ public class GWControllerSampleApplication extends Application implements Gatewa
      */
     public void joinSession() {
 
-        if (selectedGateway == null) {
+        if (selectedGatewayApp == null) {
 
             Log.e(TAG, "Can't join session, no gateway is selected");
             return;
         }
 
-        gwController.joinSessionAsync(selectedGateway.getBusName(), new SessionListener());
+        gwController.joinSessionAsync(selectedGatewayApp.getBusName(), new SessionListener());
     }
 
     /**
@@ -224,41 +224,44 @@ public class GWControllerSampleApplication extends Application implements Gatewa
     }
 
     /**
-     * @return Currently selected {@link Gateway}
+     * @return Currently selected {@link GatewayMgmtApp}
      */
-    public Gateway getSelectedGateway() {
+    public GatewayMgmtApp getSelectedGatewayApp() {
 
-        return selectedGateway;
+        return selectedGatewayApp;
     }
 
     /**
-     * @param selectedGateway
-     *            Set the selected gateway
+     * @param selectedGatewayApp
+     *            Set the selected {@link GatewayMgmtApp}
      */
-    public void setSelectedGateway(Gateway selectedGateway) {
-        this.selectedGateway = selectedGateway;
+    public void setSelectedGatewayApp(GatewayMgmtApp selectedGatewayApp) {
+
+        this.selectedGatewayApp = selectedGatewayApp;
     }
 
     /**
-     * @return Currently selected {@link ConnectorApplication}
+     * @return Currently selected {@link ConnectorApp}
      */
-    public ConnectorApplication getSelectedApp() {
-        return selectedApp;
+    public ConnectorApp getSelectedConnectorApp() {
+
+        return selectedConnectorApp;
     }
 
     /**
-     * Set selected {@link ConnectorApplication}
-     * 
-     * @param selectedApp
+     * Set selected {@link ConnectorApp}
+     *
+     * @param selectedConnectorApp
      */
-    public void setSelectedApp(ConnectorApplication selectedApp) {
-        this.selectedApp = selectedApp;
+    public void setSelectedConnectorApp(ConnectorApp selectedConnectorApp) {
+
+        this.selectedConnectorApp = selectedConnectorApp;
     }
 
     /**
      * @return Currently selected ACL
      */
-    public AccessControlList getSelectedAcl() {
+    public Acl getSelectedAcl() {
         return selectedAcl;
     }
 
@@ -266,26 +269,26 @@ public class GWControllerSampleApplication extends Application implements Gatewa
      * @param selectedAcl
      *            Set selected ACL
      */
-    public void setSelectedAcl(AccessControlList selectedAcl) {
+    public void setSelectedAcl(Acl selectedAcl) {
         this.selectedAcl = selectedAcl;
     }
 
     /**
-     * @see org.alljoyn.gatewaycontroller.sdk.GatewayListChangedHandler#gatewayChanged()
+     * @see org.alljoyn.gatewaycontroller.sdk.GatewayMgmtAppListener#gatewayMgmtAppAnnounced()
      */
     @Override
-    public void gatewayChanged() {
+    public void gatewayMgmtAppAnnounced() {
 
-        Log.d(TAG, "Received gatewayChanged event, sending the Intent");
-        sendBroadcast(new Intent(GWControllerActions.GWC_GATEWAY_LIST_CHANGED.name()));
+        Log.d(TAG, "Received announcement from a GatewayManagementApp event, sending the Intent");
+        sendBroadcast(new Intent(GWControllerActions.GWC_GATEWAY_ANNOUNCE_RECEIVED.name()));
     }
 
     /**
-     * For debug print {@link AccessRules} to log
-     * 
+     * For debug print {@link AclRules} to log
+     *
      * @param rules
      */
-    public void printAccessRules(AccessRules rules) {
+    public void printAclRules(AclRules rules) {
 
         Log.v(TAG, "Exposed Services: " + rules.getExposedServices());
 
@@ -293,7 +296,7 @@ public class GWControllerSampleApplication extends Application implements Gatewa
 
         for (RemotedApp remApp : rules.getRemotedApps()) {
 
-            Log.v(TAG, "App: '" + remApp + "', ObjDesc: '" + remApp.getObjDescRules() + "'");
+            Log.v(TAG, "App: '" + remApp + "', ObjDesc: '" + remApp.getRuleObjectDescriptions() + "'");
             Log.v(TAG, "------------------------------------------------");
         }// for :: remotedApp
 
@@ -302,7 +305,7 @@ public class GWControllerSampleApplication extends Application implements Gatewa
 
     /**
      * Show the Android toast message
-     * 
+     *
      * @param msg
      */
     public void showToast(final String msg) {
@@ -312,7 +315,7 @@ public class GWControllerSampleApplication extends Application implements Gatewa
 
     /**
      * Performs all the preparation before starting the service
-     * 
+     *
      * @throws GatewayControllerException
      */
     private void prepareAJ() throws GatewayControllerException {
@@ -338,7 +341,7 @@ public class GWControllerSampleApplication extends Application implements Gatewa
 
     /**
      * Advertise the daemon so that the thin client can find it
-     * 
+     *
      * @param logger
      */
     private void advertiseDaemon() throws GatewayControllerException {

@@ -28,6 +28,6 @@ public enum GWControllerActions {
     GWC_SESSION_JOINED, GWC_SESSION_JOIN_FAILED,
 
     // Gateway actions
-    GWC_GATEWAY_LIST_CHANGED, ;
-
+    GWC_GATEWAY_ANNOUNCE_RECEIVED,
+    ;
 }

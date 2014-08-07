@@ -19,7 +19,7 @@ package org.alljoyn.gatewaycontroller.sdk;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleObjectPath;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ManifestObjectDescriptionAJ;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ManifestObjectDescriptionInfoAJ;
 import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ManifestRulesAJ;
@@ -27,62 +27,62 @@ import org.alljoyn.gatewaycontroller.sdk.managerinterfaces.ManifestRulesAJ;
 /**
  * The manifest rules of the Gateway Connector Application
  */
-public class ManifestRules {
+public class ConnectorCapabilities {
 
     /**
      * The interfaces that the Gateway Connector Application exposes to its
      * clients
      */
-    private final List<ManifestObjectDescription> exposedServices;
+    private final List<RuleObjectDescription> exposedServices;
 
     /**
      * The interfaces that the Gateway Connector Application allows to remote
      */
-    private final List<ManifestObjectDescription> remotedServices;
+    private final List<RuleObjectDescription> remotedServices;
 
     /**
      * Constructor
      * 
      * @param manifRulesAJ
      */
-    ManifestRules(ManifestRulesAJ manifRulesAJ) {
-        exposedServices = new ArrayList<ManifestObjectDescription>(manifRulesAJ.exposedServices.length);
-        remotedServices = new ArrayList<ManifestObjectDescription>(manifRulesAJ.remotedServices.length);
+    ConnectorCapabilities(ManifestRulesAJ manifRulesAJ) {
+        exposedServices = new ArrayList<RuleObjectDescription>(manifRulesAJ.exposedServices.length);
+        remotedServices = new ArrayList<RuleObjectDescription>(manifRulesAJ.remotedServices.length);
 
         convertList(manifRulesAJ.exposedServices, exposedServices);
         convertList(manifRulesAJ.remotedServices, remotedServices);
     }
 
     /**
-     * The {@link ManifestObjectDescription} objects that the Gateway Connector
+     * The {@link RuleObjectDescription} objects that the Gateway Connector
      * Application exposes to its clients
      * 
      * @return List of exposed services
      */
-    public List<ManifestObjectDescription> getExposedServices() {
+    public List<RuleObjectDescription> getExposedServices() {
         return exposedServices;
     }
 
     /**
-     * The {@link ManifestObjectDescription} objects that the Gateway Connector
+     * The {@link RuleObjectDescription} objects that the Gateway Connector
      * Application supports for being remoted
      * 
      * @return List of remoted interfaces
      */
-    public List<ManifestObjectDescription> getRemotedServices() {
+    public List<RuleObjectDescription> getRemotedServices() {
         return remotedServices;
     }
 
     /**
      * Converts {@link ManifestObjectDescriptionAJ} into
-     * {@link ManifestObjectDescription} and fills with it the given list
+     * {@link RuleObjectDescription} and fills with it the given list
      */
-    private void convertList(ManifestObjectDescriptionInfoAJ[] from, List<ManifestObjectDescription> to) {
+    private void convertList(ManifestObjectDescriptionInfoAJ[] from, List<RuleObjectDescription> to) {
 
         for (ManifestObjectDescriptionInfoAJ objDescInfoAJ : from) {
 
-            ManifestObjectDescription mod = new ManifestObjectDescription(objDescInfoAJ);
-            ConnAppObjectPath objPath = mod.getObjectPath();
+            RuleObjectDescription mod = new RuleObjectDescription(objDescInfoAJ);
+            RuleObjectPath objPath = mod.getObjectPath();
 
             // If manifest object path isPrefix true, then isAllowedObjectPath is TRUE
             objPath.setPrefixAllowed(objPath.isPrefix());

@@ -16,12 +16,12 @@
 
 package org.alljoyn.gatewaycontroller.sdk;
 
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList.AclResponseCode;
+import org.alljoyn.gatewaycontroller.sdk.Acl.AclResponseCode;
 
 /**
  * The class holds the {@link AclResponseCode} returned by the invocation of the
- * createAcl or updateAcl methods. In addition it holds the {@link AccessRules}
- * object with the rules that do not comply with the {@link ManifestRules}
+ * createAcl or updateAcl methods. In addition it holds the {@link AclRules}
+ * object with the rules that do not comply with the {@link ConnectorCapabilities}
  */
 public class AclWriteResponse {
 
@@ -41,9 +41,9 @@ public class AclWriteResponse {
     private final String objectPath;
 
     /**
-     * The rules that don't comply with the {@link ManifestRules}
+     * The rules that don't comply with the {@link ConnectorCapabilities}
      */
-    private final AccessRules invalidRules;
+    private final AclRules invalidRules;
 
     /**
      * Constructor
@@ -53,11 +53,11 @@ public class AclWriteResponse {
      * @param code
      *            {@link AclResponseCode}
      * @param invalidRules
-     *            {@link AccessRules}
+     *            {@link AclRules}
      * @param objPath
      *            Object path
      */
-    AclWriteResponse(String id, AclResponseCode code, AccessRules invalidRules, String objPath) {
+    AclWriteResponse(String id, AclResponseCode code, AclRules invalidRules, String objPath) {
 
         this.id             = id;
         this.code           = code;
@@ -80,14 +80,14 @@ public class AclWriteResponse {
     }
 
     /**
-     * @return {@link AccessRules} with the rules that don't comply with the {@link ManifestRules}
+     * @return {@link AclRules} with the rules that don't comply with the {@link ConnectorCapabilities}
      */
-    public AccessRules getInvalidRules() {
+    public AclRules getInvalidRules() {
         return invalidRules;
     }
 
     /**
-     * @return {@link AccessControlList} object path
+     * @return {@link Acl} object path
      */
     public String getObjectPath() {
         return objectPath;

@@ -22,8 +22,8 @@ import org.alljoyn.about.AboutServiceImpl;
 import org.alljoyn.bus.BusAttachment;
 import org.alljoyn.bus.Status;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
-import org.alljoyn.gatewaycontroller.sdk.ajcommunication.GatewayControllerSessionListener;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil.SessionResult;
+import org.alljoyn.gatewaycontroller.sdk.ajcommunication.GatewayControllerSessionListener;
 import org.alljoyn.gatewaycontroller.sdk.announcement.AnnouncementManager;
 
 import android.util.Log;
@@ -38,7 +38,7 @@ public class GatewayController {
     /**
      * Self reference for the {@link GatewayController} singleton
      */
-    private static GatewayController SELF = new GatewayController();
+    private static GatewayController SELF   = new GatewayController();
 
     /**
      * The prefix for all the gateway interface names
@@ -46,9 +46,9 @@ public class GatewayController {
     public static final String IFACE_PREFIX = "org.alljoyn.gwagent.ctrl";
 
     /**
-     * Port number to connect to a Gateway Configuration Manager
+     * Port number to connect to a Gateway Management App
      */
-    public static final short PORT_NUM = 1020;
+    public static final short PORT_NUM      = 1020;
 
     /**
      * The BusAttachment to be used
@@ -75,7 +75,7 @@ public class GatewayController {
 
     /**
      * Initialize the gateway controller
-     * 
+     *
      * @param bus
      *            {@link BusAttachment} to use
      * @throws IllegalStateException
@@ -125,13 +125,13 @@ public class GatewayController {
     }
 
     /**
-     * Join session synchronously with the given gateway identified by the
+     * Join session synchronously with the given Gateway Management App identified by the
      * gwBusName. This method doesn't require
      * {@link GatewayControllerSessionListener}. Use this method when there is
      * no need to receive any session related event.
-     * 
+     *
      * @param gwBusName
-     *            The bus name of the gateway to connect to.
+     *            The bus name of the Gateway Management App to connect to.
      * @return {@link SessionResult}
      * @throws IllegalArgumentException
      *             is thrown if bad arguments have been received
@@ -142,16 +142,16 @@ public class GatewayController {
             throw new IllegalArgumentException("The given gwBusName is undefined");
         }
 
-        Log.d(TAG, "Join session synchronously with the Gateway: '" + gwBusName + "'");
+        Log.d(TAG, "Join session synchronously with the Gateway Management App: '" + gwBusName + "'");
         return joinSession(gwBusName, new GatewayControllerSessionListener());
     }
 
     /**
      * Join session synchronously with the given gateway identified by the
      * gwBusName. The session related events will be sent to the given listener.
-     * 
+     *
      * @param gwBusName
-     *            The bus name of the gateway to connect to.
+     *            The bus name of the Gateway Management App to connect to.
      * @param listener
      *            The listener is used to be notified about the session related
      *            events
@@ -167,9 +167,9 @@ public class GatewayController {
 
     /**
      * Join session asynchronously with the given gwBusName.
-     * 
+     *
      * @param gwBusName
-     *            The bus name of the gateway to connect to.
+     *            The bus name of the Gateway Management App to connect to.
      * @param listener
      *            The listener is used to be notified about the session related
      *            events
@@ -180,13 +180,13 @@ public class GatewayController {
 
         checkSessionValidity(gwBusName, listener);
 
-        Log.d(TAG, "Join session asynchronously with the Gateway: '" + gwBusName + "'");
+        Log.d(TAG, "Join session asynchronously with the Gateway Management App: '" + gwBusName + "'");
         CommunicationUtil.joinSessionAsync(bus, gwBusName, listener);
     }
 
     /**
      * Disconnect the given session
-     * 
+     *
      * @param sessionId
      *            The session id to disconnect
      * @return Returns the leave session {@link Status}
@@ -198,17 +198,17 @@ public class GatewayController {
     }
 
     /**
-     * Set the {@link GatewayListChangedHandler} to be notified that the gateway
-     * list has been changed
-     * 
+     * Set the {@link GatewayMgmtAppListener} to be notified about the Announcement signals
+     * received from a {@link GatewayMgmtApp}
+     *
      * @param handler
-     *            {@link GatewayListChangedHandler}
+     *            {@link GatewayMgmtAppListener}
      * @throws IllegalArgumentException
      *             If the received handler is NULL
      * @throws IllegalStateException
      *             If the {@link GatewayController} hasn't been initialized
      */
-    public void setGatewayListChangedHandler(GatewayListChangedHandler handler) {
+    public void setAnnounceListener(GatewayMgmtAppListener handler) {
 
         if (handler == null) {
 
@@ -220,15 +220,15 @@ public class GatewayController {
             throw new IllegalStateException("GatewayController hasn't been initialized");
         }
 
-        announceManager.setGatewayChangedListener(handler);
+        announceManager.setGatewayMgmtAppListener(handler);
     }
 
     /**
-     * @return Returns list of {@link Gateway}s found on the network
-     * @throws If
-     *             the {@link GatewayController} hasn't been initialized
+     * @return Returns list of {@link GatewayMgmtApp}s found on the network
+     * @throws IllegalStateException
+     *          If the {@link GatewayController} hasn't been initialized
      */
-    public List<Gateway> getGateways() {
+    public List<GatewayMgmtApp> getGatewayMgmtApps() {
 
         if (announceManager == null) {
 
@@ -241,7 +241,7 @@ public class GatewayController {
     /**
      * Checks {@link BusAttachment} validity. It should be not null and
      * connected
-     * 
+     *
      * @throws IllegalStateException
      */
     private void checkBusValidity(BusAttachment bus) {
@@ -261,9 +261,9 @@ public class GatewayController {
 
     /**
      * Check validity of the received arguments
-     * 
+     *
      * @param gwBusName
-     *            Gateway bus name
+     *            The bus name of the Gateway Management App to connect to.
      * @param listener
      *            Session events listener
      * @throws IllegalArgumentException

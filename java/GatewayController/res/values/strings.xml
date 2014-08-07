@@ -50,7 +50,7 @@
     <string name="connector_acls_show_manifest_menu_lbl">Show Manifest</string>
     
     <string name="title_activity_connector_manifest">Manifest</string>
-    <string name="connector_app_manifest_rules">Manifest Rules</string>
+    <string name="connector_app_manifest_rules">Manifest Capabilities</string>
     <string name="connector_app_manifest_rules_exp_services_not_found">NO EXPOSED SERVICES FOUND</string>
     <string name="connector_app_manifest_rules_remoted_services">Remoted Services</string> <!-- Exposed Services are taken from acl_mgmt_exp_services_lbl -->
     <string name="connector_app_manifest_rules_remoted_services_not_found">NO REMOTED SERVICES FOUND</string>

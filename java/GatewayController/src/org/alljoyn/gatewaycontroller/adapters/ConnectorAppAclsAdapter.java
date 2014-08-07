@@ -19,8 +19,8 @@ package org.alljoyn.gatewaycontroller.adapters;
 import java.util.List;
 
 import org.alljoyn.gatewaycontroller.R;
-import org.alljoyn.gatewaycontroller.activity.ConnectorApplicationActivity;
-import org.alljoyn.gatewaycontroller.sdk.AccessControlList;
+import org.alljoyn.gatewaycontroller.activity.ConnectorAppActivity;
+import org.alljoyn.gatewaycontroller.sdk.Acl;
 
 import android.content.Context;
 import android.util.Log;
@@ -34,8 +34,8 @@ import android.widget.TextView;
 /**
  * Manages the list of {@link VisualAcl}s
  */
-public class ConnectorApplicationAclsAdapter extends VisualArrayAdapter {
-    private static String TAG = "gwcapp" + ConnectorApplicationAclsAdapter.class.getSimpleName();
+public class ConnectorAppAclsAdapter extends VisualArrayAdapter {
+    private static String TAG = "gwcapp" + ConnectorAppAclsAdapter.class.getSimpleName();
 
     static class AclView {
 
@@ -48,7 +48,7 @@ public class ConnectorApplicationAclsAdapter extends VisualArrayAdapter {
     /**
      * Constructor
      */
-    ConnectorApplicationAclsAdapter(Context context) {
+    ConnectorAppAclsAdapter(Context context) {
 
         this(context, -1, null);
     }
@@ -60,7 +60,7 @@ public class ConnectorApplicationAclsAdapter extends VisualArrayAdapter {
      * @param viewItemResId
      * @param itemsList
      */
-    public ConnectorApplicationAclsAdapter(Context context, int viewItemResId, List<VisualItem> itemsList) {
+    public ConnectorAppAclsAdapter(Context context, int viewItemResId, List<VisualItem> itemsList) {
 
         super(context, viewItemResId, itemsList);
     }
@@ -90,7 +90,7 @@ public class ConnectorApplicationAclsAdapter extends VisualArrayAdapter {
         }
 
         final VisualAcl visualAcl   = (VisualAcl) getItem(position);
-        final AccessControlList acl = visualAcl.getAcl();
+        final Acl acl = visualAcl.getAcl();
 
         aclView.aclName.setText(acl.getName());
 
@@ -105,7 +105,7 @@ public class ConnectorApplicationAclsAdapter extends VisualArrayAdapter {
                 }
 
                 Log.d(TAG, "The state of the ACL name: '" + acl.getName() + "' changed to isActive: '" + isChecked + "'");
-                ((ConnectorApplicationActivity) context).changeAclActiveStatus(visualAcl, buttonView, isChecked);
+                ((ConnectorAppActivity) context).changeAclActiveStatus(visualAcl, buttonView, isChecked);
             }
         });
 

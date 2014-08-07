@@ -21,15 +21,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class defines access rules for the {@link AccessControlList}
+ * This class defines access rules for the {@link Acl}
  */
-public class AccessRules {
+public class AclRules {
 
     /**
      * The interfaces that the Gateway Connector Application exposes to its
      * clients
      */
-    private final List<ManifestObjectDescription> exposedServices;
+    private final List<RuleObjectDescription> exposedServices;
 
     /**
      * The applications that may be reached by the Gateway Connector Application
@@ -38,7 +38,7 @@ public class AccessRules {
     private final List<RemotedApp> remotedApps;
 
     /**
-     * This {@link AccessRules} metadata
+     * This {@link AclRules} metadata
      */
     private Map<String, String> metadata;
 
@@ -54,7 +54,7 @@ public class AccessRules {
      * @throws IllegalArgumentException
      *             is thrown if bad arguments have been received
      */
-    public AccessRules(List<ManifestObjectDescription> exposedServices, List<RemotedApp> remotedApps) {
+    public AclRules(List<RuleObjectDescription> exposedServices, List<RemotedApp> remotedApps) {
 
         if (exposedServices == null) {
             throw new IllegalArgumentException("exposedServices is undefined");
@@ -74,7 +74,7 @@ public class AccessRules {
      * 
      * @return List of exposed services
      */
-    public List<ManifestObjectDescription> getExposedServices() {
+    public List<RuleObjectDescription> getExposedServices() {
         return exposedServices;
     }
 

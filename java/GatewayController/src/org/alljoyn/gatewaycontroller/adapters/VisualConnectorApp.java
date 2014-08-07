@@ -19,17 +19,17 @@ package org.alljoyn.gatewaycontroller.adapters;
 import java.util.EnumMap;
 import java.util.Map;
 
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplication;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.ConnectionStatus;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.InstallStatus;
-import org.alljoyn.gatewaycontroller.sdk.ConnectorApplicationStatus.OperationalStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorApp;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus.ConnectionStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus.InstallStatus;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorAppStatus.OperationalStatus;
 
 /**
- * {@link ConnectorApplication} to be visualized by the
+ * {@link ConnectorApp} to be visualized by the
  * {@link ConnectorAppsAdapter}
  */
-public class VisualConnectorApplication implements VisualItem {
+public class VisualConnectorApp implements VisualItem {
 
     /**
      * {@link ConnectionStatus} color
@@ -67,14 +67,14 @@ public class VisualConnectorApplication implements VisualItem {
     // =========================================//
 
     /**
-     * {@link ConnectorApplication}
+     * {@link ConnectorApp}
      */
-    private ConnectorApplication app;
+    private ConnectorApp app;
 
     /**
-     * {@link ConnectorApplicationStatus}
+     * {@link ConnectorAppStatus}
      */
-    private ConnectorApplicationStatus appStatus;
+    private ConnectorAppStatus appStatus;
 
     /**
      * Constructor
@@ -82,7 +82,7 @@ public class VisualConnectorApplication implements VisualItem {
      * @param app
      * @param appStatus
      */
-    public VisualConnectorApplication(ConnectorApplication app, ConnectorApplicationStatus appStatus) {
+    public VisualConnectorApp(ConnectorApp app, ConnectorAppStatus appStatus) {
 
         this.app       = app;
         this.appStatus = appStatus;
@@ -99,17 +99,17 @@ public class VisualConnectorApplication implements VisualItem {
     }
 
     /**
-     * @return {@link ConnectorApplicationStatus}
+     * @return {@link ConnectorAppStatus}
      */
-    public ConnectorApplicationStatus getAppStatus() {
+    public ConnectorAppStatus getAppStatus() {
         return appStatus;
     }
 
     /**
      * @param appStatus
-     *            {@link ConnectorApplicationStatus}
+     *            {@link ConnectorAppStatus}
      */
-    public void setAppStatus(ConnectorApplicationStatus appStatus) {
+    public void setAppStatus(ConnectorAppStatus appStatus) {
         this.appStatus = appStatus;
     }
 
@@ -134,14 +134,14 @@ public class VisualConnectorApplication implements VisualItem {
     }
 
     /**
-     * @return {@link ConnectorApplication}
+     * @return {@link ConnectorApp}
      */
-    public ConnectorApplication getApp() {
+    public ConnectorApp getApp() {
         return app;
     }
 
     /**
-     * Call clean on {@link ConnectorApplication}
+     * Call clean on {@link ConnectorApp}
      */
     public void clear() {
         app.clear();

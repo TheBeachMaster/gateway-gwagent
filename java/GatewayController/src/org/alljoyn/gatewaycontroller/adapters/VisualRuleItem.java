@@ -16,14 +16,14 @@
 
 package org.alljoyn.gatewaycontroller.adapters;
 
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppInterface;
-import org.alljoyn.gatewaycontroller.sdk.ManifestObjectDescription.ConnAppObjectPath;
-import org.alljoyn.gatewaycontroller.sdk.ManifestRules;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleInterface;
+import org.alljoyn.gatewaycontroller.sdk.RuleObjectDescription.RuleObjectPath;
+import org.alljoyn.gatewaycontroller.sdk.ConnectorCapabilities;
 
 /**
- * {@link ManifestRules} to be visualized by the {@link ManifestRulesAdapter}
+ * {@link ConnectorCapabilities} to be visualized by the {@link ConnectorCapabilitiesAdapter}
  */
-public class VisualManifestItem implements VisualItem {
+public class VisualRuleItem implements VisualItem {
 
     public static enum ItemType {
 
@@ -44,14 +44,14 @@ public class VisualManifestItem implements VisualItem {
      * Constructor
      * 
      * @param visualItem
-     *            must be either {@link ConnAppObjectPath} or
-     *            {@link ConnAppInterface}
+     *            must be either {@link RuleObjectPath} or
+     *            {@link RuleInterface}
      * @param type
      * @throws IllegalArgumentException
      */
-    public VisualManifestItem(Object visualItem, ItemType type) {
+    public VisualRuleItem(Object visualItem, ItemType type) {
 
-        if (!(visualItem instanceof ConnAppObjectPath) && !(visualItem instanceof ConnAppInterface)) {
+        if (!(visualItem instanceof RuleObjectPath) && !(visualItem instanceof RuleInterface)) {
 
             throw new IllegalArgumentException("Wrong visualItem type");
         }
