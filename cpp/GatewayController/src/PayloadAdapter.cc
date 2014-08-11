@@ -18,7 +18,7 @@
 #include <alljoyn/gateway/LogModule.h>
 
 namespace ajn {
-namespace gwcontroller {
+namespace gwc {
 
 
 MsgArg*PayloadAdapter::MarshalMetadata(const std::map<qcc::String, qcc::String>& metadata, QStatus& status)
@@ -45,7 +45,7 @@ MsgArg*PayloadAdapter::MarshalMetadata(const std::map<qcc::String, qcc::String>&
     return metadataKeyValueArg;
 }
 
-QStatus PayloadAdapter::marshalObjectDescriptions(const GatewayCtrlRuleObjectDescription& object, MsgArg* objectsArrayEntry)
+QStatus PayloadAdapter::marshalObjectDescriptions(const RuleObjectDescription& object, MsgArg* objectsArrayEntry)
 {
 
     if (objectsArrayEntry == 0) {
@@ -54,12 +54,12 @@ QStatus PayloadAdapter::marshalObjectDescriptions(const GatewayCtrlRuleObjectDes
 
     QStatus status = ER_OK;
 
-    const std::set<GatewayCtrlRuleInterface>*interfaces = object.getInterfaces();
+    const std::set<RuleInterface>*interfaces = object.getInterfaces();
 
     std::vector<const char*> interfacesVector(interfaces->size());
     int index = 0;
-    for (std::set<GatewayCtrlRuleInterface>::const_iterator itr = interfaces->begin(); itr != interfaces->end(); itr++) {
-        interfacesVector[index++] = (GatewayCtrlRuleInterface(*itr)).getName().c_str();
+    for (std::set<RuleInterface>::const_iterator itr = interfaces->begin(); itr != interfaces->end(); itr++) {
+        interfacesVector[index++] = (RuleInterface(*itr)).getName().c_str();
     }
 
     objectsArrayEntry->Set("(obas)", object.getObjectPath()->getPath().c_str(),
@@ -70,7 +70,7 @@ QStatus PayloadAdapter::marshalObjectDescriptions(const GatewayCtrlRuleObjectDes
     return status;
 }
 
-QStatus PayloadAdapter::FillRuleObjectDescriptionVector(const ajn::MsgArg*inputArray, std::vector<GatewayCtrlRuleObjectDescription*>& vector)
+QStatus PayloadAdapter::FillRuleObjectDescriptionVector(const ajn::MsgArg*inputArray, std::vector<RuleObjectDescription*>& vector)
 {
     const ajn::MsgArg* exposedServices;
 
@@ -81,7 +81,7 @@ QStatus PayloadAdapter::FillRuleObjectDescriptionVector(const ajn::MsgArg*inputA
         return status;
     }
     for (size_t i = 0; i < num; ++i) {
-        GatewayCtrlRuleObjectDescription*manifestObjDesc = unmarshalObjectDescriptionsWithFriendlyNames(&exposedServices[i], status);
+        RuleObjectDescription*manifestObjDesc = unmarshalObjectDescriptionsWithFriendlyNames(&exposedServices[i], status);
 
         if (status != ER_OK) {
             return status;
@@ -94,7 +94,7 @@ QStatus PayloadAdapter::FillRuleObjectDescriptionVector(const ajn::MsgArg*inputA
 
 }
 
-GatewayCtrlRuleObjectDescription*PayloadAdapter::unmarshalObjectDescriptionsWithFriendlyNames(const MsgArg* manifestObjectDescriptionInfo, QStatus& status)
+RuleObjectDescription*PayloadAdapter::unmarshalObjectDescriptionsWithFriendlyNames(const MsgArg* manifestObjectDescriptionInfo, QStatus& status)
 {
     char*ObjectPath;
     bool IsPrefix;
@@ -108,8 +108,8 @@ GatewayCtrlRuleObjectDescription*PayloadAdapter::unmarshalObjectDescriptionsWith
         return NULL;
     }
 
-    std::set<GatewayCtrlRuleInterface> interfaces;
-    GatewayCtrlRuleObjectPath objectPath(ObjectPath, ObjectPathFriendlyName, IsPrefix, IsPrefix); // a manifest object path, we do not get the isPrefixAllowed from the server so we need to deduce it ourselves. for the manifest it is not important so insert the same as IsPrefix.
+    std::set<RuleInterface> interfaces;
+    RuleObjectPath objectPath(ObjectPath, ObjectPathFriendlyName, IsPrefix, IsPrefix); // a manifest object path, we do not get the isPrefixAllowed from the server so we need to deduce it ourselves. for the manifest it is not important so insert the same as IsPrefix.
 
     for (size_t x = 0; x < count; x++) {
         char*InterfaceName;
@@ -122,12 +122,12 @@ GatewayCtrlRuleObjectDescription*PayloadAdapter::unmarshalObjectDescriptionsWith
             return NULL;
         }
 
-        GatewayCtrlRuleInterface RuleInterface(InterfaceName, InterfaceFriendlyName, isSecured);
+        RuleInterface RuleInterface(InterfaceName, InterfaceFriendlyName, isSecured);
 
         interfaces.insert(RuleInterface);
     }
 
-    GatewayCtrlRuleObjectDescription*manifestObjectDescriptionOut = new GatewayCtrlRuleObjectDescription(objectPath, interfaces);
+    RuleObjectDescription*manifestObjectDescriptionOut = new RuleObjectDescription(objectPath, interfaces);
 
     return manifestObjectDescriptionOut;
 }
@@ -166,7 +166,7 @@ QStatus PayloadAdapter::unmarshalMetadata(const MsgArg* metadataArg, std::map<qc
 }
 
 
-GatewayCtrlRuleObjectDescription*PayloadAdapter::unmarshalObjectDescriptionsWithoutNames(const ajn::MsgArg*manifestObjectDescriptionInfo, const std::vector<GatewayCtrlRuleObjectDescription*>& ruleObjDescriptions, QStatus& status)
+RuleObjectDescription*PayloadAdapter::unmarshalObjectDescriptionsWithoutNames(const ajn::MsgArg*manifestObjectDescriptionInfo, const std::vector<RuleObjectDescription*>& ruleObjDescriptions, QStatus& status)
 {
 
 
@@ -181,7 +181,7 @@ GatewayCtrlRuleObjectDescription*PayloadAdapter::unmarshalObjectDescriptionsWith
         return NULL;
     }
 
-    std::set<GatewayCtrlRuleInterface> interfaces;
+    std::set<RuleInterface> interfaces;
 
     for (size_t x = 0; x < interfaceCount; x++) {
         char*InterfaceName;
@@ -192,17 +192,17 @@ GatewayCtrlRuleObjectDescription*PayloadAdapter::unmarshalObjectDescriptionsWith
             return NULL;
         }
 
-        GatewayCtrlRuleInterface RuleInterface(InterfaceName, "", false);
+        RuleInterface RuleInterface(InterfaceName, "", false);
 
         interfaces.insert(RuleInterface);
     }
 
-    std::vector<GatewayCtrlRuleObjectDescription*>::const_iterator ruleObjDescriptionsIter;
+    std::vector<RuleObjectDescription*>::const_iterator ruleObjDescriptionsIter;
     bool isPrefixAllowed = true;
     qcc::String friendlyName = "";
 
     for (ruleObjDescriptionsIter = ruleObjDescriptions.begin(); ruleObjDescriptionsIter != ruleObjDescriptions.end(); ruleObjDescriptionsIter++) {
-        GatewayCtrlRuleObjectDescription* objDesc = *ruleObjDescriptionsIter;
+        RuleObjectDescription* objDesc = *ruleObjDescriptionsIter;
 
         if (objDesc->getObjectPath()->getPath().compare(ObjectPathString) == 0) {
             isPrefixAllowed = objDesc->getObjectPath()->isPrefix();
@@ -211,21 +211,21 @@ GatewayCtrlRuleObjectDescription*PayloadAdapter::unmarshalObjectDescriptionsWith
         }
     }
 
-    GatewayCtrlRuleObjectPath objectPath(ObjectPathString, friendlyName, IsPrefix, isPrefixAllowed);
+    RuleObjectPath objectPath(ObjectPathString, friendlyName, IsPrefix, isPrefixAllowed);
 
-    GatewayCtrlRuleObjectDescription*manifestObjectDescriptionOut = new GatewayCtrlRuleObjectDescription(objectPath, interfaces);
+    RuleObjectDescription*manifestObjectDescriptionOut = new RuleObjectDescription(objectPath, interfaces);
 
     return manifestObjectDescriptionOut;
 }
 
-QStatus PayloadAdapter::MarshalAclRules(const GatewayCtrlAclRules& aclRules, std::vector<MsgArg*>& aclRulesVector)
+QStatus PayloadAdapter::MarshalAclRules(const AclRules& aclRules, std::vector<MsgArg*>& aclRulesVector)
 {
 
 
     QStatus status = ER_OK;
 
     {
-        const std::vector<GatewayCtrlRuleObjectDescription*> exposedServices = ((GatewayCtrlAclRules)aclRules).getExposedServices();
+        const std::vector<RuleObjectDescription*> exposedServices = ((AclRules)aclRules).getExposedServices();
 
         MsgArg*exposedServicesArg = new MsgArg[exposedServices.size()];
 
@@ -233,7 +233,7 @@ QStatus PayloadAdapter::MarshalAclRules(const GatewayCtrlAclRules& aclRules, std
         for (size_t i = 0; i != exposedServices.size(); i++) {
             status = PayloadAdapter::marshalObjectDescriptions(*exposedServices[i], &exposedServicesArg[i]);
             if (status != ER_OK) {
-                QCC_LogError(status, ("GatewayCtrlRuleObjectDescription failed"));
+                QCC_LogError(status, ("RuleObjectDescription failed"));
                 delete [] exposedServicesArg;
                 goto failed;
             }
@@ -245,7 +245,7 @@ QStatus PayloadAdapter::MarshalAclRules(const GatewayCtrlAclRules& aclRules, std
                                               exposedServices.size(),
                                               exposedServicesArg);
         if (status != ER_OK) {
-            QCC_LogError(status, ("GatewayCtrlAclRules failed"));
+            QCC_LogError(status, ("AclRules failed"));
             delete [] exposedServicesArg;
             delete exposedServicesArrayArg;
 
@@ -255,19 +255,19 @@ QStatus PayloadAdapter::MarshalAclRules(const GatewayCtrlAclRules& aclRules, std
 
         aclRulesVector.push_back(exposedServicesArrayArg);
 
-        const std::vector<GatewayCtrlRemotedApp*> remotedApps = ((GatewayCtrlAclRules)aclRules).getRemotedApps();
+        const std::vector<RemotedApp*> remotedApps = ((AclRules)aclRules).getRemotedApps();
 
         MsgArg*remotedAppsArg = new MsgArg[remotedApps.size()];
 
         for (size_t i = 0; i != remotedApps.size(); i++) {
-            GatewayCtrlRemotedApp*app = remotedApps[i];
+            RemotedApp*app = remotedApps[i];
 
             MsgArg*ruleObjDescriptionsArg = new MsgArg[app->getRuleObjDesciptions().size()];
 
             for (size_t x = 0; x != app->getRuleObjDesciptions().size(); x++) {
                 status = PayloadAdapter::marshalObjectDescriptions(*app->getRuleObjDesciptions()[x], &ruleObjDescriptionsArg[x]);
                 if (status != ER_OK) {
-                    QCC_LogError(status, ("GatewayCtrlAclRules failed"));
+                    QCC_LogError(status, ("AclRules failed"));
                     delete [] exposedServicesArg;
                     delete [] ruleObjDescriptionsArg;
                     delete [] remotedAppsArg;
@@ -305,7 +305,7 @@ QStatus PayloadAdapter::MarshalAclRules(const GatewayCtrlAclRules& aclRules, std
 
         aclRulesVector.push_back(remotedAppsArrayArg);
 
-        const std::map<qcc::String, qcc::String> metadata = ((GatewayCtrlAclRules)aclRules).getMetadata();
+        const std::map<qcc::String, qcc::String> metadata = ((AclRules)aclRules).getMetadata();
 
         MsgArg*metadataKeyValueArg = PayloadAdapter::MarshalMetadata(metadata, status);
 

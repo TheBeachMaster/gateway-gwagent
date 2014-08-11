@@ -16,13 +16,13 @@
 
 
 #import "VisualAclRules.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlRuleInterface.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlRuleObjectPath.h"
+#import "alljoyn/gateway/AJGWCRuleInterface.h"
+#import "alljoyn/gateway/AJGWCRuleObjectPath.h"
 
 
 @implementation VisualInterfaceInfo
 
--(id) init:(AJGWCGatewayCtrlRuleInterface *)interface isConfigured:(BOOL)configured enabled:(BOOL)enabled
+-(id) init:(AJGWCRuleInterface *)interface isConfigured:(BOOL)configured enabled:(BOOL)enabled
 {
     self = [super init];
 
@@ -54,7 +54,7 @@
 @end
 
 @implementation VisualObjPathInfo
--(id) init:(AJGWCGatewayCtrlRuleObjectPath *)objectPath isConfigured:(BOOL)configured enabled:(BOOL)enabled
+-(id) init:(AJGWCRuleObjectPath *)objectPath isConfigured:(BOOL)configured enabled:(BOOL)enabled
 {
     self = [super init];
 
@@ -93,19 +93,19 @@
 
 @implementation VisualAclRules
 
--(id)initWithArrayOfRuleObjectDescription:(NSArray *)ArrayOfRuleObjectDescription
+-(id)initWithArrayOfRuleObjectDescription:(NSArray *)arrayOfRuleObjectDescription
 {
     self = [super init];
 
     self.aclRulesDictionary = [[NSMutableDictionary alloc]init];
 
     // Gather the object paths for each interface
-    for (AJGWCGatewayCtrlRuleObjectDescription *objectDescription in ArrayOfRuleObjectDescription) {
+    for (AJGWCRuleObjectDescription *objectDescription in arrayOfRuleObjectDescription) {
         NSSet *interfaces = [objectDescription interfaces];
 
         VisualObjPathInfo *objPathInfo = [[VisualObjPathInfo alloc] init:[objectDescription objectPath] isConfigured:[objectDescription isConfigured] enabled:YES] ;
 
-        for (AJGWCGatewayCtrlRuleInterface *interface in interfaces) {
+        for (AJGWCRuleInterface *interface in interfaces) {
 
             VisualInterfaceInfo *interfaceInfo = [[VisualInterfaceInfo alloc]init:interface isConfigured:NO enabled:YES]; // we will populate the configured interfaces later in this function
 
@@ -221,7 +221,7 @@
     [objectPathInfo.objectPath setPrefix:![objectPathInfo.objectPath isPrefix]];
 }
 
--(NSArray *) createAJGWCGatewayCtrlRuleObjectDescriptions
+-(NSArray *) createAJGWCRuleObjectDescriptions
 {
     NSMutableArray *objectDescriptions = [[NSMutableArray alloc]init];
 
@@ -253,7 +253,7 @@
             [arrayOfInterfaces addObject:interfaceInfo.interface];
         }
 
-        AJGWCGatewayCtrlRuleObjectDescription *objDesc = [[AJGWCGatewayCtrlRuleObjectDescription alloc]
+        AJGWCRuleObjectDescription *objDesc = [[AJGWCRuleObjectDescription alloc]
                                                               initWithObjectPath:objPathInfo.objectPath interfaces:arrayOfInterfaces isConfigured:YES];
 
 

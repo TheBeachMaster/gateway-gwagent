@@ -22,7 +22,7 @@
 #include <qcc/platform.h>
 
 namespace ajn {
-namespace gwcontroller {
+namespace gwc {
 static char const* const QCC_MODULE = "Gateway Controller"; //logModules::GATEWAYCTRL_MODULE_LOG_NAME;
 }
 }

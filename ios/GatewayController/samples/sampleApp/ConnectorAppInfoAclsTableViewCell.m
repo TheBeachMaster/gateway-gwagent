@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 #import "ConnectorAppInfoAclsTableViewCell.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlEnums.h"
+#import "alljoyn/gateway/AJGWCEnums.h"
 #import "AJNStatus.h"
 
 @implementation ConnectorAppInfoAclsTableViewCell
@@ -42,7 +42,7 @@
     }
 
     if (ER_OK != status || resCode != GW_ACL_RC_SUCCESS) {
-        NSLog(@"Failed to change acl state. status:%@ responseCode:%@", [AJNStatus descriptionForStatusCode:status], [AJGWCGatewayCtrlEnums AJGWCAclResponseCodeToString:resCode]);
+        NSLog(@"Failed to change acl state. status:%@ responseCode:%@", [AJNStatus descriptionForStatusCode:status], [AJGWCEnums AJGWCAclResponseCodeToString:resCode]);
 
         [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to change acl state." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
 

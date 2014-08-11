@@ -18,14 +18,14 @@
 #define __GATEWAYCONTROLLERCPP__PAYLOADADAPTER__
 
 #include <alljoyn/about/AnnounceHandler.h>
-#include <alljoyn/gateway/GatewayCtrlAcl.h>
-#include <alljoyn/gateway/GatewayCtrlRuleObjectDescription.h>
+#include <alljoyn/gateway/Acl.h>
+#include <alljoyn/gateway/RuleObjectDescription.h>
 
 #include <alljoyn/Status.h>
 #include <qcc/String.h>
 
 namespace ajn {
-namespace gwcontroller {
+namespace gwc {
 
 /**
  * AclAdapter class. Used to marshal and unmarshal Acls
@@ -50,7 +50,7 @@ class PayloadAdapter {
      * @param objectDescriptions - the objectDescriptions to fill
      * @return
      */
-    static GatewayCtrlRuleObjectDescription*unmarshalObjectDescriptionsWithFriendlyNames(const MsgArg* objSpecArgs, QStatus& status);
+    static RuleObjectDescription*unmarshalObjectDescriptionsWithFriendlyNames(const MsgArg* objSpecArgs, QStatus& status);
 
     /**
      * Unmarshal MsgArg without friendly names and find them in the manifest, if possible
@@ -59,7 +59,7 @@ class PayloadAdapter {
      * @return pointer to manifest object desc
      */
 
-    static GatewayCtrlRuleObjectDescription*unmarshalObjectDescriptionsWithoutNames(const ajn::MsgArg*manifestObjectDescriptionInfo, const std::vector<GatewayCtrlRuleObjectDescription*>& ruleObjDescriptions, QStatus& status);
+    static RuleObjectDescription*unmarshalObjectDescriptionsWithoutNames(const ajn::MsgArg*manifestObjectDescriptionInfo, const std::vector<RuleObjectDescription*>& ruleObjDescriptions, QStatus& status);
 
     /**
      * Unmarshal the metadata from the message
@@ -75,7 +75,7 @@ class PayloadAdapter {
      * @param status - success/failure
      * @return msgArg - the messageArg to put it into
      */
-    static MsgArg* marshalAcl(const GatewayCtrlAcl& acl, QStatus& status);
+    static MsgArg* marshalAcl(const Acl& acl, QStatus& status);
 
 
     /**
@@ -84,7 +84,7 @@ class PayloadAdapter {
      * @param objectsArray - the array to marshal it into
      * @return status - success/failure
      */
-    static QStatus marshalObjectDescriptions(const GatewayCtrlRuleObjectDescription& object, MsgArg* objectsArrayEntry);
+    static QStatus marshalObjectDescriptions(const RuleObjectDescription& object, MsgArg* objectsArrayEntry);
 
     /**
      * marshalMetadata - static function to Marshal the Metadata Array
@@ -94,7 +94,7 @@ class PayloadAdapter {
      */
     static MsgArg*MarshalMetadata(const std::map<qcc::String, qcc::String>& metadata, QStatus& status);
 
-    static QStatus FillRuleObjectDescriptionVector(const ajn::MsgArg*inputArray, std::vector<GatewayCtrlRuleObjectDescription*>& vector);
+    static QStatus FillRuleObjectDescriptionVector(const ajn::MsgArg*inputArray, std::vector<RuleObjectDescription*>& vector);
 
     /**
      * MarshalAclRules - a static function to marshal objectDescriptions
@@ -102,7 +102,7 @@ class PayloadAdapter {
      * @param aclRulesVector - the vector to marshal it into
      * @return status - success/failure
      */
-    static QStatus MarshalAclRules(const GatewayCtrlAclRules& aclRules, std::vector<MsgArg*>& aclRulesVector);
+    static QStatus MarshalAclRules(const AclRules& aclRules, std::vector<MsgArg*>& aclRulesVector);
 
 
 
@@ -111,7 +111,7 @@ class PayloadAdapter {
 
 };
 
-}     /* namespace gwcontroller */
+}     /* namespace gwc */
 } /* namespace ajn */
 
 #endif /* defined(__GATEWAYCONTROLLERCPP__PAYLOADADAPTER__) */

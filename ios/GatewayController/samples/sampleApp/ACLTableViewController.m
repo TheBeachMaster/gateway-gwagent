@@ -15,8 +15,8 @@
  ******************************************************************************/
 
 #import "ACLTableViewController.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlRemotedApp.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlRuleObjectDescription.h"
+#import "alljoyn/gateway/AJGWCRemotedApp.h"
+#import "alljoyn/gateway/AJGWCRuleObjectDescription.h"
 #import "AclRulesContainer.h"
 #import "ObjectPathLevelRulesTableViewController.h"
 #import "InterfaceRuleTableViewCell.h"
@@ -26,7 +26,7 @@
 
 @interface ACLTableViewController () <UIActionSheetDelegate>
 
-@property (weak,nonatomic) AJGWCGatewayCtrlConnectorCapabilities *connectorCapabilities;
+@property (weak,nonatomic) AJGWCConnectorCapabilities *connectorCapabilities;
 @property (strong,nonatomic) AclRulesContainer *aclRulesContainer;
 
 @end
@@ -71,7 +71,7 @@
     self.title = [self.acl aclName];
 
     QStatus status;
-    AJGWCGatewayCtrlConnectorCapabilities* localConnectorCapabilities;
+    AJGWCConnectorCapabilities* localConnectorCapabilities;
     status = [self.connectorApp retrieveConnectorCapabilitiesUsingSessionId:self.sessionId connectorCapabilities:&localConnectorCapabilities];
     self.connectorCapabilities = localConnectorCapabilities;
     if (ER_OK != status) {
@@ -146,11 +146,11 @@
     }
 }
 
-- (void)PrintObjectDescriptions:(AJGWCGatewayCtrlRuleObjectDescription *)objDesc
+- (void)PrintObjectDescriptions:(AJGWCRuleObjectDescription *)objDesc
 {
     NSMutableString *interfaces = [[NSMutableString alloc]init];
 
-    for (AJGWCGatewayCtrlRuleInterface *interface in [objDesc interfaces]) {
+    for (AJGWCRuleInterface *interface in [objDesc interfaces]) {
         [interfaces appendString:[interface interfaceName]];
     }
     NSLog(@"        ObjPath:%@ - interfaces are[%@]",[[objDesc objectPath] path], interfaces);
@@ -160,7 +160,7 @@
 - (QStatus)update
 {
     QStatus status;
-    AJGWCGatewayCtrlConnectorCapabilities *connectorCapabilities;
+    AJGWCConnectorCapabilities *connectorCapabilities;
     status = [self.connectorApp retrieveConnectorCapabilitiesUsingSessionId:self.sessionId connectorCapabilities:&connectorCapabilities];
 
     if (status != ER_OK) {
@@ -168,13 +168,13 @@
         return status;
     }
 
-    AJGWCGatewayCtrlAclRules *gwAclRules = [self.aclRulesContainer createAJGWCGatewayCtrlAclRules];
+    AJGWCAclRules *gwAclRules = [self.aclRulesContainer createAJGWCAclRules];
 
-    AJGWCGatewayCtrlAclWriteResponse *response;
+    AJGWCAclWriteResponse *response;
     status = [self.acl update:self.sessionId aclRules:gwAclRules connectorCapabilities:connectorCapabilities aclWriteResponse:&response];
 
     if (status != ER_OK) {
-        NSLog(@"AJGWCGatewayCtrlAcl update failed:%@",[AJNStatus descriptionForStatusCode:status]);
+        NSLog(@"AJGWCAcl update failed:%@",[AJNStatus descriptionForStatusCode:status]);
         return status;
     }
 
@@ -183,9 +183,9 @@
 
         NSLog(@"found %d invalid remoted app rules:", [invalidRemotedApps count]);
 
-        for (AJGWCGatewayCtrlRemotedApp *invalidRemotedApp in invalidRemotedApps) {
+        for (AJGWCRemotedApp *invalidRemotedApp in invalidRemotedApps) {
             NSLog(@"    AppName:%@",[invalidRemotedApp appName]);
-            for (AJGWCGatewayCtrlRuleObjectDescription *objDesc in [invalidRemotedApp ruleObjDescriptions]) {
+            for (AJGWCRuleObjectDescription *objDesc in [invalidRemotedApp ruleObjDescriptions]) {
                 [self PrintObjectDescriptions:objDesc];
             }
         }
@@ -193,7 +193,7 @@
 
     if ([response.invalidRules.exposedServices count] > 0) {
         NSLog(@"found invalid exposed services rules");
-        for (AJGWCGatewayCtrlRuleObjectDescription *objDesc in response.invalidRules.exposedServices) {
+        for (AJGWCRuleObjectDescription *objDesc in response.invalidRules.exposedServices) {
             [self PrintObjectDescriptions:objDesc];
         }
     }

@@ -15,36 +15,36 @@
  ******************************************************************************/
 
 #import "AclRulesContainer.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlAclRules.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlRemotedApp.h"
+#import "alljoyn/gateway/AJGWCAclRules.h"
+#import "alljoyn/gateway/AJGWCRemotedApp.h"
 
 @interface AclRulesContainer ()
 
-@property (strong,nonatomic) AJGWCGatewayCtrlAclRules *ajgwcGatewayCtrlAclRules;
-@property (strong,nonatomic) NSMutableArray *aclRulesArray; // array of arrays of AclRules objects. position 0 is "Exposed Services" AclRules objects. each entry from 1 corresponds to a remotedApp from ajgwcGatewayCtrlAclRules
+@property (strong,nonatomic) AJGWCAclRules *ajgwcAclRules;
+@property (strong,nonatomic) NSMutableArray *aclRulesArray; // array of arrays of AclRules objects. position 0 is "Exposed Services" AclRules objects. each entry from 1 corresponds to a remotedApp from ajgwcAclRules
 
 @end
 
 @implementation AclRulesContainer
-- (instancetype)initWithACL:(AJGWCGatewayCtrlAcl *)acl UsingSessionId:(AJNSessionId)sessionId connectorCapabilities:(AJGWCGatewayCtrlConnectorCapabilities *)connectorCapabilities announcements:(NSArray *)announcements status:(QStatus &)status
+- (instancetype)initWithACL:(AJGWCAcl *)acl UsingSessionId:(AJNSessionId)sessionId connectorCapabilities:(AJGWCConnectorCapabilities *)connectorCapabilities announcements:(NSArray *)announcements status:(QStatus &)status
 {
     self = [super init];
     if (self) {
         self.aclRulesArray = [[NSMutableArray alloc]init];
 
-        AJGWCGatewayCtrlAclRules *tmpGatewayCtrlAclRules;
-        status = [acl retrieveUsingSessionId:sessionId connectorCapabilities:connectorCapabilities announcements:announcements aclRules:&tmpGatewayCtrlAclRules];
-        self.ajgwcGatewayCtrlAclRules = tmpGatewayCtrlAclRules;
+        AJGWCAclRules *tmpAclRules;
+        status = [acl retrieveUsingSessionId:sessionId connectorCapabilities:connectorCapabilities announcements:announcements aclRules:&tmpAclRules];
+        self.ajgwcAclRules = tmpAclRules;
         if (status != ER_OK) {
             return nil;
         }
 
-        VisualAclRules *exposeServicesRules = [[VisualAclRules alloc]initWithArrayOfRuleObjectDescription:[self.ajgwcGatewayCtrlAclRules exposedServices]];
+        VisualAclRules *exposeServicesRules = [[VisualAclRules alloc]initWithArrayOfRuleObjectDescription:[self.ajgwcAclRules exposedServices]];
 
         self.aclRulesArray[0] = exposeServicesRules;
 
         int pos = 1;
-        for (AJGWCGatewayCtrlRemotedApp *remotedApp in [self.ajgwcGatewayCtrlAclRules  remotedApps]) {
+        for (AJGWCRemotedApp *remotedApp in [self.ajgwcAclRules  remotedApps]) {
             VisualAclRules *remotedAppRules = [[VisualAclRules alloc]initWithArrayOfRuleObjectDescription:[remotedApp ruleObjDescriptions]];
 
             self.aclRulesArray[pos] = remotedAppRules;
@@ -64,7 +64,7 @@
     if (pos == 0) {
         return @"Exposed Services";
     } else {
-    return [self.ajgwcGatewayCtrlAclRules.remotedApps[pos-1] appName];
+    return [self.ajgwcAclRules.remotedApps[pos-1] appName];
     }
 }
 
@@ -73,34 +73,34 @@
     return self.aclRulesArray[section];
 }
 
-- (AJGWCGatewayCtrlRemotedApp *)findRemotedAppInAjgwcGatewayCtrlAclRules:(NSInteger)pos
+- (AJGWCRemotedApp *)findRemotedAppInAjgwcAclRules:(NSInteger)pos
 {
-    return self.ajgwcGatewayCtrlAclRules.remotedApps[pos -1];
+    return self.ajgwcAclRules.remotedApps[pos -1];
 }
 
-- (AJGWCGatewayCtrlAclRules *)createAJGWCGatewayCtrlAclRules
+- (AJGWCAclRules *)createAJGWCAclRules
 {
-    AJGWCGatewayCtrlAclRules *rules = nil;
+    AJGWCAclRules *rules = nil;
 
-    // Create a list of AJGWCGatewayCtrlRuleObjectDescription based on the configured exposed services rules
+    // Create a list of AJGWCRuleObjectDescription based on the configured exposed services rules
     NSArray *exposedServices;
-    NSMutableArray *remotedApps = [[NSMutableArray alloc]init]; // array of AJGWCGatewayCtrlRemotedApp
+    NSMutableArray *remotedApps = [[NSMutableArray alloc]init]; // array of AJGWCRemotedApp
 
-    exposedServices = [((VisualAclRules *)_aclRulesArray[0]) createAJGWCGatewayCtrlRuleObjectDescriptions];
+    exposedServices = [((VisualAclRules *)_aclRulesArray[0]) createAJGWCRuleObjectDescriptions];
 
     for (NSInteger pos = 1; pos != [_aclRulesArray count]; pos++) {
         VisualAclRules *aclRules = _aclRulesArray[pos];
 
-        NSArray *remotedServicesObjectDescriptions = [aclRules createAJGWCGatewayCtrlRuleObjectDescriptions];
+        NSArray *remotedServicesObjectDescriptions = [aclRules createAJGWCRuleObjectDescriptions];
 
-        AJGWCGatewayCtrlRemotedApp *remotedApp = [[AJGWCGatewayCtrlRemotedApp alloc] initWithAnnouncedApp:[self findRemotedAppInAjgwcGatewayCtrlAclRules:pos] ruleObjDescriptions:&remotedServicesObjectDescriptions];
+        AJGWCRemotedApp *remotedApp = [[AJGWCRemotedApp alloc] initWithAnnouncedApp:[self findRemotedAppInAjgwcAclRules:pos] ruleObjDescriptions:&remotedServicesObjectDescriptions];
 
         remotedApps[pos-1] = remotedApp;
 
     }
 
 
-    rules = [[AJGWCGatewayCtrlAclRules alloc] initWithExposedServices:exposedServices remotedApps:remotedApps];
+    rules = [[AJGWCAclRules alloc] initWithExposedServices:exposedServices remotedApps:remotedApps];
 
     return rules;
 }
