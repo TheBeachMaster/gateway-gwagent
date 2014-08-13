@@ -38,17 +38,17 @@ public class GatewayController {
     /**
      * Self reference for the {@link GatewayController} singleton
      */
-    private static GatewayController SELF   = new GatewayController();
+    private static final GatewayController SELF  = new GatewayController();
 
     /**
      * The prefix for all the gateway interface names
      */
-    public static final String IFACE_PREFIX = "org.alljoyn.gwagent.ctrl";
+    public static final String IFACE_PREFIX      = "org.alljoyn.gwagent.ctrl";
 
     /**
      * Port number to connect to a Gateway Management App
      */
-    public static final short PORT_NUM      = 1020;
+    public static final short PORT_NUM           = 1020;
 
     /**
      * The BusAttachment to be used
