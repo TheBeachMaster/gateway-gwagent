@@ -16,16 +16,16 @@
 
 
 #import <Foundation/Foundation.h>
-#import "alljoyn/gateway/AJGWCGatewayCtrlRuleObjectDescription.h"
+#import "alljoyn/gateway/AJGWCRuleObjectDescription.h"
 
 @interface VisualInterfaceInfo : NSObject <NSCopying>
-@property (strong,nonatomic) AJGWCGatewayCtrlRuleInterface *interface;
+@property (strong,nonatomic) AJGWCRuleInterface *interface;
 @property (nonatomic) BOOL configured;              // is this interface configured to be included in the ACL - if YES, all object paths under it are included
 @property (nonatomic) BOOL enabled;                 // can this interface be configured or was a parent configured for it?
 @end
 
 @interface VisualObjPathInfo : NSObject <NSCopying>
-@property (strong,nonatomic) AJGWCGatewayCtrlRuleObjectPath *objectPath;
+@property (strong,nonatomic) AJGWCRuleObjectPath *objectPath;
 @property (nonatomic) BOOL enabled;                 // can this objPath be configured
 @property (nonatomic) BOOL configured;              // is this path configured to be included in the ACL
 @end
@@ -34,12 +34,12 @@
 @property (nonatomic) BOOL configured;              // are these access rules configured to be included in the ACL
 @property (strong,nonatomic) NSMutableDictionary *aclRulesDictionary; // key - VisualInterfaceInfo, value - array of VisualObjPathInfo
 
--(id)initWithArrayOfRuleObjectDescription:(NSArray *)ArrayOfRuleObjectDescription;
+-(id)initWithArrayOfRuleObjectDescription:(NSArray *)arrayOfRuleObjectDescription;
 
-// return array of AJGWCGatewayCtrlRuleInterface
+// return array of AJGWCRuleInterface
 - (NSArray *)interfaces;
 
-// return array of AJGWCGatewayCtrlRuleObjectPath
+// return array of AJGWCRuleObjectPath
 - (NSArray *)objectPathsForInterface:(VisualInterfaceInfo *)interface;
 
 -(void) switchAllAclRules;
@@ -50,7 +50,7 @@
 
 -(void) switchObjectPathAllowSubObjects:(VisualObjPathInfo *)objectPathInfo;
 
--(NSArray *) createAJGWCGatewayCtrlRuleObjectDescriptions;
+-(NSArray *) createAJGWCRuleObjectDescriptions;
 
 @end
 

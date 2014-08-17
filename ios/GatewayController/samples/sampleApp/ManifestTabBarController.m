@@ -18,7 +18,7 @@
 #import "AJNStatus.h"
 #import "ConnectorCapabilitiesViewController.h"
 #import "ManifestFileViewController.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlRuleObjectDescription.h"
+#import "alljoyn/gateway/AJGWCRuleObjectDescription.h"
 
 @interface ManifestTabBarController () <UITabBarControllerDelegate>
 
@@ -54,7 +54,7 @@
         }
 
     } else {
-        AJGWCGatewayCtrlConnectorCapabilities* connectorCapabilities;
+        AJGWCConnectorCapabilities* connectorCapabilities;
 
         status = [self.connectorApp retrieveConnectorCapabilitiesUsingSessionId:self.sessionId connectorCapabilities:&connectorCapabilities];
         if (ER_OK != status) {
@@ -72,17 +72,17 @@
 {
     NSMutableAttributedString* objDescArrayStr = [[NSMutableAttributedString alloc] init];
 
-    for (AJGWCGatewayCtrlRuleObjectDescription* mObjDesc in objDescArray)
+    for (AJGWCRuleObjectDescription* mObjDesc in objDescArray)
     {
         //objectPath
-        AJGWCGatewayCtrlRuleObjectPath* RuleObjPath = [mObjDesc objectPath];
+        AJGWCRuleObjectPath* RuleObjPath = [mObjDesc objectPath];
         NSString* RuleObjPathStr = [NSString stringWithFormat:@"%@\n%@\n%@\n", [RuleObjPath friendlyName], [RuleObjPath path], [RuleObjPath isPrefix] ? @"Prefix" : @"Not Prefix"];
         NSLog(@"Final string(RuleObjPathPathStr):\n%@", RuleObjPathStr); // final str
 
         //interfaces
         NSMutableString* connAppInterfaceStr = [[NSMutableString alloc] init];
         NSSet* interfaces = [mObjDesc interfaces];
-        for (AJGWCGatewayCtrlRuleInterface* connAppInterface in interfaces) {
+        for (AJGWCRuleInterface* connAppInterface in interfaces) {
             connAppInterfaceStr = [NSMutableString stringWithFormat:@"%@%@", connAppInterfaceStr, [NSString stringWithFormat:@"    %@\n    %@\n    %@\n\n", [connAppInterface friendlyName], [connAppInterface interfaceName], [connAppInterface isSecured] ? @"Secured" : @"Not Secured"]];
         }
         NSLog(@"Final string(connAppInterfaceStr):\n%@", connAppInterfaceStr); // final str

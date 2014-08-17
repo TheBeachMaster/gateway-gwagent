@@ -22,7 +22,7 @@
 #include <alljoyn/about/AboutClient.h>
 
 namespace ajn {
-namespace gwcontroller {
+namespace gwc {
 /**
  * Announcement data - information coming from the announcement
  * The application should create and maintain a vector of AnnouncementData objects based on the current set of announcement in the network. See sample application for more.

@@ -19,7 +19,7 @@
 #include <queue>
 
 using namespace ajn;
-using namespace gwcontroller;
+using namespace gwc;
 
 TaskData::~TaskData() {
 

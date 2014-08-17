@@ -16,13 +16,13 @@
 
 #import <Foundation/Foundation.h>
 #import "AJNSessionOptions.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlAcl.h"
+#import "alljoyn/gateway/AJGWCAcl.h"
 #import "VisualAclRules.h"
 
 
 @interface AclRulesContainer : NSObject
 
-- (instancetype)initWithACL:(AJGWCGatewayCtrlAcl *)acl UsingSessionId:(AJNSessionId)sessionId connectorCapabilities:(AJGWCGatewayCtrlConnectorCapabilities *)connectorCapabilities announcements:(NSArray *)announcements status:(QStatus &)status;
+- (instancetype)initWithACL:(AJGWCAcl *)acl UsingSessionId:(AJNSessionId)sessionId connectorCapabilities:(AJGWCConnectorCapabilities *)connectorCapabilities announcements:(NSArray *)announcements status:(QStatus &)status;
 
 - (NSUInteger) numberOfEntries;
 
@@ -30,6 +30,6 @@
 
 - (VisualAclRules *)aclRulesForSection:(NSInteger)section;
 
-- (AJGWCGatewayCtrlAclRules *)createAJGWCGatewayCtrlAclRules;
+- (AJGWCAclRules *)createAJGWCAclRules;
 
 @end

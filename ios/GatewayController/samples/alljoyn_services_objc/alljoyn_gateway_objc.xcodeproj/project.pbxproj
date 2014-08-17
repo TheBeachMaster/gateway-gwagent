@@ -8,23 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		19D279D3191BBB6700BEF943 /* AJGWCAnnouncementData.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279BE191BBB6700BEF943 /* AJGWCAnnouncementData.mm */; };
-		19D279D4191BBB6700BEF943 /* AJGWCGatewayCtrlAcl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279BF191BBB6700BEF943 /* AJGWCGatewayCtrlAcl.mm */; };
-		19D279D5191BBB6700BEF943 /* AJGWCGatewayCtrlAclRules.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C0191BBB6700BEF943 /* AJGWCGatewayCtrlAclRules.mm */; };
-		19D279D6191BBB6700BEF943 /* AJGWCGatewayCtrlAclWriteResponse.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C1191BBB6700BEF943 /* AJGWCGatewayCtrlAclWriteResponse.mm */; };
-		19D279D7191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatusSignalHandlerAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C3191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatusSignalHandlerAdapter.mm */; };
-		19D279D8191BBB6700BEF943 /* AJGWCGatewayCtrlSessionListenerAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C6191BBB6700BEF943 /* AJGWCGatewayCtrlSessionListenerAdapter.mm */; };
-		19D279D9191BBB6700BEF943 /* AJGWCGatewayCtrlAnnouncedApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C7191BBB6700BEF943 /* AJGWCGatewayCtrlAnnouncedApp.mm */; };
-		19D279DA191BBB6700BEF943 /* AJGWCGatewayCtrlEnums.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C8191BBB6700BEF943 /* AJGWCGatewayCtrlEnums.mm */; };
-		19D279DB191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C9191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtApp.mm */; };
-		19D279DC191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtAppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CA191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtAppController.mm */; };
-		19D279DD191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CB191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectDescription.mm */; };
-		19D279DE191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorCapabilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CC191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorCapabilities.mm */; };
-		19D279DF191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CD191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm */; };
-		19D279E0191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CE191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm */; };
-		19D279E1191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CF191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApp.mm */; };
-		19D279E2191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatus.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D0191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatus.mm */; };
-		19D279E3191BBB6700BEF943 /* AJGWCGatewayCtrlRuleInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D1191BBB6700BEF943 /* AJGWCGatewayCtrlRuleInterface.mm */; };
-		19D279E4191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectPath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D2191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectPath.mm */; };
+		19D279D4191BBB6700BEF943 /* AJGWCAcl.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279BF191BBB6700BEF943 /* AJGWCAcl.mm */; };
+		19D279D5191BBB6700BEF943 /* AJGWCAclRules.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C0191BBB6700BEF943 /* AJGWCAclRules.mm */; };
+		19D279D6191BBB6700BEF943 /* AJGWCAclWriteResponse.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C1191BBB6700BEF943 /* AJGWCAclWriteResponse.mm */; };
+		19D279D7191BBB6700BEF943 /* AJGWCConnectorAppStatusSignalHandlerAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C3191BBB6700BEF943 /* AJGWCConnectorAppStatusSignalHandlerAdapter.mm */; };
+		19D279D8191BBB6700BEF943 /* AJGWCSessionListenerAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C6191BBB6700BEF943 /* AJGWCSessionListenerAdapter.mm */; };
+		19D279D9191BBB6700BEF943 /* AJGWCAnnouncedApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C7191BBB6700BEF943 /* AJGWCAnnouncedApp.mm */; };
+		19D279DA191BBB6700BEF943 /* AJGWCEnums.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C8191BBB6700BEF943 /* AJGWCEnums.mm */; };
+		19D279DB191BBB6700BEF943 /* AJGWCGatewayMgmtApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279C9191BBB6700BEF943 /* AJGWCGatewayMgmtApp.mm */; };
+		19D279DC191BBB6700BEF943 /* AJGWCGatewayController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CA191BBB6700BEF943 /* AJGWCGatewayController.mm */; };
+		19D279DD191BBB6700BEF943 /* AJGWCRuleObjectDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CB191BBB6700BEF943 /* AJGWCRuleObjectDescription.mm */; };
+		19D279DE191BBB6700BEF943 /* AJGWCConnectorCapabilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CC191BBB6700BEF943 /* AJGWCConnectorCapabilities.mm */; };
+		19D279DF191BBB6700BEF943 /* AJGWCRemotedApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CD191BBB6700BEF943 /* AJGWCRemotedApp.mm */; };
+		19D279E0191BBB6700BEF943 /* AJGWCSessionResult.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CE191BBB6700BEF943 /* AJGWCSessionResult.mm */; };
+		19D279E1191BBB6700BEF943 /* AJGWCConnectorApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279CF191BBB6700BEF943 /* AJGWCConnectorApp.mm */; };
+		19D279E2191BBB6700BEF943 /* AJGWCConnectorAppStatus.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D0191BBB6700BEF943 /* AJGWCConnectorAppStatus.mm */; };
+		19D279E3191BBB6700BEF943 /* AJGWCRuleInterface.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D1191BBB6700BEF943 /* AJGWCRuleInterface.mm */; };
+		19D279E4191BBB6700BEF943 /* AJGWCRuleObjectPath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 19D279D2191BBB6700BEF943 /* AJGWCRuleObjectPath.mm */; };
 		9AA935ED1854BC2B00378361 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA935EC1854BC2B00378361 /* Foundation.framework */; };
 		9AA935FB1854BC2B00378361 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA935FA1854BC2B00378361 /* XCTest.framework */; };
 		9AA935FC1854BC2B00378361 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9AA935EC1854BC2B00378361 /* Foundation.framework */; };
@@ -67,44 +67,44 @@
 
 /* Begin PBXFileReference section */
 		19D279AB191BBB6700BEF943 /* AJGWCAnnouncementData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCAnnouncementData.h; sourceTree = "<group>"; };
-		19D279AC191BBB6700BEF943 /* AJGWCGatewayCtrlAcl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlAcl.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279AD191BBB6700BEF943 /* AJGWCGatewayCtrlAclRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlAclRules.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279AE191BBB6700BEF943 /* AJGWCGatewayCtrlAclWriteResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlAclWriteResponse.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279AF191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatusSignalHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlConnectorAppStatusSignalHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279B0191BBB6700BEF943 /* AJGWCGatewayCtrlSessionListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlSessionListener.h; sourceTree = "<group>"; };
-		19D279B1191BBB6700BEF943 /* AJGWCGatewayCtrlAnnouncedApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlAnnouncedApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279B2191BBB6700BEF943 /* AJGWCGatewayCtrlEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlEnums.h; sourceTree = "<group>"; };
-		19D279B3191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlGatewayMgmtApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279B4191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlGatewayMgmtAppController.h; sourceTree = "<group>"; };
-		19D279B5191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlRuleObjectDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279B6191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlConnectorCapabilities.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279B7191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlRemotedApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279B8191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlSessionResult.h; sourceTree = "<group>"; };
-		19D279B9191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlConnectorApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279BA191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlConnectorAppStatus.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279BB191BBB6700BEF943 /* AJGWCGatewayCtrlRuleInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayCtrlRuleInterface.h; sourceTree = "<group>"; };
-		19D279BC191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlRuleObjectPath.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279AC191BBB6700BEF943 /* AJGWCAcl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCAcl.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279AD191BBB6700BEF943 /* AJGWCAclRules.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCAclRules.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279AE191BBB6700BEF943 /* AJGWCAclWriteResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCAclWriteResponse.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279AF191BBB6700BEF943 /* AJGWCConnectorAppStatusSignalHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCConnectorAppStatusSignalHandler.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279B0191BBB6700BEF943 /* AJGWCSessionListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCSessionListener.h; sourceTree = "<group>"; };
+		19D279B1191BBB6700BEF943 /* AJGWCAnnouncedApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCAnnouncedApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279B2191BBB6700BEF943 /* AJGWCEnums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCEnums.h; sourceTree = "<group>"; };
+		19D279B3191BBB6700BEF943 /* AJGWCGatewayMgmtApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayMgmtApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279B4191BBB6700BEF943 /* AJGWCGatewayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCGatewayController.h; sourceTree = "<group>"; };
+		19D279B5191BBB6700BEF943 /* AJGWCRuleObjectDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCRuleObjectDescription.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279B6191BBB6700BEF943 /* AJGWCConnectorCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCConnectorCapabilities.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279B7191BBB6700BEF943 /* AJGWCRemotedApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCRemotedApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279B8191BBB6700BEF943 /* AJGWCSessionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCSessionResult.h; sourceTree = "<group>"; };
+		19D279B9191BBB6700BEF943 /* AJGWCConnectorApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCConnectorApp.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279BA191BBB6700BEF943 /* AJGWCConnectorAppStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCConnectorAppStatus.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279BB191BBB6700BEF943 /* AJGWCRuleInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AJGWCRuleInterface.h; sourceTree = "<group>"; };
+		19D279BC191BBB6700BEF943 /* AJGWCRuleObjectPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCRuleObjectPath.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		19D279BE191BBB6700BEF943 /* AJGWCAnnouncementData.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCAnnouncementData.mm; sourceTree = "<group>"; };
-		19D279BF191BBB6700BEF943 /* AJGWCGatewayCtrlAcl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlAcl.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279C0191BBB6700BEF943 /* AJGWCGatewayCtrlAclRules.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlAclRules.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279C1191BBB6700BEF943 /* AJGWCGatewayCtrlAclWriteResponse.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlAclWriteResponse.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279C2191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatusSignalHandlerAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlConnectorAppStatusSignalHandlerAdapter.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279C3191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatusSignalHandlerAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlConnectorAppStatusSignalHandlerAdapter.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279C4191BBB6700BEF943 /* AJGWCGatewayCtrlConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279C5191BBB6700BEF943 /* AJGWCGatewayCtrlSessionListenerAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCGatewayCtrlSessionListenerAdapter.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279C6191BBB6700BEF943 /* AJGWCGatewayCtrlSessionListenerAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlSessionListenerAdapter.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279C7191BBB6700BEF943 /* AJGWCGatewayCtrlAnnouncedApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlAnnouncedApp.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279C8191BBB6700BEF943 /* AJGWCGatewayCtrlEnums.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlEnums.mm; sourceTree = "<group>"; };
-		19D279C9191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlGatewayMgmtApp.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279CA191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtAppController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlGatewayMgmtAppController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279CB191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectDescription.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlRuleObjectDescription.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279CC191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorCapabilities.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlConnectorCapabilities.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279CD191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlRemotedApp.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279CE191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlSessionResult.mm; sourceTree = "<group>"; };
-		19D279CF191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlConnectorApp.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279D0191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatus.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayCtrlConnectorAppStatus.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		19D279D1191BBB6700BEF943 /* AJGWCGatewayCtrlRuleInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlRuleInterface.mm; sourceTree = "<group>"; };
-		19D279D2191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectPath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCGatewayCtrlRuleObjectPath.mm; sourceTree = "<group>"; };
+		19D279BF191BBB6700BEF943 /* AJGWCAcl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCAcl.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279C0191BBB6700BEF943 /* AJGWCAclRules.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCAclRules.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279C1191BBB6700BEF943 /* AJGWCAclWriteResponse.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCAclWriteResponse.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279C2191BBB6700BEF943 /* AJGWCConnectorAppStatusSignalHandlerAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCConnectorAppStatusSignalHandlerAdapter.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279C3191BBB6700BEF943 /* AJGWCConnectorAppStatusSignalHandlerAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCConnectorAppStatusSignalHandlerAdapter.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279C4191BBB6700BEF943 /* AJGWCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCConstants.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279C5191BBB6700BEF943 /* AJGWCSessionListenerAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AJGWCSessionListenerAdapter.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279C6191BBB6700BEF943 /* AJGWCSessionListenerAdapter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCSessionListenerAdapter.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279C7191BBB6700BEF943 /* AJGWCAnnouncedApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCAnnouncedApp.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279C8191BBB6700BEF943 /* AJGWCEnums.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCEnums.mm; sourceTree = "<group>"; };
+		19D279C9191BBB6700BEF943 /* AJGWCGatewayMgmtApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayMgmtApp.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279CA191BBB6700BEF943 /* AJGWCGatewayController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCGatewayController.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279CB191BBB6700BEF943 /* AJGWCRuleObjectDescription.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCRuleObjectDescription.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279CC191BBB6700BEF943 /* AJGWCConnectorCapabilities.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCConnectorCapabilities.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279CD191BBB6700BEF943 /* AJGWCRemotedApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCRemotedApp.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279CE191BBB6700BEF943 /* AJGWCSessionResult.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCSessionResult.mm; sourceTree = "<group>"; };
+		19D279CF191BBB6700BEF943 /* AJGWCConnectorApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCConnectorApp.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279D0191BBB6700BEF943 /* AJGWCConnectorAppStatus.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; lineEnding = 0; path = AJGWCConnectorAppStatus.mm; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		19D279D1191BBB6700BEF943 /* AJGWCRuleInterface.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCRuleInterface.mm; sourceTree = "<group>"; };
+		19D279D2191BBB6700BEF943 /* AJGWCRuleObjectPath.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AJGWCRuleObjectPath.mm; sourceTree = "<group>"; };
 		9AA935E91854BC2B00378361 /* liballjoyn_gateway_objc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liballjoyn_gateway_objc.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AA935EC1854BC2B00378361 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9AA935F01854BC2B00378361 /* alljoyn_gateway_objc-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "alljoyn_gateway_objc-Prefix.pch"; sourceTree = "<group>"; };
@@ -160,23 +160,23 @@
 			isa = PBXGroup;
 			children = (
 				19D279AB191BBB6700BEF943 /* AJGWCAnnouncementData.h */,
-				19D279AC191BBB6700BEF943 /* AJGWCGatewayCtrlAcl.h */,
-				19D279AD191BBB6700BEF943 /* AJGWCGatewayCtrlAclRules.h */,
-				19D279AE191BBB6700BEF943 /* AJGWCGatewayCtrlAclWriteResponse.h */,
-				19D279AF191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatusSignalHandler.h */,
-				19D279B0191BBB6700BEF943 /* AJGWCGatewayCtrlSessionListener.h */,
-				19D279B1191BBB6700BEF943 /* AJGWCGatewayCtrlAnnouncedApp.h */,
-				19D279B2191BBB6700BEF943 /* AJGWCGatewayCtrlEnums.h */,
-				19D279B3191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtApp.h */,
-				19D279B4191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtAppController.h */,
-				19D279B5191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectDescription.h */,
-				19D279B6191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorCapabilities.h */,
-				19D279B7191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.h */,
-				19D279B8191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.h */,
-				19D279B9191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApp.h */,
-				19D279BA191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatus.h */,
-				19D279BB191BBB6700BEF943 /* AJGWCGatewayCtrlRuleInterface.h */,
-				19D279BC191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectPath.h */,
+				19D279AC191BBB6700BEF943 /* AJGWCAcl.h */,
+				19D279AD191BBB6700BEF943 /* AJGWCAclRules.h */,
+				19D279AE191BBB6700BEF943 /* AJGWCAclWriteResponse.h */,
+				19D279AF191BBB6700BEF943 /* AJGWCConnectorAppStatusSignalHandler.h */,
+				19D279B0191BBB6700BEF943 /* AJGWCSessionListener.h */,
+				19D279B1191BBB6700BEF943 /* AJGWCAnnouncedApp.h */,
+				19D279B2191BBB6700BEF943 /* AJGWCEnums.h */,
+				19D279B3191BBB6700BEF943 /* AJGWCGatewayMgmtApp.h */,
+				19D279B4191BBB6700BEF943 /* AJGWCGatewayController.h */,
+				19D279B5191BBB6700BEF943 /* AJGWCRuleObjectDescription.h */,
+				19D279B6191BBB6700BEF943 /* AJGWCConnectorCapabilities.h */,
+				19D279B7191BBB6700BEF943 /* AJGWCRemotedApp.h */,
+				19D279B8191BBB6700BEF943 /* AJGWCSessionResult.h */,
+				19D279B9191BBB6700BEF943 /* AJGWCConnectorApp.h */,
+				19D279BA191BBB6700BEF943 /* AJGWCConnectorAppStatus.h */,
+				19D279BB191BBB6700BEF943 /* AJGWCRuleInterface.h */,
+				19D279BC191BBB6700BEF943 /* AJGWCRuleObjectPath.h */,
 			);
 			path = gateway;
 			sourceTree = "<group>";
@@ -185,26 +185,26 @@
 			isa = PBXGroup;
 			children = (
 				19D279BE191BBB6700BEF943 /* AJGWCAnnouncementData.mm */,
-				19D279BF191BBB6700BEF943 /* AJGWCGatewayCtrlAcl.mm */,
-				19D279C0191BBB6700BEF943 /* AJGWCGatewayCtrlAclRules.mm */,
-				19D279C1191BBB6700BEF943 /* AJGWCGatewayCtrlAclWriteResponse.mm */,
-				19D279C2191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatusSignalHandlerAdapter.h */,
-				19D279C3191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatusSignalHandlerAdapter.mm */,
-				19D279C4191BBB6700BEF943 /* AJGWCGatewayCtrlConstants.h */,
-				19D279C5191BBB6700BEF943 /* AJGWCGatewayCtrlSessionListenerAdapter.h */,
-				19D279C6191BBB6700BEF943 /* AJGWCGatewayCtrlSessionListenerAdapter.mm */,
-				19D279C7191BBB6700BEF943 /* AJGWCGatewayCtrlAnnouncedApp.mm */,
-				19D279C8191BBB6700BEF943 /* AJGWCGatewayCtrlEnums.mm */,
-				19D279C9191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtApp.mm */,
-				19D279CA191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtAppController.mm */,
-				19D279CB191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectDescription.mm */,
-				19D279CC191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorCapabilities.mm */,
-				19D279CD191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm */,
-				19D279CE191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm */,
-				19D279CF191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApp.mm */,
-				19D279D0191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatus.mm */,
-				19D279D1191BBB6700BEF943 /* AJGWCGatewayCtrlRuleInterface.mm */,
-				19D279D2191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectPath.mm */,
+				19D279BF191BBB6700BEF943 /* AJGWCAcl.mm */,
+				19D279C0191BBB6700BEF943 /* AJGWCAclRules.mm */,
+				19D279C1191BBB6700BEF943 /* AJGWCAclWriteResponse.mm */,
+				19D279C2191BBB6700BEF943 /* AJGWCConnectorAppStatusSignalHandlerAdapter.h */,
+				19D279C3191BBB6700BEF943 /* AJGWCConnectorAppStatusSignalHandlerAdapter.mm */,
+				19D279C4191BBB6700BEF943 /* AJGWCConstants.h */,
+				19D279C5191BBB6700BEF943 /* AJGWCSessionListenerAdapter.h */,
+				19D279C6191BBB6700BEF943 /* AJGWCSessionListenerAdapter.mm */,
+				19D279C7191BBB6700BEF943 /* AJGWCAnnouncedApp.mm */,
+				19D279C8191BBB6700BEF943 /* AJGWCEnums.mm */,
+				19D279C9191BBB6700BEF943 /* AJGWCGatewayMgmtApp.mm */,
+				19D279CA191BBB6700BEF943 /* AJGWCGatewayController.mm */,
+				19D279CB191BBB6700BEF943 /* AJGWCRuleObjectDescription.mm */,
+				19D279CC191BBB6700BEF943 /* AJGWCConnectorCapabilities.mm */,
+				19D279CD191BBB6700BEF943 /* AJGWCRemotedApp.mm */,
+				19D279CE191BBB6700BEF943 /* AJGWCSessionResult.mm */,
+				19D279CF191BBB6700BEF943 /* AJGWCConnectorApp.mm */,
+				19D279D0191BBB6700BEF943 /* AJGWCConnectorAppStatus.mm */,
+				19D279D1191BBB6700BEF943 /* AJGWCRuleInterface.mm */,
+				19D279D2191BBB6700BEF943 /* AJGWCRuleObjectPath.mm */,
 			);
 			name = src;
 			path = GatewayController/src;
@@ -366,24 +366,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19D279D6191BBB6700BEF943 /* AJGWCGatewayCtrlAclWriteResponse.mm in Sources */,
-				19D279D4191BBB6700BEF943 /* AJGWCGatewayCtrlAcl.mm in Sources */,
-				19D279E0191BBB6700BEF943 /* AJGWCGatewayCtrlSessionResult.mm in Sources */,
-				19D279D5191BBB6700BEF943 /* AJGWCGatewayCtrlAclRules.mm in Sources */,
-				19D279E4191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectPath.mm in Sources */,
-				19D279DD191BBB6700BEF943 /* AJGWCGatewayCtrlRuleObjectDescription.mm in Sources */,
-				19D279DC191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtAppController.mm in Sources */,
-				19D279DA191BBB6700BEF943 /* AJGWCGatewayCtrlEnums.mm in Sources */,
-				19D279DE191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorCapabilities.mm in Sources */,
-				19D279DF191BBB6700BEF943 /* AJGWCGatewayCtrlRemotedApp.mm in Sources */,
-				19D279D9191BBB6700BEF943 /* AJGWCGatewayCtrlAnnouncedApp.mm in Sources */,
-				19D279E3191BBB6700BEF943 /* AJGWCGatewayCtrlRuleInterface.mm in Sources */,
-				19D279D8191BBB6700BEF943 /* AJGWCGatewayCtrlSessionListenerAdapter.mm in Sources */,
+				19D279D6191BBB6700BEF943 /* AJGWCAclWriteResponse.mm in Sources */,
+				19D279D4191BBB6700BEF943 /* AJGWCAcl.mm in Sources */,
+				19D279E0191BBB6700BEF943 /* AJGWCSessionResult.mm in Sources */,
+				19D279D5191BBB6700BEF943 /* AJGWCAclRules.mm in Sources */,
+				19D279E4191BBB6700BEF943 /* AJGWCRuleObjectPath.mm in Sources */,
+				19D279DD191BBB6700BEF943 /* AJGWCRuleObjectDescription.mm in Sources */,
+				19D279DC191BBB6700BEF943 /* AJGWCGatewayController.mm in Sources */,
+				19D279DA191BBB6700BEF943 /* AJGWCEnums.mm in Sources */,
+				19D279DE191BBB6700BEF943 /* AJGWCConnectorCapabilities.mm in Sources */,
+				19D279DF191BBB6700BEF943 /* AJGWCRemotedApp.mm in Sources */,
+				19D279D9191BBB6700BEF943 /* AJGWCAnnouncedApp.mm in Sources */,
+				19D279E3191BBB6700BEF943 /* AJGWCRuleInterface.mm in Sources */,
+				19D279D8191BBB6700BEF943 /* AJGWCSessionListenerAdapter.mm in Sources */,
 				19D279D3191BBB6700BEF943 /* AJGWCAnnouncementData.mm in Sources */,
-				19D279DB191BBB6700BEF943 /* AJGWCGatewayCtrlGatewayMgmtApp.mm in Sources */,
-				19D279E2191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatus.mm in Sources */,
-				19D279E1191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorApp.mm in Sources */,
-				19D279D7191BBB6700BEF943 /* AJGWCGatewayCtrlConnectorAppStatusSignalHandlerAdapter.mm in Sources */,
+				19D279DB191BBB6700BEF943 /* AJGWCGatewayMgmtApp.mm in Sources */,
+				19D279E2191BBB6700BEF943 /* AJGWCConnectorAppStatus.mm in Sources */,
+				19D279E1191BBB6700BEF943 /* AJGWCConnectorApp.mm in Sources */,
+				19D279D7191BBB6700BEF943 /* AJGWCConnectorAppStatusSignalHandlerAdapter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

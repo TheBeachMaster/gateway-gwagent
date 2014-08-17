@@ -16,13 +16,13 @@
 
 #import <UIKit/UIKit.h>
 #import "AJNSessionOptions.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlAcl.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApp.h"
+#import "alljoyn/gateway/AJGWCAcl.h"
+#import "alljoyn/gateway/AJGWCConnectorApp.h"
 
 @interface ACLTableViewController : UITableViewController
 
-@property (strong,nonatomic) AJGWCGatewayCtrlAcl *acl;
+@property (strong,nonatomic) AJGWCAcl *acl;
 @property (nonatomic) AJNSessionId sessionId;
-@property (weak, nonatomic) AJGWCGatewayCtrlConnectorApp* connectorApp;
+@property (weak, nonatomic) AJGWCConnectorApp* connectorApp;
 
 @end

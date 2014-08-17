@@ -16,17 +16,17 @@
 
 #import "ConnectorAppInfoViewController.h"
 #import "AJNStatus.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlAcl.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorAppStatusSignalHandler.h"
+#import "alljoyn/gateway/AJGWCAcl.h"
+#import "alljoyn/gateway/AJGWCConnectorAppStatusSignalHandler.h"
 #import "ConnectorAppInfoAclsTableViewCell.h"
 #import "ACLTableViewController.h"
 #import "ManifestTabBarController.h"
 #import "CreateAclViewController.h"
 #import "AppDelegate.h"
 
-@interface ConnectorAppInfoViewController () <UIActionSheetDelegate, AJGWCGatewayCtrlConnectorAppStatusSignalHandler>
+@interface ConnectorAppInfoViewController () <UIActionSheetDelegate, AJGWCConnectorAppStatusSignalHandler>
 
-@property (strong, nonatomic) NSMutableArray *acls; // array of AJGWCGatewayCtrlAcl
+@property (strong, nonatomic) NSMutableArray *acls; // array of AJGWCAcl
 @property (strong, nonatomic) NSString *manifestFileText;
 
 @property (nonatomic) NSIndexPath* indexPathToDelete;
@@ -52,7 +52,7 @@
 
     [self retrieveStatus];
 
-    [self retrieves];
+    [self retrieveAcls];
 
     QStatus handlerStatus = [self.connectorApp setStatusSignalHandler:self];
     if (ER_OK != handlerStatus) {
@@ -74,11 +74,11 @@
 
 }
 
-- (void)retrieves
+- (void)retrieveAcls
 {
     QStatus status = ER_FAIL;
     self.acls = [[NSMutableArray alloc] init];
-    status = [self.connectorApp retrievesUsingSessionId:self.sessionId acls:self.acls];
+    status = [self.connectorApp retrieveAclsUsingSessionId:self.sessionId acls:self.acls];
 
 
     if (ER_OK != status) {
@@ -165,7 +165,7 @@
                 case 2: // Refresh
                 {
                     NSLog(@"Calling refresh");
-                    [self retrieves];
+                    [self retrieveAcls];
                     [self.aclsTableView reloadData];
                 }
                     break;
@@ -211,7 +211,7 @@
     status = [self.connectorApp deleteAclUsingSessionId:self.sessionId aclId:aclId status:resCode];
 
     if (ER_OK != status || resCode != GW_ACL_RC_SUCCESS) {
-        NSLog(@"Failed to delete acl. status:%@ responseCode:%@", [AJNStatus descriptionForStatusCode:status], [AJGWCGatewayCtrlEnums AJGWCAclResponseCodeToString:resCode]);
+        NSLog(@"Failed to delete acl. status:%@ responseCode:%@", [AJNStatus descriptionForStatusCode:status], [AJGWCEnums AJGWCAclResponseCodeToString:resCode]);
         [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Failed to delete acl." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];
     } else {
         [self.acls removeObjectAtIndex:self.indexPathToDelete.row];
@@ -245,7 +245,7 @@
 {
     ConnectorAppInfoAclsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AclCell" forIndexPath:indexPath];
 
-    AJGWCGatewayCtrlAcl* aclList = [self.acls objectAtIndex:indexPath.row];
+    AJGWCAcl* aclList = [self.acls objectAtIndex:indexPath.row];
     cell.aclObject = aclList;
     cell.sessionId = self.sessionId;
     cell.aclNameLbl.text = [aclList aclName];
@@ -253,8 +253,8 @@
     return cell;
 }
 
-#pragma mark -  AJGWCGatewayCtrlConnectorAppStatusSignalHandler method
-- (void)onStatusSignal:(NSString*) appId status:(AJGWCGatewayCtrlConnectorAppStatus*) status
+#pragma mark -  AJGWCConnectorAppStatusSignalHandler method
+- (void)onStatusSignal:(NSString*) appId status:(AJGWCConnectorAppStatus*) status
 {
     NSLog(@"AppID %@ status has changed", appId);
     if ([[self.connectorApp appId] isEqualToString:appId])
@@ -274,7 +274,7 @@
     NSLog(@"Retrieving application status for %@", [self.connectorApp appId]);
     QStatus status = ER_FAIL;
 
-    AJGWCGatewayCtrlConnectorAppStatus* connectorAppStatus;
+    AJGWCConnectorAppStatus* connectorAppStatus;
 
     status = [self.connectorApp retrieveStatusUsingSessionId:self.sessionId status:&connectorAppStatus];
 
@@ -285,11 +285,11 @@
     }
 }
 
-- (void)updateLabelsStatus:(AJGWCGatewayCtrlConnectorAppStatus*) connectorAppStatus
+- (void)updateLabelsStatus:(AJGWCConnectorAppStatus*) connectorAppStatus
 {
-    [ConnectorAppInfoViewController setLabelTextColor:self.connectivityLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCConnectionStatusToString:[connectorAppStatus connectionStatus]]];
-    [ConnectorAppInfoViewController setLabelTextColor:self.operationLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCOperationalStatusToString:[connectorAppStatus operationalStatus]]];
-    [ConnectorAppInfoViewController setLabelTextColor:self.installationLbl forStatus:[AJGWCGatewayCtrlEnums AJGWCInstallStatusToString:[connectorAppStatus installStatus]]];
+    [ConnectorAppInfoViewController setLabelTextColor:self.connectivityLbl forStatus:[AJGWCEnums AJGWCConnectionStatusToString:[connectorAppStatus connectionStatus]]];
+    [ConnectorAppInfoViewController setLabelTextColor:self.operationLbl forStatus:[AJGWCEnums AJGWCOperationalStatusToString:[connectorAppStatus operationalStatus]]];
+    [ConnectorAppInfoViewController setLabelTextColor:self.installationLbl forStatus:[AJGWCEnums AJGWCInstallStatusToString:[connectorAppStatus installStatus]]];
 }
 
 + (void)setLabelTextColor:(UILabel*) label forStatus:(NSString*) statusString

@@ -21,8 +21,8 @@
 
 @interface CreateAclViewController () <UITextFieldDelegate>
 
-@property (nonatomic) AJGWCGatewayCtrlAclRules* aclRules;
-@property (strong,nonatomic) AJGWCGatewayCtrlAcl *acl;
+@property (nonatomic) AJGWCAclRules* aclRules;
+@property (strong,nonatomic) AJGWCAcl *acl;
 
 @end
 
@@ -49,7 +49,7 @@
     QStatus status;
     NSArray* ann =[[AnnouncementManager sharedInstance] getAnnouncements];
 
-    AJGWCGatewayCtrlAclRules* tmpAclRules;
+    AJGWCAclRules* tmpAclRules;
 
     status = [self.connectorApp retrieveApplicableConnectorCapabilitiesUsingSessionId:self.sessionId rules:&tmpAclRules announcements:ann];
 
@@ -64,7 +64,7 @@
 
 - (IBAction)didTouchCreateAclBtn:(id)sender {
     QStatus status;
-    AJGWCGatewayCtrlAclWriteResponse* aclWResp;
+    AJGWCAclWriteResponse* aclWResp;
     status = [self.connectorApp createAclUsingSessionId:self.sessionId name:self.aclNameTextField.text aclRules:self.aclRules aclStatus:&aclWResp];
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to create acl" status:status];
@@ -81,12 +81,12 @@
         }
 
         NSMutableArray *acls = [[NSMutableArray alloc] init];
-        status = [self.connectorApp retrievesUsingSessionId:self.sessionId acls:acls];
+        status = [self.connectorApp retrieveAclsUsingSessionId:self.sessionId acls:acls];
 
         if (ER_OK != status) {
             [AppDelegate AlertAndLog:@"Failed to retrieve Acls" status:status];
         } else {
-            for (AJGWCGatewayCtrlAcl* acl in acls)
+            for (AJGWCAcl* acl in acls)
             {
                 if ([[acl aclId] isEqualToString:[aclWResp aclId]])
                     self.acl = acl;
