@@ -15,10 +15,10 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "VisualAccessRules.h"
+#import "VisualAclRules.h"
 
 @interface ObjectPathLevelRulesTableViewController : UITableViewController
-@property (weak,nonatomic) VisualAccessRules *accessRules;
+@property (weak,nonatomic) VisualAclRules *aclRules;
 @property (strong,nonatomic) VisualInterfaceInfo *key;
 
 @end

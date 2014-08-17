@@ -21,8 +21,8 @@
 
 @interface CreateAclViewController () <UITextFieldDelegate>
 
-@property (nonatomic) AJGWCGatewayCtrlAccessRules* accessRules;
-@property (strong,nonatomic) AJGWCGatewayCtrlAccessControlList *acl;
+@property (nonatomic) AJGWCGatewayCtrlAclRules* aclRules;
+@property (strong,nonatomic) AJGWCGatewayCtrlAcl *acl;
 
 @end
 
@@ -36,24 +36,24 @@
 
 - (void)startVC
 {
-    self.appNameLbl.text = [self.connectorApplication friendlyName];
+    self.appNameLbl.text = [self.connectorApp friendlyName];
     self.createAclBtn.enabled = NO;
     self.aclNameTextField.delegate = self; // Set TextField.delegate to enable dissmiss keyboard
 
-    [self retrieveConfigurableRules];
+    [self retrieveApplicableConnectorCapabilities];
 }
 
 
-- (void)retrieveConfigurableRules
+- (void)retrieveApplicableConnectorCapabilities
 {
     QStatus status;
     NSArray* ann =[[AnnouncementManager sharedInstance] getAnnouncements];
 
-    AJGWCGatewayCtrlAccessRules* tmpAccessRules;
+    AJGWCGatewayCtrlAclRules* tmpAclRules;
 
-    status = [self.connectorApplication retrieveConfigurableRulesUsingSessionId:self.sessionId rules:&tmpAccessRules announcements:ann];
+    status = [self.connectorApp retrieveApplicableConnectorCapabilitiesUsingSessionId:self.sessionId rules:&tmpAclRules announcements:ann];
 
-    self.accessRules = tmpAccessRules;
+    self.aclRules = tmpAclRules;
 
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve configurable rules" status:status];
@@ -65,7 +65,7 @@
 - (IBAction)didTouchCreateAclBtn:(id)sender {
     QStatus status;
     AJGWCGatewayCtrlAclWriteResponse* aclWResp;
-    status = [self.connectorApplication createAclUsingSessionId:self.sessionId name:self.aclNameTextField.text accessRules:self.accessRules aclStatus:&aclWResp];
+    status = [self.connectorApp createAclUsingSessionId:self.sessionId name:self.aclNameTextField.text aclRules:self.aclRules aclStatus:&aclWResp];
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to create acl" status:status];
     } else {
@@ -81,12 +81,12 @@
         }
 
         NSMutableArray *acls = [[NSMutableArray alloc] init];
-        status = [self.connectorApplication retrieveAclsUsingSessionId:self.sessionId acls:acls];
+        status = [self.connectorApp retrievesUsingSessionId:self.sessionId acls:acls];
 
         if (ER_OK != status) {
             [AppDelegate AlertAndLog:@"Failed to retrieve Acls" status:status];
         } else {
-            for (AJGWCGatewayCtrlAccessControlList* acl in acls)
+            for (AJGWCGatewayCtrlAcl* acl in acls)
             {
                 if ([[acl aclId] isEqualToString:[aclWResp aclId]])
                     self.acl = acl;
@@ -109,7 +109,7 @@
         ACLTableViewController *aclTVC = segue.destinationViewController;
         aclTVC.sessionId = self.sessionId;
         aclTVC.acl = self.acl;
-        aclTVC.connectorApplication = self.connectorApplication;
+        aclTVC.connectorApp = self.connectorApp;
     }
 }
 

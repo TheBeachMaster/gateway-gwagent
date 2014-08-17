@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2013, AllSeen Alliance. All rights reserved.
+ * Copyright (c) 2013-2014, AllSeen Alliance. All rights reserved.
  *
  *    Permission to use, copy, modify, and/or distribute this software for any
  *    purpose with or without fee is hereby granted, provided that the above
@@ -21,9 +21,9 @@
 #include <alljoyn/SessionListener.h>
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 
-class GatewayCtrlGateway;
+class GatewayCtrlGatewayMgmtApp;
 
 /**
  * class GatewayCtrlSessionHandler
@@ -34,7 +34,7 @@ class GatewayCtrlSessionHandler : public ajn::BusAttachment::JoinSessionAsyncCB,
     /**
      * Constructor for GatewayCtrlSessionHandler
      */
-    GatewayCtrlSessionHandler(GatewayCtrlGateway* gateway);
+    GatewayCtrlSessionHandler(GatewayCtrlGatewayMgmtApp* gateway);
 
     /**
      * Destructor for GatewayCtrlSessionHandler
@@ -74,11 +74,11 @@ class GatewayCtrlSessionHandler : public ajn::BusAttachment::JoinSessionAsyncCB,
     /**
      * The device of this Session Handler
      */
-    GatewayCtrlGateway* m_Gateway;
+    GatewayCtrlGatewayMgmtApp* m_Gateway;
 
 };
 
-}     /* namespace services */
+}     /* namespace gwcontroller */
 } /* namespace ajn */
 
 #endif /* GATEWAYCTRLSESSIONHANDLER_H_ */

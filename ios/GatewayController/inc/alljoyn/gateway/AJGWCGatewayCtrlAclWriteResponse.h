@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AJGWCGatewayCtrlEnums.h"
-#import "AJGWCGatewayCtrlAccessRules.h"
+#import "AJGWCGatewayCtrlAclRules.h"
 #import "alljoyn/gateway/GatewayCtrlAclWriteResponse.h"
 
 @interface AJGWCGatewayCtrlAclWriteResponse : NSObject
@@ -25,16 +25,16 @@
  * Constructor
  * @param handle A handle to a cpp GatewayCtrlAclWriteResponse object
  */
-- (id)initWithHandle:(ajn::services::GatewayCtrlAclWriteResponse*) handle;
+- (id)initWithHandle:(ajn::gwcontroller::GatewayCtrlAclWriteResponse*) handle;
 
 /**
  * Constructor
  * @param aclId The ACL id
  * @param code {@link AJGWCAclResponseCode}
- * @param invalidRules {@link AJGWCGatewayCtrlAccessRules}
+ * @param invalidRules {@link AJGWCGatewayCtrlAclRules}
  * @param objPath Object path
  */
-- (id)initWithAclId:(NSString*) aclId code:(AJGWCAclResponseCode) code invalidRules:(AJGWCGatewayCtrlAccessRules *) invalidRules objPath:(NSString*) objPath;
+- (id)initWithAclId:(NSString*) aclId code:(AJGWCAclResponseCode) code invalidRules:(AJGWCGatewayCtrlAclRules *) invalidRules objPath:(NSString*) objPath;
 
 /**
  * @return The id of the ACL that the write operation was referred to
@@ -47,14 +47,14 @@
 - (AJGWCAclResponseCode)responseCode;
 
 /**
- * @return {@link AJGWCGatewayCtrlAccessRules} with the rules that don't comply with the {@link AJGWCGatewayCtrlManifestRules}
+ * @return {@link AJGWCGatewayCtrlAclRules} with the rules that don't comply with the {@link AJGWCGatewayCtrlConnectorCapabilities}
  */
-- (AJGWCGatewayCtrlAccessRules*)invalidRules;
+- (AJGWCGatewayCtrlAclRules*)invalidRules;
 
 /**
  * @return object path
  */
 - (NSString*)objectPath;
 
-- (ajn::services::GatewayCtrlAclWriteResponse*)handle;
+- (ajn::gwcontroller::GatewayCtrlAclWriteResponse*)handle;
 @end

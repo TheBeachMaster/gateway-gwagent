@@ -19,7 +19,7 @@
 @interface AJGWCGatewayCtrlEnums : NSObject
 
 /**
- * Connection status of the Third Party Application to the cloud service
+ * Connection status of the Connector App to the cloud service
  */
 
 typedef enum {
@@ -32,13 +32,13 @@ typedef enum {
 
 /**
  * Return the {@link AJGWCConnectionStatus} in a string format
- * @param connectionStatus {@link AJGWCConnectionStatus} Connection status of the Third Party Application to the cloud service
+ * @param connectionStatus {@link AJGWCConnectionStatus} Connection status of the Connector App to the cloud service
  * @return representation of {@link AJGWCConnectionStatus} in a string format
  */
 + (NSString*)AJGWCConnectionStatusToString:(AJGWCConnectionStatus) connectionStatus;
 
 /**
- * The installation status of the Third Party Application
+ * The installation status of the Connector App
  */
 typedef enum {
     GW_IS_INSTALLED = 0,                              //!< Installed
@@ -50,14 +50,14 @@ typedef enum {
 
 /**
  * Return the {@link AJGWCInstallStatus} in a string format
- * @param installStatus {@link AJGWCInstallStatus} The installation status of the Third Party Application
+ * @param installStatus {@link AJGWCInstallStatus} The installation status of the Connector App
  * @return representation of {@link AJGWCInstallStatus} in a string format
  */
 + (NSString*)AJGWCInstallStatusToString:(AJGWCInstallStatus) installStatus;
 
 
 /**
- * The operational status of the Third Party Application
+ * The operational status of the Connector App
  */
 typedef enum {
     GW_OS_RUNNING = 0,                              //!< The application is running
@@ -66,14 +66,14 @@ typedef enum {
 
 /**
  * Return the {@link AJGWCOperationalStatus} in a string format
- * @param operationalStatus {@link AJGWCOperationalStatus} The operational status of the Third Party Application
+ * @param operationalStatus {@link AJGWCOperationalStatus} The operational status of the Connector App
  * @return representation of {@link AJGWCOperationalStatus} in a string format
  */
 + (NSString*)AJGWCOperationalStatusToString:(AJGWCOperationalStatus) operationalStatus;
 
 
 /**
- * The restart status of the Third Party Application
+ * The restart status of the Connector App
  */
 typedef enum {
     GW_RESTART_APP_RC_SUCCESS = 0,                              //!< The application restarted
@@ -82,7 +82,7 @@ typedef enum {
 
 /**
  * Return the {@link AJGWCRestartStatus} in a string format
- * @param restartStatus {@link AJGWCRestartStatus} The restart status of the Third Party Application
+ * @param restartStatus {@link AJGWCRestartStatus} The restart status of the Connector App
  * @return representation of {@link AJGWCRestartStatus} in a string format
  */
 + (NSString*)AJGWCRestartStatusToString:(AJGWCRestartStatus) restartStatus;

@@ -18,10 +18,10 @@
 #define alljoyn_gateway_cpp_GatewayCtrlEnums_h
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 
 /**
- * Connection status of the Third Party Application to the cloud service
+ * Connection status of the Connector App to the cloud service
  */
 
 typedef enum {
@@ -32,7 +32,7 @@ typedef enum {
     GW_CS_ERROR = 4                         //! Error
 } ConnectionStatus;
 /**
- * The installation status of the Third Party Application
+ * The installation status of the Connector App
  */
 typedef enum {
     GW_IS_INSTALLED = 0,                    //!< Installed
@@ -43,7 +43,7 @@ typedef enum {
 } InstallStatus;
 
 /**
- * The operational status of the Third Party Application
+ * The operational status of the Connector App
  */
 typedef enum {
     GW_OS_RUNNING = 0,                      //!< The application is running
@@ -51,7 +51,7 @@ typedef enum {
 } OperationalStatus;
 
 /**
- * The restart status of the Third Party Application
+ * The restart status of the Connector App
  */
 typedef enum {
     GW_RESTART_APP_RC_SUCCESS = 0,          //!< The application restarted

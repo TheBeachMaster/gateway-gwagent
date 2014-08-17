@@ -15,17 +15,17 @@
  ******************************************************************************/
 
 #include <alljoyn/gateway/GatewayCtrlSessionHandler.h>
-#include <alljoyn/gateway/GatewayCtrlGateway.h>
+#include <alljoyn/gateway/GatewayCtrlGatewayMgmtApp.h>
 #include "GatewayCtrlConstants.h"
 #include <sstream>
 #include <alljoyn/gateway/LogModule.h>
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 using namespace gwcConsts;
 
 
-GatewayCtrlSessionHandler::GatewayCtrlSessionHandler(GatewayCtrlGateway* gateway) : m_SessionId(0), m_Gateway(gateway)
+GatewayCtrlSessionHandler::GatewayCtrlSessionHandler(GatewayCtrlGatewayMgmtApp* gateway) : m_SessionId(0), m_Gateway(gateway)
 {
 
 }
@@ -73,5 +73,5 @@ ajn::SessionId GatewayCtrlSessionHandler::getSessionId() const
     return m_SessionId;
 }
 
-}     /* namespace services */
+}     /* namespace gwcontroller */
 } /* namespace ajn */

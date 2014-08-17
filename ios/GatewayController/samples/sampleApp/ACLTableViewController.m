@@ -16,18 +16,18 @@
 
 #import "ACLTableViewController.h"
 #import "alljoyn/gateway/AJGWCGatewayCtrlRemotedApp.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlManifestObjectDescription.h"
-#import "AccessRulesContainer.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlRuleObjectDescription.h"
+#import "AclRulesContainer.h"
 #import "ObjectPathLevelRulesTableViewController.h"
-#import "InterfaceRuleCellTableViewCell.h"
+#import "InterfaceRuleTableViewCell.h"
 #import "AJNStatus.h"
 #import "AnnouncementManager.h"
 #import "AppDelegate.h"
 
 @interface ACLTableViewController () <UIActionSheetDelegate>
 
-@property (weak,nonatomic) AJGWCGatewayCtrlManifestRules *manifestRules;
-@property (strong,nonatomic) AccessRulesContainer *accessRulesContainer;
+@property (weak,nonatomic) AJGWCGatewayCtrlConnectorCapabilities *connectorCapabilities;
+@property (strong,nonatomic) AclRulesContainer *aclRulesContainer;
 
 @end
 
@@ -71,15 +71,15 @@
     self.title = [self.acl aclName];
 
     QStatus status;
-    AJGWCGatewayCtrlManifestRules* localManifestRules;
-    status = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId manifestRules:&localManifestRules];
-    self.manifestRules = localManifestRules;
+    AJGWCGatewayCtrlConnectorCapabilities* localConnectorCapabilities;
+    status = [self.connectorApp retrieveConnectorCapabilitiesUsingSessionId:self.sessionId connectorCapabilities:&localConnectorCapabilities];
+    self.connectorCapabilities = localConnectorCapabilities;
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve manifest rules" status:status];
         return;
     }
 
-    self.accessRulesContainer = [[AccessRulesContainer alloc]initWithACL:self.acl UsingSessionId:self.sessionId manifestRules:self.manifestRules announcements:[[AnnouncementManager sharedInstance] getAnnouncements] status:status];
+    self.aclRulesContainer = [[AclRulesContainer alloc]initWithACL:self.acl UsingSessionId:self.sessionId connectorCapabilities:self.connectorCapabilities announcements:[[AnnouncementManager sharedInstance] getAnnouncements] status:status];
 
     if (status != ER_OK) {
         [AppDelegate AlertAndLog:@"Failed to retrieve Acl" status:status];
@@ -109,7 +109,7 @@
             switch (buttonIndex) {
                 case 0:
                 {
-                    QStatus status = [self updateACL];
+                    QStatus status = [self update];
                     if (status != ER_OK) {
                         [[[UIAlertView alloc]initWithTitle:@"Failed to Update ACL" message:[NSString stringWithFormat:@"error:%@",[AJNStatus descriptionForStatusCode:status]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
                     }
@@ -146,35 +146,35 @@
     }
 }
 
-- (void)PrintObjectDescriptions:(AJGWCGatewayCtrlManifestObjectDescription *)objDesc
+- (void)PrintObjectDescriptions:(AJGWCGatewayCtrlRuleObjectDescription *)objDesc
 {
     NSMutableString *interfaces = [[NSMutableString alloc]init];
 
-    for (AJGWCGatewayCtrlConnAppInterface *interface in [objDesc interfaces]) {
+    for (AJGWCGatewayCtrlRuleInterface *interface in [objDesc interfaces]) {
         [interfaces appendString:[interface interfaceName]];
     }
     NSLog(@"        ObjPath:%@ - interfaces are[%@]",[[objDesc objectPath] path], interfaces);
 }
 
 
-- (QStatus)updateACL
+- (QStatus)update
 {
     QStatus status;
-    AJGWCGatewayCtrlManifestRules *manifestRules;
-    status = [self.connectorApplication retrieveManifestRulesUsingSessionId:self.sessionId manifestRules:&manifestRules];
+    AJGWCGatewayCtrlConnectorCapabilities *connectorCapabilities;
+    status = [self.connectorApp retrieveConnectorCapabilitiesUsingSessionId:self.sessionId connectorCapabilities:&connectorCapabilities];
 
     if (status != ER_OK) {
-        NSLog(@"retrieveManifestRulesUsingSessionId failed:%@",[AJNStatus descriptionForStatusCode:status]);
+        NSLog(@"retrieveConnectorCapabilitiesUsingSessionId failed:%@",[AJNStatus descriptionForStatusCode:status]);
         return status;
     }
 
-    AJGWCGatewayCtrlAccessRules *gwAccessRules = [self.accessRulesContainer createAJGWCGatewayCtrlAccessRules];
+    AJGWCGatewayCtrlAclRules *gwAclRules = [self.aclRulesContainer createAJGWCGatewayCtrlAclRules];
 
     AJGWCGatewayCtrlAclWriteResponse *response;
-    status = [self.acl updateAcl:self.sessionId accessRules:gwAccessRules manifestRules:manifestRules aclWriteResponse:&response];
+    status = [self.acl update:self.sessionId aclRules:gwAclRules connectorCapabilities:connectorCapabilities aclWriteResponse:&response];
 
     if (status != ER_OK) {
-        NSLog(@"AJGWCGatewayCtrlAccessControlList updateAcl failed:%@",[AJNStatus descriptionForStatusCode:status]);
+        NSLog(@"AJGWCGatewayCtrlAcl update failed:%@",[AJNStatus descriptionForStatusCode:status]);
         return status;
     }
 
@@ -185,7 +185,7 @@
 
         for (AJGWCGatewayCtrlRemotedApp *invalidRemotedApp in invalidRemotedApps) {
             NSLog(@"    AppName:%@",[invalidRemotedApp appName]);
-            for (AJGWCGatewayCtrlManifestObjectDescription *objDesc in [invalidRemotedApp objDescRules]) {
+            for (AJGWCGatewayCtrlRuleObjectDescription *objDesc in [invalidRemotedApp ruleObjDescriptions]) {
                 [self PrintObjectDescriptions:objDesc];
             }
         }
@@ -193,7 +193,7 @@
 
     if ([response.invalidRules.exposedServices count] > 0) {
         NSLog(@"found invalid exposed services rules");
-        for (AJGWCGatewayCtrlManifestObjectDescription *objDesc in response.invalidRules.exposedServices) {
+        for (AJGWCGatewayCtrlRuleObjectDescription *objDesc in response.invalidRules.exposedServices) {
             [self PrintObjectDescriptions:objDesc];
         }
     }
@@ -217,28 +217,28 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return [self.accessRulesContainer numberOfEntries] ; //we add one for the exposed services
+    return [self.aclRulesContainer numberOfEntries] ; //we add one for the exposed services
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    VisualAccessRules *rules =[self.accessRulesContainer accessRulesForSection:section];
+    VisualAclRules *rules =[self.aclRulesContainer aclRulesForSection:section];
 
-    NSDictionary *dict = [rules accessRulesDictionary];
+    NSDictionary *dict = [rules aclRulesDictionary];
 
-    NSArray *accessRulesKeys = [dict allKeys];
+    NSArray *aclRulesKeys = [dict allKeys];
 
-    return [ accessRulesKeys count];
+    return [ aclRulesKeys count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    InterfaceRuleCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"InterfaceRuleCell" forIndexPath:indexPath];
+    InterfaceRuleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"InterfaceRuleCell" forIndexPath:indexPath];
 
     NSUInteger section = [indexPath section];
 
-    cell.rules = [self.accessRulesContainer accessRulesForSection:section];
+    cell.rules = [self.aclRulesContainer aclRulesForSection:section];
 
     cell.indexPath = indexPath;
 
@@ -247,7 +247,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSString *entryName = [self.accessRulesContainer entryNameAt:section];
+    NSString *entryName = [self.aclRulesContainer entryNameAt:section];
 
     return entryName;
 }
@@ -257,9 +257,9 @@
     if ([identifier isEqual:@"ObjectPathSegue"]) {
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 
-    VisualAccessRules *rulesForSection = [self.accessRulesContainer accessRulesForSection:[indexPath section]];
+    VisualAclRules *rulesForSection = [self.aclRulesContainer aclRulesForSection:[indexPath section]];
 
-    NSArray *object_paths = [rulesForSection objectPathsForInterface:[rulesForSection.accessRulesDictionary allKeys][[indexPath row]]                         ];
+    NSArray *object_paths = [rulesForSection objectPathsForInterface:[rulesForSection.aclRulesDictionary allKeys][[indexPath row]]                         ];
 
     if ([object_paths count] == 0) {
         NSLog(@"error, object path array for interface is 0");
@@ -281,13 +281,13 @@
     if ([segue.destinationViewController isKindOfClass:[ObjectPathLevelRulesTableViewController class]]){
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
 
-        VisualAccessRules *rulesForSection = [self.accessRulesContainer accessRulesForSection:[indexPath section]];
+        VisualAclRules *rulesForSection = [self.aclRulesContainer aclRulesForSection:[indexPath section]];
 
         ObjectPathLevelRulesTableViewController *vc = segue.destinationViewController;
 
-        vc.accessRules = rulesForSection;
+        vc.aclRules = rulesForSection;
 
-        vc.key = [rulesForSection.accessRulesDictionary allKeys][[indexPath row]];
+        vc.key = [rulesForSection.aclRulesDictionary allKeys][[indexPath row]];
     }
 
 }
@@ -313,9 +313,9 @@
 }
 
 - (void) serviceButtonCliecked:(UIButton *) sender {
-    VisualAccessRules *rulesForSection = [self.accessRulesContainer accessRulesForSection:sender.tag];
+    VisualAclRules *rulesForSection = [self.aclRulesContainer aclRulesForSection:sender.tag];
 
-    [rulesForSection switchAllAccessRules];
+    [rulesForSection switchAllAclRules];
 
     [self updateConfigButton:sender configured:[rulesForSection configured]];
 
@@ -325,7 +325,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 
-    VisualAccessRules *rulesForSection = [self.accessRulesContainer accessRulesForSection:section];
+    VisualAclRules *rulesForSection = [self.aclRulesContainer aclRulesForSection:section];
 
     CGRect frame = tableView.frame;
     NSString *titleTxt = @"Add All";
@@ -363,7 +363,7 @@
     NSLog(@"renaming '%@' to '%@'", [self.acl aclName], aclNameTextField.text);
     [self.acl setAclName:aclNameTextField.text];
 
-    [self updateACL];
+    [self update];
     [self.refreshControl beginRefreshing];
     [self refresh:nil];
 }

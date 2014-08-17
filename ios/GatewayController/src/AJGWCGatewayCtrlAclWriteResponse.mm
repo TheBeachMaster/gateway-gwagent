@@ -19,26 +19,26 @@
 
 @interface AJGWCGatewayCtrlAclWriteResponse ()
 
-@property (nonatomic) ajn::services::GatewayCtrlAclWriteResponse* handle;
+@property (nonatomic) ajn::gwcontroller::GatewayCtrlAclWriteResponse* handle;
 
 @end
 
 @implementation AJGWCGatewayCtrlAclWriteResponse
 
-- (id)initWithHandle:(ajn::services::GatewayCtrlAclWriteResponse *) handle
+- (id)initWithHandle:(ajn::gwcontroller::GatewayCtrlAclWriteResponse *) handle
 {
     self = [super init];
     if (self) {
-        self.handle = (ajn::services::GatewayCtrlAclWriteResponse *)handle;
+        self.handle = (ajn::gwcontroller::GatewayCtrlAclWriteResponse *)handle;
     }
     return self;
 }
 
-- (id)initWithAclId:(NSString*) aclId code:(AJGWCAclResponseCode) code invalidRules:(AJGWCGatewayCtrlAccessRules *) invalidRules objPath:(NSString*) objPath
+- (id)initWithAclId:(NSString*) aclId code:(AJGWCAclResponseCode) code invalidRules:(AJGWCGatewayCtrlAclRules *) invalidRules objPath:(NSString*) objPath
 {
     self = [super init];
     if (self) {
-        self.handle = new ajn::services::GatewayCtrlAclWriteResponse([AJNConvertUtil convertNSStringToQCCString:aclId], (ajn::services::AclResponseCode)code, [invalidRules handle], [AJNConvertUtil convertNSStringToQCCString:objPath]);
+        self.handle = new ajn::gwcontroller::GatewayCtrlAclWriteResponse([AJNConvertUtil convertNSStringToQCCString:aclId], (ajn::gwcontroller::AclResponseCode)code, [invalidRules handle], [AJNConvertUtil convertNSStringToQCCString:objPath]);
     }
     return self;
 }
@@ -53,9 +53,9 @@
     return (AJGWCAclResponseCode)self.handle->getResponseCode();
 }
 
-- (AJGWCGatewayCtrlAccessRules*)invalidRules
+- (AJGWCGatewayCtrlAclRules*)invalidRules
 {
-    return [[AJGWCGatewayCtrlAccessRules alloc] initWithHandle:self.handle->getInvalidRules()];
+    return [[AJGWCGatewayCtrlAclRules alloc] initWithHandle:self.handle->getInvalidRules()];
 }
 
 - (NSString*)objectPath
@@ -64,7 +64,7 @@
 }
 
 
-- (ajn::services::GatewayCtrlAclWriteResponse*)handle
+- (ajn::gwcontroller::GatewayCtrlAclWriteResponse*)handle
 {
     return _handle;
 }

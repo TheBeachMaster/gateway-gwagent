@@ -21,14 +21,14 @@ AJGWCGatewayCtrlSessionListenerAdapter::AJGWCGatewayCtrlSessionListenerAdapter(i
     sessionListenerHandler = handle;
 }
 
-void AJGWCGatewayCtrlSessionListenerAdapter::sessionEstablished(ajn::services::GatewayCtrlGateway* gateway)
+void AJGWCGatewayCtrlSessionListenerAdapter::sessionEstablished(ajn::gwcontroller::GatewayCtrlGatewayMgmtApp* gatewayMgmtApp)
 {
-    [sessionListenerHandler sessionEstablished:[[AJGWCGatewayCtrlGateway alloc] initWithHandle:gateway]];
+    [sessionListenerHandler sessionEstablished:[[AJGWCGatewayCtrlGatewayMgmtApp alloc] initWithHandle:gatewayMgmtApp]];
 }
 
-void AJGWCGatewayCtrlSessionListenerAdapter::sessionLost(ajn::services::GatewayCtrlGateway* gateway)
+void AJGWCGatewayCtrlSessionListenerAdapter::sessionLost(ajn::gwcontroller::GatewayCtrlGatewayMgmtApp* gatewayMgmtApp)
 {
-    [sessionListenerHandler sessionLost:[[AJGWCGatewayCtrlGateway alloc] initWithHandle:gateway]];
+    [sessionListenerHandler sessionLost:[[AJGWCGatewayCtrlGatewayMgmtApp alloc] initWithHandle:gatewayMgmtApp]];
 }
 
 id<AJGWCGatewayCtrlSessionListener> AJGWCGatewayCtrlSessionListenerAdapter::getListener() const

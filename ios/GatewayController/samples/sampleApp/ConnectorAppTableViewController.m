@@ -15,18 +15,18 @@
  ******************************************************************************/
 
 #import "ConnectorAppTableViewController.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlGatewayController.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplication.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlApplicationStatusSignalHandler.h"
-#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplicationStatus.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlGatewayMgmtAppController.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApp.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorAppStatusSignalHandler.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorAppStatus.h"
 #import "alljoyn/gateway/AJGWCGatewayCtrlEnums.h"
 #import "ConnectorAppTableViewCell.h"
 #import "ConnectorAppInfoViewController.h"
 #import "AppDelegate.h"
 
-@interface ConnectorAppTableViewController () <AJGWCGatewayCtrlApplicationStatusSignalHandler, UIActionSheetDelegate, AJGWCGatewayCtrlSessionListener>
+@interface ConnectorAppTableViewController () <AJGWCGatewayCtrlConnectorAppStatusSignalHandler, UIActionSheetDelegate, AJGWCGatewayCtrlSessionListener>
 
-@property (strong, nonatomic) AJGWCGatewayCtrlGateway* gateway;
+@property (strong, nonatomic) AJGWCGatewayCtrlGatewayMgmtApp* gatewayMgmtApp;
 @property (nonatomic) AJNSessionId sessionId;
 @property (strong, nonatomic) NSArray* gwApps;
 
@@ -51,26 +51,26 @@
 
 - (void)stopGWController
 {
-    QStatus status = [self.gateway leaveSession];
+    QStatus status = [self.gatewayMgmtApp leaveSession];
     if (status != ER_OK) {
         [AppDelegate AlertAndLog:@"Failed to leaveSession" status:status];
     } else {
         NSLog(@"Successfully leave Session");
     }
-    [[AJGWCGatewayCtrlGatewayController sharedInstance] shutdown];
+    [[AJGWCGatewayCtrlGatewayMgmtAppController sharedInstance] shutdown];
 }
 - (void)startGWController
 {
     UIBarButtonItem *optionsBtn = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(didTouUpInsideOptionsBtn:)];
     self.navigationItem.rightBarButtonItem = optionsBtn;
 
-    [AJGWCGatewayCtrlGatewayController startWithBus:self.busAttachment];
+    [AJGWCGatewayCtrlGatewayMgmtAppController startWithBus:self.busAttachment];
 
-    AJGWCGatewayCtrlGatewayController* gwController = [AJGWCGatewayCtrlGatewayController sharedInstance];
+    AJGWCGatewayCtrlGatewayMgmtAppController* gwController = [AJGWCGatewayCtrlGatewayMgmtAppController sharedInstance];
 
-    self.gateway = [gwController createGatewayWithBusName:self.ajnAnnouncement.busName objectDescs:self.ajnAnnouncement.objectDescriptions aboutData:self.ajnAnnouncement.aboutData];
+    self.gatewayMgmtApp = [gwController createGatewayWithBusName:self.ajnAnnouncement.busName objectDescs:self.ajnAnnouncement.objectDescriptions aboutData:self.ajnAnnouncement.aboutData];
 
-    AJGWCGatewayCtrlSessionResult *sessionResult = [self.gateway joinSession:self];
+    AJGWCGatewayCtrlSessionResult *sessionResult = [self.gatewayMgmtApp joinSession:self];
 
     if (sessionResult.status != ER_OK) {
         [AppDelegate AlertAndLog:@"Failed to retrieve installed apps" status:sessionResult.status];
@@ -80,15 +80,15 @@
 
     NSLog(@"SessionId is %u", self.sessionId);
 
-    [self retrieveInstalledApps];
+    [self retrieveConnectorApps];
 }
 
-- (void)retrieveInstalledApps
+- (void)retrieveConnectorApps
 {
-    NSMutableArray* installedApps = [[NSMutableArray alloc] init];
-    QStatus status = [self.gateway retrieveInstalledApps:self.sessionId installedApps:installedApps];
-    self.gwApps = [[NSArray alloc] initWithArray:installedApps];
-    NSLog(@"retrieveInstalledApps return [%lu] applications", (unsigned long)[self.gwApps count]);
+    NSMutableArray* connectorApps = [[NSMutableArray alloc] init];
+    QStatus status = [self.gatewayMgmtApp retrieveConnectorApps:self.sessionId connectorApps:connectorApps];
+    self.gwApps = [[NSArray alloc] initWithArray:connectorApps];
+    NSLog(@"retrieveConnectorApps return [%lu] applications", (unsigned long)[self.gwApps count]);
     if (ER_OK != status) {
         [AppDelegate AlertAndLog:@"Failed to retrieve installed apps" status:status];
     }
@@ -98,12 +98,12 @@
     });
 }
 
-- (void)statusChangedHandler:(BOOL) flag
+- (void)statusSignalHandler:(BOOL) flag
 {
-    for(AJGWCGatewayCtrlConnectorApplication* connectorApp in self.gwApps)
+    for(AJGWCGatewayCtrlConnectorApp* connectorApp in self.gwApps)
     {
         if (flag == YES) {
-            QStatus handlerStatus = [connectorApp setStatusChangedHandler:self];
+            QStatus handlerStatus = [connectorApp setStatusSignalHandler:self];
             if (ER_OK != handlerStatus) {
                 NSLog(@"Failed to set status changed handler");
             } else {
@@ -111,7 +111,7 @@
             }
         } else {
             NSLog(@"calling unset status changed handler for %@", [connectorApp friendlyName]);
-            [connectorApp unsetStatusChangedHandler];
+            [connectorApp unsetStatusSignalHandler];
         }
     }
 }
@@ -132,7 +132,7 @@
             switch (buttonIndex) {
                 case 0:
                     NSLog(@"Calling refresh");
-                    [self retrieveInstalledApps]; //refresh
+                    [self retrieveConnectorApps]; //refresh
                     break;
                 default:
                     break;
@@ -144,8 +144,8 @@
     }
 }
 
-#pragma mark -  AJGWCGatewayCtrlApplicationStatusSignalHandler method
-- (void)onStatusChanged:(NSString*) appId status:(AJGWCGatewayCtrlConnectorApplicationStatus*) status
+#pragma mark -  AJGWCGatewayCtrlConnectorAppStatusSignalHandler method
+- (void)onStatusSignal:(NSString*) appId status:(AJGWCGatewayCtrlConnectorAppStatus*) status
 {
     NSLog(@"AppID %@ status has changed:", appId);
     NSLog(@"installStatus: %@", [AJGWCGatewayCtrlEnums AJGWCInstallStatusToString:[status installStatus]]);
@@ -176,12 +176,12 @@
 {
     ConnectorAppTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ConnectorAppCell" forIndexPath:indexPath];
 
-    AJGWCGatewayCtrlConnectorApplication* connectorApp = [self.gwApps objectAtIndex:indexPath.row];
+    AJGWCGatewayCtrlConnectorApp* connectorApp = [self.gwApps objectAtIndex:indexPath.row];
     cell.ConnectorAppNameLbl.text = [connectorApp friendlyName];
 
     /* Retrieve Status */
     QStatus status = ER_FAIL;
-    AJGWCGatewayCtrlConnectorApplicationStatus* connectorAppStatus;
+    AJGWCGatewayCtrlConnectorAppStatus* connectorAppStatus;
     status = [connectorApp retrieveStatusUsingSessionId:self.sessionId status:&connectorAppStatus];
 
     if (status == ER_OK) {
@@ -207,14 +207,14 @@
 {
     if ([segue.destinationViewController isKindOfClass:[ConnectorAppInfoViewController class]]) {
         ConnectorAppInfoViewController *connectorAppInfo = segue.destinationViewController;
-        connectorAppInfo.connectorApplication =  [self.gwApps objectAtIndex:[self.tableView indexPathForSelectedRow].row];
+        connectorAppInfo.connectorApp =  [self.gwApps objectAtIndex:[self.tableView indexPathForSelectedRow].row];
         connectorAppInfo.sessionId = self.sessionId;
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [self statusChangedHandler:NO];
+    [self statusSignalHandler:NO];
 }
 
 - (void)didMoveToParentViewController:(UIViewController *)parent
@@ -226,15 +226,15 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [self statusChangedHandler:YES];
+    [self statusSignalHandler:YES];
 }
 
-- (void)sessionEstablished:(AJGWCGatewayCtrlGateway*) gateway
+- (void)sessionEstablished:(AJGWCGatewayCtrlGatewayMgmtApp*) gatewayMgmtApp
 {
     NSLog(@"Session established");
 }
 
-- (void)sessionLost:(AJGWCGatewayCtrlGateway*) gateway
+- (void)sessionLost:(AJGWCGatewayCtrlGatewayMgmtApp*) gatewayMgmtApp
 {
     NSLog(@"Session lost");
     [[[UIAlertView alloc]initWithTitle:@"Session lost" message:@"Connection to the gateway lost" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil] show];

@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 #import <UIKit/UIKit.h>
-#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApplication.h"
+#import "alljoyn/gateway/AJGWCGatewayCtrlConnectorApp.h"
 #import "AJNSessionOptions.h"
 
 static NSDictionary* STATUS_COLOR = [[NSDictionary alloc]
@@ -39,7 +39,7 @@ static NSDictionary* STATUS_COLOR = [[NSDictionary alloc]
 
 @interface ConnectorAppInfoViewController : UIViewController
 
-@property (weak, nonatomic) AJGWCGatewayCtrlConnectorApplication* connectorApplication;
+@property (weak, nonatomic) AJGWCGatewayCtrlConnectorApp* connectorApp;
 @property (nonatomic) AJNSessionId sessionId;
 @property (strong, nonatomic) IBOutlet UILabel *friendlyNameLbl;
 @property (strong, nonatomic) IBOutlet UILabel *appVersionLbl;

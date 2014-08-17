@@ -20,7 +20,7 @@
 #include <qcc/String.h>
 
 namespace ajn {
-namespace services {
+namespace gwcontroller {
 namespace gwcConsts {
 //static const uint16_t UUID_LENGTH = 16;
 
@@ -58,8 +58,8 @@ static const qcc::String AJ_METHOD_DEACTIVATEACL = "DeactivateAcl";
 static const qcc::String AJ_METHOD_GETACL = "GetAcl";
 static const qcc::String AJ_METHOD_GETACLSTATUS = "GetAclStatus";
 static const qcc::String AJ_METHOD_UPDATEACL = "UpdateAcl";
-static const qcc::String AJ_METHOD_UPDATEACLMETADATA = "UpdateAclMetaData";
-static const qcc::String AJ_METHOD_UPDATECUSTOMMETADATA = "UpdateAclCustomMetaData";
+static const qcc::String AJ_METHOD_UPDATEACLMETADATA = "UpdateAclMetadata";
+static const qcc::String AJ_METHOD_UPDATECUSTOMMETADATA = "UpdateAclCustomMetadata";
 
 static const qcc::String AJPARAM_EMPTY = "";
 static const qcc::String AJPARAM_VAR = "v";
@@ -86,7 +86,7 @@ static const qcc::String AJSUFFIX_DEVICE_NAME = "_DEVICE_NAME";
 static const uint16_t AJ_METHOD_UPDATEACL_INPUT_PARAM_COUNT = 5;
 
 }         //namespace gwcConsts
-}     //namespace services
+}     //namespace gwcontroller
 } //namespace ajn
 
 #endif
