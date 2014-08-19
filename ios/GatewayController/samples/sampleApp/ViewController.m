@@ -148,7 +148,7 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
     }
     else if ([segue.destinationViewController isKindOfClass:[ConnectorAppTableViewController class]]) {
         ConnectorAppTableViewController *connectorAppTableViewController = segue.destinationViewController;
-        connectorAppTableViewController.title = [AJNAboutDataConverter messageArgumentToString:[[(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement] aboutData][@"DeviceName"]];
+        connectorAppTableViewController.title = @"Controller Apps"; //[AJNAboutDataConverter messageArgumentToString:[[(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement] aboutData][@"DeviceName"]];
         connectorAppTableViewController.busAttachment = self.clientBusAttachment;
         connectorAppTableViewController.ajnAnnouncement = [(ClientInformation *)(self.clientInformationDict)[self.announcementButtonCurrentTitle] announcement];
         NSLog(@"AnnouncementManager entries: [%lu]",(unsigned long)[[[AnnouncementManager sharedInstance] getAnnouncements] count]);
@@ -400,10 +400,8 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
     // Create a dictionary to contain announcements using a key in the format of: "announcementUniqueName + announcementObj"
     self.clientInformationDict = [[NSMutableDictionary alloc] init];
 
-    // Init AJNBusAttachment
     self.clientBusAttachment = [[AJNBusAttachment alloc] initWithApplicationName:(APPNAME) allowRemoteMessages:(ALLOWREMOTEMESSAGES)];
 
-    // Start AJNBusAttachment
     status = [self.clientBusAttachment start];
     if (status != ER_OK) {
         [AppDelegate AlertAndLog:@"Failed at AJNBusAttachment start" status:status];
@@ -411,7 +409,6 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
         return;
     }
 
-    // Connect AJNBusAttachment
     status = [self.clientBusAttachment connectWithArguments:(@"")];
     if (status != ER_OK) {
         [AppDelegate AlertAndLog:@"Failed at AJNBusAttachment connectWithArguments" status:status];
@@ -431,12 +428,10 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
         return;
     }
 
-    [AnnouncementManager sharedInstance]; //announcement manager for all no gw annoncement
+    [AnnouncementManager sharedInstance]; //Initialize announcement manager for all annoncements other than gateway management app
 
-    // Advertise Daemon for tcl
     status = [self.clientBusAttachment requestWellKnownName:self.realmBusName withFlags:kAJNBusNameFlagDoNotQueue];
     if (status == ER_OK) {
-        // Advertise the name with a quite prefix for TC to find it
         NSUUID *UUID = [NSUUID UUID];
         NSString *stringUUID = [UUID UUIDString];
 
@@ -518,7 +513,6 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
     QStatus status;
     NSLog(@"Stop About Client");
 
-    // Bus attachment cleanup
     status = [self.clientBusAttachment cancelAdvertisedName:[NSString stringWithFormat:@"%@%@", DAEMON_QUIET_PREFIX, self.realmBusName] withTransportMask:kAJNTransportMaskAny];
     if (status == ER_OK) {
         NSLog(@"Successfully cancel advertised name");
@@ -532,7 +526,6 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
         NSLog(@"Successfully remove MatchRule");
     }
 
-    // Cancel advertise name for each announcement bus
     for (NSString *key in[self.clientInformationDict allKeys]) {
         ClientInformation *clientInfo = (self.clientInformationDict)[key];
         status = [self.clientBusAttachment cancelFindAdvertisedName:[[clientInfo announcement] busName]];
@@ -551,7 +544,6 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
 
     self.announcementReceiver = nil;
 
-    // Stop bus attachment
     status = [self.clientBusAttachment stop];
     if (status == ER_OK) {
         NSLog(@"Successfully stopped bus");
@@ -574,10 +566,6 @@ static NSString * const AUTH_MECHANISM = @"ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX ALL
 }
 
 #pragma mark UITableView delegates
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-//{
-//    return 1;
-//}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
