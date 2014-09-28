@@ -45,7 +45,7 @@ QStatus AclRules::init(const MsgArg*exposedServicesArrayArg, const MsgArg*remote
         return status;
     }
 
-    for (int i = 0; i != exposedServicesCount; i++) {
+    for (size_t i = 0; i != exposedServicesCount; i++) {
 
         RuleObjectDescription* exposedService = PayloadAdapter::unmarshalObjectDescriptionsWithoutNames(&exposedServicesArray[i], connectorCapabilities.getExposedServices(), status);
 
@@ -66,7 +66,7 @@ QStatus AclRules::init(const MsgArg*exposedServicesArrayArg, const MsgArg*remote
         return status;
     }
 
-    for (int i = 0; i != remotedAppsCount; i++) {
+    for (size_t i = 0; i != remotedAppsCount; i++) {
         RemotedApp*remotedApp = new RemotedApp();
 
         QStatus status = remotedApp->init(&remotedAppsArray[i], connectorCapabilities.getRemotedServices(), internalMetadata);

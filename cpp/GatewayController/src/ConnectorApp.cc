@@ -753,7 +753,7 @@ QStatus ConnectorApp::createAcl(SessionId sessionId, const qcc::String& name, Ac
 
         MsgArg*args = new MsgArg[aclRulesVector.size()];
 
-        for (int x = 0; x != aclRulesVector.size(); x++) {
+        for (size_t x = 0; x != aclRulesVector.size(); x++) {
             args[x] = *aclRulesVector[x];
         }
 

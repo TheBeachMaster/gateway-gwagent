@@ -84,12 +84,12 @@ void RuleObjectPath::setPrefixAllowed(bool isPrefixAllowed) {
     m_isPrefixAllowed = isPrefixAllowed;
 }
 
-RuleObjectDescription::RuleObjectDescription(const RuleObjectPath& objectPath, std::set<RuleInterface> interfaces) : m_Interfaces(interfaces), m_IsConfigured(false)
+RuleObjectDescription::RuleObjectDescription(const RuleObjectPath& objectPath, std::set<RuleInterface> interfaces) : m_IsConfigured(false), m_Interfaces(interfaces)
 {
     m_ObjectPath = new RuleObjectPath(objectPath);
 }
 
-RuleObjectDescription::RuleObjectDescription(const RuleObjectPath& objectPath, std::set<RuleInterface> interfaces, bool isConfigured) : m_Interfaces(interfaces), m_IsConfigured(isConfigured)
+RuleObjectDescription::RuleObjectDescription(const RuleObjectPath& objectPath, std::set<RuleInterface> interfaces, bool isConfigured) : m_IsConfigured(isConfigured), m_Interfaces(interfaces)
 {
     m_ObjectPath = new RuleObjectPath(objectPath);
 }
