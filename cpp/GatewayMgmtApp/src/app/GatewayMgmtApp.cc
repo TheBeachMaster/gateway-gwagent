@@ -128,7 +128,7 @@ QStatus fillPropertyStore()
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setAppName("AllJoyn Gateway Agent Mgmt App");
+    status = propertyStoreImpl->setAppName("AllJoyn Gateway Configruration Manager", "en");
     if (status != ER_OK) {
         return status;
     }
@@ -147,6 +147,22 @@ QStatus fillPropertyStore()
         return status;
     }
     status = propertyStoreImpl->setSupportUrl("http://www.allseenalliance.org");
+    if (status != ER_OK) {
+        return status;
+    }
+    status = propertyStoreImpl->setManufacturer("AllSeen Alliance", "en");
+    if (status != ER_OK) {
+        return status;
+    }
+    status = propertyStoreImpl->setModelNumber("1.0");
+    if (status != ER_OK) {
+        return status;
+    }
+    status = propertyStoreImpl->setSoftwareVersion("1.0");
+    if (status != ER_OK) {
+        return status;
+    }
+    status = propertyStoreImpl->setDescription("AllJoyn Gateway Configuration Manager Application", "en");
     if (status != ER_OK) {
         return status;
     }
