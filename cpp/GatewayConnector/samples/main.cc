@@ -246,7 +246,7 @@ int main(int argc, char** argv) {
     keyListener = new SrpKeyXListener();
     keyListener->setPassCode("000000");
     qcc::String keystore = "/opt/alljoyn/apps/" + wellknownName + "/store/.alljoyn_keystore.ks";
-    status = bus->EnablePeerSecurity("ALLJOYN_SRP_KEYX ALLJOYN_PIN_KEYX", keyListener, keystore.c_str(), false);
+    status = bus->EnablePeerSecurity("ALLJOYN_PIN_KEYX ALLJOYN_SRP_KEYX ALLJOYN_ECDHE_PSK", keyListener, keystore.c_str(), false);
 
     //====================================
     // Initialize GwConnector interface
