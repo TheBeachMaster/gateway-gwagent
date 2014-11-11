@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright (c) 2014, AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
