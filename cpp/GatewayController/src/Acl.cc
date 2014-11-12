@@ -584,7 +584,7 @@ QStatus Acl::updateCustomMetadata(SessionId sessionId, const std::map<qcc::Strin
         Message replyMsg(*busAttachment);
         status = proxy.MethodCall(interfaceName.c_str(), AJ_METHOD_UPDATECUSTOMMETADATA.c_str(), metadataArg, 1, replyMsg);
 
-        delete metadataArg;
+        delete [] metadataArg;
         metadataArg = NULL;
 
         if (status != ER_OK) {
