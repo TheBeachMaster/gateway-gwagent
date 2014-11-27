@@ -20,7 +20,6 @@ using namespace ajn;
 using namespace gw;
 using namespace std;
 
-
 QStatus GatewayMergedAcl::unmarshal(Message& msg)
 {
     QStatus status = ER_OK;
@@ -28,6 +27,7 @@ QStatus GatewayMergedAcl::unmarshal(Message& msg)
     //exposed services
     MsgArg* exposedServiceArgs;
     size_t numExposedServiceArgs;
+
     status = msg->GetArg(0)->Get("a(obas)", &numExposedServiceArgs, &exposedServiceArgs);
     if (ER_OK != status) {
         return status;

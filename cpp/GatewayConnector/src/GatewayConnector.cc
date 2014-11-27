@@ -113,7 +113,7 @@ const InterfaceDescription* GatewayConnector::initInterface(QStatus& status)
     return m_Bus->GetInterface(GW_CONNECTOR_IFC_NAME);
 }
 
-QStatus GatewayConnector::getMergedAcl(GatewayMergedAcl& response)
+QStatus GatewayConnector::getMergedAcl(GatewayMergedAcl* response)
 {
     QStatus status = ER_OK;
 
@@ -123,7 +123,7 @@ QStatus GatewayConnector::getMergedAcl(GatewayMergedAcl& response)
         return status;
     }
 
-    status = response.unmarshal(reply);
+    status = response->unmarshal(reply);
 
     return status;
 }

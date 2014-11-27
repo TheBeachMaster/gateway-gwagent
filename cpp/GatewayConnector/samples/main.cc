@@ -333,7 +333,7 @@ int main(int argc, char** argv) {
 
         if (0 == strcmp(cmd, "GetMergedAcl")) {
             GatewayMergedAcl macl;
-            QStatus status = myApp.getMergedAcl(macl);
+            QStatus status = myApp.getMergedAcl(&macl);
             cout << "GetMergedAcl returned " << status << endl;
             if (status == ER_OK) {
                 dumpAcl(&macl);

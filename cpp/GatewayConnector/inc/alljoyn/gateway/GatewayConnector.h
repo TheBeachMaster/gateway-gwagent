@@ -66,7 +66,7 @@ class GatewayConnector : public MessageReceiver {
      * @param response - MergedAcl response
      * @return status - success/failure
      */
-    QStatus getMergedAcl(GatewayMergedAcl& response);
+    QStatus getMergedAcl(GatewayMergedAcl* response);
 
     /**
      * Async method to get the merged Acl from the GatewayMgmtApp

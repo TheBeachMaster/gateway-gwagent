@@ -400,10 +400,10 @@ int GatewayRouterPolicyManager::writeDefaultUserPolicies(xmlTextWriterPtr writer
     if (rc < 0) {
         return rc;
     }
-    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path", (xmlChar*)(AJ_GW_OBJECTPATH + "/" + userName).c_str());
+/*    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path", (xmlChar*)(AJ_GW_OBJECTPATH + "/" + userName).c_str());
     if (rc < 0) {
         return rc;
-    }
+    }*/
     rc = xmlTextWriterEndElement(writer);
     if (rc < 0) {
         return rc;
