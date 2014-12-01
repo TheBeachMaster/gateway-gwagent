@@ -27,6 +27,14 @@ QStatus GatewayMergedAcl::unmarshal(Message& msg)
     //exposed services
     MsgArg* exposedServiceArgs;
     size_t numExposedServiceArgs;
+    const ajn::MsgArg* returnArgs = NULL;
+    size_t numArgs = 0;
+
+    msg->GetArgs(numArgs, returnArgs);
+
+    if (numArgs == 0) {
+        return ER_BUS_UNEXPECTED_SIGNATURE;
+    }
 
     status = msg->GetArg(0)->Get("a(obas)", &numExposedServiceArgs, &exposedServiceArgs);
     if (ER_OK != status) {
