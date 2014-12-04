@@ -18,6 +18,8 @@ if not gateway_env.has_key('_ALLJOYNCORE_'):
     gateway_env.Append(LIBS = ['alljoyn'])
     if gateway_env['OS'] == 'openwrt':
         gateway_env.AppendUnique(LIBS = [ 'stdc++', 'pthread' ])
+    if gateway_env['OS'] == 'linux':
+        gateway_env.AppendUnique(LIBS = [ 'pthread' ])
 
 gateway_dirs = [
     'GatewayMgmtApp',
