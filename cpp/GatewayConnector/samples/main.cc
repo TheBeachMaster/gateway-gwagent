@@ -55,6 +55,8 @@ class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionLi
             bus->EnableConcurrentCallbacks();
             QStatus myStat = configClient.GetVersion((char*)context, v, sessionId);
             cout << "Status " << myStat << " returned when contacting config service, version=" << v << endl;
+            myStat = configClient.SetPasscode((char*)context, NULL, 6, (const uint8_t*)"000000", sessionId);
+            cout << "SetPasscode status " << myStat << endl;
             free(context);
             bus->LeaveSession(sessionId);
             delete this;

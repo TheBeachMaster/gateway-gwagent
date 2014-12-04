@@ -388,26 +388,15 @@ int GatewayRouterPolicyManager::writeDefaultUserPolicies(xmlTextWriterPtr writer
     if (rc < 0) {
         return rc;
     }
+    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_type", (xmlChar*)"method_call");
+    if (rc < 0) {
+        return rc;
+    }
     rc = xmlTextWriterEndElement(writer);
     if (rc < 0) {
         return rc;
     }
-    rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-    if (rc < 0) {
-        return rc;
-    }
-    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_sender", (xmlChar*)GW_WELLKNOWN_NAME);
-    if (rc < 0) {
-        return rc;
-    }
-/*    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path", (xmlChar*)(AJ_GW_OBJECTPATH + "/" + userName).c_str());
-    if (rc < 0) {
-        return rc;
-    }*/
-    rc = xmlTextWriterEndElement(writer);
-    if (rc < 0) {
-        return rc;
-    }
+
     //allow default Dbus interface
     rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
     if (rc < 0) {
@@ -450,11 +439,61 @@ int GatewayRouterPolicyManager::writeDefaultUserPolicies(xmlTextWriterPtr writer
     if (rc < 0) {
         return rc;
     }
+
     rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
     if (rc < 0) {
         return rc;
     }
-    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path", (xmlChar*)"/About");
+    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_interface",  (xmlChar*)"org.freedesktop.DBus.Properties");
+    if (rc < 0) {
+        return rc;
+    }
+    rc = xmlTextWriterEndElement(writer);
+    if (rc < 0) {
+        return rc;
+    }
+
+    rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
+    if (rc < 0) {
+        return rc;
+    }
+    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_interface",  (xmlChar*)"org.freedesktop.DBus.Properties");
+    if (rc < 0) {
+        return rc;
+    }
+    rc = xmlTextWriterEndElement(writer);
+    if (rc < 0) {
+        return rc;
+    }
+
+
+    rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
+    if (rc < 0) {
+        return rc;
+    }
+    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path",  (xmlChar*)"/org/alljoyn/Bus/Peer");
+    if (rc < 0) {
+        return rc;
+    }
+    rc = xmlTextWriterEndElement(writer);
+    if (rc < 0) {
+        return rc;
+    }
+
+    rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
+    if (rc < 0) {
+        return rc;
+    }
+    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path",  (xmlChar*)"/org/alljoyn/Bus/Peer");
+    if (rc < 0) {
+        return rc;
+    }
+    rc = xmlTextWriterEndElement(writer);
+    if (rc < 0) {
+        return rc;
+    }
+
+    rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
     if (rc < 0) {
         return rc;
     }
@@ -467,10 +506,6 @@ int GatewayRouterPolicyManager::writeDefaultUserPolicies(xmlTextWriterPtr writer
         return rc;
     }
     rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-    if (rc < 0) {
-        return rc;
-    }
-    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path", (xmlChar*)"/About");
     if (rc < 0) {
         return rc;
     }
@@ -499,38 +534,6 @@ int GatewayRouterPolicyManager::writeDefaultUserPolicies(xmlTextWriterPtr writer
         return rc;
     }
     //allow Device Icon communication
-    rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-    if (rc < 0) {
-        return rc;
-    }
-    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path", (xmlChar*)"/About/DeviceIcon");
-    if (rc < 0) {
-        return rc;
-    }
-    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_type", (xmlChar*)"method_return");
-    if (rc < 0) {
-        return rc;
-    }
-    rc = xmlTextWriterEndElement(writer);
-    if (rc < 0) {
-        return rc;
-    }
-    rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-    if (rc < 0) {
-        return rc;
-    }
-    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path", (xmlChar*)"/About/DeviceIcon");
-    if (rc < 0) {
-        return rc;
-    }
-    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_type", (xmlChar*)"error");
-    if (rc < 0) {
-        return rc;
-    }
-    rc = xmlTextWriterEndElement(writer);
-    if (rc < 0) {
-        return rc;
-    }
     rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
     if (rc < 0) {
         return rc;
@@ -616,44 +619,6 @@ int GatewayRouterPolicyManager::writeExposedServices(xmlTextWriterPtr writer, co
             if (rc < 0) {
                 return rc;
             }
-            //send_type=method_return
-            rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-            if (rc < 0) {
-                return rc;
-            }
-            if (isPrefix) {
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path_prefix", (xmlChar*)objectPath.c_str());
-            } else {
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path", (xmlChar*)objectPath.c_str());
-            }
-            if (rc < 0) {
-                return rc;
-            }
-            rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_type", (xmlChar*)"method_return");
-            if (rc < 0) {
-                return rc;
-            }
-            //send_type=error
-            rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-            if (rc < 0) {
-                return rc;
-            }
-            if (isPrefix) {
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path_prefix", (xmlChar*)objectPath.c_str());
-            } else {
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path", (xmlChar*)objectPath.c_str());
-            }
-            if (rc < 0) {
-                return rc;
-            }
-            rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_type", (xmlChar*)"error");
-            if (rc < 0) {
-                return rc;
-            }
-            rc = xmlTextWriterEndElement(writer);
-            if (rc < 0) {
-                return rc;
-            }
         } else {
             for (size_t interfaceIndx = 0; interfaceIndx < interfaces.size(); interfaceIndx++) {
                 //receive_type = method_call
@@ -699,56 +664,6 @@ int GatewayRouterPolicyManager::writeExposedServices(xmlTextWriterPtr writer, co
                     return rc;
                 }
                 rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_type", (xmlChar*)"signal");
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterEndElement(writer);
-                if (rc < 0) {
-                    return rc;
-                }
-                //send_type=method_return
-                rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-                if (rc < 0) {
-                    return rc;
-                }
-                if (isPrefix) {
-                    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path_prefix", (xmlChar*)objectPath.c_str());
-                } else {
-                    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path", (xmlChar*)objectPath.c_str());
-                }
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_interface", (xmlChar*)interfaces[interfaceIndx].c_str());
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_type", (xmlChar*)"method_return");
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterEndElement(writer);
-                if (rc < 0) {
-                    return rc;
-                }
-                //send_type=error
-                rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-                if (rc < 0) {
-                    return rc;
-                }
-                if (isPrefix) {
-                    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path_prefix", (xmlChar*)objectPath.c_str());
-                } else {
-                    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_path", (xmlChar*)objectPath.c_str());
-                }
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_interface", (xmlChar*)interfaces[interfaceIndx].c_str());
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"send_type", (xmlChar*)"error");
                 if (rc < 0) {
                     return rc;
                 }
@@ -816,52 +731,6 @@ int GatewayRouterPolicyManager::writeRemotedApps(xmlTextWriterPtr writer, const 
             if (rc < 0) {
                 return rc;
             }
-            //send_type=method_return
-            rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-            if (rc < 0) {
-                return rc;
-            }
-            if (isPrefix) {
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path_prefix", (xmlChar*)objectPath.c_str());
-            } else {
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path", (xmlChar*)objectPath.c_str());
-            }
-            if (rc < 0) {
-                return rc;
-            }
-            rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_sender", (xmlChar*)uniqueName.c_str());
-            if (rc < 0) {
-                return rc;
-            }
-            rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_type", (xmlChar*)"method_return");
-            if (rc < 0) {
-                return rc;
-            }
-            //send_type=error
-            rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-            if (rc < 0) {
-                return rc;
-            }
-            if (isPrefix) {
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path_prefix", (xmlChar*)objectPath.c_str());
-            } else {
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path", (xmlChar*)objectPath.c_str());
-            }
-            if (rc < 0) {
-                return rc;
-            }
-            rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_sender", (xmlChar*)uniqueName.c_str());
-            if (rc < 0) {
-                return rc;
-            }
-            rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_type", (xmlChar*)"error");
-            if (rc < 0) {
-                return rc;
-            }
-            rc = xmlTextWriterEndElement(writer);
-            if (rc < 0) {
-                return rc;
-            }
         } else {
             for (size_t interfaceIndx = 0; interfaceIndx < interfaces.size(); interfaceIndx++) {
                 //receive_type = method_call
@@ -915,64 +784,6 @@ int GatewayRouterPolicyManager::writeRemotedApps(xmlTextWriterPtr writer, const 
                     return rc;
                 }
                 rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_type", (xmlChar*)"signal");
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterEndElement(writer);
-                if (rc < 0) {
-                    return rc;
-                }
-                //send_type=method_return
-                rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-                if (rc < 0) {
-                    return rc;
-                }
-                if (isPrefix) {
-                    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path_prefix", (xmlChar*)objectPath.c_str());
-                } else {
-                    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path", (xmlChar*)objectPath.c_str());
-                }
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_interface", (xmlChar*)interfaces[interfaceIndx].c_str());
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_sender", (xmlChar*)uniqueName.c_str());
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_type", (xmlChar*)"method_return");
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterEndElement(writer);
-                if (rc < 0) {
-                    return rc;
-                }
-                //send_type=error
-                rc = xmlTextWriterStartElement(writer, (xmlChar*)"allow");
-                if (rc < 0) {
-                    return rc;
-                }
-                if (isPrefix) {
-                    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path_prefix", (xmlChar*)objectPath.c_str());
-                } else {
-                    rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_path", (xmlChar*)objectPath.c_str());
-                }
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_interface", (xmlChar*)interfaces[interfaceIndx].c_str());
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_sender", (xmlChar*)uniqueName.c_str());
-                if (rc < 0) {
-                    return rc;
-                }
-                rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_type", (xmlChar*)"error");
                 if (rc < 0) {
                     return rc;
                 }
