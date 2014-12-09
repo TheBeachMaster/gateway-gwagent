@@ -45,6 +45,7 @@
 			<interfaces>			
 				<interface name="NotificationInterface">org.alljoyn.Notification</interface>
 				<interface name="AboutInterface">org.alljoyn.About</interface>
+				<interface name="AboutIcon">org.alljoyn.Icon</interface>
 				<interface name="NotificationSuperInterface">org.alljoyn.NotificationSuper</interface>
 				<interface name="ConfigInterface">org.alljoyn.Config</interface>
 			</interfaces>				
