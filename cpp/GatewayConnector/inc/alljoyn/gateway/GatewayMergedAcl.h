@@ -24,6 +24,8 @@
 namespace ajn {
 namespace gw {
 
+static const uint16_t UUID_LENGTH = 16;
+
 /**
  * Class that contains the MergedAcl information
  */
@@ -71,7 +73,7 @@ class GatewayMergedAcl {
         /**
          * The AppId of the App
          */
-        uint8_t appId[16];
+        uint8_t appId[UUID_LENGTH];
 
         /**
          * The objectDescriptions of the App

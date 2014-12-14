@@ -57,7 +57,7 @@ QStatus GatewayMergedAcl::unmarshal(Message& msg)
 
         uint8_t* appIdArg;
         size_t appIdArgLen;
-
+        size_t appIdLen = UUID_LENGTH;
         MsgArg* objDescArgs;
         size_t numObjDescArgs;
 
@@ -66,9 +66,13 @@ QStatus GatewayMergedAcl::unmarshal(Message& msg)
             return status;
         }
 
+        if (appIdArgLen < UUID_LENGTH) {
+            appIdLen = appIdArgLen;
+        }
+
         RemotedApp remotedApp;
         remotedApp.deviceId.assign(deviceIdArg);
-        memcpy(remotedApp.appId, appIdArg, 16);
+        memcpy(remotedApp.appId, appIdArg, appIdLen);
         status = unmarshalObjectDescriptions(objDescArgs, numObjDescArgs, remotedApp.objectDescs);
         if (status != ER_OK) {
             return status;
