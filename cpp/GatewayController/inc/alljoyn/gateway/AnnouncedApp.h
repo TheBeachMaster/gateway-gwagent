@@ -36,10 +36,12 @@ class AnnouncedApp {
      * @param busName The name of the {@link BusAttachment} of the device that sent the Announcement
      * @param appName The name of the application
      * @param appId The application id
+     * @param appIdLength The application id length
      * @param deviceName The name of the device
      * @param deviceId The device id
+     * @return {@link QStatus}
      */
-    void init(const qcc::String& busName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId);
+    QStatus init(const qcc::String& busName, const qcc::String& appName, const uint8_t*appId, uint32_t appIdLength, const qcc::String& deviceName, const qcc::String& deviceId);
 
     /**
      * init
@@ -57,7 +59,7 @@ class AnnouncedApp {
     /**
      * @return The bus name
      */
-    const qcc::String& getBusName();
+    const qcc::String& getBusName() const;
 
     /**
      * @return The name of the application that sent the announcement
@@ -67,7 +69,13 @@ class AnnouncedApp {
     /**
      * @return Id of the application that sent the announcement
      */
-    uint8_t*getAppId();
+    const uint8_t*getAppId() const;
+
+
+    /**
+     * @return Length of Id of the application that sent the announcement
+     */
+    uint32_t getAppIdLength() const;
 
     /**
      * @return The name of the device that the application belongs to
@@ -77,7 +85,7 @@ class AnnouncedApp {
     /**
      * @return The id of the device that the application belongs to
      */
-    const qcc::String& getDeviceId();
+    const qcc::String& getDeviceId() const;
 
     /**
      * set bus name
@@ -92,8 +100,9 @@ class AnnouncedApp {
 
     /**
      * set app Id
+     * @return {@link QStatus}
      */
-    void setAppId(uint8_t*appId, size_t len);
+    QStatus setAppId(const uint8_t*appId, size_t len);
 
     /**
      * set device name
@@ -122,6 +131,11 @@ class AnnouncedApp {
      */
 
     qcc::String m_AppName;
+
+    /**
+     * length of the appID. maximum is UUID_LENGTH
+     */
+    uint32_t m_AppIdLength;
 
     /**
      * The Id of the application that sent the announcement

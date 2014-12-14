@@ -75,6 +75,7 @@ QStatus GatewayController::createGateway(const qcc::String& gatewayBusName, cons
 
                     if (status != ER_OK) {
                         QCC_LogError(status, ("GatewayMgmtApp init failed"));
+                        delete gatewayMgmtApp;
                         return status;
                     }
                     break;
@@ -85,6 +86,8 @@ QStatus GatewayController::createGateway(const qcc::String& gatewayBusName, cons
 
     if (gatewayMgmtApp) {
         m_Gateways[gatewayBusName] = *gatewayMgmtApp;
+    } else {
+        return ER_FAIL;
     }
 
     return ER_OK;

@@ -28,7 +28,7 @@ namespace ajn {
 namespace gwc {
 
 /**
- * AclAdapter class. Used to marshal and unmarshal Acls
+ * PayloadAdapter class. Used to marshal and unmarshal Acls
  */
 class PayloadAdapter {
 

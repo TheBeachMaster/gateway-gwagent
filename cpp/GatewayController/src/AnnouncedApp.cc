@@ -24,26 +24,35 @@ namespace gwc {
 
 using namespace gwcConsts;
 
-void AnnouncedApp::init(const qcc::String& busName, const qcc::String& appName, uint8_t*appId, const qcc::String& deviceName, const qcc::String& deviceId)
+QStatus AnnouncedApp::init(const qcc::String& busName, const qcc::String& appName, const uint8_t*appId, uint32_t appIdLength, const qcc::String& deviceName, const qcc::String& deviceId)
 {
 
+    if ((busName == qcc::String::Empty) ||
+        (appName == qcc::String::Empty) ||
+        (deviceName == qcc::String::Empty) ||
+        (deviceId == qcc::String::Empty) ||
+        (appId == NULL) ||
+        (appIdLength == 0)) {
+        return ER_FAIL;
+    }
+    m_AppIdLength = appIdLength;
     m_BusName = busName;
     m_AppName  = appName;
     m_DeviceName = deviceName;
     m_DeviceId = deviceId;
-    setAppId(appId, UUID_LENGTH);
+    return setAppId(appId, appIdLength);
 }
 
 QStatus AnnouncedApp::init(const qcc::String& busName, ajn::services::AboutClient::AboutData const& aboutData)
 {
-    setBusName(busName);
+    ajn::services::AboutClient::AboutData::const_iterator itr = aboutData.find("AppId");
 
-    if (aboutData.find("AppId") == aboutData.end()) {
+    if (itr == aboutData.end()) {
         QCC_LogError(ER_FAIL, ("AppId missing in about structure, bus name is '%s'", busName.c_str()));
         return ER_FAIL;
     }
 
-    const MsgArg*value = &aboutData.find("AppId")->second;
+    const MsgArg*value = &itr->second;
 
 
     uint8_t* appIdBin = NULL;
@@ -54,26 +63,19 @@ QStatus AnnouncedApp::init(const qcc::String& busName, ajn::services::AboutClien
         return status;
     }
 
-    setAppId(appIdBin, len);
-
-//            GetAboutDataEntry(aboutData,"AppId")
-    m_BusName = busName;
-    m_AppName = getAboutDataEntry(aboutData, "AppName");
-    m_DeviceName  = getAboutDataEntry(aboutData, "DeviceName");
-    m_DeviceId = getAboutDataEntry(aboutData, "DeviceId");
-
-    return ER_OK;
+    return init(busName, getAboutDataEntry(aboutData, "AppName"), appIdBin, len, getAboutDataEntry(aboutData, "DeviceName"), getAboutDataEntry(aboutData, "DeviceId"));
 }
 
 
 qcc::String AnnouncedApp::getAboutDataEntry(ajn::services::AboutClient::AboutData const& aboutData, const qcc::String& key)
 {
-    if (aboutData.find(key) == aboutData.end()) {
+    ajn::services::AboutClient::AboutData::const_iterator itr = aboutData.find(key);
+    if (itr == aboutData.end()) {
         QCC_LogError(ER_FAIL, ("Called GetAboutDataEntry but couldn't find the key '%s' requested", key.c_str()));
         return "";
     }
 
-    const MsgArg*value = &aboutData.find(key)->second;
+    const MsgArg*value = &itr->second;
 
     if (value->typeId == ALLJOYN_STRING) {
         return value->v_string.str;
@@ -91,7 +93,7 @@ AnnouncedApp::~AnnouncedApp()
 {
 }
 
-const qcc::String& AnnouncedApp::getBusName()
+const qcc::String& AnnouncedApp::getBusName() const
 {
     return m_BusName;
 }
@@ -102,17 +104,23 @@ const qcc::String& AnnouncedApp::getAppName() const
     return m_AppName;
 }
 
-uint8_t*AnnouncedApp::getAppId()
+const uint8_t*AnnouncedApp::getAppId() const
 {
     return m_AppId;
 }
+
+uint32_t AnnouncedApp::getAppIdLength() const
+{
+    return m_AppIdLength;
+}
+
 
 const qcc::String& AnnouncedApp::getDeviceName() const
 {
     return m_DeviceName;
 }
 
-const qcc::String& AnnouncedApp::getDeviceId()
+const qcc::String& AnnouncedApp::getDeviceId() const
 {
     return m_DeviceId;
 }
@@ -128,13 +136,18 @@ void AnnouncedApp::setAppName(const qcc::String& appName)
     m_AppName = appName;
 }
 
-void AnnouncedApp::setAppId(uint8_t*appId, size_t len)
+QStatus AnnouncedApp::setAppId(const uint8_t*appId, size_t len)
 {
     if (appId) {
         if (len <= UUID_LENGTH) {
-            memcpy(m_AppId, appId, UUID_LENGTH);
+
+            memcpy(m_AppId, appId, len);
+            return ER_OK;
         }
+        return ER_BAD_ARG_2;
     }
+
+    return ER_BAD_ARG_1;
 }
 
 void AnnouncedApp::setDeviceName(const qcc::String& deviceName)

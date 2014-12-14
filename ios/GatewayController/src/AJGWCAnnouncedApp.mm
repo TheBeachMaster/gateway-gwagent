@@ -25,7 +25,7 @@
 
 @implementation AJGWCAnnouncedApp
 
-- (id)initWithBusName:(NSString*) busName appName:(NSString*) appName appId:(uint8_t*) appId deviceName:(NSString*) deviceName deviceId:(NSString*)deviceId
+- (id)initWithBusName:(NSString*) busName appName:(NSString*) appName appId:(uint8_t*) appId appIdLength:(uint32_t)appIdLength deviceName:(NSString*) deviceName deviceId:(NSString*)deviceId
 {
     self = [super init];
     if (self) {
@@ -33,6 +33,7 @@
         self.handle->init([AJNConvertUtil convertNSStringToQCCString:busName],
                           [AJNConvertUtil convertNSStringToQCCString:appName],
                           appId,
+                          appIdLength,
                           [AJNConvertUtil convertNSStringToQCCString:deviceName],
                           [AJNConvertUtil convertNSStringToQCCString:deviceId]);
     }
@@ -73,7 +74,7 @@
 
 - (uint8_t*)appId
 {
-    return self.handle->getAppId();
+    return (uint8_t*)self.handle->getAppId();
 }
 
 - (NSString*)deviceName
