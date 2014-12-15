@@ -107,7 +107,12 @@ QStatus RemotedApp::init(AnnouncedApp* announcedApp, const std::vector<RuleObjec
 {
     m_RuleObjDescriptions = ruleObjDescriptions;
 
-    AnnouncedApp::init(announcedApp->getBusName(),  announcedApp->getAppName(),  announcedApp->getAppId(),  announcedApp->getDeviceName(),  announcedApp->getDeviceId());
+    AnnouncedApp::init(announcedApp->getBusName(),
+                       announcedApp->getAppName(),
+                       announcedApp->getAppId(),
+                       announcedApp->getAppIdLength(),
+                       announcedApp->getDeviceName(),
+                       announcedApp->getDeviceId());
 
     return ER_OK;
 }

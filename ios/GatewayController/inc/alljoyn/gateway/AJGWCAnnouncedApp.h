@@ -23,10 +23,11 @@
  * @param busName The name of the {@link AJNBusAttachment} of the device that sent the Announcement
  * @param appName The name of the application
  * @param appId The application id
+ * @param appIdLength The application id length
  * @param deviceName The name of the device
  * @param deviceId The device id
  */
-- (id)initWithBusName:(NSString*) busName appName:(NSString*) appName appId:(uint8_t*) appId deviceName:(NSString*) deviceName deviceId:(NSString*)deviceId;
+- (id)initWithBusName:(NSString*) busName appName:(NSString*) appName appId:(uint8_t*) appId appIdLength:(uint32_t)appIdLength deviceName:(NSString*) deviceName deviceId:(NSString*)deviceId;
 
 /**
  * Constructor
