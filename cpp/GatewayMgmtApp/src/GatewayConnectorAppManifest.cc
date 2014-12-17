@@ -179,7 +179,9 @@ void GatewayConnectorAppManifest::parseObjects(xmlNode* currentKey, Capabilities
         }
 
         qcc::String objectPath = "";
-        qcc::String objectFriendly = (const char*)xmlGetProp(objectKey, (const xmlChar*)"name");
+        xmlChar*xmlObjectFriendly = xmlGetProp(objectKey, (const xmlChar*)"name");
+        qcc::String objectFriendly = (const char*)xmlObjectFriendly;
+        xmlFree(xmlObjectFriendly);
         bool isPrefix = false;
         std::vector<GatewayConnectorAppCapability::InterfaceDesc> interfaces;
 
@@ -214,9 +216,14 @@ void GatewayConnectorAppManifest::parseObjects(xmlNode* currentKey, Capabilities
                 }
 
                 bool isSecured = false;
-                qcc::String interfaceFriendly = (const char*)xmlGetProp(interfaceKey, (const xmlChar*)"name");
+
+                xmlChar*xmlInterfaceFriendly = xmlGetProp(interfaceKey, (const xmlChar*)"name");
+                qcc::String interfaceFriendly = (const char*)xmlInterfaceFriendly;
+                xmlFree(xmlInterfaceFriendly);
                 qcc::String interfaceName = (const char*)interfaceKey->children->content;
-                qcc::String secured = (const char*)xmlGetProp(interfaceKey, (const xmlChar*)"secured");
+                xmlChar*xmlSecured = xmlGetProp(interfaceKey, (const xmlChar*)"secured");
+                qcc::String secured = (const char*)xmlSecured;
+                xmlFree(xmlSecured);
 
                 if (secured.compare("true") == 0) {
                     isSecured = true;
@@ -253,7 +260,9 @@ void GatewayConnectorAppManifest::parseExecutionInfo(xmlNode* currentKey)
                 if (envVariableKey->type != XML_ELEMENT_NODE || envVariableKey->children == NULL) {
                     continue;
                 }
-                qcc::String variableName = (const char*)xmlGetProp(envVariableKey, (const xmlChar*)"name");
+                xmlChar*xmlVariableName = xmlGetProp(envVariableKey, (const xmlChar*)"name");
+                qcc::String variableName = (const char*)xmlVariableName;
+                xmlFree(xmlVariableName);
                 qcc::String variableValue = (const char*)envVariableKey->children->content;
                 m_EnvironmentVariables.push_back(variableName + "=" + variableValue);
             }
