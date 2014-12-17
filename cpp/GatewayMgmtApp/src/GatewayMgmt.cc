@@ -220,6 +220,7 @@ QStatus GatewayMgmt::shutdownGatewayMgmt()
         }
     }
 
+    xmlCleanupParser();
     m_Bus = NULL;
     return returnStatus;
 }
