@@ -44,7 +44,6 @@ define Package/$(PKG_NAME)
 	+alljoyn-config \
 	+alljoyn-services_common \
 	+alljoyn-notification \
-	+alljoyn-onboarding \
     +libxml2 \
     +shadow-useradd \
     +shadow-userdel
