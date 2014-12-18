@@ -300,6 +300,7 @@ exit:
 
     xmlFreeTextWriter(writer);
     xmlFreeDoc(doc);
+    xmlCleanupParser();
     return status;
 }
 
