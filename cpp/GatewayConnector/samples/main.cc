@@ -174,19 +174,19 @@ class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionLi
                         cout << "url=" << url.c_str() << endl;
                     }
 
-                    uint8_t*content = NULL;
-                    myStat = iconClient.GetContent((char*)context, &content, contentSize, sessionId);
+                    AboutIconClient::Icon icon;
+                    myStat = iconClient.GetIcon((char*)context, icon, sessionId);
 
                     if (myStat != ER_OK) {
                         cout << "GetContent: status=" << QCC_StatusText(myStat) << endl;
                     } else {
-                        cout << "Content size=" << contentSize << endl;
+                        cout << "Content size=" << icon.contentSize << endl;
                         cout << "Content :\t";
-                        for (size_t i = 0; i < contentSize; i++) {
+                        for (size_t i = 0; i < icon.contentSize; i++) {
                             if (i % 8 == 0 && i > 0) {
                                 cout << "\n\t\t";
                             }
-                            cout << hex << uppercase << setfill('0') << setw(2) << (unsigned int)content[i]
+                            cout << hex << uppercase << setfill('0') << setw(2) << (unsigned int)icon.content[i]
                                  << nouppercase << dec;
                         }
                         cout << endl;
