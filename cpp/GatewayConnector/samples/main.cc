@@ -39,15 +39,44 @@ using namespace ajn::services;
 using namespace ajn::gw;
 using namespace std;
 
-BusAttachment* bus;
-NotificationService* notificationService = 0;
-NotificationSender* notificationSender = 0;
-CommonBusListener*  busListener = 0;
-SrpKeyXListener* keyListener = 0;
-qcc::String tweetScript = "";
+
+class ExitManager
+{
+public:
+    ExitManager() : exiting(false), signum(0) {}
+    ~ExitManager() {}
+
+    bool isExiting() const
+    {
+        return exiting;
+    }
+
+    void setExiting( int32_t signum )
+    {
+        exiting = true;
+        this->signum = signum;
+    }
+
+    int32_t getSignum() const
+    {
+        return signum;
+    }
+
+private:
+    bool exiting;
+    int32_t signum;
+};
+
+ExitManager exitManager;
+
 
 class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionListener {
   private:
+    BusAttachment* bus;
+    ConfigSession()
+    {
+        // Private to force use of the ctor with BusAttachment* parameter
+    }
     void PrintAboutData(AboutClient::AboutData& aboutData)
     {
         for (AboutClient::AboutData::iterator itx = aboutData.begin(); itx != aboutData.end(); ++itx) {
@@ -81,6 +110,8 @@ class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionLi
     }
 
   public:
+    ConfigSession( BusAttachment* busAttachment ) : bus(busAttachment) {}
+
     virtual void JoinSessionCB(QStatus status, SessionId sessionId, const SessionOpts& opts, void* context) {
         static bool firstJoin = true;
         QStatus myStat;
@@ -164,7 +195,6 @@ class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionLi
 
                 if (isIconInterface) {
                     AboutIconClient iconClient(*bus);
-                    size_t contentSize = 0;
                     qcc::String url;
 
                     myStat = iconClient.GetUrl((char*)context, url, sessionId);
@@ -178,10 +208,11 @@ class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionLi
                     myStat = iconClient.GetIcon((char*)context, icon, sessionId);
 
                     if (myStat != ER_OK) {
-                        cout << "GetContent: status=" << QCC_StatusText(myStat) << endl;
+                        cout << "GetIcon: status=" << QCC_StatusText(myStat) << endl;
                     } else {
-                        cout << "Content size=" << icon.contentSize << endl;
-                        cout << "Content :\t";
+                        cout << "Icon size=" << icon.contentSize << endl;
+                        cout << "Icon mimetype=" << icon.mimetype << endl;
+                        cout << "Icon content:\t";
                         for (size_t i = 0; i < icon.contentSize; i++) {
                             if (i % 8 == 0 && i > 0) {
                                 cout << "\n\t\t";
@@ -197,21 +228,6 @@ class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionLi
                         cout << "getVersion: status=" << QCC_StatusText(myStat) << endl;
                     } else {
                         cout << "Version=" << ver << endl;
-                    }
-
-                    qcc::String mimetype;
-                    myStat = iconClient.GetMimeType((char*)context, mimetype, sessionId);
-                    if (myStat != ER_OK) {
-                        cout << "getMimetype: status=" << QCC_StatusText(myStat) << endl;
-                    } else {
-                        cout << "Mimetype=" << mimetype.c_str() << endl;
-                    }
-
-                    myStat = iconClient.GetSize((char*)context, contentSize, sessionId);
-                    if (myStat != ER_OK) {
-                        cout << "getSize status=" << QCC_StatusText(myStat) << endl;
-                    } else {
-                        cout << "Size=" << contentSize << endl;
                     }
                 } // if (isIconInterface)
 
@@ -267,64 +283,81 @@ class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionLi
 
 };
 
-class ConfigAnnounceHandler : public AnnounceHandler {
+class ConfigAboutListener : public AboutListener {
+  private:
+    BusAttachment* bus;
+    ConfigAboutListener()
+    {
+        // Private to force use of ctor with BusAttachment* parameter
+    }
   public:
-    virtual void Announce(uint16_t version, uint16_t port,
-                          const char* busName, const ObjectDescriptions& objectDescs, const AboutData& aboutData) {
+    ConfigAboutListener( BusAttachment* busAttachment ) : bus(busAttachment) {}
+
+    virtual void Announced(const char* busName, uint16_t version, SessionPort port,
+                          const MsgArg& objectDescriptionArg, const MsgArg& aboutDataArg) {
+
+        QStatus status = ER_OK;
 
         cout << "Received Announce from " << busName << endl;
 
-        ObjectDescriptions::const_iterator it1 = objectDescs.find("/Config");
-        if (it1 == objectDescs.end()) { return; }
-
-        vector<qcc::String>::const_iterator it2;
-        for (it2 = it1->second.begin(); it2 != it1->second.end(); it2++) {
-            if (0 == it2->compare("org.alljoyn.Config")) { break; }
+        // Go through the object descriptions to find the Config interface
+        MsgArg *entries;
+        typedef struct {
+            char* objectPath;
+            MsgArg* interfaces;
+            size_t numInterfaces;
+        } ObjectDescription;
+        size_t num = 0;
+        bool found = false;
+        status = objectDescriptionArg.Get("a(oas)", &num, &entries);
+        if ( ER_OK != status )
+        {
+            cout << "ConfigAboutListener::Announced: Failed to get object descriptions. Status="
+                << QCC_StatusText(status) << endl;
+            return;
         }
-        if (it2 == it1->second.end()) { return; }
+        for (size_t i = 0; i > num && !found; ++i) {
+            ObjectDescription objDesc;
+            status = entries[i].Get("(oas)", &objDesc.objectPath, &objDesc.interfaces, &objDesc.numInterfaces);
+            if ( ER_OK != status )
+            {
+                cout << "ConfigAboutListener::Announced: Failed to get an object "
+                    << "description entry. Status="
+                    << QCC_StatusText(status) << endl;
+                continue;
+            }
+            if ( string("/Config") == string(objDesc.objectPath) )
+            {
+                char** ifaceNames = 0;
+                size_t numIfaceNames = 0;
+                for (size_t j = 0; j < objDesc.numInterfaces && !found; ++j) {
+                    status = objDesc.interfaces[j].Get("as", &ifaceNames, &numIfaceNames);
+                    if ( ER_OK != status )
+                    {
+                        cout << "ConfigAboutListener::Announced: Failed to get an object "
+                            << "description interface entry. Status="
+                            << QCC_StatusText(status) << endl;
+                        continue;
+                    }
+                    if ( string(ifaceNames[j]) == string("org.alljoyn.Config") )
+                    {
+                        // We found the Config interface so continue below
+                        found = true;
+                    }
+                }
+            }
+        }
+        if ( !found ) { return; }
 
         SessionOpts opts(SessionOpts::TRAFFIC_MESSAGES, false, SessionOpts::PROXIMITY_ANY, TRANSPORT_ANY);
-        ConfigSession* cs = new ConfigSession();
+        ConfigSession* cs = new ConfigSession(bus);
         bus->JoinSessionAsync(busName, port, cs, opts, cs, strdup(busName));
     }
 
 };
 
-ConfigAnnounceHandler* announceHandler = 0;
-
-void cleanup() {
-    if (!bus) {
-        return;
-    }
-
-    if (announceHandler) {
-        AnnouncementRegistrar::UnRegisterAnnounceHandler(*bus, *announceHandler, NULL, 0);
-        delete announceHandler;
-    }
-
-    if (notificationService) {
-        notificationService->shutdown();
-        notificationService = 0;
-    }
-    if (busListener) {
-        CommonSampleUtil::aboutServiceDestroy(bus, busListener);
-        delete busListener;
-        busListener = 0;
-    }
-
-    bus->Disconnect();
-    if (keyListener) {
-        delete keyListener;
-        keyListener = 0;
-    }
-    bus->Stop();
-    delete bus;
-    bus = 0;
-}
-
 void signal_callback_handler(int32_t signum) {
-    cleanup();
-    exit(signum);
+    exitManager.setExiting(signum);
 }
 
 void dumpObjectSpecs(list<GatewayMergedAcl::ObjectDescription>& specs, const char* indent) {
@@ -386,7 +419,16 @@ class MyApp : public GatewayConnector {
 };
 
 class MyReceiver : public NotificationReceiver {
+  private:
+    qcc::String tweetScript;
+    MyReceiver()
+    {
+        // Private to force use of other ctor
+    }
   public:
+    MyReceiver( const qcc::String& tweetScriptStr ) : tweetScript(tweetScriptStr)
+    {
+    }
     virtual void Receive(Notification const& notification) {
         vector<NotificationText> vecMessages = notification.getText();
 
@@ -410,9 +452,12 @@ class MyReceiver : public NotificationReceiver {
     }
 };
 
+
 int main(int argc, char** argv) {
     signal(SIGINT, signal_callback_handler);
-    bus = new BusAttachment("ConnectorApp", true);
+    BusAttachment bus("ConnectorApp", true);
+    CommonBusListener  busListener;
+    SrpKeyXListener keyListener;
 
     //====================================
     // Initialize bus
@@ -421,17 +466,15 @@ int main(int argc, char** argv) {
     PasswordManager::SetCredentials("ALLJOYN_PIN_KEYX", "000000");
 #endif
 
-    QStatus status = bus->Start();
+    QStatus status = bus.Start();
     if (ER_OK != status) {
         cout << "Error starting bus: " << QCC_StatusText(status) << endl;
-        cleanup();
         return 1;
     }
 
-    status = bus->Connect();
+    status = bus.Connect();
     if (ER_OK != status) {
         cout << "Error connecting bus: " << QCC_StatusText(status) << endl;
-        cleanup();
         return 1;
     }
 
@@ -442,36 +485,34 @@ int main(int argc, char** argv) {
     bool notInteractive = (interOff && (strcmp(interOff, "1") == 0)) ? true : false;
 
     char* twScript = getenv("TWITTER_SCRIPT");
-    tweetScript = twScript ? "/opt/alljoyn/apps/" + wellknownName + "/bin/" +  twScript : "";
+    qcc::String tweetScript = twScript ? "/opt/alljoyn/apps/" + wellknownName + "/bin/" +  twScript : "";
 
     //====================================
     // Initialize authentication
     //====================================
-    keyListener = new SrpKeyXListener();
-    keyListener->setPassCode("000000");
+    keyListener.setPassCode("000000");
     qcc::String keystore = "/opt/alljoyn/apps/" + wellknownName + "/store/.alljoyn_keystore.ks";
-    status = bus->EnablePeerSecurity("ALLJOYN_PIN_KEYX ALLJOYN_SRP_KEYX ALLJOYN_ECDHE_PSK", keyListener, keystore.c_str(), false);
+    status = bus.EnablePeerSecurity("ALLJOYN_PIN_KEYX ALLJOYN_SRP_KEYX ALLJOYN_ECDHE_PSK", &keyListener, keystore.c_str(), false);
 
     //====================================
     // Initialize GwConnector interface
     //====================================
-    MyApp myApp(bus, wellknownName.c_str());
+    MyApp myApp(&bus, wellknownName.c_str());
     status = myApp.init();
     if (ER_OK != status) {
         cout << "Error connecting bus: " << QCC_StatusText(status) << endl;
-        cleanup();
         return 1;
     }
 
     //====================================
     // Initialize notification consumer
     //====================================
-    notificationService = NotificationService::getInstance();
-    MyReceiver receiver;
-    status = notificationService->initReceive(bus, &receiver);
+    NotificationService* notificationService = NotificationService::getInstance();
+    MyReceiver receiver(tweetScript);
+    status = notificationService->initReceive(&bus, &receiver);
     if (ER_OK != status) {
         cout << "Error initializing notification receiver: " << QCC_StatusText(status) << endl;
-        cleanup();
+        notificationService->shutdown();
         return 1;
     }
 
@@ -484,26 +525,25 @@ int main(int argc, char** argv) {
     qcc::String appid;
     GuidUtil::GetInstance()->GenerateGUID(&appid);
 
-    AboutPropertyStoreImpl propStore;
+    AboutData aboutData("en");
+    AboutObj aboutObj(bus);
     DeviceNamesType deviceNames;
     deviceNames.insert(pair<qcc::String, qcc::String>("en", "ConnectorSampleDevice"));
-    status = CommonSampleUtil::fillPropertyStore(&propStore, appid, "ConnectorSample", deviceid, deviceNames);
+    status = CommonSampleUtil::fillAboutData(&aboutData, appid, "ConnectorSample", deviceid, deviceNames);
     if (status != ER_OK) {
-        cout << "Could not fill PropertyStore. " <<  QCC_StatusText(status) << endl;
-        cleanup();
+        cout << "Could not fill AboutData. " <<  QCC_StatusText(status) << endl;
         return 1;
     }
-    busListener = new CommonBusListener();
-    status = CommonSampleUtil::prepareAboutService(bus, &propStore, busListener, 900);
+    status = CommonSampleUtil::prepareAboutService(&bus, &aboutData, &aboutObj, &busListener, 900);
     if (status != ER_OK) {
         cout << "Could not set up the AboutService." << endl;
-        cleanup();
+        notificationService->shutdown();
         return 1;
     }
-    notificationSender = notificationService->initSend(bus, &propStore);
+    NotificationSender* notificationSender = notificationService->initSend(&bus, &aboutData);
     if (!notificationSender) {
         cout << "Could not initialize Sender" << endl;
-        cleanup();
+        notificationService->shutdown();
         return 1;
     }
 
@@ -511,8 +551,8 @@ int main(int argc, char** argv) {
     //====================================
     // Register for config announcements
     //====================================
-    announceHandler = new ConfigAnnounceHandler();
-    AnnouncementRegistrar::RegisterAnnounceHandler(*bus, *announceHandler, NULL, 0);
+    ConfigAboutListener aboutListener(&bus);
+    bus.RegisterAboutListener(aboutListener);
 
     //====================================
     // Here we go
@@ -520,7 +560,7 @@ int main(int argc, char** argv) {
     size_t lineSize = 1024;
     char line[1024];
     char* buffy = line;
-    while (1) {
+    while ( !exitManager.isExiting() ) {
         if (notInteractive) {
             sleep(5);
             continue;
@@ -574,7 +614,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    cleanup();
-
-    return 0;
+    notificationService->shutdownSender();
+    notificationService->shutdown();
+    return exitManager.getSignum();
 }
