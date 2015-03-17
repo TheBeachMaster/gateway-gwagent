@@ -17,24 +17,27 @@
 package org.alljoyn.gatewaycontroller.sdk.announcement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.alljoyn.about.AboutService;
-import org.alljoyn.about.AboutServiceImpl;
+import org.alljoyn.bus.AboutListener;
+import org.alljoyn.bus.AboutObjectDescription;
+import org.alljoyn.bus.BusAttachment;
+import org.alljoyn.bus.Status;
 import org.alljoyn.bus.Variant;
 import org.alljoyn.gatewaycontroller.sdk.AnnouncedApp;
 import org.alljoyn.gatewaycontroller.sdk.GatewayController;
 import org.alljoyn.gatewaycontroller.sdk.GatewayMgmtApp;
 import org.alljoyn.gatewaycontroller.sdk.GatewayMgmtAppListener;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
-import org.alljoyn.services.common.AnnouncementHandler;
-import org.alljoyn.services.common.BusObjectDescription;
 
 import android.util.Log;
 
@@ -42,43 +45,101 @@ import android.util.Log;
  * The {@link GatewayController} component that is responsible to receive and
  * manage the {@link AboutService} announcements
  */
-public class AnnouncementManager implements AnnouncementHandler {
+public class AnnouncementManager implements AboutListener {
     private static final String TAG = "gwc" + AnnouncementManager.class.getSimpleName();
+    private static final int PING_TIMEOUT_TIME_IN_MS = 5000;
+    private static final int PING_INTERVAL_IN_MS = 30000;
 
     /**
      * Handles Announcement tasks sequentially
      */
-    private ExecutorService announceTaskHandler;
+    private ScheduledExecutorService announceTaskHandler;
 
     /**
      * Received announcements of the devices in proximity The key is built by:
      * {@link AnnouncedApp#getKey()}
      */
-    private Map<String, AnnouncementData> appAnnouncements;
+    private ConcurrentHashMap<String, AnnouncementData> appAnnouncements;
 
     /**
      * Received announcements of the gateway management apps in proximity.
      * The key is created by: {@link AnnouncedApp#getKey()}
      */
-    private Map<String, GatewayMgmtApp> gatewayApps;
+    private ConcurrentHashMap<String, GatewayMgmtApp> gatewayApps;
 
     /**
      * Listeners for the announcements from the Gateway Management apps
      */
     private GatewayMgmtAppListener gwMgtmAppListener;
 
+    private Runnable runnablePingAllDevicesAndGateway = new Runnable() {
+
+        @Override
+        public void run() {
+            checkForLostApps();
+            checkForLostGateway();
+        }
+
+        private void checkForLostApps() {
+            BusAttachment bus = GatewayController.getInstance().getBusAttachment();
+            if (null == bus) {
+                return;
+            }
+            Iterator<AnnouncementData> iterator = appAnnouncements.values().iterator();
+            while (iterator.hasNext()) {
+                AnnouncementData anData = iterator.next();
+                String busName = anData.getApplicationData().getBusName();
+                Status status = bus.ping(busName, PING_TIMEOUT_TIME_IN_MS);
+                if (Status.OK != status) {
+                    Log.d(TAG, "checkForLostApps() - ping app failed, returned status " + status + ", removing app: '" + busName + "'");
+                    iterator.remove();
+                }
+            }
+        }
+
+        private void checkForLostGateway() {
+            boolean gwRemoved = false;
+            BusAttachment bus = GatewayController.getInstance().getBusAttachment();
+            if (null == bus) {
+                return;
+            }
+            Iterator<GatewayMgmtApp> iterator = gatewayApps.values().iterator();
+            while (iterator.hasNext()) {
+                GatewayMgmtApp gw = iterator.next();
+                String busName = gw.getBusName();
+                Status status = bus.ping(busName, PING_TIMEOUT_TIME_IN_MS);
+                if (Status.OK != status) {
+                    Log.d(TAG, "checkForLostGateway() - ping gateway app failed, returned status " + status + ", removing gateway app: '" + busName + "'");
+                    iterator.remove();
+                    gwRemoved = true;
+                }
+            }
+
+            if (gwMgtmAppListener != null && gwRemoved) {
+                gwMgtmAppListener.gatewayMgmtAppAnnounced();
+            }
+        }
+
+    };
+
+    ScheduledFuture<?> scheduledFuturePing;
+
     /**
      * Constructor
      */
     public AnnouncementManager() {
 
-        appAnnouncements    = new HashMap<String, AnnouncementData>();
-        gatewayApps         = new HashMap<String, GatewayMgmtApp>();
-        announceTaskHandler = Executors.newSingleThreadExecutor();
+        appAnnouncements    = new ConcurrentHashMap<String, AnnouncementData>();
+        gatewayApps         = new ConcurrentHashMap<String, GatewayMgmtApp>();
+        announceTaskHandler = Executors.newSingleThreadScheduledExecutor();
 
         // Gateway Controller needs to receive Announcement signals with all
         // type of the interfaces
-        AboutServiceImpl.getInstance().addAnnouncementHandler(this, null);
+        GatewayController.getInstance().getBusAttachment().registerAboutListener(this);
+        GatewayController.getInstance().getBusAttachment().whoImplements(null);
+
+        scheduledFuturePing = announceTaskHandler.scheduleAtFixedRate(runnablePingAllDevicesAndGateway,
+                PING_INTERVAL_IN_MS, PING_INTERVAL_IN_MS, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -87,7 +148,8 @@ public class AnnouncementManager implements AnnouncementHandler {
     public void clear() {
 
         Log.d(TAG, "Clearing the object resources");
-        AboutServiceImpl.getInstance().removeAnnouncementHandler(this, null);
+        GatewayController.getInstance().getBusAttachment().unregisterAboutListener(this);
+        scheduledFuturePing.cancel(true);
 
         if (appAnnouncements != null) {
             appAnnouncements.clear();
@@ -146,38 +208,21 @@ public class AnnouncementManager implements AnnouncementHandler {
         return appAnnouncements.get(CommunicationUtil.getKey(deviceId, appId));
     }
 
-    // ============== AnnouncementHandler ==============//
+    // ============== AboutListener ============== //
 
     /**
-     * @see org.alljoyn.services.common.AnnouncementHandler#onAnnouncement(java.lang.String,
-     *      short, org.alljoyn.services.common.BusObjectDescription[],
-     *      java.util.Map)
+     * @see org.alljoyn.bus.AboutListener#announced(java.lang.String, int, short, AboutObjectDescription[], java.util.Map)
      */
-    @Override
-    public void onAnnouncement(final String busName, final short port,
-                                   final BusObjectDescription[] objectDescriptions,
-                                       final Map<String, Variant> aboutData) {
 
-        Log.d(TAG, "Received Announcement from: '" + busName + "' enqueueing");
+    @Override
+    public void announced(final String busName, int version, final short port,
+            final AboutObjectDescription[] objectDescriptions, final Map<String, Variant> aboutData) {
+
+        Log.d(TAG, "Received announced() callback for: '" + busName + "' enqueueing");
         announceTaskHandler.execute(new Runnable() {
             @Override
             public void run() {
                 handleAnnouncement(busName, port, objectDescriptions, aboutData);
-            }
-        });
-    }
-
-    /**
-     * @see org.alljoyn.services.common.AnnouncementHandler#onDeviceLost(java.lang.String)
-     */
-    @Override
-    public void onDeviceLost(final String busName) {
-
-        Log.d(TAG, "Received onDeviceLost event of: '" + busName + "' enqueueing");
-        announceTaskHandler.execute(new Runnable() {
-            @Override
-            public void run() {
-                handleDeviceLost(busName);
             }
         });
     }
@@ -190,7 +235,7 @@ public class AnnouncementManager implements AnnouncementHandler {
      * @param objectDescriptions
      * @param aboutData
      */
-    private void handleAnnouncement(String busName, short port, BusObjectDescription[] objectDescriptions, Map<String, Variant> aboutData) {
+    private void handleAnnouncement(String busName, short port, AboutObjectDescription[] objectDescriptions, Map<String, Variant> aboutData) {
 
         Log.d(TAG, "Received announcement from: '" + busName + "', handling");
 
@@ -242,79 +287,17 @@ public class AnnouncementManager implements AnnouncementHandler {
 
     }// handleAnnouncement
 
-    /**
-     * Handles asynchronously received lostAdvertisedName event
-     *
-     * @param busName
-     */
-    private void handleDeviceLost(String busName) {
-
-        handleDeviceLostApps(busName);
-        boolean gwRemoved = handleDeviceLostGateway(busName);
-
-        if (gwMgtmAppListener != null && gwRemoved) {
-            gwMgtmAppListener.gatewayMgmtAppAnnounced();
-        }
-    }
-
-    /**
-     * Search the application by the given busName to be removed from the
-     * appAnnouncements
-     *
-     * @param busName
-     * @return TRUE if an application was removed
-     */
-    private void handleDeviceLostApps(String busName) {
-
-        Iterator<AnnouncementData> iterator = appAnnouncements.values().iterator();
-
-        while (iterator.hasNext()) {
-
-            AnnouncementData anData = iterator.next();
-            if (anData.getApplicationData().getBusName().equals(busName)) {
-
-                Log.d(TAG, "lostAdvertisedName for Applications, removed: '" + busName + "'");
-                iterator.remove();
-            }
-        }
-    }
-
-    /**
-     * Search the Gateway App by the given busName to be removed from the
-     * gatewayApps
-     *
-     * @param busName
-     * @return TRUE if a gateway was removed
-     */
-    private boolean handleDeviceLostGateway(String busName) {
-
-        boolean gwRemoved = false;
-        Iterator<GatewayMgmtApp> iterator = gatewayApps.values().iterator();
-
-        while (iterator.hasNext()) {
-
-            GatewayMgmtApp gw = iterator.next();
-            if (gw.getBusName().equals(busName)) {
-
-                Log.d(TAG, "lostAdvertisedName for GW, removed: '" + busName + "'");
-                iterator.remove();
-                gwRemoved = true;
-            }
-        }
-
-        return gwRemoved;
-    }
 
     /**
      * @param objectDescriptions
      * @return Return TRUE the announcement was sent from GW, otherwise FALSE
      */
-    private boolean isFromGW(BusObjectDescription[] objectDescriptions) {
+    private boolean isFromGW(AboutObjectDescription[] objectDescriptions) {
 
         // Check whether the announcement was sent from a Gateway Management App
-        for (BusObjectDescription objDesc : objectDescriptions) {
+        for (AboutObjectDescription objDesc : objectDescriptions) {
 
-            for (String iface : objDesc.getInterfaces()) {
+            for (String iface : objDesc.interfaces) {
 
                 if (iface.startsWith(GatewayController.IFACE_PREFIX)) {
                     return true;

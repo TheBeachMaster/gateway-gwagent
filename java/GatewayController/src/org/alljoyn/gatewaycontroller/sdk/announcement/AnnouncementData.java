@@ -19,6 +19,7 @@ package org.alljoyn.gatewaycontroller.sdk.announcement;
 import java.util.Map;
 
 import org.alljoyn.about.AboutService;
+import org.alljoyn.bus.AboutObjectDescription;
 import org.alljoyn.bus.Variant;
 import org.alljoyn.gatewaycontroller.sdk.AnnouncedApp;
 import org.alljoyn.services.common.BusObjectDescription;
@@ -36,7 +37,7 @@ public class AnnouncementData {
     /**
      * The announced object descriptions
      */
-    private final BusObjectDescription[] objDescArr;
+    private final AboutObjectDescription[] objDescArr;
 
     /**
      * The announcement data
@@ -56,7 +57,7 @@ public class AnnouncementData {
      * @param aboutData
      * @param app
      */
-    AnnouncementData(short portNumber, BusObjectDescription[] objDescArr, Map<String, Variant> aboutData,
+    AnnouncementData(short portNumber, AboutObjectDescription[] objDescArr, Map<String, Variant> aboutData,
                          AnnouncedApp app) {
 
         this.portNumber = portNumber;
@@ -91,7 +92,7 @@ public class AnnouncementData {
     /**
      * @return The array of {@link BusObjectDescription}
      */
-    public BusObjectDescription[] getObjDescArr() {
+    public AboutObjectDescription[] getObjDescArr() {
         return objDescArr;
     }
 

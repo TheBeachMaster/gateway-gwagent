@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.alljoyn.bus.AboutObjectDescription;
 import org.alljoyn.bus.BusAttachment;
 import org.alljoyn.bus.BusException;
 import org.alljoyn.bus.BusObject;
@@ -727,9 +728,9 @@ public class ConnectorApp {
 
         Map<RuleObjectPath, Set<RuleInterface>> remotedRules = new HashMap<RuleObjectPath, Set<RuleInterface>>();
 
-        for (BusObjectDescription bod : ann.getObjDescArr()) {
+        for (AboutObjectDescription bod : ann.getObjDescArr()) {
 
-            List<String> ifacesToMatch = new ArrayList<String>(Arrays.asList(bod.getInterfaces()));
+            List<String> ifacesToMatch = new ArrayList<String>(Arrays.asList(bod.interfaces));
 
             for (RuleObjectDescription connectorRule : remotedServices) {
 
@@ -739,8 +740,8 @@ public class ConnectorApp {
 
                 // Check object path suitability: if connector app objPath is a  prefix of BusObjDesc objPath
                 // or both object paths are equal
-                if ((connectorObjPath.isPrefix() && bod.getPath().startsWith(connectorObjPath.getPath())) ||
-                        connectorObjPath.getPath().equals(bod.getPath())) {
+                if ((connectorObjPath.isPrefix() && bod.path.startsWith(connectorObjPath.getPath())) ||
+                        connectorObjPath.getPath().equals(bod.path)) {
 
                     Set<RuleInterface> resIfaces    = new HashSet<RuleInterface>();
                     Iterator<String> ifacesToMatchIter = ifacesToMatch.iterator();
@@ -788,10 +789,10 @@ public class ConnectorApp {
 
                     // We add the BOD.objPath if the connector app OP is not equal to
                     // the BOD.objPath
-                    if (!connectorObjPath.getPath().equals(bod.getPath())) {
+                    if (!connectorObjPath.getPath().equals(bod.path)) {
 
                         // bodOp starts with the manOp but itself it's not a  prefix
-                        RuleObjectPath bodOp = new RuleObjectPath(bod.getPath(), "", false, connectorObjPath.isPrefixAllowed());
+                        RuleObjectPath bodOp = new RuleObjectPath(bod.path, "", false, connectorObjPath.isPrefixAllowed());
                         remotedIfaces           = remotedRules.get(bodOp);
 
                         if (remotedIfaces == null) {
