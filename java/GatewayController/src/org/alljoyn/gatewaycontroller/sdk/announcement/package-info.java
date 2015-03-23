@@ -16,7 +16,7 @@
 
 /**
  * The {@link org.alljoyn.gatewaycontroller.sdk.GatewayController} component that is responsible to receive and manage
- * the {@link org.alljoyn.about.AboutService} announcements
+ * the {@link org.alljoyn.bus.AboutListener} announcements
  */
 package org.alljoyn.gatewaycontroller.sdk.announcement;
 

@@ -27,7 +27,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.alljoyn.about.AboutService;
 import org.alljoyn.bus.AboutListener;
 import org.alljoyn.bus.AboutObjectDescription;
 import org.alljoyn.bus.BusAttachment;
@@ -43,7 +42,7 @@ import android.util.Log;
 
 /**
  * The {@link GatewayController} component that is responsible to receive and
- * manage the {@link AboutService} announcements
+ * manage the {@link AboutListener} announcements
  */
 public class AnnouncementManager implements AboutListener {
     private static final String TAG = "gwc" + AnnouncementManager.class.getSimpleName();

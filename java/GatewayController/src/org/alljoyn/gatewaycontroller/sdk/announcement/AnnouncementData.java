@@ -18,7 +18,7 @@ package org.alljoyn.gatewaycontroller.sdk.announcement;
 
 import java.util.Map;
 
-import org.alljoyn.about.AboutService;
+import org.alljoyn.bus.AboutListener;
 import org.alljoyn.bus.AboutObjectDescription;
 import org.alljoyn.bus.Variant;
 import org.alljoyn.gatewaycontroller.sdk.AnnouncedApp;
@@ -74,7 +74,7 @@ public class AnnouncementData {
     }
 
     /**
-     * @return The {@link AboutService} data which was sent with the
+     * @return The {@link AboutListener} data which was sent with the
      *         Announcement
      */
     public Map<String, Variant> getAboutData() {

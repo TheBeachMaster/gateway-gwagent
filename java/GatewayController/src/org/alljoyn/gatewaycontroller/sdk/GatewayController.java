@@ -18,7 +18,6 @@ package org.alljoyn.gatewaycontroller.sdk;
 
 import java.util.List;
 
-import org.alljoyn.about.AboutServiceImpl;
 import org.alljoyn.bus.BusAttachment;
 import org.alljoyn.bus.Status;
 import org.alljoyn.gatewaycontroller.sdk.ajcommunication.CommunicationUtil;
@@ -87,10 +86,6 @@ public class GatewayController {
         Log.i(TAG, "Initializing the GatewayController");
 
         this.bus = bus;
-
-        if (!AboutServiceImpl.getInstance().isClientRunning()) {
-            throw new IllegalStateException("AboutClient is not running, can't initialize AnnouncementManager");
-        }
 
         announceManager = new AnnouncementManager();
     }

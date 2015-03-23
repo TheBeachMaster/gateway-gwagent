@@ -16,7 +16,6 @@
 
 package org.alljoyn.gatewaycontroller;
 
-import org.alljoyn.about.AboutServiceImpl;
 import org.alljoyn.bus.BusAttachment;
 import org.alljoyn.bus.SessionOpts;
 import org.alljoyn.bus.Status;
@@ -155,7 +154,6 @@ public class GWControllerSampleApplication extends Application implements Gatewa
             authManager = new AuthManager(this);
             authManager.register(bus);
 
-            AboutServiceImpl.getInstance().startAboutClient(bus);
             Log.i(TAG, "The Gateway Controller application has been started, Bus unique name: '" + bus.getUniqueName() + "'");
 
             gwController.init(bus);
