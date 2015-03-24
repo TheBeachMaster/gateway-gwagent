@@ -27,5 +27,6 @@ if docgateway_env['DOCS'] == 'html':
     returnValue = docgateway_env.Install('$NS_DIST_DIR/docs', Dir('html'))
     docgateway_env.Clean('Doxygen_html', Dir('html'))
     docgateway_env.Depends(returnValue, generateDocs)
+    docgateway_env.Alias('gwagent_docs', generateDocs)
 
 Return('returnValue')
