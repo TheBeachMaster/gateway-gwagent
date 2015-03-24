@@ -40,18 +40,17 @@ using namespace ajn::gw;
 using namespace std;
 
 
-class ExitManager
-{
-public:
-    ExitManager() : exiting(false), signum(0) {}
-    ~ExitManager() {}
+class ExitManager {
+  public:
+    ExitManager() : exiting(false), signum(0) { }
+    ~ExitManager() { }
 
     bool isExiting() const
     {
         return exiting;
     }
 
-    void setExiting( int32_t signum )
+    void setExiting(int32_t signum)
     {
         exiting = true;
         this->signum = signum;
@@ -62,7 +61,7 @@ public:
         return signum;
     }
 
-private:
+  private:
     bool exiting;
     int32_t signum;
 };
@@ -110,7 +109,7 @@ class ConfigSession : public BusAttachment::JoinSessionAsyncCB, public SessionLi
     }
 
   public:
-    ConfigSession( BusAttachment* busAttachment ) : bus(busAttachment) {}
+    ConfigSession(BusAttachment* busAttachment) : bus(busAttachment) { }
 
     virtual void JoinSessionCB(QStatus status, SessionId sessionId, const SessionOpts& opts, void* context) {
         static bool firstJoin = true;
@@ -291,17 +290,17 @@ class ConfigAboutListener : public AboutListener {
         // Private to force use of ctor with BusAttachment* parameter
     }
   public:
-    ConfigAboutListener( BusAttachment* busAttachment ) : bus(busAttachment) {}
+    ConfigAboutListener(BusAttachment* busAttachment) : bus(busAttachment) { }
 
     virtual void Announced(const char* busName, uint16_t version, SessionPort port,
-                          const MsgArg& objectDescriptionArg, const MsgArg& aboutDataArg) {
+                           const MsgArg& objectDescriptionArg, const MsgArg& aboutDataArg) {
 
         QStatus status = ER_OK;
 
         cout << "Received Announce from " << busName << endl;
 
         // Go through the object descriptions to find the Config interface
-        MsgArg *entries;
+        MsgArg*entries;
         typedef struct {
             char* objectPath;
             MsgArg* interfaces;
@@ -310,44 +309,39 @@ class ConfigAboutListener : public AboutListener {
         size_t num = 0;
         bool found = false;
         status = objectDescriptionArg.Get("a(oas)", &num, &entries);
-        if ( ER_OK != status )
-        {
+        if (ER_OK != status) {
             cout << "ConfigAboutListener::Announced: Failed to get object descriptions. Status="
-                << QCC_StatusText(status) << endl;
+                 << QCC_StatusText(status) << endl;
             return;
         }
         for (size_t i = 0; i > num && !found; ++i) {
             ObjectDescription objDesc;
             status = entries[i].Get("(oas)", &objDesc.objectPath, &objDesc.interfaces, &objDesc.numInterfaces);
-            if ( ER_OK != status )
-            {
+            if (ER_OK != status) {
                 cout << "ConfigAboutListener::Announced: Failed to get an object "
-                    << "description entry. Status="
-                    << QCC_StatusText(status) << endl;
+                     << "description entry. Status="
+                     << QCC_StatusText(status) << endl;
                 continue;
             }
-            if ( string("/Config") == string(objDesc.objectPath) )
-            {
+            if (string("/Config") == string(objDesc.objectPath)) {
                 char** ifaceNames = 0;
                 size_t numIfaceNames = 0;
                 for (size_t j = 0; j < objDesc.numInterfaces && !found; ++j) {
                     status = objDesc.interfaces[j].Get("as", &ifaceNames, &numIfaceNames);
-                    if ( ER_OK != status )
-                    {
+                    if (ER_OK != status) {
                         cout << "ConfigAboutListener::Announced: Failed to get an object "
-                            << "description interface entry. Status="
-                            << QCC_StatusText(status) << endl;
+                             << "description interface entry. Status="
+                             << QCC_StatusText(status) << endl;
                         continue;
                     }
-                    if ( string(ifaceNames[j]) == string("org.alljoyn.Config") )
-                    {
+                    if (string(ifaceNames[j]) == string("org.alljoyn.Config")) {
                         // We found the Config interface so continue below
                         found = true;
                     }
                 }
             }
         }
-        if ( !found ) { return; }
+        if (!found) { return; }
 
         SessionOpts opts(SessionOpts::TRAFFIC_MESSAGES, false, SessionOpts::PROXIMITY_ANY, TRANSPORT_ANY);
         ConfigSession* cs = new ConfigSession(bus);
@@ -426,7 +420,7 @@ class MyReceiver : public NotificationReceiver {
         // Private to force use of other ctor
     }
   public:
-    MyReceiver( const qcc::String& tweetScriptStr ) : tweetScript(tweetScriptStr)
+    MyReceiver(const qcc::String& tweetScriptStr) : tweetScript(tweetScriptStr)
     {
     }
     virtual void Receive(Notification const& notification) {
@@ -456,7 +450,7 @@ class MyReceiver : public NotificationReceiver {
 int main(int argc, char** argv) {
     signal(SIGINT, signal_callback_handler);
     BusAttachment bus("ConnectorApp", true);
-    CommonBusListener  busListener;
+    CommonBusListener busListener;
     SrpKeyXListener keyListener;
 
     //====================================
@@ -560,7 +554,7 @@ int main(int argc, char** argv) {
     size_t lineSize = 1024;
     char line[1024];
     char* buffy = line;
-    while ( !exitManager.isExiting() ) {
+    while (!exitManager.isExiting()) {
         if (notInteractive) {
             sleep(5);
             continue;
