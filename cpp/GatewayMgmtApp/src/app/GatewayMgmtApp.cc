@@ -128,7 +128,7 @@ QStatus fillPropertyStore()
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setAppName("AllJoyn Gateway Configruration Manager", "en");
+    status = propertyStoreImpl->setAppName("AllJoyn Gateway Configuration Manager", "en");
     if (status != ER_OK) {
         return status;
     }
