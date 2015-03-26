@@ -14,9 +14,9 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
+#include <alljoyn/AboutData.h>
 #include <alljoyn/AllJoynStd.h>
 #include <alljoyn/about/AnnouncementRegistrar.h>
-#include <alljoyn/about/AboutPropertyStoreImpl.h>
 #include <alljoyn/gateway/GatewayRouterPolicyManager.h>
 #include "GatewayConstants.h"
 #include <libxml/parser.h>
@@ -28,7 +28,7 @@ using namespace services;
 using namespace qcc;
 using namespace gwConsts;
 
-GatewayRouterPolicyManager::GatewayRouterPolicyManager() : m_AnnounceRegistered(false), m_AutoCommit(false)
+GatewayRouterPolicyManager::GatewayRouterPolicyManager() : m_AboutListenerRegistered(false), m_AutoCommit(false)
 {
 }
 
@@ -47,13 +47,14 @@ QStatus GatewayRouterPolicyManager::init(BusAttachment* bus)
         return status;
     }
 
-    if (!m_AnnounceRegistered) {
-        status = AnnouncementRegistrar::RegisterAnnounceHandler(*bus, *this, NULL, 0);
+    if (!m_AboutListenerRegistered) {
+        bus->RegisterAboutListener(*this);
+        status = bus->WhoImplements(NULL);
         if (status != ER_OK) {
-            QCC_LogError(status, ("Could not register AnnouncementListener. AnnounceHandlerApi not initialized"));
+            QCC_LogError(status, ("WhoImplements call FAILED. GatewayRouterPolicyManager not initialized"));
             return status;
         }
-        m_AnnounceRegistered = true;
+        m_AboutListenerRegistered = true;
     }
     return status;
 }
@@ -67,13 +68,9 @@ QStatus GatewayRouterPolicyManager::shutdown(BusAttachment* bus)
         return status;
     }
 
-    if (m_AnnounceRegistered) {
-        status = AnnouncementRegistrar::UnRegisterAnnounceHandler(*bus, *this, NULL, 0);
-        if (status != ER_OK) {
-            QCC_LogError(status, ("Could not unregister the AnnounceHandler"));
-            return status;
-        }
-        m_AnnounceRegistered = false;
+    if (m_AboutListenerRegistered) {
+        bus->UnregisterAboutListener(*this);
+        m_AboutListenerRegistered = false;
     }
     return status;
 }
@@ -799,31 +796,21 @@ int GatewayRouterPolicyManager::writeRemotedApps(xmlTextWriterPtr writer, const 
     return rc;
 }
 
-void GatewayRouterPolicyManager::Announce(unsigned short version, unsigned short port, const char* busName, const ObjectDescriptions& objectDescs,
-                                          const AboutData& aboutData)
+void GatewayRouterPolicyManager::Announced(const char* busName, uint16_t version, SessionPort port, const MsgArg& objectDescs, const MsgArg& aboutDataArg)
 {
     QCC_DbgTrace(("Received Announcement from %s", busName));
 
-    String deviceIdKey = AboutPropertyStoreImpl::getPropertyStoreName(DEVICE_ID);
-    String appIdKey = AboutPropertyStoreImpl::getPropertyStoreName(APP_ID);
-    String deviceIdValue = "";
+    char* deviceId;
     uint8_t* appIdBuffer = NULL;
     size_t numElements = 0;
 
-    for (AboutClient::AboutData::const_iterator it = aboutData.begin(); it != aboutData.end(); ++it) {
-        const qcc::String& key = it->first;
-        if (key.compare(deviceIdKey) == 0) {
-            const ajn::MsgArg& value = it->second;
-            char* tmpDeviceId = 0;
-            QStatus status = value.Get(AJPARAM_STR.c_str(), &tmpDeviceId);
-            if (status == ER_OK) {
-                deviceIdValue.assign(tmpDeviceId);
-            }
-        } else if (key.compare(appIdKey) == 0) {
-            const ajn::MsgArg& value = it->second;
-            value.Get(AJPARAM_BINARY_ARR.c_str(), &numElements, &appIdBuffer);
-        }
-    }
+    AboutData aboutData;
+    aboutData.CreatefromMsgArg(aboutDataArg);
+
+    aboutData.GetDeviceId(&deviceId);
+    String deviceIdValue(deviceId);
+
+    aboutData.GetAppId(&appIdBuffer, &numElements);
 
     if (!numElements || !deviceIdValue.length()) {
         QCC_DbgHLPrintf(("Announcement missing appId or deviceId - ignoring the announcement"));

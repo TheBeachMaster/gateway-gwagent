@@ -17,7 +17,6 @@
 #include "AppBusObject.h"
 #include "../GatewayConstants.h"
 #include "AclAdapter.h"
-#include <alljoyn/about/AboutServiceApi.h>
 #include <alljoyn/gateway/GatewayMgmt.h>
 
 namespace ajn {
@@ -46,22 +45,6 @@ AppBusObject::AppBusObject(BusAttachment* bus, GatewayConnectorApp* connectorApp
     if (*status != ER_OK) {
         QCC_LogError(*status, ("Could not create the AclMgmtInterface"));
         return;
-    }
-
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        QCC_DbgHLPrintf(("AboutService is not defined"));
-        *status = ER_FAIL;
-        return;
-    }
-
-    std::vector<String> interfaces;
-    interfaces.push_back(AJ_GW_APP_INTERFACE);
-    interfaces.push_back(AJ_GW_APP_CONNECTOR_INTERFACE);
-    interfaces.push_back(AJ_GW_ACL_MGMT_INTERFACE);
-    *status = aboutService->AddObjectDescription(m_ObjectPath, interfaces);
-    if (*status != ER_OK) {
-        QCC_LogError(*status, ("Could not add interface to ObjectDescription"));
     }
 
     QCC_DbgTrace((GenerateIntrospection(true).c_str()));
@@ -114,7 +97,7 @@ postCreate:
         return status;
     }
 
-    status = AddInterface(*interfaceDescription);
+    status = AddInterface(*interfaceDescription, ANNOUNCED);
     if (status != ER_OK) {
         QCC_LogError(status, ("Could not add interface"));
         return status;
@@ -191,7 +174,7 @@ postCreate:
         return status;
     }
 
-    status = AddInterface(*interfaceDescription);
+    status = AddInterface(*interfaceDescription, ANNOUNCED);
     if (status != ER_OK) {
         QCC_LogError(status, ("Could not add interface"));
         return status;
@@ -256,7 +239,7 @@ postCreate:
         return status;
     }
 
-    status = AddInterface(*interfaceDescription);
+    status = AddInterface(*interfaceDescription, ANNOUNCED);
     if (status != ER_OK) {
         QCC_LogError(status, ("Could not add interface"));
         return status;
@@ -289,17 +272,6 @@ postCreate:
 
 AppBusObject::~AppBusObject()
 {
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        QCC_DbgPrintf(("AboutService is not defined"));
-        return;
-    }
-
-    std::vector<String> interfaces;
-    interfaces.push_back(AJ_GW_APP_INTERFACE);
-    interfaces.push_back(AJ_GW_APP_CONNECTOR_INTERFACE);
-    interfaces.push_back(AJ_GW_ACL_MGMT_INTERFACE);
-    aboutService->RemoveObjectDescription(m_ObjectPath, interfaces);
 }
 
 QStatus AppBusObject::Get(const char* interfaceName, const char* propName, MsgArg& val)

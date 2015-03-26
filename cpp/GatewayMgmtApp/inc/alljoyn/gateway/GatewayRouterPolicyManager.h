@@ -34,7 +34,7 @@ namespace gw {
  * GatewayRouterPolicyManager - Class that manages policies defined and updates the
  * daemon config file accordingly
  */
-class GatewayRouterPolicyManager : public services::AnnounceHandler {
+class GatewayRouterPolicyManager : public AboutListener {
 
   public:
 
@@ -84,15 +84,24 @@ class GatewayRouterPolicyManager : public services::AnnounceHandler {
     QStatus commit();
 
     /**
-     * Callback when an Announce signal arrives
-     * @param version
-     * @param port
-     * @param busName
-     * @param objectDescs
-     * @param aboutData
+     * @param[in] busName              well known name of the remote BusAttachment
+     * @param[in] version              version of the Announce signal from the remote About Object
+     * @param[in] port                 SessionPort used by the announcer
+     * @param[in] objectDescriptionArg  MsgArg the list of object paths and interfaces in the announcement.
+     *                                  The objectDescriptionArg contains an array with a signature of `a(oas)`.
+     *                                  This is an array object paths with a list of interfaces found at those paths.
+     * @param[in] aboutDataArg          MsgArg containing a dictionary of Key/Value pairs of the AboutData fields that have been announced.
+     *                                  These fields are:
+     *                                   - AppId
+     *                                   - DefaultLanguage
+     *                                   - DeviceName - optional (but is required for System Apps)
+     *                                                - localizable - uses language specified by DefaultLanguage field
+     *                                   - DeviceId
+     *                                   - AppName - localizable - uses language specified by DefaultLanguage field
+     *                                   - Manufacturer - localizable - uses language specified by DefaultLanguage field
+     *                                   - ModelNumber
      */
-    void Announce(unsigned short version, unsigned short port, const char* busName, const ObjectDescriptions& objectDescs,
-                  const AboutData& aboutData);
+    void Announced(const char* busName, uint16_t version, SessionPort port, const MsgArg& objectDescriptionArg, const MsgArg& aboutDataArg);
 
     /**
      * Get the map of announced devices
@@ -117,9 +126,9 @@ class GatewayRouterPolicyManager : public services::AnnounceHandler {
   private:
 
     /**
-     * Boolean to track whether the AnnounceHandler was already registered
+     * Boolean to track whether the AboutListener was already registered
      */
-    bool m_AnnounceRegistered;
+    bool m_AboutListenerRegistered;
 
     /**
      * Boolean to dictate whether we will commit automatically after each change

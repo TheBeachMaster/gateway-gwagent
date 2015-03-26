@@ -17,7 +17,6 @@
 #include "AclBusObject.h"
 #include "../GatewayConstants.h"
 #include "AclAdapter.h"
-#include <alljoyn/about/AboutServiceApi.h>
 #include <alljoyn/gateway/GatewayMgmt.h>
 
 namespace ajn {
@@ -83,7 +82,7 @@ postCreate:
         return;
     }
 
-    *status = AddInterface(*interfaceDescription);
+    *status = AddInterface(*interfaceDescription, ANNOUNCED);
     if (*status != ER_OK) {
         QCC_LogError(*status, ("Could not add interface"));
         return;
@@ -139,35 +138,10 @@ postCreate:
     }
 
     QCC_DbgTrace(("Created GatewayAclBusObject successfully"));
-
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        QCC_DbgHLPrintf(("AboutService is not defined"));
-        *status = ER_FAIL;
-        return;
-    }
-
-    std::vector<String> interfaces;
-    interfaces.push_back(AJ_GW_ACL_INTERFACE);
-    *status = aboutService->AddObjectDescription(m_ObjectPath, interfaces);
-    if (*status != ER_OK) {
-        QCC_LogError(*status, ("Could not add interface to ObjectDescription"));
-    }
-
-    QCC_DbgTrace((GenerateIntrospection(true).c_str()));
 }
 
 AclBusObject::~AclBusObject()
 {
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        QCC_DbgPrintf(("AboutService is not defined"));
-        return;
-    }
-
-    std::vector<String> interfaces;
-    interfaces.push_back(AJ_GW_ACL_INTERFACE);
-    aboutService->RemoveObjectDescription(m_ObjectPath, interfaces);
 }
 
 QStatus AclBusObject::Get(const char* interfaceName, const char* propName, MsgArg& val)

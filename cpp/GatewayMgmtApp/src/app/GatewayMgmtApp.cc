@@ -15,7 +15,8 @@
  ******************************************************************************/
 #include <signal.h>
 #include <alljoyn/PasswordManager.h>
-#include <alljoyn/about/AboutPropertyStoreImpl.h>
+#include <alljoyn/AboutData.h>
+#include <alljoyn/AboutObj.h>
 #include <alljoyn/gateway/GatewayMgmt.h>
 #include <alljoyn/gateway/GatewayBusListener.h>
 #include "../GatewayConstants.h"
@@ -24,14 +25,13 @@
 
 using namespace ajn;
 using namespace gw;
-using namespace services;
 using namespace qcc;
 
 #define SERVICE_PORT 900
 
 GatewayMgmt* gatewayMgmt = NULL;
 BusAttachment* bus = NULL;
-AboutPropertyStoreImpl* propertyStoreImpl = NULL;
+AboutData* aboutData = NULL;
 GatewayBusListener*  busListener = NULL;
 SrpKeyXListener* keyListener = NULL;
 static volatile sig_atomic_t s_interrupt = false;
@@ -70,16 +70,10 @@ QStatus prepareBusAttachment()
     return status;
 }
 
-QStatus prepareAboutService()
+QStatus prepareBusListener()
 {
-    if (!bus || !propertyStoreImpl || !busListener) {
+    if (!bus || !busListener) {
         return ER_FAIL;
-    }
-
-    AboutServiceApi::Init(*bus, *propertyStoreImpl);
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        return ER_BUS_NOT_ALLOWED;
     }
 
     busListener->setSessionPort(SERVICE_PORT);
@@ -94,18 +88,12 @@ QStatus prepareAboutService()
         return status;
     }
 
-    status = aboutService->Register(SERVICE_PORT);
-    if (status != ER_OK) {
-        return status;
-    }
-
-    status = bus->RegisterBusObject(*aboutService);
     return status;
 }
 
-QStatus fillPropertyStore()
+QStatus fillAboutData()
 {
-    if (!propertyStoreImpl) {
+    if (!aboutData) {
         return ER_BAD_ARG_1;
     }
 
@@ -116,68 +104,47 @@ QStatus fillPropertyStore()
     qcc::String appId;
     GuidUtil::GetInstance()->GenerateGUID(&appId);
 
-    status = propertyStoreImpl->setDeviceId(deviceId);
+    status = aboutData->SetDeviceId(deviceId.c_str());
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setDeviceName("AllJoyn Gateway Agent", "en");
+    status = aboutData->SetDeviceName("AllJoyn Gateway Agent", "en");
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setAppId(appId);
+    status = aboutData->SetAppId(appId.c_str());
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setAppName("AllJoyn Gateway Configuration Manager", "en");
+    status = aboutData->SetAppName("AllJoyn Gateway Configuration Manager", "en");
     if (status != ER_OK) {
         return status;
     }
-    std::vector<qcc::String> languages;
-    languages.push_back("en");
-    status = propertyStoreImpl->setSupportedLangs(languages);
+    status = aboutData->SetDefaultLanguage("en");
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setDefaultLang("en");
+    status = aboutData->SetSupportUrl("http://www.allseenalliance.org");
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setAjSoftwareVersion(ajn::GetVersion());
+    status = aboutData->SetManufacturer("AllSeen Alliance", "en");
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setSupportUrl("http://www.allseenalliance.org");
+    status = aboutData->SetModelNumber("1.0");
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setManufacturer("AllSeen Alliance", "en");
+    status = aboutData->SetSoftwareVersion("1.0");
     if (status != ER_OK) {
         return status;
     }
-    status = propertyStoreImpl->setModelNumber("1.0");
-    if (status != ER_OK) {
-        return status;
-    }
-    status = propertyStoreImpl->setSoftwareVersion("1.0");
-    if (status != ER_OK) {
-        return status;
-    }
-    status = propertyStoreImpl->setDescription("AllJoyn Gateway Configuration Manager Application", "en");
+    status = aboutData->SetDescription("AllJoyn Gateway Configuration Manager Application", "en");
     if (status != ER_OK) {
         return status;
     }
     return status;
-}
-
-void aboutServiceDestroy(BusAttachment* bus, GatewayBusListener* busListener)
-{
-    if (bus && busListener) {
-        bus->UnregisterBusListener(*busListener);
-        bus->UnbindSessionPort(busListener->getSessionPort());
-    }
-
-    AboutServiceApi::DestroyInstance();
-    return;
 }
 
 void cleanup()
@@ -191,16 +158,17 @@ void cleanup()
         bus->ReleaseName(GW_WELLKNOWN_NAME);
 
         if (busListener) {
-            aboutServiceDestroy(bus, busListener);
+            bus->UnregisterBusListener(*busListener);
+            bus->UnbindSessionPort(busListener->getSessionPort());
         }
     }
     if (busListener) {
         delete busListener;
         busListener = NULL;
     }
-    if (propertyStoreImpl) {
-        delete propertyStoreImpl;
-        propertyStoreImpl = NULL;
+    if (aboutData) {
+        delete aboutData;
+        aboutData = NULL;
     }
     if (keyListener) {
         delete keyListener;
@@ -250,18 +218,18 @@ start:
         return 1;
     }
 
-    propertyStoreImpl = new AboutPropertyStoreImpl();
-    status = fillPropertyStore();
+    aboutData = new AboutData("en");
+    status = fillAboutData();
     if (status != ER_OK) {
-        QCC_LogError(status, ("Could not fill PropertyStore."));
+        QCC_LogError(status, ("Could not fill AboutData."));
         cleanup();
         return 1;
     }
 
     busListener = new GatewayBusListener(bus, DaemonDisconnectHandler);
-    status = prepareAboutService();
+    status = prepareBusListener();
     if (status != ER_OK) {
-        QCC_LogError(status, ("Could not set up the AboutService."));
+        QCC_LogError(status, ("Could not set up the BusListener."));
         cleanup();
         return 1;
     }
@@ -295,14 +263,8 @@ start:
         return 1;
     }
 
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        QCC_LogError(status, ("Could not initialize about Service"));
-        cleanup();
-        return 1;
-    }
-
-    status = aboutService->Announce();
+    AboutObj aboutObj(*bus);
+    status = aboutObj.Announce(SERVICE_PORT, *aboutData);
     if (status != ER_OK) {
         QCC_LogError(status, ("Could not announce."));
         cleanup();

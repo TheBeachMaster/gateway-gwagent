@@ -16,14 +16,12 @@
 
 #include "AppMgmtBusObject.h"
 #include "../GatewayConstants.h"
-#include <alljoyn/about/AboutServiceApi.h>
 #include <alljoyn/gateway/GatewayMgmt.h>
 #include <alljoyn/gateway/GatewayConnectorApp.h>
 #include <vector>
 
 namespace ajn {
 namespace gw {
-using namespace services;
 using namespace qcc;
 using namespace gwConsts;
 
@@ -54,7 +52,7 @@ postCreate:
         return;
     }
 
-    *status = AddInterface(*interfaceDescription);
+    *status = AddInterface(*interfaceDescription, ANNOUNCED);
     if (*status != ER_OK) {
         QCC_LogError(*status, ("Could not add interface"));
         return;
@@ -67,19 +65,8 @@ postCreate:
         return;
     }
 
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        QCC_DbgHLPrintf(("AboutService is not defined"));
-        *status = ER_FAIL;
-        return;
-    }
-
     std::vector<String> interfaces;
     interfaces.push_back(AJ_GW_APP_MGMT_INTERFACE);
-    *status = aboutService->AddObjectDescription(AJ_GW_OBJECTPATH, interfaces);
-    if (*status != ER_OK) {
-        QCC_LogError(*status, ("Could not add interface to ObjectDescription"));
-    }
 
     QCC_DbgTrace(("Created AppMgmtBusObject successfully"));
     QCC_DbgTrace((GenerateIntrospection(true).c_str()));
@@ -87,15 +74,6 @@ postCreate:
 
 AppMgmtBusObject::~AppMgmtBusObject()
 {
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        QCC_DbgPrintf(("AboutService is not defined"));
-        return;
-    }
-
-    std::vector<String> interfaces;
-    interfaces.push_back(AJ_GW_APP_MGMT_INTERFACE);
-    aboutService->RemoveObjectDescription(AJ_GW_OBJECTPATH, interfaces);
 }
 
 QStatus AppMgmtBusObject::Get(const char* interfaceName, const char* propName, MsgArg& val)

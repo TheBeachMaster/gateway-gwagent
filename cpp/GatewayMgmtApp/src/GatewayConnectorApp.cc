@@ -14,7 +14,6 @@
  *    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  ******************************************************************************/
 
-#include <alljoyn/about/AboutServiceApi.h>
 #include <alljoyn/gateway/GatewayConnectorApp.h>
 #include <alljoyn/gateway/GatewayMgmt.h>
 #include <alljoyn/gateway/GatewayRouterPolicyManager.h>
@@ -451,15 +450,6 @@ AclResponseCode GatewayConnectorApp::createAcl(qcc::String* aclId, qcc::String c
     }
 
     m_Acls.insert(std::pair<qcc::String, GatewayAcl*>(*aclId, acl));
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        QCC_DbgHLPrintf(("AboutServiceApi not initialized. Can't announce"));
-    } else {
-        status = aboutService->Announce();
-        if (status != ER_OK) {
-            QCC_LogError(status, ("Sending the announcement failed"));
-        }
-    }
 
     if (m_OperationalStatus != GW_OS_RUNNING && hasActiveAcl()) {
         bool success = startConnectorApp();
@@ -548,16 +538,6 @@ AclResponseCode GatewayConnectorApp::deleteAcl(qcc::String const& aclId)
             if (!success) {
                 QCC_DbgHLPrintf(("Could not stop the app %s", m_ConnectorId.c_str()));
             }
-        }
-    }
-
-    AboutServiceApi* aboutService = AboutServiceApi::getInstance();
-    if (!aboutService) {
-        QCC_DbgHLPrintf(("AboutServiceApi not initialized. Can't announce"));
-    } else {
-        status = aboutService->Announce();
-        if (status != ER_OK) {
-            QCC_LogError(status, ("Sending the announcement failed"));
         }
     }
 
