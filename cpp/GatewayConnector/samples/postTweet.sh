@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Copyright (c) 2014, AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
@@ -21,10 +21,10 @@ urlEncode() {
   local input="$*"
   local strlen=${#input}
   local encoded=""
-  local i=0
+  local i=1
 
-  while [ $i -lt $strlen ]; do
-     char=${input:$i:1}
+  while [ $i -lt $((strlen+1)) ]; do
+     char=$(expr substr "$input" "$i" 1)
      case "$char" in
         [-_.~a-zA-Z0-9] ) enc="${char}" ;;
         * )               enc=$(printf '%%%02X' "'$char")
@@ -36,7 +36,10 @@ urlEncode() {
 }
 
 DEBUG=$(env | awk /DEBUG=/ | sed 's/DEBUG=//')
-[[ $DEBUG ]] && echo "Debug mode is set. Printing parameter values" && echo ""
+if [ "$DEBUG" ]; then
+    echo "Debug mode is set. Printing parameter values"
+    echo ""
+fi
 
 ##################################################################
 ### Values necessary to Send Authenticated Requests with Twitter
@@ -62,7 +65,7 @@ oauth_version_ec=$(urlEncode ${oauth_version})
 request_type_ec=$(urlEncode ${request_type})
 request_url_ec=$(urlEncode ${request_url})
 
-if [[ $DEBUG ]]; then 
+if [ "$DEBUG" ]; then 
 	echo "Authentication keys:"
 	printf "%-25s: %s\n" oauth_consumer_key 	 $oauth_consumer_key
 	printf "%-25s: %s\n" oauth_token 			 $oauth_token
@@ -85,7 +88,7 @@ oauth_nonce=$(date +%s%T123456789 | openssl base64 | sed -e s'/[+=/]//g')
 oauth_nonce_ec=$(urlEncode ${oauth_nonce})
 oauth_timestamp_ec=$(urlEncode ${oauth_timestamp})
 
-if [[ $DEBUG ]]; then 
+if [ "$DEBUG" ]; then 
 	echo "Random Generated keys:";
 	printf "%-25s: %s\n" oauth_timestamp 	$oauth_timestamp
 	printf "%-25s: %s\n" oauth_nonce 		$oauth_nonce
@@ -105,7 +108,7 @@ fi
 
 status_ec=$(urlEncode ${status})
 
-if [[ $DEBUG ]]; then 
+if [ "$DEBUG" ]; then 
 	echo "Call Parameters:"
 	printf "%-25s: %s\n" status  	"$status"
 	echo ""
@@ -132,7 +135,7 @@ signature_value_string="$request_type_ec&$request_url_ec&$signature_param_string
 oauth_signature=`echo -n ${signature_value_string} | openssl dgst -sha1 -hmac ${signature_key} -binary | openssl base64`
 oauth_signature_ec=$(urlEncode ${oauth_signature})
 
-if [[ $DEBUG ]]; then 
+if [ "$DEBUG" ]; then 
 	echo "Generating Signature:"
 	printf "%-25s: %s\n" signature_key 			 $signature_key
 	printf "%-25s: %s\n" signature_param_string  $signature_param_string
@@ -158,7 +161,7 @@ oauth_version=\"$oauth_version_ec\""
 encodingHeader="application/x-www-form-urlencoded"
 data="status=$status_ec"
 
-if [[ $DEBUG ]]; then 
+if [ "$DEBUG" ]; then 
         printf "%-25s: %s\n" oauthHeader $oauthHeader
         printf "%-25s: %s\n" data $data
 	echo ""
