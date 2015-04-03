@@ -618,6 +618,10 @@ int GatewayRouterPolicyManager::writeExposedServices(xmlTextWriterPtr writer, co
             if (rc < 0) {
                 return rc;
             }
+            rc = xmlTextWriterEndElement(writer);
+            if (rc < 0) {
+                return rc;
+            }
         } else {
             for (size_t interfaceIndx = 0; interfaceIndx < interfaces.size(); interfaceIndx++) {
                 //receive_type = method_call
@@ -727,6 +731,10 @@ int GatewayRouterPolicyManager::writeRemotedApps(xmlTextWriterPtr writer, const 
                 return rc;
             }
             rc = xmlTextWriterWriteAttribute(writer, (xmlChar*)"receive_type", (xmlChar*)"signal");
+            if (rc < 0) {
+                return rc;
+            }
+            rc = xmlTextWriterEndElement(writer);
             if (rc < 0) {
                 return rc;
             }
