@@ -23,6 +23,7 @@ gateway_env.Install('$GWMA_DISTDIR/inc/alljoyn/gateway', gateway_env.Glob('inc/a
 gateway_env.Install('$GWMA_DISTDIR/bin', gateway_env.SConscript('src/SConscript', exports = ['gateway_env']))
 gateway_env.Install('$GWMA_DISTDIR/bin', File('manifest.xsd'))
 gateway_env.Install('$GWMA_DISTDIR/bin', File('installPackage.sh'))
+gateway_env.Install('$GWMA_DISTDIR/bin', File('removePackage.sh'))
 gateway_env.Install('$GWMA_DISTDIR/bin', File('defaultConfig.xml'))
 
 # Build docs

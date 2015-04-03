@@ -24,6 +24,7 @@
 #   GWAGENT_SRC_DIR - root directory of the gwagent git repo
 #   ARTIFACTS_DIR - directory to copy build products
 #   WORKING_DIR - directory for working with files
+#   CPU - CPU parameter to give to scons (e.g. x86_64, x86, etc.)
 
 
 set -o nounset
@@ -33,7 +34,7 @@ set -o xtrace
 
 
 # check for required env variables
-for var in BUILD_VARIANT GWAGENT_SDK_VERSION GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR
+for var in BUILD_VARIANT GWAGENT_SDK_VERSION GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR CPU
 do
     if [ -z "${!var:-}" ]
     then
@@ -69,7 +70,7 @@ esac
 # build the code
 
 pushd ${GWAGENT_SRC_DIR}
-scons V=1 OS=linux CPU=x86_64 BINDINGS=cpp BR=off VARIANT=${BUILD_VARIANT} WS=check POLICYDB=on
+scons V=1 OS=linux CPU=${CPU} BINDINGS=cpp BR=off VARIANT=${BUILD_VARIANT} WS=detail POLICYDB=on
 popd
 
 
@@ -86,20 +87,32 @@ mkdir -p $sdkStaging/daemon
 
 distDir=${GWAGENT_SRC_DIR}/build/linux/x86_64/${BUILD_VARIANT}/dist
 
-cp $distDir/gatewayMgmtApp/bin/* $sdkStaging/gw-mgmt
-cp $distDir/gatewayConnector/tar/lib/* $sdkStaging/gw-mgmt/lib
-cp $distDir/gatewayMgmtApp/bin/installPackage.sh $sdkStaging/app-manager
-chmod u+x $sdkStaging/app-manager/installPackage.sh
-cp $distDir/gatewayConnector/tar/lib/* $sdkStaging/gw-mgmt/lib
-cp $distDir/cpp/bin/alljoyn-daemon $sdkStaging/daemon/
-cp $distDir/cpp/lib/* $sdkStaging/daemon/
+# copy Gateway agent files to gw-mgmt directory
+cp $distDir/gatewayMgmtApp/bin/GatewayMgmtApp $sdkStaging/gw-mgmt
+cp $distDir/gatewayMgmtApp/bin/manifest.xsd $sdkStaging/gw-mgmt
+cp $distDir/cpp/lib/liballjoyn.so $sdkStaging/gw-mgmt/lib
+chmod a+x $sdkStaging/gw-mgmt/GatewayMgmtApp
 
-cp ${GWAGENT_SRC_DIR}/cpp/GatewayMgmtApp/defaultConfig.xml $sdkStaging/alljoyn-daemon.d/
+# copy the sample defaultConfig.xml file to the location where the gwagent will modify it
+cp $distDir/gatewayMgmtApp/bin/defaultConfig.xml $sdkStaging/alljoyn-daemon.d/
+
+# copy sample scripts to app-manager directory
+cp $distDir/gatewayMgmtApp/bin/*.sh $sdkStaging/app-manager/
+chmod a+x $sdkStaging/app-manager/*.sh
+
+# copy routing node and lib to daemon directory
+cp $distDir/cpp/bin/alljoyn-daemon $sdkStaging/daemon/
+cp $distDir/cpp/lib/liballjoyn.so $sdkStaging/daemon/
+chmod a+x $sdkStaging/daemon/alljoyn-daemon
+
+# copy sample routing node config.xml to daemon directory
 cp ${GWAGENT_SRC_DIR}/cpp/GatewayMgmtApp/samples/config.xml $sdkStaging/daemon/
+
+chmod a+x $distDir/gatewayConnector/tar/bin/*.sh
 
 # package sample connector
 pushd $distDir/gatewayConnector/tar
-tar zcvf $sdkStaging/app-manager/dummyApp.tar.gz *
+tar zcvf $sdkStaging/app-manager/dummyApp.tar.gz --owner=0 --group=0 *
 popd
 
 #========================================
@@ -118,7 +131,7 @@ sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-linux-sdk-$variantString
 tarFile=$sdkName.tar.gz
 
 pushd $sdkStaging
-tar zcvf $sdksDir/$tarFile *
+tar zcvf $sdksDir/$tarFile --owner=0 --group=0  *
 popd
 
 pushd $sdksDir

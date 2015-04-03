@@ -1,3 +1,5 @@
+#!/bin/sh 
+
 # Copyright (c) 2014, AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
@@ -13,75 +15,112 @@
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
-echo "Trying to install: $1"
+# sample script to handle installing of an application until package manager is available
 
-if [ ! -d "/opt/alljoyn" ]; then
-  mkdir "/opt/alljoyn" 2>/dev/null || { echo "Could not create alljoyn directory"; exit 1; }
+# exit if the tar filename wasn't given
+if [ -z "$1" ]; then
+    echo "Usage: $(basename $0) [package.tar.gz]"
+    exit 1
 fi
+tarFile=$1
 
-if [ ! -d "/opt/alljoyn/apps" ]; then
-  mkdir "/opt/alljoyn/apps" 2>/dev/null || { echo "Could not create alljoyn/apps directory"; exit 2; }
-fi
+# the base installation directory for alljoyn and the gateway agent
+baseDir=/opt/alljoyn
+tmpDir=
+pkgInstallDir=
+connectorId=
 
-if [ ! -d "/opt/alljoyn/alljoyn-daemon.d" ]; then
-  mkdir "/opt/alljoyn/alljoyn-daemon.d" 2>/dev/null || { echo "Could not create alljoyn/alljoyn-daemon.d directory"; exit 3; }
-fi
+# whether install completed successfully
+installCompleted=0
+# whether we created a user
+createdUser=0
 
-if [ ! -d "/opt/alljoyn/alljoyn-daemon.d/apps" ]; then
-  mkdir "/opt/alljoyn/alljoyn-daemon.d/apps" 2>/dev/null || { echo "Could not create alljoyn/alljoyn-daemon.d/apps directory"; exit 4; }
-fi
+# function to clean up files, etc. on exit
+cleanup_on_exit() 
+{
+    # remove our temporary folder
+    if [ -n "$tmpDir" ] && [ -d "$tmpDir" ]; then
+        rm -fr $tmpDir
+    fi
 
-if [ ! -d "/opt/alljoyn/app-manager" ]; then
-  mkdir "/opt/alljoyn/app-manager" 2>/dev/null || { echo "Could not create alljoyn/app-manager directory"; exit 5; }
-fi
+    if [ "$installCompleted" = 0 ]; then
+        # remove the install directory (if we created it)
+        if [ -n "$pkgInstallDir" ] && [ -d "$pkgInstallDir" ]; then
+            rm -fr $pkgInstallDir
+        fi
+        # remove user (if we created it)
+        if [ "$createdUser" != 0 ]; then
+            echo userdel "$connectorId"
+        fi
+    fi
+}
 
+# add trap to clean up temp directory on exit
+trap 'cleanup_on_exit' EXIT
+
+
+
+echo "Trying to install: $tarFile"
+
+# get a temp directory to untar the package
 uuid=$(cat /proc/sys/kernel/random/uuid)
+tmpDir=$baseDir/app-manager/$uuid
 
-if [ -d "/opt/alljoyn/app-manager/$uuid" ]; then
-  echo "Uid $uuid directory already exists. Should not have happened"; exit 6; 
+if [ -d "$tmpDir" ]; then
+    echo "$tmpDir directory already exists. Should not have happened"; exit 6; 
 fi
 
-mkdir "/opt/alljoyn/app-manager/$uuid" 2>/dev/null || { echo "Could not create alljoyn/app-manager/$uuid directory"; exit 7; }
+mkdir "$tmpDir" || exit 7
 
-tar -xzf $1 -C /opt/alljoyn/app-manager/$uuid
+tar -xzf $tarFile -C $tmpDir
 
-if [ ! -f "/opt/alljoyn/app-manager/$uuid/Manifest.xml" ]; then
-  echo "Can not find Manifest file. Aborting"; exit 8; 
+manifestFile=$tmpDir/Manifest.xml
+if [ ! -f "$manifestFile" ]; then
+    echo "Can not find $manifestFile file. Aborting"; exit 8; 
 fi
 
-if [ ! -d "/opt/alljoyn/app-manager/$uuid/bin" ]; then
-  echo "Can not find bin directory. Aborting"; exit 9; 
+appBinDir=$tmpDir/bin
+if [ ! -d "$appBinDir" ]; then
+    echo "Can not find $appBinDir directory. Aborting"; exit 9; 
 fi
 
-connectorId=$(grep "<connectorId>" /opt/alljoyn/app-manager/$uuid/Manifest.xml | sed -e "s/ *<connectorId>//" | sed -e "s/<\/connectorId *>//")
+# get the connectorId from the Manifest.xml
+connectorId=$(grep "<connectorId>" $manifestFile | sed -e "s/ *<connectorId>//" | sed -e "s/<\/connectorId *>//")
 
-if [ -d "/opt/alljoyn/apps/$connectorId" ]; then
-  echo "Can not create directory for this app. It already exists"; exit 10; 
+connectorAppDir=$baseDir/apps/$connectorId
+if [ -d "$connectorAppDir" ]; then
+    echo "Can not create directory for this app. It already exists: $connectorAppDir"; 
+    exit 10; 
 fi
 
-mkdir "/opt/alljoyn/apps/$connectorId" 2>/dev/null || { echo "Could not create /opt/alljoyn/apps/$connectorId directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 11; }
-mkdir "/opt/alljoyn/apps/$connectorId/acls" 2>/dev/null || { echo "Could not create /opt/alljoyn/apps/$connectorId/acls directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 12; }
-mkdir "/opt/alljoyn/apps/$connectorId/bin" 2>/dev/null || { echo "Could not create /opt/alljoyn/apps/$connectorId/bin directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 13; }
-## TODO mkdir "/opt/alljoyn/apps/$connectorId/etc" 2>/dev/null || { echo "Could not create /opt/alljoyn/apps/$connectorId/etc directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 14; }
-mkdir "/opt/alljoyn/apps/$connectorId/lib" 2>/dev/null || { echo "Could not create /opt/alljoyn/apps/$connectorId/lib directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 15; }
-## TODO mkdir "/opt/alljoyn/apps/$connectorId/res" 2>/dev/null || { echo "Could not create /opt/alljoyn/apps/$connectorId/res directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 16; }
-mkdir "/opt/alljoyn/apps/$connectorId/store" 2>/dev/null || { echo "Could not create /opt/alljoyn/apps/$connectorId/store directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 17; }
-## TODO mkdir "/opt/alljoyn/apps/$connectorId/tmp" 2>/dev/null || { echo "Could not create /opt/alljoyn/apps/$connectorId/tmp directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 18; }
+pkgInstallDir=$connectorAppDir
 
-cp -rf /opt/alljoyn/app-manager/$uuid/bin/* /opt/alljoyn/apps/$connectorId/bin 2>/dev/null || { echo "Could not copy files from bin directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 19; }
+mkdir -p $pkgInstallDir || exit 11
+mkdir -p $pkgInstallDir/acls || exit 12
+mkdir -p "$pkgInstallDir/bin" || exit 13
+## TODO mkdir -p "$pkgInstallDir/etc || exit 14
+mkdir -p "$pkgInstallDir/lib" || exit 15
+## TODO mkdir -p "$pkgInstallDir/res" || exit 16
+mkdir -p "$pkgInstallDir/store" || exit 17
+## TODO mkdir -p "$pkgInstallDir/tmp" || exit 18
 
-if [ -d "/opt/alljoyn/app-manager/$uuid/lib" ]; then
-    cp -rf /opt/alljoyn/app-manager/$uuid/lib/* /opt/alljoyn/apps/$connectorId/lib 2>/dev/null || { echo "Could not copy files from lib directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 20; }
+cp -rf $tmpDir/bin/* $pkgInstallDir/bin || exit 19
+cp -rf $tmpDir/lib/* $pkgInstallDir/lib || exit 20
+cp $tmpDir/Manifest.xml $pkgInstallDir/ || exit 21
+
+# allow package to be installed for an existing user (for testing purposes)
+id -u "$connectorId" &> /dev/null
+if [ $? != 0 ]; then
+    useradd $connectorId || exit 22
+    createdUser=1
 fi
 
-cp /opt/alljoyn/app-manager/$uuid/Manifest.xml /opt/alljoyn/apps/$connectorId/ 2>/dev/null || { echo "Could not copy Manifest file"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 21; }
+chown -R "$connectorId" "$pkgInstallDir/store" || exit 23
+chmod -R a+rx "$pkgInstallDir/bin" || exit 24
+chmod -R a+rx "$pkgInstallDir/lib" || exit 25
 
-useradd $connectorId 2>/dev/null || { echo "Could not create a user for $connectorId"; rm -rf "/opt/alljoyn/apps/$connectorId"; exit 22; }
+installCompleted=1
 
-chown -R "$connectorId" "/opt/alljoyn/apps/$connectorId/store" 2>/dev/null || { echo "Could not chown /opt/alljoyn/apps/$connectorId/store directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; userdel $connectorId; exit 23; }
-chmod -R a+rx "/opt/alljoyn/apps/$connectorId/bin" 2>/dev/null || { echo "Could not chmod /opt/alljoyn/apps/$connectorId/bin directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; userdel $connectorId; exit 24; }
-chmod -R a+rx "/opt/alljoyn/apps/$connectorId/lib" 2>/dev/null || { echo "Could not chmod /opt/alljoyn/apps/$connectorId/lib directory"; rm -rf "/opt/alljoyn/apps/$connectorId"; userdel $connectorId; exit 25; }
-
-echo "Successfully installed $1"; 
-exit 0; 
+echo "Successfully installed $tarFile with connectorId: $connectorId"; 
+exit 0
 
