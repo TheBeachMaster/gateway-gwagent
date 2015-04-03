@@ -472,6 +472,11 @@ qcc::String GatewayConnectorApp::generateAclId(qcc::String const& aclName)
         }
     }
 
+    // use "acl" if ACL contains no alphanumeric characters
+    if (aclId.size() == 0) {
+        aclId = "acl";
+    }
+
     std::map<String, GatewayAcl*>::iterator it;
     it = m_Acls.find(aclId);
     if (it == m_Acls.end()) {
