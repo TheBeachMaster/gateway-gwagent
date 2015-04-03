@@ -26,5 +26,5 @@ gateway_env.Install('$GWMA_DISTDIR/bin', File('installPackage.sh'))
 gateway_env.Install('$GWMA_DISTDIR/bin', File('defaultConfig.xml'))
 
 # Build docs
-installDocs = gateway_env.SConscript('docs/SConscript', exports = ['gateway_env'])
-gateway_env.Depends(installDocs, gateway_env.Glob('$GWMA_DISTDIR/inc/alljoyn/gateway/*.h'));
+installedDocs = gateway_env.SConscript('docs/SConscript', exports = ['gateway_env'])
+gateway_env.Depends(installedDocs, gateway_env.Glob('$GWMA_DISTDIR/inc/alljoyn/gateway/*.h'));
