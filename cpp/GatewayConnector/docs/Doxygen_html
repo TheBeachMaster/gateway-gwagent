@@ -25,7 +25,7 @@ DOXYFILE_ENCODING      = UTF-8
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded
 # by quotes) that should identify the project.
 
-PROJECT_NAME = "AllJoyn&trade; Gateway Management App API Reference Manual"
+PROJECT_NAME = "AllJoyn&trade; Connector C++ API Reference Manual"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
@@ -38,7 +38,7 @@ PROJECT_NUMBER         = "Version 14.12.00"
 # If a relative path is entered, it will be relative to the location
 # where doxygen was started. If left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = $(GWMA_DISTDIR)/docs
+OUTPUT_DIRECTORY       = $(GWCNC_DISTDIR)/docs
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create
 # 4096 sub-directories (in 2 levels) under the output directory of each output
@@ -546,7 +546,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = $(GWMA_DISTDIR)/inc/alljoyn/gateway
+INPUT                  = $(GWCNC_DISTDIR)/inc/alljoyn/gateway
                         
                          
 # This tag can be used to specify the character encoding of the source files

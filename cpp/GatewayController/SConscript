@@ -23,5 +23,5 @@ gateway_env.Install('$GWC_DISTDIR/inc/alljoyn/gateway', gateway_env.Glob('inc/al
 gateway_env.Install('$GWC_DISTDIR/lib', gateway_env.SConscript('src/SConscript', exports = ['gateway_env']))
 
 # Build docs
-#installDocs = gateway_env.SConscript('docs/SConscript', exports = ['gateway_env'])
-#gateway_env.Depends(installDocs, gateway_env.Glob('$GWC_DISTDIR/inc/alljoyn/gateway/*.h'));
+installDocs = gateway_env.SConscript('docs/SConscript', exports = ['gateway_env'])
+gateway_env.Depends(installDocs, gateway_env.Glob('$GWC_DISTDIR/inc/alljoyn/gateway/*.h'));

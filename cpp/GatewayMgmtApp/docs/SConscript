@@ -15,18 +15,15 @@
 import os
 Import('gateway_env')
 
-returnValue = []
-
 docgateway_env = gateway_env.Clone()
+docgateway_env['ENV']['GWMA_DISTDIR'] = str(gateway_env.Dir('$GWMA_DISTDIR'))
+
+installedDocs = []
 
 # Build docs
 if docgateway_env['DOCS'] == 'html':
-    # the target directory 'docs/tmp' is never built this will cause doxygen 
-    # to run every time DOCS == 'html'
-    generateDocs = docgateway_env.Doxygen(source='Doxygen_html', target=[Dir('tmp'), Dir('html')])
-    returnValue = docgateway_env.Install('$NS_DIST_DIR/docs', Dir('html'))
-    docgateway_env.Clean('Doxygen_html', Dir('html'))
-    docgateway_env.Depends(returnValue, generateDocs)
-    docgateway_env.Alias('gwagent_docs', generateDocs)
+    installedDocs = docgateway_env.Doxygen(source=['Doxygen_html'])
+    
+docgateway_env.Alias('gwma_docs', installedDocs)
 
-Return('returnValue')
+Return('installedDocs')

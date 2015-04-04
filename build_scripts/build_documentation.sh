@@ -57,7 +57,7 @@ mkdir -p $sdksDir
 # generate the docs
 
 pushd ${GWAGENT_SRC_DIR}
-scons V=1 BINDINGS=cpp DOCS=html -u gwagent_docs
+scons V=1 BINDINGS=cpp DOCS=html -u gwma_docs
 popd
 
 

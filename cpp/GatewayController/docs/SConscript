@@ -1,4 +1,4 @@
-# Copyright (c) 2013, AllSeen Alliance. All rights reserved.
+# Copyright (c) 2013-2014, AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
 #    purpose with or without fee is hereby granted, provided that the above
@@ -12,19 +12,18 @@
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-Import('gateway_env')
 import os
+Import('gateway_env')
 
-gateway_env['GWCNC_DISTDIR'] = gateway_env['DISTDIR'] + '/gatewayConnector'
+docgateway_env = gateway_env.Clone()
+docgateway_env['ENV']['GWC_DISTDIR'] = str(gateway_env.Dir('$GWC_DISTDIR'))
 
-gateway_env.Append(LIBPATH = '$GWCNC_DISTDIR/lib');
-gateway_env.Append(CPPPATH = '$GWCNC_DISTDIR/inc');
+installedDocs = []
 
-gateway_env.Install('$GWCNC_DISTDIR/inc/alljoyn/gateway', gateway_env.Glob('inc/alljoyn/gateway/*.h'))
-gateway_env.Install('$GWCNC_DISTDIR/lib', gateway_env.SConscript('src/SConscript', exports = ['gateway_env']))
-gateway_env.Install('$GWCNC_DISTDIR/bin', gateway_env.SConscript('samples/SConscript', exports = ['gateway_env']))
-    
 # Build docs
-installedDocs = gateway_env.SConscript('docs/SConscript', exports = ['gateway_env'])
-gateway_env.Depends(installedDocs, gateway_env.Glob('$GWCNC_DISTDIR/inc/alljoyn/gateway/*.h'));
+if docgateway_env['DOCS'] == 'html':
+    installedDocs = docgateway_env.Doxygen(source=['Doxygen_html'])
+    
+docgateway_env.Alias('gwc_docs', installedDocs)
 
+Return('installedDocs')
