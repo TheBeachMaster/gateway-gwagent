@@ -40,6 +40,7 @@ class GatewayRouterPolicyManager : public AboutListener {
 
     /**
      * Constructor for the GatewayRouterPolicyManager class
+     *
      */
     GatewayRouterPolicyManager();
 
@@ -123,6 +124,18 @@ class GatewayRouterPolicyManager : public AboutListener {
      */
     void setAutoCommit(bool autoCommit);
 
+    /**
+     * Set the name of the gateway default policy file
+     * @param gatewayPolicyFile
+     */
+    void setGatewayPolicyFile(const char* gatewayPolicyFile);
+
+    /**
+     * Set the directory where application policy files will be written
+     * @param appPolicyDirectory
+     */
+    void setAppPolicyDirectory(const char* appPolicyDirectory);
+
   private:
 
     /**
@@ -145,6 +158,16 @@ class GatewayRouterPolicyManager : public AboutListener {
      * AclRules. Map of ConnectorIds to their AclRules
      */
     std::map<qcc::String, std::vector<GatewayAclRules> > m_ConnectorAppRules;
+
+    /**
+     * Filename for the gateway agent default policies file
+     */
+    qcc::String m_gatewayPolicyFile;
+
+    /**
+     * Directory containing the policies for the applications
+     */
+    qcc::String m_appPolicyDirectory;
 
     /**
      * Helper function to write the default policies to a file

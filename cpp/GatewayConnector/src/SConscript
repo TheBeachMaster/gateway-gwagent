@@ -23,11 +23,11 @@ libs = []
 
 # Static library
 objs = gwcnc_env.Object(srcs)
-libs.append(gwcnc_env.StaticLibrary('alljoyn_gwConnector', objs))
+libs.append(gwcnc_env.StaticLibrary('alljoyn_gwconnector', objs))
 
 # Shared library
 if gwcnc_env.get('LIBTYPE', 'static') != 'static':
     shobjs = gwcnc_env.SharedObject(srcs)
-    libs.append(gwcnc_env.SharedLibrary('alljoyn_gwConnector', shobjs))
+    libs.append(gwcnc_env.SharedLibrary('alljoyn_gwconnector', shobjs))
 
 Return('libs')

@@ -189,8 +189,10 @@ void signal_callback_handler(int32_t signum)
         s_interrupt = true;
     }
 }
+qcc::String policyFileOption = "--gwagent-policy-file=";
+qcc::String appsPolicyDirOption = "--apps-policy-dir=";
 
-int main()
+int main(int argc, char** argv)
 {
     // Allow CTRL+C to end application
     signal(SIGINT, signal_callback_handler);
@@ -201,6 +203,20 @@ start:
 
     // Initialize GatewayMgmt object
     gatewayMgmt = GatewayMgmt::getInstance();
+
+    for (int i = 1; i < argc; i++) {
+        qcc::String arg(argv[i]);
+        if (arg.compare(0, policyFileOption.size(), policyFileOption) == 0) {
+            qcc::String policyFile = arg.substr(policyFileOption.size());
+            QCC_DbgPrintf(("Setting gatewayPolicyFile to: %s", policyFile.c_str()));
+            gatewayMgmt->setGatewayPolicyFile(policyFile.c_str());
+        }
+        if (arg.compare(0, appsPolicyDirOption.size(), appsPolicyDirOption) == 0) {
+            qcc::String policyDir = arg.substr(appsPolicyDirOption.size());
+            QCC_DbgPrintf(("Setting appsPolicyDir to: %s", policyDir.c_str()));
+            gatewayMgmt->setAppPolicyDir(policyDir.c_str());
+        }
+    }
 
     QStatus status = prepareBusAttachment();
     if (status != ER_OK) {

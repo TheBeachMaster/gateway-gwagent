@@ -28,7 +28,10 @@ using namespace services;
 using namespace qcc;
 using namespace gwConsts;
 
-GatewayRouterPolicyManager::GatewayRouterPolicyManager() : m_AboutListenerRegistered(false), m_AutoCommit(false)
+static const qcc::String GATEWAY_POLICIES_DIRECTORY = "/opt/alljoyn/alljoyn-daemon.d";
+
+GatewayRouterPolicyManager::GatewayRouterPolicyManager() : m_AboutListenerRegistered(false), m_AutoCommit(false),
+    m_gatewayPolicyFile(GATEWAY_POLICIES_DIRECTORY + "/gwagent-config.xml"), m_appPolicyDirectory(GATEWAY_POLICIES_DIRECTORY + "/apps")
 {
 }
 
@@ -90,6 +93,17 @@ void GatewayRouterPolicyManager::setAutoCommit(bool autoCommit)
     m_AutoCommit = autoCommit;
 }
 
+void GatewayRouterPolicyManager::setGatewayPolicyFile(const char* gatewayPolicyFile)
+{
+    m_gatewayPolicyFile = gatewayPolicyFile;
+}
+
+void GatewayRouterPolicyManager::setAppPolicyDirectory(const char* appPolicyDirectory)
+{
+    m_appPolicyDirectory = appPolicyDirectory;
+}
+
+
 bool GatewayRouterPolicyManager::addConnectorAppRules(String const& connectorId, std::vector<GatewayAclRules> const& rules)
 {
     std::map<qcc::String, std::vector<GatewayAclRules> >::iterator iter;
@@ -114,7 +128,7 @@ bool GatewayRouterPolicyManager::removeConnectorAppRules(qcc::String const& conn
 
     m_ConnectorAppRules.erase(iter);
 
-    int rc = remove((GATEWAY_POLICIES_DIRECTORY + "/apps/" + connectorId + ".xml").c_str());
+    int rc = remove((m_appPolicyDirectory + "/" + connectorId + ".xml").c_str());
     if (rc != 0) {
         QCC_DbgHLPrintf(("Could not remove app policy file successfully"));
     }
@@ -258,7 +272,7 @@ QStatus GatewayRouterPolicyManager::writeAppPolicies(std::map<qcc::String, std::
     if (rc < 0) {
         goto exit;
     }
-    rc = xmlSaveFormatFile((GATEWAY_POLICIES_DIRECTORY + "/apps/" + iter->first + ".xml").c_str(), doc, 1);
+    rc = xmlSaveFormatFile((m_appPolicyDirectory + "/" + iter->first + ".xml").c_str(), doc, 1);
     if (rc < 0) {
         status = ER_WRITE_ERROR;
         goto exit;
@@ -298,7 +312,7 @@ QStatus GatewayRouterPolicyManager::writeDefaultPolicies()
     if (rc < 0) {
         goto exit;
     }
-    rc = xmlTextWriterWriteElement(writer, (xmlChar*)"includedir", (xmlChar*)(GATEWAY_POLICIES_DIRECTORY + "/apps").c_str());
+    rc = xmlTextWriterWriteElement(writer, (xmlChar*)"includedir", (xmlChar*)(m_appPolicyDirectory).c_str());
     if (rc < 0) {
         goto exit;
     }
@@ -329,7 +343,7 @@ QStatus GatewayRouterPolicyManager::writeDefaultPolicies()
     if (rc < 0) {
         goto exit;
     }
-    rc = xmlSaveFormatFile((GATEWAY_POLICIES_DIRECTORY + "/defaultConfig.xml").c_str(), doc, 1);
+    rc = xmlSaveFormatFile(m_gatewayPolicyFile.c_str(), doc, 1);
     if (rc < 0) {
         status = ER_WRITE_ERROR;
         goto exit;
