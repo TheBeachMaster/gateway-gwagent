@@ -53,34 +53,41 @@ mkdir -p ${ARTIFACTS_DIR}
 mkdir -p $sdksDir
 
 
+
 #========================================
 # generate the docs
 
-pushd ${GWAGENT_SRC_DIR}
-scons V=1 BINDINGS=cpp DOCS=html -u gwma_docs
-popd
+generateDocs() {
+    docName=$1
+    docSrc=$2
+
+    pushd ${GWAGENT_SRC_DIR}
+    scons V=1 BINDINGS=cpp DOCS=html VARIANT=release -u ${docName}_docs
+    popd
+
+    docArtifacts=$sdkStaging/$docName
+    cp -r ${GWAGENT_SRC_DIR}/build/linux/x86_64/release/dist/$2/docs/* $docArtifacts
+
+    # create Manifest.txt file
+    echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $docArtifacts/Manifest.txt
+
+    # create the documentation package
+    sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-$docName-docs
+    tarFile=$sdksDir/$sdkName.tar.gz
+
+    pushd $docArtifacts
+    tar zcvf $tarFile * --exclude=SConscript
+    popd
+
+    pushd $sdksDir
+    md5File=$sdksDir/md5-alljoyn-gwagent-${GWAGENT_SDK_VERSION}-docs.txt
+    md5sum $sdkName.tar.gz >> $md5File
+    popd
+}
 
 
-#========================================
-# create the documentation package
 
-docArtifacts=$sdkStaging
-cp -r ${GWAGENT_SRC_DIR}/cpp/GatewayMgmtApp/docs/* $docArtifacts
-
-# create Manifest.txt file
-echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $sdkStaging/Manifest.txt
-
-sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-docs
-
-tarFile=$sdksDir/$sdkName.tar.gz
-
-pushd $sdkStaging
-tar zcvf $tarFile * --exclude=SConscript
-popd
-
-pushd $sdksDir
-md5File=$sdksDir/md5-$sdkName.txt
-rm -f $md5File
-md5sum $sdkName.tar.gz > $md5File
-popd
+generateDocs gwma gatewayMgmtApp
+generateDocs gwcnc gatewayConnector
+generateDocs gwc gatewayController
 
