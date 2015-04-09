@@ -107,7 +107,7 @@ do
 
     cd $proj_dir
 
-    for sdk in "iphonesimulator7.1 -arch i386" iphoneos
+    for sdk in "iphonesimulator -arch i386" iphoneos
     do
         xcodebuild -project $proj_dir/alljoyn_gateway_$language.xcodeproj -sdk $sdk -configuration $buildVariantString CONFIGURATION_BUILD_DIR=$gwagentBuildDir
 
