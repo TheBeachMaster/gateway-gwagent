@@ -430,7 +430,7 @@ class MyReceiver : public NotificationReceiver {
             cout << "Notification in: " << it->getLanguage().c_str() << "  Message: " << it->getText().c_str() << endl;
 
             if (tweetScript.size() && it->getLanguage().compare("en") == 0) {
-                qcc::String cmd = "sh -i " + tweetScript + " \"" + notification.getAppName() +
+                qcc::String cmd = "sh " + tweetScript + " \"" + notification.getAppName() +
                                   " sent: " + it->getText().c_str() + "\"";
                 cout << "Command is: " << cmd.c_str() << endl;
                 int result = system(cmd.c_str());
