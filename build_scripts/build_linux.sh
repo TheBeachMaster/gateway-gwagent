@@ -78,40 +78,46 @@ popd
 # copy build products to staging directories
 
 # create directory structure
-mkdir -p $sdkStaging/alljoyn-daemon.d/apps
+mkdir -p $sdkStaging/usr/bin
+mkdir -p $sdkStaging/usr/lib
+mkdir -p $sdkStaging/etc/alljoyn/gwagent
+mkdir -p $sdkStaging/etc/alljoyn/gwagent-apps
 mkdir -p $sdkStaging/apps
 mkdir -p $sdkStaging/app-manager
-mkdir -p $sdkStaging/gw-mgmt/lib
+mkdir -p $sdkStaging/gwagent
 mkdir -p $sdkStaging/daemon
 
 
 distDir=${GWAGENT_SRC_DIR}/build/linux/x86_64/${BUILD_VARIANT}/dist
 
-# copy Gateway agent files to gw-mgmt directory
-cp $distDir/gatewayMgmtApp/bin/GatewayMgmtApp $sdkStaging/gw-mgmt
-cp $distDir/gatewayMgmtApp/bin/manifest.xsd $sdkStaging/gw-mgmt
-cp $distDir/cpp/lib/liballjoyn.so $sdkStaging/gw-mgmt/lib
-chmod a+x $sdkStaging/gw-mgmt/GatewayMgmtApp
-
-# copy the sample defaultConfig.xml file to the location where the gwagent will modify it
-cp $distDir/gatewayMgmtApp/bin/defaultConfig.xml $sdkStaging/alljoyn-daemon.d/
+# copy gateway agent files
+cp $distDir/gatewayMgmtApp/bin/alljoyn-gwagent $sdkStaging/usr/bin
+cp $distDir/gatewayMgmtApp/bin/manifest.xsd $sdkStaging/gwagent
+cp $distDir/cpp/lib/liballjoyn_about.so $sdkStaging/usr/lib
+cp $distDir/gatewayMgmtApp/bin/gwagent-config.xml $sdkStaging/etc/alljoyn/gwagent/gwagent.conf
 
 # copy sample scripts to app-manager directory
 cp $distDir/gatewayMgmtApp/bin/*.sh $sdkStaging/app-manager/
-chmod a+x $sdkStaging/app-manager/*.sh
+chmod a+rx $sdkStaging/app-manager/*.sh
 
-# copy routing node and lib to daemon directory
+# copy routing node files
 cp $distDir/cpp/bin/alljoyn-daemon $sdkStaging/daemon/
-cp $distDir/cpp/lib/liballjoyn.so $sdkStaging/daemon/
-chmod a+x $sdkStaging/daemon/alljoyn-daemon
+cp $distDir/cpp/lib/liballjoyn.so $sdkStaging/usr/lib
+chmod a+rx $sdkStaging/daemon/alljoyn-daemon
 
 # copy sample routing node config.xml to daemon directory
-cp ${GWAGENT_SRC_DIR}/cpp/GatewayMgmtApp/samples/config.xml $sdkStaging/daemon/
+cp ${GWAGENT_SRC_DIR}/cpp/GatewayMgmtApp/samples/config.xml $sdkStaging/etc/alljoyn/alljoyn.conf
+chmod a+rx $sdkStaging/usr/bin/*
 
-chmod a+x $distDir/gatewayConnector/tar/bin/*.sh
+# copy other base services so files needed by the sample connector
+cp $distDir/services_common/lib/liballjoyn_services_common.so $sdkStaging/usr/lib
+cp $distDir/notification/lib/liballjoyn_notification.so $sdkStaging/usr/lib
+cp $distDir/config/lib/liballjoyn_config.so $sdkStaging/usr/lib
+cp $distDir/gatewayConnector/lib/liballjoyn_gwconnector.so $sdkStaging/usr/lib
 
 # package sample connector
 pushd $distDir/gatewayConnector/tar
+chmod a+rx $distDir/gatewayConnector/tar/bin/*.sh
 tar zcvf $sdkStaging/app-manager/dummyApp.tar.gz --owner=0 --group=0 *
 popd
 
@@ -139,5 +145,3 @@ md5File=$sdksDir/md5-$sdkName.txt
 rm -f $md5File
 md5sum $tarFile > $md5File
 popd
-
-

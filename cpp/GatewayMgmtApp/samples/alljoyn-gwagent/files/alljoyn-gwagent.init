@@ -25,9 +25,9 @@ boot() {
 }
 
 start() {
-	service_start /opt/alljoyn/gw-mgmt/GatewayMgmtApp 
+	service_start /usr/bin/alljoyn-gwagent --gwagent-policy-file=/etc/alljoyn/gwagent/gwagent.conf --apps-policy-dir=/etc/alljoyn/gwagent-apps
 }
 
 stop() {
-	service_stop /opt/alljoyn/gw-mgmt/GatewayMgmtApp
+	service_stop /usr/bin/alljoyn-gwagent
 }

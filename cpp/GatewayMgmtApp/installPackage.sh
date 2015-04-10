@@ -105,7 +105,10 @@ mkdir -p "$pkgInstallDir/store" || exit 17
 ## TODO mkdir -p "$pkgInstallDir/tmp" || exit 18
 
 cp -rf $tmpDir/bin/* $pkgInstallDir/bin || exit 19
-cp -rf $tmpDir/lib/* $pkgInstallDir/lib || exit 20
+ls $tmpDir/lib/* &> /dev/null
+if [ $? == 0 ]; then
+    cp -rf $tmpDir/lib/* $pkgInstallDir/lib || exit 20
+fi
 cp $tmpDir/Manifest.xml $pkgInstallDir/ || exit 21
 
 # allow package to be installed for an existing user (for testing purposes)
