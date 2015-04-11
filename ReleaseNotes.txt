@@ -35,6 +35,7 @@ ASAGW-31    Documentation needed for GatewayConnector and GatewayController comp
 ASAGW-32    Output binaries and installation folders for Gateway need to conform to other AllJoyn projects
 ASAGW-36    running postTweet.sh script with "sh -i" can hang on Ubuntu
 ASAGW-41    Sample Connector App ipk not built properly for OpenWRT
+ASAGW-42    Connector interface not registered as secured by Gateway Agent
 
 A complete list of closed issues can be found at:
 https://jira.allseenalliance.org/issues/?jql=project%20%3D%20ASAGW%20AND%20issuetype%20in%20%28Bug%29%20AND%20fixVersion%20%3D%20%2214.12%22%20AND%20status%20in%20%28Resolved%2CClosed%29%20ORDER%20BY%20key%20ASC
