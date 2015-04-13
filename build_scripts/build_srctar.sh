@@ -17,9 +17,9 @@
 
 
 #
-# Builds an archive file of the Linux build for gwagent
+# Builds a source tar of the gwagent project
 #
-#   GWAGENT_SDK_VERSION - version name ot use in buildig the archive file
+#   GWAGENT_SDK_VERSION - version name to use in building the archive file
 #   GWAGENT_SRC_DIR - root directory of the gwagent git repo
 #   ARTIFACTS_DIR - directory to copy build products
 #   WORKING_DIR - directory for working with files
@@ -42,52 +42,32 @@ do
 done
 
 
-#========================================
-# set variables for different directories needed
-sdkStaging=${WORKING_DIR}/sdk_stage
-sdksDir=${ARTIFACTS_DIR}/sdks
-
 # create the directories needed
-mkdir -p $sdkStaging
 mkdir -p ${ARTIFACTS_DIR}
-mkdir -p $sdksDir
+mkdir -p ${WORKING_DIR}
+
+outputTarFileName=alljoyn-gwagent-$GWAGENT_SDK_VERSION-src.tar
+
+pushd ${GWAGENT_SRC_DIR}
+git archive --prefix=alljoyn-gwagent-$GWAGENT_SDK_VERSION-src/gateway/gwagent/ HEAD^{tree} -o ${WORKING_DIR}/$outputTarFileName
+
+cd ../../core/alljoyn
+git archive --prefix=alljoyn-gwagent-$GWAGENT_SDK_VERSION-src/core/alljoyn/ HEAD^{tree} build_core -o ${WORKING_DIR}/core.tar
+
+cd ../../services/base
+git archive --prefix=alljoyn-gwagent-$GWAGENT_SDK_VERSION-src/services/base/ HEAD^{tree} sample_apps -o ${WORKING_DIR}/services.tar
+
+cd ../..
+
+tar --concatenate --file=${WORKING_DIR}/$outputTarFileName ${WORKING_DIR}/core.tar
+tar --concatenate --file=${WORKING_DIR}/$outputTarFileName ${WORKING_DIR}/services.tar
+
+gzip ${WORKING_DIR}/$outputTarFileName
+
+pushd ${WORKING_DIR}
+md5sum $outputTarFileName.gz > md5sum.txt
+popd
 
 
-
-#========================================
-# generate the docs
-
-generateDocs() {
-    docName=$1
-    docSrc=$2
-
-    pushd ${GWAGENT_SRC_DIR}
-    scons V=1 BINDINGS=cpp DOCS=html VARIANT=release -u ${docName}_docs
-    popd
-
-    docArtifacts=$sdkStaging/$docName
-    cp -r ${GWAGENT_SRC_DIR}/build/linux/x86_64/release/dist/$2/docs/* $docArtifacts
-
-    # create Manifest.txt file
-    echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $docArtifacts/Manifest.txt
-
-    # create the documentation package
-    sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-$docName-docs
-    tarFile=$sdksDir/$sdkName.tar.gz
-
-    pushd $docArtifacts
-    tar zcvf $tarFile * --exclude=SConscript
-    popd
-
-    pushd $sdksDir
-    md5File=$sdksDir/md5-alljoyn-gwagent-${GWAGENT_SDK_VERSION}-docs.txt
-    md5sum $sdkName.tar.gz >> $md5File
-    popd
-}
-
-
-
-generateDocs gwma gatewayMgmtApp
-generateDocs gwcnc gatewayConnector
-generateDocs gwc gatewayController
-
+cp ${WORKING_DIR}/$outputTarFileName.gz ${ARTIFACTS_DIR}
+cp ${WORKING_DIR}/md5sum.txt ${ARTIFACTS_DIR}

@@ -103,6 +103,18 @@ class GatewayMgmt {
      */
     GatewayBusListener* getBusListener() const;
 
+    /**
+     * Set the name of the gateway default policy file
+     * @param gatewayPoliciesFile
+     */
+    void setGatewayPolicyFile(const char* gatewayPolicyFile);
+
+    /**
+     * Set the directory where application policy files will be written
+     * @param appPoliciesDirectory
+     */
+    void setAppPolicyDir(const char* appPolicyDirectory);
+
   private:
 
     /**
@@ -140,6 +152,16 @@ class GatewayMgmt {
      * The MetadataManager of the GatewayMgmt instance
      */
     GatewayMetadataManager* m_MetadataManager;
+
+    /**
+     * Filename for the gateway agent default policies file
+     */
+    qcc::String m_gatewayPolicyFile;
+
+    /**
+     * Directory containing the policies for the applications
+     */
+    qcc::String m_appPolicyDirectory;
 
 };
 

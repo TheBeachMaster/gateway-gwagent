@@ -1,47 +1,55 @@
-GateWay agent Release Notes
--------------------------------------
+GateWay agent 14.12 Release Notes
+====================================
 
 Platform Support
 ----------------
- 1) Configuration Manager & Connector - OpenWRT, Linux Ubuntu 14.04
- 2) Controller - Android KitKat 4.4 (ARM7), IOS 7
+ 1) Gateway Agent & sample connector
+    - OpenWRT BB
+    - Linux Ubuntu 14.04 LTS (64 bit)
+ 2) Controller
+    - Android KitKat 4.4 (ARM7)
+    - iOS 7.1 (32-bit)
 
 
-Features added in This Version
+Features added in Version 14.12
 ------------------------------
 
 Issues Addressed in This Version 
 --------------------------------
-ASAGW-17	Remoting Config interface fails due to ER_AUTH_FAIL at Exchange Guids.
-ASAGW-15	3rd party sample app stops after update of an ACL and GetMergedAcl method call
-ASAGW-13	Add support for ALLJOYN_ECDHE_PSK
-ASAGW-2     Make use of Announcement signals sent by the Gateway Manager to know that the list of ACLs or Connector apps has changed
-ASAGW-23	Unable to delete profile in the IOS sample APP
-ASAGW-14	Unable to install app with secured boolean in it's Manifest.xml
-ASAGW-20	Add about testing to connector sample app
-ASAGW-26	Gateway Agent does not need onborading service
-ASAGW-22	GW Third Party Apps Are not stopped when Contain single profile which is Inactivated
 ASAGW-3	    Inconsistent naming convention in gateway public interface
 ASAGW-4	    Inconsistent ways to return QStatus making it hard to use the gateway API
 ASAGW-8	    Some mandatory fields are not initialised in AboutPropertyStoreImpl of GatewayAgent Manager App
-ASAGW-1	    Change the names in the SDK and the sample application following the new name convention
-ASAGW-5	    Handle static analysis issues
 ASAGW-11	XSD limits object path to 50 characters. This is too short. Should be longer or not limtied.
+ASAGW-12    installPackage.sh shell script does not function on openwrt (TPLINK842ND) 
+ASAGW-13	Add support for ALLJOYN_ECDHE_PSK
+ASAGW-15	3rd party sample app stops after update of an ACL and GetMergedAcl method call
+ASAGW-16    Getting error "Bad substitution" from sample app
+ASAGW-17	Remoting Config interface fails due to ER_AUTH_FAIL at Exchange Guids.
+ASAGW-20	Add about testing to connector sample app
+ASAGW-21    Error thrown when ACL name is in UTF-8
 ASAGW-24	IOS sample app project fails to compile due to wrong path in the project
-ASAGW-19	Create user guide and interface spec documents
+ASAGW-26	Gateway Agent does not need onborading service
+ASAGW-28    Policy entries not generated properly with some ACLs
+ASAGW-29    Gateway Manager About App Name Misspelled
+ASAGW-31    Documentation needed for GatewayConnector and GatewayController components
+ASAGW-32    Output binaries and installation folders for Gateway need to conform to other AllJoyn projects
+ASAGW-36    running postTweet.sh script with "sh -i" can hang on Ubuntu
+ASAGW-41    Sample Connector App ipk not built properly for OpenWRT
+ASAGW-42    Connector interface not registered as secured by Gateway Agent
+
+A complete list of closed issues can be found at:
+https://jira.allseenalliance.org/issues/?jql=project%20%3D%20ASAGW%20AND%20issuetype%20in%20%28Bug%29%20AND%20fixVersion%20%3D%20%2214.12%22%20AND%20status%20in%20%28Resolved%2CClosed%29%20ORDER%20BY%20key%20ASC
 
 
 Known Issues
 ------------
-ASAGW-25	Very small leak reported by Valgrind for Gateway Agent
-ASAGW-9 	change connector sample app to have reverse domain name format as a connectorID
-ASAGW-10	replace appID with ConnectorID where needed in the code
-ASAGW-21	Error thrown when ACL name is in UTF-8
-ASAGW-16	Getting error "Bad substitution" at twitter shell script of sample app on ubuntu
-ASAGW-12	installPackage.sh shell script does not function on openwrt (TPLINK842ND)
-ASAGW-7	    error=sign-compare warnings	Tsahi Asher
-ASAGW-6	    GATEWAY_APPS_DIRECTORY required by PackageManager
 ASAGW-18	New Gateway 3rd party apps are not registered without a restart of the GW agent.
+ASAGW-25	Very small leak reported by Valgrind for Gateway Agent
+ASAGW-40    GatewayMgmtApp should clean up "old" lost devices from policy db xml file sooner than a router restart
+
+For a complete list of open issues:
+https://jira.allseenalliance.org/issues/?jql=project%20%3D%20ASAGW%20AND%20status%20not%20in%20%28closed%2C%20resolved%29%20and%20type%20not%20in%20%28task%2C%20%22New%20Feature%22%29%20ORDER%20BY%20priority%20DESC%2C%20key%20ASC
+
 
 Compatibility
 -------------
@@ -49,5 +57,4 @@ Compatibility
 
 Change history
 --------------
-
-Initial Release
+14.12  - Initial Alliance Alliance release

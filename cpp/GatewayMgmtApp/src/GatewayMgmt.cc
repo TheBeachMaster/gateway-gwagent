@@ -39,7 +39,8 @@ GatewayMgmt* GatewayMgmt::getInstance()
 }
 
 GatewayMgmt::GatewayMgmt() : m_Bus(NULL), m_BusListener(NULL),
-    m_RouterPolicyManager(NULL), m_ConnectorAppManager(NULL), m_MetadataManager(NULL)
+    m_RouterPolicyManager(NULL), m_ConnectorAppManager(NULL), m_MetadataManager(NULL),
+    m_gatewayPolicyFile(""), m_appPolicyDirectory("")
 {
 }
 
@@ -144,6 +145,12 @@ QStatus GatewayMgmt::initGatewayMgmt(BusAttachment* bus)
     }
 
     m_RouterPolicyManager->setAutoCommit(true);
+    if (!m_gatewayPolicyFile.empty()) {
+        m_RouterPolicyManager->setGatewayPolicyFile(m_gatewayPolicyFile.c_str());
+    }
+    if (!m_appPolicyDirectory.empty()) {
+        m_RouterPolicyManager->setAppPolicyDirectory(m_appPolicyDirectory.c_str());
+    }
     status = m_RouterPolicyManager->commit();
     if (status != ER_OK) {
         QCC_LogError(status, ("Initial commit of the Policies did not succeed"));
@@ -249,6 +256,17 @@ GatewayBusListener* GatewayMgmt::getBusListener() const
 {
     return m_BusListener;
 }
+
+void GatewayMgmt::setGatewayPolicyFile(const char* gatewayPolicyFile)
+{
+    m_gatewayPolicyFile = gatewayPolicyFile;
+}
+
+void GatewayMgmt::setAppPolicyDir(const char* appPolicyDirectory)
+{
+    m_appPolicyDirectory = appPolicyDirectory;
+}
+
 
 } /* namespace gw */
 } /* namespace ajn */

@@ -52,7 +52,7 @@
 		</object>
 	</remotedServices>
 	<executionInfo>
-		<executable>GatewayConnectorSample</executable>
+		<executable>alljoyn-gwconnectorsample</executable>
 		<env_variables>			
 			<variable name="LD_LIBRARY_PATH">/opt/alljoyn/apps/dummyapp1/lib</variable>
 			<variable name="ER_DEBUG">7</variable>
