@@ -57,6 +57,9 @@ mkdir -p $sdksDir
 #========================================
 # generate the docs
 
+md5File=$sdksDir/md5-alljoyn-gwagent-${GWAGENT_SDK_VERSION}-docs.txt
+rm -f $md5File
+
 generateDocs() {
     docName=$1
     docSrc=$2
@@ -69,7 +72,9 @@ generateDocs() {
     cp -r ${GWAGENT_SRC_DIR}/build/linux/x86_64/release/dist/$2/docs/* $docArtifacts
 
     # create Manifest.txt file
-    echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $docArtifacts/Manifest.txt
+    pushd ${GWAGENT_SRC_DIR}
+    python ${GWAGENT_SRC_DIR}/build_scripts/genversion.py > $docArtifacts/Manifest.txt
+    popd
 
     # create the documentation package
     sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-$docName-docs
@@ -80,7 +85,6 @@ generateDocs() {
     popd
 
     pushd $sdksDir
-    md5File=$sdksDir/md5-alljoyn-gwagent-${GWAGENT_SDK_VERSION}-docs.txt
     md5sum $sdkName.tar.gz >> $md5File
     popd
 }
@@ -90,4 +94,12 @@ generateDocs() {
 generateDocs gwma gatewayMgmtApp
 generateDocs gwcnc gatewayConnector
 generateDocs gwc gatewayController
+
+iosDocsZip=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-ios-sdk-docs.zip
+androidDocsZip=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-android-sdk-docs.zip
+
+pushd $sdksDir
+[[ ! -f $iosDocsZip ]] || md5sum $iosDocsZip >> $md5File
+[[ ! -f $androidDocsZip ]] || md5sum $androidDocsZip >> $md5File
+popd
 

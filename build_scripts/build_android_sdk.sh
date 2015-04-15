@@ -52,6 +52,7 @@ extractedSdks=${WORKING_DIR}/unzipped_sdks
 jarsDepends=${WORKING_DIR}/jars
 libsDepends=${WORKING_DIR}/libs
 sdkStaging=${WORKING_DIR}/sdk_stage
+docStaging=${WORKING_DIR}/doc_stage
 sdksDir=${ARTIFACTS_DIR}/sdks
 
 # create the directories needed
@@ -167,7 +168,9 @@ cp ${GWAGENT_SRC_DIR}/ReleaseNotes.txt $gwagentSdkDir/
 cp ${GWAGENT_SRC_DIR}/README.md $gwagentSdkDir/
 
 # create Manifest.txt file
-echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $gwagentSdkDir/Manifest.txt
+pushd ${GWAGENT_SRC_DIR}
+python ${GWAGENT_SRC_DIR}/build_scripts/genversion.py > $gwagentSdkDir/Manifest.txt
+popd
 
 # copy docs
 cp -r ${docArtifacts}/* $gwagentSdkDir/docs/
@@ -188,10 +191,27 @@ pushd $sdkStaging
 zip -q -r $sdksDir/$zipFile *
 popd
 
+
+# build a zip of the Javadoc on release builds
+docZipFile=
+if [ "$BUILD_VARIANT" == "release" ]
+then
+    docName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-android-sdk-docs
+    docZipDir=$docStaging/$docName
+    mkdir -p $docZipDir
+    cp -r $docArtifacts/* $docZipDir/
+
+    docZipFile=$docName.zip
+    pushd $docStaging
+    zip -q -r $sdksDir/$docZipFile *
+    popd
+fi
+
+# generate md5s
 pushd $sdksDir
 md5File=$sdksDir/md5-$sdkName.txt
 rm -f $md5File
 md5sum $zipFile > $md5File
+[[ -z "$docZipFile" ]] || md5sum $docZipFile >> $md5File
 popd
-
 

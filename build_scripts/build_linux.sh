@@ -131,7 +131,9 @@ cp ${GWAGENT_SRC_DIR}/ReleaseNotes.txt $sdkStaging/
 cp ${GWAGENT_SRC_DIR}/README.md $sdkStaging/
 
 # create Manifest.txt file
-echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $sdkStaging/Manifest.txt
+pushd ${GWAGENT_SRC_DIR}
+python ${GWAGENT_SRC_DIR}/build_scripts/genversion.py > $sdkStaging/Manifest.txt
+popd
 
 sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-linux-sdk-$variantString
 tarFile=$sdkName.tar.gz
