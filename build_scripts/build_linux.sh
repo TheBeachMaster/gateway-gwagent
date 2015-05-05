@@ -88,7 +88,7 @@ mkdir -p $sdkStaging/gwagent
 mkdir -p $sdkStaging/daemon
 
 
-distDir=${GWAGENT_SRC_DIR}/build/linux/x86_64/${BUILD_VARIANT}/dist
+distDir=${GWAGENT_SRC_DIR}/build/linux/${CPU}/${BUILD_VARIANT}/dist
 
 # copy gateway agent files
 cp $distDir/gatewayMgmtApp/bin/alljoyn-gwagent $sdkStaging/usr/bin
