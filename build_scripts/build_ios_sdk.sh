@@ -1,5 +1,7 @@
 #!/bin/bash
 
+    docZipFile=$docName.zip
+
 # Copyright AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
@@ -50,6 +52,7 @@ extractedSdks=${WORKING_DIR}/unzipped_sdks
 sdkStaging=${WORKING_DIR}/sdk_stage
 buildDir=${WORKING_DIR}/build
 sdksDir=${ARTIFACTS_DIR}/sdks
+docStaging=${WORKING_DIR}/doc_stage
 
 # create the directories needed
 mkdir -p $extractedSdks
@@ -99,6 +102,9 @@ export OPENSSL_ROOT=/usr/local/openssl-1.0.1e
 libArtifacts=${ARTIFACTS_DIR}/lib
 mkdir $libArtifacts
 
+docArtifacts=${ARTIFACTS_DIR}/docs
+mkdir -p $docArtifacts
+
 for language in objc cpp
 do
     # build product directory
@@ -139,9 +145,7 @@ do
             --no-install-docset --no-publish-docset \
             --include ${GWAGENT_SRC_DIR}/ios/GatewayController/inc/alljoyn/gateway)
 
-        gwagentDocsDir=${ARTIFACTS_DIR}/docs/gateway
-        mkdir -p $gwagentDocsDir
-        tar cf - -C $doc_builddir docset html | tar xf - -C $gwagentDocsDir
+        tar cf - -C $doc_builddir docset html | tar xf - -C $docArtifacts
 
     fi
 
@@ -189,10 +193,12 @@ cp ${GWAGENT_SRC_DIR}/ReleaseNotes.txt $gwagentSdkDir/
 cp ${GWAGENT_SRC_DIR}/README.md $gwagentSdkDir/
 
 # create Manifest.txt file
-echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $gwagentSdkDir/Manifest.txt
+pushd ${GWAGENT_SRC_DIR}
+python ${GWAGENT_SRC_DIR}/build_scripts/genversion.py > $gwagentSdkDir/Manifest.txt
+popd
 
 # copy docs
-cp -r ${gwagentDocsDir}/* $gwagentSdkDir/docs/gateway/
+cp -r ${docArtifacts}/* $gwagentSdkDir/docs/gateway/
 
 # copy libs
 cp ${ARTIFACTS_DIR}/lib/liballjoyn_gateway_cpp.a $gwagentSdkDir/cpp/lib/
@@ -213,9 +219,25 @@ pushd $sdkStaging
 zip -q -r $sdksDir/$zipFile alljoyn-ios
 popd
 
+docZipFile=
+if [ "$BUILD_VARIANT" == "release" ] 
+then
+    docName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-ios-sdk-docs
+    docZipDir=$docStaging/$docName
+    mkdir -p $docZipDir
+    cp -r ${docArtifacts}/* $docZipDir/
+
+    docZipFile=$docName.zip
+    pushd $docStaging
+    zip -q -r $sdksDir/$docZipFile *
+    popd
+fi
+
+# generate md5s
 pushd $sdksDir
 md5File=$sdksDir/md5-$sdkName.txt
 rm -f $md5File
 md5 $zipFile > $md5File
+[[ -z "$docZipFile" ]] || md5 $docZipFile >> $md5File
 popd
 
