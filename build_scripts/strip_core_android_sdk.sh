@@ -15,12 +15,10 @@
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 #
-# Prepares released dependencies from other projects for building the gateway project
-# It currently strips down the Android SDK to the minimum needed
+# Strips down the AllJoyn Core Android SDK to the minimum needed for building the gateway project
 #
 #   DEPENDENCIES_DIR - directory contains the zip files of the dependencies
 #   CORE_VERSION - version of AllJoyn core
-#   SERVICES_VERSION - version of Base Services (optional)
 #   WORKING_DIR - directory for working with files
 #   ARTIFACTS_DIR - directory to which to copy the prepared dependencies
 
@@ -48,15 +46,6 @@ sdksDir=${ARTIFACTS_DIR}/sdks
 mkdir -p $sdksDir
 mkdir -p $extractedSdks
 mkdir -p $sdkStaging
-
-# Copy config sdk as is to artifacts
-if [ -n "${SERVICES_VERSION:-}" ]
-then
-    cp ${DEPENDENCIES_DIR}/alljoyn-config-service-framework-${SERVICES_VERSION}-android-sdk-rel.zip $sdksDir/
-fi
-
-# Copy iOS SDK as is to artifacts
-cp ${DEPENDENCIES_DIR}/alljoyn-${CORE_VERSION}-osx_ios-sdk.zip $sdksDir/
 
 # Extract subset of Android SDK for dbg and rel variants
 for variantString in dbg rel
@@ -92,4 +81,3 @@ do
     zip $sdksDir/$zipFile -r alljoyn-android
 
 done
-
