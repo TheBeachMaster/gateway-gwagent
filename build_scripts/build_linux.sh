@@ -19,12 +19,12 @@
 #
 # Builds an archive of the Linux build for gwagent
 #
-#   BUILD_VARIANT - release or debug
-#   GWAGENT_SDK_VERSION - version name to use in building the archive file
-#   GWAGENT_SRC_DIR - root directory of the gwagent git repo
-#   ARTIFACTS_DIR - directory to copy build products
-#   WORKING_DIR - directory for working with files
-#   CPU - CPU parameter to give to scons (e.g. x86_64, x86, etc.)
+#   BUILD_VARIANT - release or debug (default to release if not given)
+#   GWAGENT_SDK_VERSION - version name to use in building the archive file (version number left out if not given)
+#   GWAGENT_SRC_DIR - root directory of the gwagent git repo (defaults to relative location if not given)
+#   ARTIFACTS_DIR - directory to copy build products (defaults to build/jobs/artifacts)
+#   WORKING_DIR - directory for working with files (defaults to build/jobs/tmp)
+#   CPU - CPU parameter to give to scons, x86_64 or x86 (defaults to x86_64)
 
 
 set -o nounset
@@ -32,23 +32,30 @@ set -o errexit
 set -o verbose
 set -o xtrace
 
+#========================================
+# Set default values for any unset environment variables
 
-# check for required env variables
-for var in BUILD_VARIANT GWAGENT_SDK_VERSION GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR CPU
-do
-    if [ -z "${!var:-}" ]
-    then
-        printf "$var must be defined!\n"
-        exit 1
-    fi
-done
+export BUILD_VARIANT=${BUILD_VARIANT:-release}
 
+if [ -z "${GWAGENT_SRC_DIR:-}" ]
+then
+    # set it to the top level directory for the git repo
+    # (based on relative position of the build_scripts)
+    export GWAGENT_SRC_DIR=$(dirname $(dirname $(readlink -f $0)))
+fi
+
+export ARTIFACTS_DIR=${ARTIFACTS_DIR:-$GWAGENT_SRC_DIR/build/jobs/artifacts}
+export WORKING_DIR=${WORKING_DIR:-$GWAGENT_SRC_DIR/build/jobs/tmp}
+export CPU=${CPU:-x86_64}
 
 #========================================
 # set variables for the different directories needed
 sdkStaging=${WORKING_DIR}/sdk_stage
 sdksDir=${ARTIFACTS_DIR}/sdks
 
+
+# remove any existing directory and contents
+rm -fr $sdkStaging
 
 # create the directories needed
 mkdir -p $sdkStaging
@@ -135,7 +142,13 @@ pushd ${GWAGENT_SRC_DIR}
 python ${GWAGENT_SRC_DIR}/build_scripts/genversion.py > $sdkStaging/Manifest.txt
 popd
 
-sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-linux-sdk-$variantString
+versionString=""
+if [ -n "${GWAGENT_SDK_VERSION:-}" ]
+then
+    versionString="${GWAGENT_SDK_VERSION}-"
+fi
+
+sdkName=alljoyn-gwagent-${versionString}linux-sdk-$variantString
 tarFile=$sdkName.tar.gz
 
 pushd $sdkStaging
