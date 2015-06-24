@@ -14,15 +14,13 @@
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-
-
 #
 # Builds an archive file of the Linux build for gwagent
 #
-#   GWAGENT_SDK_VERSION - version name ot use in buildig the archive file
-#   GWAGENT_SRC_DIR - root directory of the gwagent git repo
-#   ARTIFACTS_DIR - directory to copy build products
-#   WORKING_DIR - directory for working with files
+#   GWAGENT_SDK_VERSION - version name ot use in building the archive file (version number left out if not given)
+#   GWAGENT_SRC_DIR - root directory of the gwagent git repo (defaults to relative location if not given)
+#   ARTIFACTS_DIR - directory to copy build products (defaults to build/jobs/artifacts)
+#   WORKING_DIR - directory for working with files (defaults to build/jobs/tmp)
 
 
 set -o nounset
@@ -31,16 +29,24 @@ set -o verbose
 set -o xtrace
 
 
-# check for required env variables
-for var in GWAGENT_SDK_VERSION GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR
-do
-    if [ -z "${!var:-}" ]
-    then
-        printf "$var must be defined!\n"
-        exit 1
-    fi
-done
+#========================================
+# Set default values for any unset environment variables
 
+if [ -z "${GWAGENT_SRC_DIR:-}" ]
+then
+    # set it to the top level directory for the git repo
+    # (based on relative position of the build_scripts)
+    export GWAGENT_SRC_DIR=$(dirname $(dirname $(readlink -f $0)))
+fi
+
+export ARTIFACTS_DIR=${ARTIFACTS_DIR:-$GWAGENT_SRC_DIR/build/jobs/artifacts}
+export WORKING_DIR=${WORKING_DIR:-$GWAGENT_SRC_DIR/build/jobs/tmp}
+
+versionString=""
+if [ -n "${GWAGENT_SDK_VERSION:-}" ]
+then
+    versionString="${GWAGENT_SDK_VERSION}-"
+fi
 
 #========================================
 # set variables for different directories needed
@@ -57,7 +63,7 @@ mkdir -p $sdksDir
 #========================================
 # generate the docs
 
-md5File=$sdksDir/md5-alljoyn-gwagent-${GWAGENT_SDK_VERSION}-docs.txt
+md5File=$sdksDir/md5-alljoyn-gwagent-${versionString}docs.txt
 rm -f $md5File
 
 generateDocs() {
@@ -77,7 +83,7 @@ generateDocs() {
     popd
 
     # create the documentation package
-    sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-$docName-docs
+    sdkName=alljoyn-gwagent-${versionString}$docName-docs
     tarFile=$sdksDir/$sdkName.tar.gz
 
     pushd $docArtifacts
@@ -95,8 +101,8 @@ generateDocs gwma gatewayMgmtApp
 generateDocs gwcnc gatewayConnector
 generateDocs gwc gatewayController
 
-iosDocsZip=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-ios-sdk-docs.zip
-androidDocsZip=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-android-sdk-docs.zip
+iosDocsZip=alljoyn-gwagent-${versionString}ios-sdk-docs.zip
+androidDocsZip=alljoyn-gwagent-${versionString}android-sdk-docs.zip
 
 pushd $sdksDir
 [[ ! -f $iosDocsZip ]] || md5sum $iosDocsZip >> $md5File

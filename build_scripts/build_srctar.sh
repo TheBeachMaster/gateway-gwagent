@@ -19,10 +19,10 @@
 #
 # Builds a source tar of the gwagent project
 #
-#   GWAGENT_SDK_VERSION - version name to use in building the archive file
-#   GWAGENT_SRC_DIR - root directory of the gwagent git repo
-#   ARTIFACTS_DIR - directory to copy build products
-#   WORKING_DIR - directory for working with files
+#   GWAGENT_SRC_DIR - root directory of the gwagent git repo (defaults to relative location if not given)
+#   GWAGENT_SDK_VERSION - version name to use in building the archive file (version number left out if not given)
+#   ARTIFACTS_DIR - directory to copy build products (default to build/jobs/artifacts)
+#   WORKING_DIR - directory for working with files (default to build/jobs/tmp)
 
 
 set -o nounset
@@ -31,31 +31,42 @@ set -o verbose
 set -o xtrace
 
 
-# check for required env variables
-for var in GWAGENT_SDK_VERSION GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR
-do
-    if [ -z "${!var:-}" ]
-    then
-        printf "$var must be defined!\n"
-        exit 1
-    fi
-done
+#========================================
+# Set default values for any unset environment variables
 
+if [ -z "${GWAGENT_SRC_DIR:-}" ]
+then
+    # set it to the top level directory for the git repo
+    # (based on relative position of the build_scripts)
+    export GWAGENT_SRC_DIR=$(dirname $(dirname $(readlink -f $0)))
+fi
+
+export ARTIFACTS_DIR=${ARTIFACTS_DIR:-$GWAGENT_SRC_DIR/build/jobs/artifacts}
+export WORKING_DIR=${WORKING_DIR:-$GWAGENT_SRC_DIR/build/jobs/tmp}
+
+
+#========================================
 
 # create the directories needed
 mkdir -p ${ARTIFACTS_DIR}
 mkdir -p ${WORKING_DIR}
 
-outputTarFileName=alljoyn-gwagent-$GWAGENT_SDK_VERSION-src.tar
+versionString=""
+if [ -n "${GWAGENT_SDK_VERSION:-}" ]
+then
+    versionString="${GWAGENT_SDK_VERSION}-"
+fi
+
+outputTarFileName=alljoyn-gwagent-${versionString}src.tar
 
 pushd ${GWAGENT_SRC_DIR}
-git archive --prefix=alljoyn-gwagent-$GWAGENT_SDK_VERSION-src/gateway/gwagent/ HEAD^{tree} -o ${WORKING_DIR}/$outputTarFileName
+git archive --prefix=alljoyn-gwagent-${versionString}src/gateway/gwagent/ HEAD^{tree} -o ${WORKING_DIR}/$outputTarFileName
 
 cd ../../core/alljoyn
-git archive --prefix=alljoyn-gwagent-$GWAGENT_SDK_VERSION-src/core/alljoyn/ HEAD^{tree} build_core -o ${WORKING_DIR}/core.tar
+git archive --prefix=alljoyn-gwagent-${versionString}src/core/alljoyn/ HEAD^{tree} build_core -o ${WORKING_DIR}/core.tar
 
 cd ../../services/base
-git archive --prefix=alljoyn-gwagent-$GWAGENT_SDK_VERSION-src/services/base/ HEAD^{tree} sample_apps -o ${WORKING_DIR}/services.tar
+git archive --prefix=alljoyn-gwagent-${versionString}src/services/base/ HEAD^{tree} sample_apps -o ${WORKING_DIR}/services.tar
 
 cd ../..
 

@@ -1,7 +1,5 @@
 #!/bin/bash
 
-    docZipFile=$docName.zip
-
 # Copyright AllSeen Alliance. All rights reserved.
 #
 #    Permission to use, copy, modify, and/or distribute this software for any
@@ -16,12 +14,10 @@
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-
 #
 # Build the iOS SDK for the gateway agent
 #
-#   CORE_VERSION - version of the Core Android SDK to use
-#   SERVICES_VERSION - version of the Services Android SDK to use
+#   CORE_VERSION - version of the Core iOS SDK to use
 #   BUILD_VARIANT - release or debug
 #   DEPENDENCIES_DIR - directory containing dependencies needed to build
 #   GWAGENT_SDK_VERSION - version name to use in building the SDK
@@ -36,7 +32,7 @@ set -o verbose
 set -o xtrace
 
 # check for required env variables
-for var in BUILD_VARIANT CORE_VERSION SERVICES_VERSION GWAGENT_SDK_VERSION DEPENDENCIES_DIR GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR
+for var in BUILD_VARIANT CORE_VERSION GWAGENT_SDK_VERSION DEPENDENCIES_DIR GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR
 do
     if [ -z "${!var:-}" ]
     then
@@ -62,7 +58,7 @@ mkdir -p $sdksDir
 
 
 #========================================
-# retrieve dependent jars/libs for the CORE_VERSION and SERVICES_VERSION
+# retrieve core SDK
 
 # determine the variant string
 case ${BUILD_VARIANT} in

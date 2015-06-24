@@ -14,15 +14,13 @@
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-
-
 #
 # Prepares released dependencies from other projects for building the gateway project
 # It currently strips down the Android SDK to the minimum needed
 #
 #   DEPENDENCIES_DIR - directory contains the zip files of the dependencies
 #   CORE_VERSION - version of AllJoyn core
-#   SERVICES_VERSION - version of Base Services
+#   SERVICES_VERSION - version of Base Services (optional)
 #   WORKING_DIR - directory for working with files
 #   ARTIFACTS_DIR - directory to which to copy the prepared dependencies
 
