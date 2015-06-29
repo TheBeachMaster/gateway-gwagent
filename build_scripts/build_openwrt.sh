@@ -17,6 +17,7 @@
 #
 # Builds OpenWRT ipks needed to install the gwagent and sample connector
 #
+#   BUILD_VARIANT - release or debug (default to release if not given)
 #   OPENWRT_REPO_URL - OpenWRT git repo URL to use
 #                    - defaults to git://git.openwrt.org/14.07/openwrt.git
 #                    - ex) git://git.openwrt.org/14.07/openwrt.git
@@ -64,6 +65,8 @@ set -o xtrace
 
 #========================================
 # Set default values for any unset environment variables
+
+export BUILD_VARIANT=${BUILD_VARIANT:-release}
 
 export OPENWRT_REPO_URL=${OPENWRT_REPO_URL:-git://git.openwrt.org/14.07/openwrt.git}
 
@@ -211,6 +214,14 @@ sed -i "s/.*$AJ_ONBOARDING_PKG\=.*$/# $AJ_ONBOARDING_PKG is not set/g" $OPENWRT_
 sed -i "s/.*$AJ_ONBOARDING_SAMPLES_PKG\=.*$/# $AJ_ONBOARDING_SAMPLES_PKG is not set/g" $OPENWRT_CONFIG
 sed -i "s/.*$AJ_SAMPLES_PKG\=.*$/# $AJ_SAMPLES_PKG is not set/g" $OPENWRT_CONFIG
 sed -i "s/.*$AJ_SERVICES_SAMPLE_APPS_PKG\=.*$/# $AJ_SERVICES_SAMPLE_APPS_PKG is not set/g" $OPENWRT_CONFIG
+
+# enable CONFIG_DEBUG based on BUILD_VARIANT
+if [ "${BUILD_VARIANT}" == "debug" ]
+then
+    sed -i "s/^.*CONFIG_DEBUG[ =].*$/CONFIG_DEBUG=y/g" $OPENWRT_CONFIG
+else
+    sed -i "s/^.*CONFIG_DEBUG[ =].*$/# CONFIG_DEBUG is not set/g" $OPENWRT_CONFIG
+fi
 
 make V=s tools/install
 make V=s toolchain/install
