@@ -144,7 +144,7 @@ QStatus AppBusObject::createAppConnectorInterface(BusAttachment* bus)
 
     InterfaceDescription* interfaceDescription = (InterfaceDescription*) bus->GetInterface(AJ_GW_APP_CONNECTOR_INTERFACE.c_str());
     if (!interfaceDescription) {
-        status = bus->CreateInterface(AJ_GW_APP_CONNECTOR_INTERFACE.c_str(), interfaceDescription, true);
+        status = bus->CreateInterface(AJ_GW_APP_CONNECTOR_INTERFACE.c_str(), interfaceDescription);
         if (status != ER_OK) {
             goto postCreate;
         }
