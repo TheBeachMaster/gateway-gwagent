@@ -17,6 +17,7 @@
 #include <SrpKeyXListener.h>
 #include <CommonSampleUtil.h>
 #include <alljoyn/BusAttachment.h>
+#include <alljoyn/Init.h>
 #include <alljoyn/notification/Notification.h>
 #include <alljoyn/notification/NotificationReceiver.h>
 #include <alljoyn/notification/NotificationService.h>
@@ -448,6 +449,9 @@ class MyReceiver : public NotificationReceiver {
 
 
 int main(int argc, char** argv) {
+    if (AllJoynInit() != ER_OK) {
+        return 1;
+    }
     signal(SIGINT, signal_callback_handler);
     BusAttachment bus("ConnectorApp", true);
     CommonBusListener busListener;
@@ -457,7 +461,7 @@ int main(int argc, char** argv) {
     // Initialize bus
     //====================================
 #ifdef QCC_USING_BD
-    PasswordManager::SetCredentials("ALLJOYN_PIN_KEYX", "000000");
+    PasswordManager::SetCredentials("ALLJOYN_SRP_LOGON", "000000");
 #endif
 
     QStatus status = bus.Start();
@@ -486,7 +490,7 @@ int main(int argc, char** argv) {
     //====================================
     keyListener.setPassCode("000000");
     qcc::String keystore = "/opt/alljoyn/apps/" + wellknownName + "/store/.alljoyn_keystore.ks";
-    status = bus.EnablePeerSecurity("ALLJOYN_PIN_KEYX ALLJOYN_SRP_KEYX ALLJOYN_ECDHE_PSK", &keyListener, keystore.c_str(), false);
+    status = bus.EnablePeerSecurity("ALLJOYN_SRP_KEYX ALLJOYN_SRP_LOGON ALLJOYN_ECDHE_PSK", &keyListener, keystore.c_str(), false);
 
     //====================================
     // Initialize GwConnector interface
@@ -610,5 +614,6 @@ int main(int argc, char** argv) {
 
     notificationService->shutdownSender();
     notificationService->shutdown();
+    AllJoynShutdown();
     return exitManager.getSignum();
 }
