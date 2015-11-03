@@ -19,12 +19,12 @@
 #
 # Builds an archive of the Linux build for gwagent
 #
-#   BUILD_VARIANT - release or debug
-#   GWAGENT_SDK_VERSION - version name to use in building the archive file
-#   GWAGENT_SRC_DIR - root directory of the gwagent git repo
-#   ARTIFACTS_DIR - directory to copy build products
-#   WORKING_DIR - directory for working with files
-#   CPU - CPU parameter to give to scons (e.g. x86_64, x86, etc.)
+#   BUILD_VARIANT - release or debug (default to release if not given)
+#   GWAGENT_SDK_VERSION - version name to use in building the archive file (version number left out if not given)
+#   GWAGENT_SRC_DIR - root directory of the gwagent git repo (defaults to relative location if not given)
+#   ARTIFACTS_DIR - directory to copy build products (defaults to build/jobs/artifacts)
+#   WORKING_DIR - directory for working with files (defaults to build/jobs/tmp)
+#   CPU - CPU parameter to give to scons, x86_64 or x86 (defaults to x86_64)
 
 
 set -o nounset
@@ -32,23 +32,30 @@ set -o errexit
 set -o verbose
 set -o xtrace
 
+#========================================
+# Set default values for any unset environment variables
 
-# check for required env variables
-for var in BUILD_VARIANT GWAGENT_SDK_VERSION GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR CPU
-do
-    if [ -z "${!var:-}" ]
-    then
-        printf "$var must be defined!\n"
-        exit 1
-    fi
-done
+export BUILD_VARIANT=${BUILD_VARIANT:-release}
 
+if [ -z "${GWAGENT_SRC_DIR:-}" ]
+then
+    # set it to the top level directory for the git repo
+    # (based on relative position of the build_scripts)
+    export GWAGENT_SRC_DIR=$(dirname $(dirname $(readlink -f $0)))
+fi
+
+export ARTIFACTS_DIR=${ARTIFACTS_DIR:-$GWAGENT_SRC_DIR/build/jobs/artifacts}
+export WORKING_DIR=${WORKING_DIR:-$GWAGENT_SRC_DIR/build/jobs/tmp}
+export CPU=${CPU:-x86_64}
 
 #========================================
 # set variables for the different directories needed
 sdkStaging=${WORKING_DIR}/sdk_stage
 sdksDir=${ARTIFACTS_DIR}/sdks
 
+
+# remove any existing directory and contents
+rm -fr $sdkStaging
 
 # create the directories needed
 mkdir -p $sdkStaging
@@ -78,40 +85,46 @@ popd
 # copy build products to staging directories
 
 # create directory structure
-mkdir -p $sdkStaging/alljoyn-daemon.d/apps
+mkdir -p $sdkStaging/usr/bin
+mkdir -p $sdkStaging/usr/lib
+mkdir -p $sdkStaging/etc/alljoyn/gwagent
+mkdir -p $sdkStaging/etc/alljoyn/gwagent-apps
 mkdir -p $sdkStaging/apps
 mkdir -p $sdkStaging/app-manager
-mkdir -p $sdkStaging/gw-mgmt/lib
+mkdir -p $sdkStaging/gwagent
 mkdir -p $sdkStaging/daemon
 
 
-distDir=${GWAGENT_SRC_DIR}/build/linux/x86_64/${BUILD_VARIANT}/dist
+distDir=${GWAGENT_SRC_DIR}/build/linux/${CPU}/${BUILD_VARIANT}/dist
 
-# copy Gateway agent files to gw-mgmt directory
-cp $distDir/gatewayMgmtApp/bin/GatewayMgmtApp $sdkStaging/gw-mgmt
-cp $distDir/gatewayMgmtApp/bin/manifest.xsd $sdkStaging/gw-mgmt
-cp $distDir/cpp/lib/liballjoyn.so $sdkStaging/gw-mgmt/lib
-chmod a+x $sdkStaging/gw-mgmt/GatewayMgmtApp
-
-# copy the sample defaultConfig.xml file to the location where the gwagent will modify it
-cp $distDir/gatewayMgmtApp/bin/defaultConfig.xml $sdkStaging/alljoyn-daemon.d/
+# copy gateway agent files
+cp $distDir/gatewayMgmtApp/bin/alljoyn-gwagent $sdkStaging/usr/bin
+cp $distDir/gatewayMgmtApp/bin/manifest.xsd $sdkStaging/gwagent
+cp $distDir/cpp/lib/liballjoyn_about.so $sdkStaging/usr/lib
+cp $distDir/gatewayMgmtApp/bin/gwagent-config.xml $sdkStaging/etc/alljoyn/gwagent/gwagent.conf
 
 # copy sample scripts to app-manager directory
 cp $distDir/gatewayMgmtApp/bin/*.sh $sdkStaging/app-manager/
-chmod a+x $sdkStaging/app-manager/*.sh
+chmod a+rx $sdkStaging/app-manager/*.sh
 
-# copy routing node and lib to daemon directory
+# copy routing node files
 cp $distDir/cpp/bin/alljoyn-daemon $sdkStaging/daemon/
-cp $distDir/cpp/lib/liballjoyn.so $sdkStaging/daemon/
-chmod a+x $sdkStaging/daemon/alljoyn-daemon
+cp $distDir/cpp/lib/liballjoyn.so $sdkStaging/usr/lib
+chmod a+rx $sdkStaging/daemon/alljoyn-daemon
 
 # copy sample routing node config.xml to daemon directory
-cp ${GWAGENT_SRC_DIR}/cpp/GatewayMgmtApp/samples/config.xml $sdkStaging/daemon/
+cp ${GWAGENT_SRC_DIR}/cpp/GatewayMgmtApp/samples/config.xml $sdkStaging/etc/alljoyn/alljoyn.conf
+chmod a+rx $sdkStaging/usr/bin/*
 
-chmod a+x $distDir/gatewayConnector/tar/bin/*.sh
+# copy other base services so files needed by the sample connector
+cp $distDir/services_common/lib/liballjoyn_services_common.so $sdkStaging/usr/lib
+cp $distDir/notification/lib/liballjoyn_notification.so $sdkStaging/usr/lib
+cp $distDir/config/lib/liballjoyn_config.so $sdkStaging/usr/lib
+cp $distDir/gatewayConnector/lib/liballjoyn_gwconnector.so $sdkStaging/usr/lib
 
 # package sample connector
 pushd $distDir/gatewayConnector/tar
+chmod a+rx $distDir/gatewayConnector/tar/bin/*.sh
 tar zcvf $sdkStaging/app-manager/dummyApp.tar.gz --owner=0 --group=0 *
 popd
 
@@ -125,9 +138,17 @@ cp ${GWAGENT_SRC_DIR}/ReleaseNotes.txt $sdkStaging/
 cp ${GWAGENT_SRC_DIR}/README.md $sdkStaging/
 
 # create Manifest.txt file
-echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $sdkStaging/Manifest.txt
+pushd ${GWAGENT_SRC_DIR}
+python ${GWAGENT_SRC_DIR}/build_scripts/genversion.py > $sdkStaging/Manifest.txt
+popd
 
-sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-linux-sdk-$variantString
+versionString=""
+if [ -n "${GWAGENT_SDK_VERSION:-}" ]
+then
+    versionString="${GWAGENT_SDK_VERSION}-"
+fi
+
+sdkName=alljoyn-gwagent-${versionString}linux-sdk-$variantString
 tarFile=$sdkName.tar.gz
 
 pushd $sdkStaging
@@ -139,5 +160,3 @@ md5File=$sdksDir/md5-$sdkName.txt
 rm -f $md5File
 md5sum $tarFile > $md5File
 popd
-
-

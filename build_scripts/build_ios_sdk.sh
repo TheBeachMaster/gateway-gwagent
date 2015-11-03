@@ -14,12 +14,10 @@
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-
 #
 # Build the iOS SDK for the gateway agent
 #
-#   CORE_VERSION - version of the Core Android SDK to use
-#   SERVICES_VERSION - version of the Services Android SDK to use
+#   CORE_VERSION - version of the Core iOS SDK to use
 #   BUILD_VARIANT - release or debug
 #   DEPENDENCIES_DIR - directory containing dependencies needed to build
 #   GWAGENT_SDK_VERSION - version name to use in building the SDK
@@ -34,7 +32,7 @@ set -o verbose
 set -o xtrace
 
 # check for required env variables
-for var in BUILD_VARIANT CORE_VERSION SERVICES_VERSION GWAGENT_SDK_VERSION DEPENDENCIES_DIR GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR
+for var in BUILD_VARIANT CORE_VERSION GWAGENT_SDK_VERSION DEPENDENCIES_DIR GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR
 do
     if [ -z "${!var:-}" ]
     then
@@ -50,6 +48,7 @@ extractedSdks=${WORKING_DIR}/unzipped_sdks
 sdkStaging=${WORKING_DIR}/sdk_stage
 buildDir=${WORKING_DIR}/build
 sdksDir=${ARTIFACTS_DIR}/sdks
+docStaging=${WORKING_DIR}/doc_stage
 
 # create the directories needed
 mkdir -p $extractedSdks
@@ -59,7 +58,7 @@ mkdir -p $sdksDir
 
 
 #========================================
-# retrieve dependent jars/libs for the CORE_VERSION and SERVICES_VERSION
+# retrieve core SDK
 
 # determine the variant string
 case ${BUILD_VARIANT} in
@@ -99,6 +98,9 @@ export OPENSSL_ROOT=/usr/local/openssl-1.0.1e
 libArtifacts=${ARTIFACTS_DIR}/lib
 mkdir $libArtifacts
 
+docArtifacts=${ARTIFACTS_DIR}/docs
+mkdir -p $docArtifacts
+
 for language in objc cpp
 do
     # build product directory
@@ -107,7 +109,7 @@ do
 
     cd $proj_dir
 
-    for sdk in "iphonesimulator7.1 -arch i386" iphoneos
+    for sdk in "iphonesimulator -arch i386" iphoneos
     do
         xcodebuild -project $proj_dir/alljoyn_gateway_$language.xcodeproj -sdk $sdk -configuration $buildVariantString CONFIGURATION_BUILD_DIR=$gwagentBuildDir
 
@@ -139,9 +141,7 @@ do
             --no-install-docset --no-publish-docset \
             --include ${GWAGENT_SRC_DIR}/ios/GatewayController/inc/alljoyn/gateway)
 
-        gwagentDocsDir=${ARTIFACTS_DIR}/docs/gateway
-        mkdir -p $gwagentDocsDir
-        tar cf - -C $doc_builddir docset html | tar xf - -C $gwagentDocsDir
+        tar cf - -C $doc_builddir docset html | tar xf - -C $docArtifacts
 
     fi
 
@@ -189,10 +189,12 @@ cp ${GWAGENT_SRC_DIR}/ReleaseNotes.txt $gwagentSdkDir/
 cp ${GWAGENT_SRC_DIR}/README.md $gwagentSdkDir/
 
 # create Manifest.txt file
-echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $gwagentSdkDir/Manifest.txt
+pushd ${GWAGENT_SRC_DIR}
+python ${GWAGENT_SRC_DIR}/build_scripts/genversion.py > $gwagentSdkDir/Manifest.txt
+popd
 
 # copy docs
-cp -r ${gwagentDocsDir}/* $gwagentSdkDir/docs/gateway/
+cp -r ${docArtifacts}/* $gwagentSdkDir/docs/gateway/
 
 # copy libs
 cp ${ARTIFACTS_DIR}/lib/liballjoyn_gateway_cpp.a $gwagentSdkDir/cpp/lib/
@@ -213,9 +215,25 @@ pushd $sdkStaging
 zip -q -r $sdksDir/$zipFile alljoyn-ios
 popd
 
+docZipFile=
+if [ "$BUILD_VARIANT" == "release" ] 
+then
+    docName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-ios-sdk-docs
+    docZipDir=$docStaging/$docName
+    mkdir -p $docZipDir
+    cp -r ${docArtifacts}/* $docZipDir/
+
+    docZipFile=$docName.zip
+    pushd $docStaging
+    zip -q -r $sdksDir/$docZipFile *
+    popd
+fi
+
+# generate md5s
 pushd $sdksDir
 md5File=$sdksDir/md5-$sdkName.txt
 rm -f $md5File
 md5 $zipFile > $md5File
+[[ -z "$docZipFile" ]] || md5 $docZipFile >> $md5File
 popd
 

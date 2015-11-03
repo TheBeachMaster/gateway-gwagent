@@ -14,15 +14,13 @@
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-
-
 #
 # Builds an archive file of the Linux build for gwagent
 #
-#   GWAGENT_SDK_VERSION - version name ot use in buildig the archive file
-#   GWAGENT_SRC_DIR - root directory of the gwagent git repo
-#   ARTIFACTS_DIR - directory to copy build products
-#   WORKING_DIR - directory for working with files
+#   GWAGENT_SDK_VERSION - version name ot use in building the archive file (version number left out if not given)
+#   GWAGENT_SRC_DIR - root directory of the gwagent git repo (defaults to relative location if not given)
+#   ARTIFACTS_DIR - directory to copy build products (defaults to build/jobs/artifacts)
+#   WORKING_DIR - directory for working with files (defaults to build/jobs/tmp)
 
 
 set -o nounset
@@ -31,16 +29,24 @@ set -o verbose
 set -o xtrace
 
 
-# check for required env variables
-for var in GWAGENT_SDK_VERSION GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR
-do
-    if [ -z "${!var:-}" ]
-    then
-        printf "$var must be defined!\n"
-        exit 1
-    fi
-done
+#========================================
+# Set default values for any unset environment variables
 
+if [ -z "${GWAGENT_SRC_DIR:-}" ]
+then
+    # set it to the top level directory for the git repo
+    # (based on relative position of the build_scripts)
+    export GWAGENT_SRC_DIR=$(dirname $(dirname $(readlink -f $0)))
+fi
+
+export ARTIFACTS_DIR=${ARTIFACTS_DIR:-$GWAGENT_SRC_DIR/build/jobs/artifacts}
+export WORKING_DIR=${WORKING_DIR:-$GWAGENT_SRC_DIR/build/jobs/tmp}
+
+versionString=""
+if [ -n "${GWAGENT_SDK_VERSION:-}" ]
+then
+    versionString="${GWAGENT_SDK_VERSION}-"
+fi
 
 #========================================
 # set variables for different directories needed
@@ -53,34 +59,53 @@ mkdir -p ${ARTIFACTS_DIR}
 mkdir -p $sdksDir
 
 
+
 #========================================
 # generate the docs
 
-pushd ${GWAGENT_SRC_DIR}
-scons V=1 BINDINGS=cpp DOCS=html -u gwma_docs
-popd
+md5File=$sdksDir/md5-alljoyn-gwagent-${versionString}docs.txt
+rm -f $md5File
+
+generateDocs() {
+    docName=$1
+    docSrc=$2
+
+    pushd ${GWAGENT_SRC_DIR}
+    scons V=1 BINDINGS=cpp DOCS=html VARIANT=release -u ${docName}_docs
+    popd
+
+    docArtifacts=$sdkStaging/$docName
+    cp -r ${GWAGENT_SRC_DIR}/build/linux/x86_64/release/dist/$2/docs/* $docArtifacts
+
+    # create Manifest.txt file
+    pushd ${GWAGENT_SRC_DIR}
+    python ${GWAGENT_SRC_DIR}/build_scripts/genversion.py > $docArtifacts/Manifest.txt
+    popd
+
+    # create the documentation package
+    sdkName=alljoyn-gwagent-${versionString}$docName-docs
+    tarFile=$sdksDir/$sdkName.tar.gz
+
+    pushd $docArtifacts
+    tar zcvf $tarFile * --exclude=SConscript
+    popd
+
+    pushd $sdksDir
+    md5sum $sdkName.tar.gz >> $md5File
+    popd
+}
 
 
-#========================================
-# create the documentation package
 
-docArtifacts=$sdkStaging
-cp -r ${GWAGENT_SRC_DIR}/cpp/GatewayMgmtApp/docs/* $docArtifacts
+generateDocs gwma gatewayMgmtApp
+generateDocs gwcnc gatewayConnector
+generateDocs gwc gatewayController
 
-# create Manifest.txt file
-echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $sdkStaging/Manifest.txt
-
-sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-docs
-
-tarFile=$sdksDir/$sdkName.tar.gz
-
-pushd $sdkStaging
-tar zcvf $tarFile * --exclude=SConscript
-popd
+iosDocsZip=alljoyn-gwagent-${versionString}ios-sdk-docs.zip
+androidDocsZip=alljoyn-gwagent-${versionString}android-sdk-docs.zip
 
 pushd $sdksDir
-md5File=$sdksDir/md5-$sdkName.txt
-rm -f $md5File
-md5sum $sdkName.tar.gz > $md5File
+[[ ! -f $iosDocsZip ]] || md5sum $iosDocsZip >> $md5File
+[[ ! -f $androidDocsZip ]] || md5sum $androidDocsZip >> $md5File
 popd
 

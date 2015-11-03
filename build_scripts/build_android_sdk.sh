@@ -14,29 +14,50 @@
 #    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 #    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
-
-
 #
 # Builds the Android SDK for the gateway agent
 #
-#   CORE_VERSION - version of the Core Android SDK to use
-#   SERVICES_VERSION - version of the Services Android SDKs to use
-#   BUILD_VARIANT - release or debug
-#   DEPENDENCIES_DIR - directory containing dependencies needed to build
-#   GWAGENT_SDK_VERSION - version name to use in building the SDK
-#   GWAGENT_SRC_DIR - root directory of the gwagent git repo
-#   ARTIFACTS_DIR - directory to copy build products
-#   WORKING_DIR - directory for working with files
-#   ANDROID_SDK - Android SDK
-
+#   ANDROID_SDK - Android SDK (required to be defined)
+#   GWAGENT_SRC_DIR - root directory of the gwagent git repo (defaults to relative location if not given)
+#   BUILD_VARIANT - release or debug (defaults to release if not given)
+#   GWAGENT_SDK_VERSION - version name to use in building the SDK (version number left out if not given)
+#   LIBRARIES_DIR - directory containing dependent jars/shared objects
+#                   (either LIBRARIES_DIR or DEPENDENCIES_DIR must be given)
+#   DEPENDENCIES_DIR - directory containing the SDK dependencies needed to build
+#                      (either LIBRARIES_DIR or DEPENDENCIES_DIR must be given)
+#   ARTIFACTS_DIR - directory to copy build products (defaults to build/jobs/artifacts)
+#   WORKING_DIR - directory for working with files (default to build/jobs/tmp)
 
 set -o nounset
 set -o errexit
 set -o verbose
 set -o xtrace
 
+#========================================
+# Set default values for any unset environment variables
+
+export BUILD_VARIANT=${BUILD_VARIANT:-release}
+
+if [ -z "${GWAGENT_SRC_DIR:-}" ]
+then
+    # set it to the top level directory for the git repo
+    # (based on relative position of the build_scripts)
+    export GWAGENT_SRC_DIR=$(dirname $(dirname $(readlink -f $0)))
+fi
+
+export ARTIFACTS_DIR=${ARTIFACTS_DIR:-$GWAGENT_SRC_DIR/build/jobs/artifacts}
+export WORKING_DIR=${WORKING_DIR:-$GWAGENT_SRC_DIR/build/jobs/tmp}
+
+#========================================
+
+if [ -z "${LIBRARIES_DIR:-}" ] && [ -z "${DEPENDENCIES_DIR:-}" ]
+then
+    printf "DEPENDENCIES_DIR or LIBRARIES_DIR must be defined!\n"
+    exit 1
+fi
+
 # check for required env variables
-for var in CORE_VERSION SERVICES_VERSION BUILD_VARIANT DEPENDENCIES_DIR GWAGENT_SDK_VERSION GWAGENT_SRC_DIR ARTIFACTS_DIR WORKING_DIR ANDROID_SDK
+for var in ANDROID_SDK
 do
     if [ -z "${!var:-}" ]
     then
@@ -48,22 +69,21 @@ done
 
 #========================================
 # set variables for different directories needed
-extractedSdks=${WORKING_DIR}/unzipped_sdks
 jarsDepends=${WORKING_DIR}/jars
 libsDepends=${WORKING_DIR}/libs
 sdkStaging=${WORKING_DIR}/sdk_stage
+docStaging=${WORKING_DIR}/doc_stage
 sdksDir=${ARTIFACTS_DIR}/sdks
 
 # create the directories needed
 mkdir -p $jarsDepends
 mkdir -p $libsDepends
-mkdir -p $extractedSdks
 mkdir -p $sdkStaging
 mkdir -p $sdksDir
 
 
 #========================================
-# retrieve dependent jars/libs for the CORE_VERSION and SERVICES_VERSION
+# retrieve dependent jars/libs for the core and services
 
 # determine the variant string
 case ${BUILD_VARIANT} in
@@ -75,12 +95,34 @@ case ${BUILD_VARIANT} in
         ;;
 esac
 
-# get alljoyn_apps_android_utils.jar
-configSdkName=alljoyn-config-service-framework-${SERVICES_VERSION}-android-sdk-rel
-configSdkContent=$extractedSdks/$configSdkName
-mkdir -p $configSdkContent
-unzip ${DEPENDENCIES_DIR}/$configSdkName.zip -d $configSdkContent
-cp $configSdkContent/alljoyn-android/services/alljoyn-config-${SERVICES_VERSION}-rel/samples/ConfigClientSample/libs/alljoyn_apps_android_utils.jar $jarsDepends/
+# get jars and shared objects from SDKs
+if [ -n "${DEPENDENCIES_DIR:-}" ]
+then
+
+    extractedSdks=${WORKING_DIR}/unzipped_sdks
+    mkdir -p $extractedSdks
+
+
+    # get alljoyn_apps_android_utils.jar from config SDK
+    configSdkNameMatch=alljoyn-config-service-framework-*-android-sdk-rel
+    configSdkName=alljoyn-config-service-framework-android-sdk-rel
+    configSdkContent=$extractedSdks/$configSdkName
+    mkdir -p $configSdkContent
+    unzip ${DEPENDENCIES_DIR}/$configSdkNameMatch.zip -d $configSdkContent
+    cp $configSdkContent/alljoyn-android/services/alljoyn-config-*-rel/samples/ConfigClientSample/libs/alljoyn_apps_android_utils.jar $jarsDepends/
+
+    # get alljoyn jars/so from the AllJoyn SDK
+    coreSdkNameMatch=alljoyn-[^a-z]*-android-sdk-${variantString}
+    coreSdkName=alljoyn-android-sdk-${variantString}
+    coreSdkContent=$extractedSdks/$coreSdkName
+    mkdir -p $coreSdkContent
+    unzip ${DEPENDENCIES_DIR}/$coreSdkNameMatch.zip -d $coreSdkContent
+    javaDir=alljoyn-android/core/alljoyn-*-${variantString}/java
+    javaContentDir=$coreSdkContent/$javaDir
+    cp $javaContentDir/jar/alljoyn.jar $jarsDepends/
+    cp $javaContentDir/jar/alljoyn_about.jar $jarsDepends/
+    cp $javaContentDir/lib/liballjoyn_java.so $libsDepends/
+fi
 
 # get android-support-v4.jar
 cp ${ANDROID_SDK}/extras/android/support/v4/android-support-v4.jar $jarsDepends/
@@ -88,17 +130,12 @@ cp ${ANDROID_SDK}/extras/android/support/v4/android-support-v4.jar $jarsDepends/
 # get android-support-v13.jar
 cp ${ANDROID_SDK}/extras/android/support/v13/android-support-v13.jar $jarsDepends/
 
-# get alljoyn jars/so
-coreSdkName=alljoyn-${CORE_VERSION}-android-sdk-${variantString}
-coreSdkContent=$extractedSdks/$coreSdkName
-mkdir -p $coreSdkContent
-unzip ${DEPENDENCIES_DIR}/$coreSdkName.zip -d $coreSdkContent
-javaDir=alljoyn-android/core/alljoyn-${CORE_VERSION}-${variantString}/java
-javaContentDir=$coreSdkContent/$javaDir
-cp $javaContentDir/jar/alljoyn.jar $jarsDepends/
-cp $javaContentDir/jar/alljoyn_about.jar $jarsDepends/
-cp $javaContentDir/lib/liballjoyn_java.so $libsDepends/
-
+# get the necessary jars/shared objects from the LIBRARIES_DIR (if set)
+if [ -n "${LIBRARIES_DIR:-}" ]
+then
+    cp ${LIBRARIES_DIR}/*.jar $jarsDepends/
+    cp ${LIBRARIES_DIR}/*.so $libsDepends/
+fi
 
 #========================================
 # build the SDK and generate the javadocs
@@ -146,12 +183,18 @@ cp -r $controllerDir/docs/* $docArtifacts
 #========================================
 # create the SDK package
 
-sdkName=alljoyn-gwagent-${GWAGENT_SDK_VERSION}-android-sdk-$variantString
+versionString=""
+if [ -n "${GWAGENT_SDK_VERSION:-}" ]
+then
+    versionString="${GWAGENT_SDK_VERSION}-"
+fi
+
+sdkName=alljoyn-gwagent-${versionString}android-sdk-$variantString
 zipFile=$sdkName.zip
 
 
 # create directory path for gwagent SDK
-gwagentSdkDir=$sdkStaging/alljoyn-android/gwagent/alljoyn-gwagent-${GWAGENT_SDK_VERSION}-$variantString
+gwagentSdkDir=$sdkStaging/alljoyn-android/gwagent/alljoyn-gwagent-${versionString}$variantString
 mkdir -p $gwagentSdkDir
 
 # create directory structure
@@ -167,7 +210,9 @@ cp ${GWAGENT_SRC_DIR}/ReleaseNotes.txt $gwagentSdkDir/
 cp ${GWAGENT_SRC_DIR}/README.md $gwagentSdkDir/
 
 # create Manifest.txt file
-echo "gateway/gwagent: $(git rev-parse --abbrev-ref HEAD) $(git rev-parse HEAD)" > $gwagentSdkDir/Manifest.txt
+pushd ${GWAGENT_SRC_DIR}
+python ${GWAGENT_SRC_DIR}/build_scripts/genversion.py > $gwagentSdkDir/Manifest.txt
+popd
 
 # copy docs
 cp -r ${docArtifacts}/* $gwagentSdkDir/docs/
@@ -188,10 +233,27 @@ pushd $sdkStaging
 zip -q -r $sdksDir/$zipFile *
 popd
 
+
+# build a zip of the Javadoc on release builds
+docZipFile=
+if [ "$BUILD_VARIANT" == "release" ]
+then
+    docName=alljoyn-gwagent-${versionString}android-sdk-docs
+    docZipDir=$docStaging/$docName
+    mkdir -p $docZipDir
+    cp -r $docArtifacts/* $docZipDir/
+
+    docZipFile=$docName.zip
+    pushd $docStaging
+    zip -q -r $sdksDir/$docZipFile *
+    popd
+fi
+
+# generate md5s
 pushd $sdksDir
 md5File=$sdksDir/md5-$sdkName.txt
 rm -f $md5File
 md5sum $zipFile > $md5File
+[[ -z "$docZipFile" ]] || md5sum $docZipFile >> $md5File
 popd
-
 
